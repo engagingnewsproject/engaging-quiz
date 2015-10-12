@@ -13,6 +13,21 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+// for registering, enqueuing relative to root plugin dir
+function get_root_plugin_path() {
+  $path = plugin_dir_path( __FILE__ );
+  return $path;
+}
+
+// for registering, enqueuing relative to root plugin url
+function get_root_plugin_url() {
+  $url = plugin_dir_url( __FILE__ );
+  return $url;
+}
+
+include(plugin_dir_path( __FILE__ ) .'init/loader.php');
+
+
 /*
 include(plugin_dir_path( __FILE__ ) .'inc/Enp_Button_Class.php');
 include(plugin_dir_path( __FILE__ ) .'inc/Enp_Button_Loader.php');
