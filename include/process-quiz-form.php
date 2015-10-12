@@ -1,5 +1,4 @@
 <?php
-include('../../../../../wp-config.php');
 global $wpdb;
 
 if( $_POST['input-question'] ) {
