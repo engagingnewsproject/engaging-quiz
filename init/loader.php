@@ -12,7 +12,7 @@ function enqueue_self_service_quiz_scripts () {
   $plugin_root_path = get_root_plugin_path();
 
 
-  //require_once($plugin_root_path . "include/quiz-shortcodes.php");
+  require_once($plugin_root_path . "include/quiz-shortcodes.php");
 
   // BUILT WITH LESS, so add bootstrap to a wrapper to apply styles
   wp_enqueue_style( 'main-css', $plugin_root_url . 'css/main.css');
@@ -52,33 +52,5 @@ function add_media_upload_scripts() {
 }
 add_action('wp_enqueue_scripts', 'add_media_upload_scripts');
 
-
-//plugins_url( $path, $plugin );
-
-function plugin_path($content) {
-  $path = get_root_plugin_path();
-  echo $path;
-  echo '<br/>';
-  $url = get_root_plugin_url();
-  echo $url;
-  echo '<br/>';
-  $plugin_url = $url.'css/bootstrap-prefix.css';
-  echo $plugin_url;
-  echo '<br/>';
-  $basename = plugin_basename( __FILE__ );
-  echo $basename;
-  echo '<br/>';
-
-  $file = dirname(__FILE__) . '/enp-quiz.php';
-  $plugin_url_dir = plugin_dir_url($file);
-  echo $plugin_url_dir;
-  echo '<br/>';
-  // Output something like: http://example.com/wp-content/plugins/your-plugin/
-  $plugin_path_dir = plugin_dir_path($file);
-  echo $plugin_path_dir;
-  echo '<br/>';
-
-}
-add_filter( 'the_content', 'plugin_path' );
 
 ?>
