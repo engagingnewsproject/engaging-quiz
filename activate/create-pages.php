@@ -4,6 +4,7 @@
 *
 *
 */
+
 $configure_quiz = array(
   'post_type'     => 'page',
   'post_title'    => 'Configure Quiz',
@@ -19,7 +20,7 @@ $quiz_report = array(
 );
 
 $quiz_answer = array(
-  'page_template' => 'self-service-quiz/page-quiz-answer.php',
+  // 'page_template' => 'self-service-quiz/page-quiz-answer.php',
   'post_type'     => 'page',
   'post_title'    => 'Quiz Answer',
   'post_content'  => '',
@@ -27,7 +28,7 @@ $quiz_answer = array(
 );
 
 $iframe_quiz = array(
-  'page_template' => 'self-service-quiz/page-iframe-quiz.php',
+  // 'page_template' => 'self-service-quiz/page-iframe-quiz.php',
   'post_type'     => 'page',
   'post_title'    => 'iframe quiz',
   'post_content'  => '',
@@ -36,7 +37,7 @@ $iframe_quiz = array(
 
 $create_a_quiz = array(
   'post_type'     => 'page',
-  'post_title'    => 'Create a Quizz',
+  'post_title'    => 'Create a Quiz',
   'post_content'  => '[create-a-quiz]',
   'post_status'   => 'publish'
 );
@@ -48,12 +49,28 @@ $view_quiz = array(
   'post_status'   => 'publish'
 );
 
+
 if( !get_page_by_title('Configure Quiz') ) {
   wp_insert_post( $configure_quiz );
+}
+
+if( !get_page_by_title('Quiz Report') ) {
   wp_insert_post( $quiz_report );
+}
+
+if( !get_page_by_title('Quiz Answer') ) {
   wp_insert_post( $quiz_answer );
+}
+
+if( !get_page_by_title('iframe quiz') ) {
   wp_insert_post( $iframe_quiz );
+}
+
+if( !get_page_by_title('Create a Quiz') ) {
   wp_insert_post( $create_a_quiz );
+}
+
+if( !get_page_by_title('View Quiz') ) {
   wp_insert_post( $view_quiz );
 }
 

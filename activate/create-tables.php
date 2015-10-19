@@ -5,6 +5,7 @@
 *
 */
 global $wpdb;
+
 $sql_enp_quiz = "CREATE TABLE `enp_quiz` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `guid` varchar(255) NOT NULL,

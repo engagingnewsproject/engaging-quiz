@@ -25,25 +25,25 @@ function get_root_plugin_url() {
   return $url;
 }
 
-include(plugin_dir_path( __FILE__ ) .'init/loader.php');
-
-
-/*
-include(plugin_dir_path( __FILE__ ) .'inc/Enp_Button_Class.php');
-include(plugin_dir_path( __FILE__ ) .'inc/Enp_Button_Loader.php');
 
 //Automatically Load all the PHP files we need
 $classesDir = array (
-    plugin_dir_path( __FILE__ ) .'admin/functions/',
-    plugin_dir_path( __FILE__ ) .'admin/settings/',
-    plugin_dir_path( __FILE__ ) .'front-end/functions/',
+    plugin_dir_path( __FILE__ ) .'init/',
+    // plugin_dir_path( __FILE__ ) .'admin/settings/',
+    // plugin_dir_path( __FILE__ ) .'front-end/functions/',
 );
+
+//TODO: Action Hook for plugin activate and include the pages create
+// and database table create
+if(1 === 2) {
+  $classesDir[] = plugin_dir_path( __FILE__ ) .'activate/';
+}
 
 foreach ($classesDir as $directory) {
     foreach (glob($directory."*.php") as $filename){
         include $filename;
     }
 }
-*/
+
 
 ?>
