@@ -41,7 +41,9 @@ foreach ($classesDir as $directory) {
 }
 
 // from install/create-tables.php
-register_activation_hook(__FILE__, 'create_enp_quiz_tables');
+register_activation_hook(__FILE__, 'enp_quiz_create_tables');
+// from install/create-tables.php
+register_activation_hook(__FILE__, 'enp_quiz_create_pages');
 
 
 ?>

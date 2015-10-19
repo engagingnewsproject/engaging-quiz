@@ -6,7 +6,7 @@
 */
 
 
-function create_enp_quiz_tables() {
+function enp_quiz_create_tables() {
 
   global $wpdb;
 
