@@ -732,7 +732,6 @@
     <div id="<?php echo $quiz->quiz_type == "multiple-choice" ? "quiz-mc-answer-pie-graph" : "quiz-slider-answer-pie-graph" ; ?>"></div>
     <?php if ( $quiz->quiz_type == "multiple-choice") { ?>
     <?php } ?>
-    <?php //include(locate_template('self-service-quiz/quiz-detailed-responses.php')); ?>
     <div class="bootstrap">
       <div class="panel panel-info">
         <!-- Default panel contents -->
