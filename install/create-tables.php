@@ -10,7 +10,10 @@ function enp_quiz_create_tables() {
 
   global $wpdb;
 
-  $enp_quiz = $wpdb->prefix .'enp_quiz';
+  // When we have all our MYSQL queries wrapped in functions, start using wpdb->prefix
+  // $enp_quiz = $wpdb->prefix .'enp_quiz';  $enp_quiz = 'enp_quiz';
+
+  $enp_quiz = 'enp_quiz';
   if($wpdb->get_var("show tables like '$enp_quiz'") != $enp_quiz) {
 
     $sql_enp_quiz = "CREATE TABLE ".$enp_quiz." (
@@ -34,7 +37,7 @@ function enp_quiz_create_tables() {
   }
 
 
-  $enp_quiz_next = $wpdb->prefix .'enp_quiz_next';
+  $enp_quiz_next = 'enp_quiz_next';
   if($wpdb->get_var("show tables like '$enp_quiz_next'") != $enp_quiz_next) {
 
     $sql_enp_quiz_next = "CREATE TABLE ".$enp_quiz_next." (
@@ -50,7 +53,7 @@ function enp_quiz_create_tables() {
   }
 
 
-  $enp_quiz_options = $wpdb->prefix .'enp_quiz_options';
+  $enp_quiz_options = 'enp_quiz_options';
   if($wpdb->get_var("show tables like '$enp_quiz_options'") != $enp_quiz_options) {
     $sql_enp_quiz_options = "CREATE TABLE ".$enp_quiz_options." (
       `ID` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -67,7 +70,7 @@ function enp_quiz_create_tables() {
   }
 
 
-  $enp_quiz_responses = $wpdb->prefix .'enp_quiz_responses';
+  $enp_quiz_responses = 'enp_quiz_responses';
   if($wpdb->get_var("show tables like '$enp_quiz_responses'") != $enp_quiz_responses) {
     $sql_enp_quiz_responses = "CREATE TABLE ".$enp_quiz_responses." (
       `ID` bigint(20) NOT NULL AUTO_INCREMENT,
