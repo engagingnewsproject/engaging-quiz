@@ -28,22 +28,20 @@ function get_root_plugin_url() {
 
 //Automatically Load all the PHP files we need
 $classesDir = array (
+    plugin_dir_path( __FILE__ ) .'install/',
     plugin_dir_path( __FILE__ ) .'init/',
     // plugin_dir_path( __FILE__ ) .'admin/settings/',
     // plugin_dir_path( __FILE__ ) .'front-end/functions/',
 );
-
-//TODO: Action Hook for plugin activate and include the pages create
-// and database table create
-if(1 === 2) {
-  $classesDir[] = plugin_dir_path( __FILE__ ) .'activate/';
-}
 
 foreach ($classesDir as $directory) {
     foreach (glob($directory."*.php") as $filename){
         include $filename;
     }
 }
+
+// from install/create-tables.php
+register_activation_hook(__FILE__, 'create_enp_quiz_tables');
 
 
 ?>

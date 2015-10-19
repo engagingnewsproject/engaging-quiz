@@ -4,7 +4,7 @@
 *
 *
 */
-
+/*
 $configure_quiz = array(
   'post_type'     => 'page',
   'post_title'    => 'Configure Quiz',
@@ -73,5 +73,5 @@ if( !get_page_by_title('Create a Quiz') ) {
 if( !get_page_by_title('View Quiz') ) {
   wp_insert_post( $view_quiz );
 }
-
+*/
 ?>
