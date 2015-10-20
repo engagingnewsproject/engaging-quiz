@@ -22,12 +22,10 @@ add_action( 'template_redirect', 'prefix_url_rewrite_templates' );
 
 
 /**
- * Template loader for Meal Planner.
+ * Template loader for ENP Quiz.
  *
- * Only need to specify class properties here.
- *
- * @package Meal_Planner
- * @author  Gary Jones
+ * @author  Gary Jones (mostly)
+ * @author  Edited by Jerry Jones
  */
 
 if( ! class_exists( 'Gamajo_Template_Loader' ) ) {
@@ -87,26 +85,4 @@ function enp_quiz_get_template_part( $slug, $name = null, $load = true ) {
     $enp_quiz_template_loader->get_template_part( $slug, $name, $load );
 }
 
-
-/*
-
-// EXAMPLE REWRITE
-function prefix_movie_rewrite_rule() {
-
-    add_rewrite_rule( 'movie/([^/]+)/photos', 'index.php?movie=$matches[1]&photos=yes', 'top' );
-    add_rewrite_rule( 'movie/([^/]+)/videos', 'index.php?movie=$matches[1]&videos=yes', 'top' );
-}
-
-add_action( 'init', 'prefix_movie_rewrite_rule' );
-
-// EXAMPLE GET VARS
-function prefix_register_query_var( $vars ) {
-    $vars[] = 'movie';
-
-    return $vars;
-}
-
-add_filter( 'query_vars', 'prefix_register_query_var' );
-
-*/
 ?>

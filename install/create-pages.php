@@ -29,14 +29,6 @@ function enp_quiz_create_pages() {
     'post_status'   => 'publish'
   );
 
-  $iframe_quiz = array(
-    // 'page_template' => 'self-service-quiz/page-iframe-quiz.php',
-    'post_type'     => 'page',
-    'post_title'    => 'iframe quiz',
-    'post_content'  => '',
-    'post_status'   => 'publish'
-  );
-
   $create_a_quiz = array(
     'post_type'     => 'page',
     'post_title'    => 'Create a Quiz',
@@ -62,10 +54,6 @@ function enp_quiz_create_pages() {
 
   if( !get_page_by_title('Quiz Answer') ) {
     wp_insert_post( $quiz_answer, true);
-  }
-
-  if( !get_page_by_title('iframe quiz') ) {
-    wp_insert_post( $iframe_quiz, true);
   }
 
   if( !get_page_by_title('Create a Quiz') ) {
