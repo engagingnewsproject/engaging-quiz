@@ -26,7 +26,6 @@ function enqueue_self_service_quiz_scripts () {
   wp_enqueue_script('jqplot', $plugin_root_url . 'js/vendor/jquery.jqplot.min.js', array('jquery'), '1.0', true);
   wp_enqueue_script('excanvas', $plugin_root_url . 'js/vendor/excanvas.min.js', array('jquery'), '1.0', true);
   //<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="excanvas.js"></script><![endif]-->
-
   wp_enqueue_script('jqplotpie', $plugin_root_url . 'js/vendor/jqplot.pieRenderer.min.js', array('jquery'), '1.0', true);
   wp_enqueue_script('formhelper-number', $plugin_root_url . 'js/vendor/bootstrap-formhelpers-number.js', array('jquery'), '1.0', true);
   wp_enqueue_script('placeholder', $plugin_root_url . 'js/vendor/jquery.placeholder.js', array('jquery'), '1.0', true);

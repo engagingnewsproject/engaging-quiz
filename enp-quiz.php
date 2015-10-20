@@ -25,6 +25,8 @@ function get_root_plugin_url() {
   return $url;
 }
 
+define( 'ENP_QUIZ_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+
 
 //Automatically Load all the PHP files we need
 $classesDir = array (
