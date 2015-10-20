@@ -32,6 +32,7 @@ define( 'ENP_QUIZ_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 $classesDir = array (
     plugin_dir_path( __FILE__ ) .'install/',
     plugin_dir_path( __FILE__ ) .'init/',
+    plugin_dir_path( __FILE__ ) .'include/',
     // plugin_dir_path( __FILE__ ) .'admin/settings/',
     // plugin_dir_path( __FILE__ ) .'front-end/functions/',
 );

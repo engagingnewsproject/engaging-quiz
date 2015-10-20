@@ -1,9 +1,19 @@
 <?php
+// TOTALLY NOT GOOD, BUT ABSPATH ISN'T WORKING,
+// AND THIS SHOULDN'T EVEN BE NEEDED....
 global $wpdb;
 
+if(!isset($wpdb))
+{
+    //require_once('../../../../wp-config.php');
+    require_once('../../../../wp-load.php');
+    global $wpdb;
+}
+// include('../../../../wp-config.php');
+
+
 if(isset($_POST['input-id'])) {
-
-
+  var_dump($wpdb);
 
   $date = date('Y-m-d H:i:s');
   $guid = $_POST['input-guid'];
@@ -14,10 +24,12 @@ if(isset($_POST['input-id'])) {
   //$preview_response = $_POST['preview'] ? 1 : 0;
   $preview_response = (isset($_POST['quiz_preview']) && ('' != $_POST['quiz_preview'])) ? 1 :  0;
   $preview = ($preview_response == 1 ) ? '&quiz_preview=true' : '';
-
+  var_dump($guid);
   $quiz = $wpdb->get_row("
     SELECT * FROM enp_quiz
     WHERE guid = '" . $guid . "' ");
+
+
 
     //next Quiz question functionality
     $nextQuiz = $wpdb->get_var("

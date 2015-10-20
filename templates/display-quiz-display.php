@@ -30,7 +30,6 @@ if ( $quiz == null ) { ?>
 
 } else {
 
-
 $summary_message = $wpdb->get_var("
     SELECT value FROM enp_quiz_options
     WHERE quiz_id = '" . $quiz->ID . "' AND field = 'summary_message' ");
@@ -54,7 +53,9 @@ if($nextQuiz) {
 
 }
 
-if ( is_page('iframe-quiz') && !isset($_GET["quiz_preview"]) ) {
+// removing the is_page('iframe-quiz') from the if
+// ... not sure if this is necessary or not - JJ
+if ( !isset($_GET["quiz_preview"]) ) {
     $date = date('Y-m-d H:i:s');
     $guid = ( isset($_POST['input-guid'] ) ? $_POST['input-guid'] : '');
     $correct_option_id = -1;
@@ -91,13 +92,10 @@ if ($parentID > 0) {
     $quiz_style_ID = $quiz->ID;
 }
 
-
-
 ?>
-
 <div class="quiz-display" style="<? echo (!empty($quiz_style_ID) ? get_quiz_styles($quiz_style_ID) : '');?> padding: 10px 0; height: 100%; width: 100%; overflow: auto;">
     <?php if ( $flag == 'quiz' ) { ?>
-        <form id="quiz-display-form" class="form-horizontal bootstrap" role="form" method="post" action="<?php echo get_stylesheet_directory_uri(); ?>/self-service-quiz/include/process-quiz-response.php">
+        <form id="quiz-display-form" class="form-horizontal bootstrap" role="form" method="post" action="<?php echo get_root_plugin_url(); ?>include/process-quiz-response.php">
             <script>
                 localStorage.setItem('referURL', '<?php echo $_GET["refer"]; ?>');
                 var referURL = localStorage.getItem('referURL');
@@ -118,7 +116,9 @@ if ($parentID > 0) {
                 document.write('<input type="hidden" name="referURL" id="referURL" value="'+passReferURL+'">');
             </script>
 
-            <input type="hidden" name="quiz_preview" id="preview" value="<?php echo $_GET["quiz_preview"]; ?>">
+            <?if(isset($_GET["quiz_preview"])) {
+                echo '<input type="hidden" name="quiz_preview" id="preview" value="'.$_GET["quiz_preview"].'">';
+            }?>
             <input type="hidden" name="input-id" id="input-id" value="<?php echo $quiz->ID; ?>">
             <input type="hidden" name="input-guid" id="input-guid" value="<?php echo $quiz->guid; ?>">
             <input type="hidden" name="quiz-type" id="quiz-type" value="<?php echo $quiz->quiz_type; ?>">
@@ -186,7 +186,7 @@ if ($parentID > 0) {
                         <span class="badge" id="slider-value-label"><?php echo $slider_options->slider_start; echo $slider_options->slider_label == '%' ? '' : ' '; echo $slider_options->slider_label; ?></span>
                     </div>
                     <div class="col-md-12">
-                        <?php include(locate_template('self-service-quiz/slider-display.php')); ?>
+                        <?php enp_quiz_get_template_part( 'display', 'slider-display');?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -212,7 +212,7 @@ if ($parentID > 0) {
 
         <form id="quiz-display-form" class="form-horizontal bootstrap" role="form" action="">
             <div class="col-sm-12">
-                <?php include(locate_template('self-service-quiz/quiz-summary.php')); ?>
+                <?php enp_quiz_get_template_part('display', 'quiz-summary'); ?>
                 <p><a href="<?php echo get_site_url() . '/iframe-quiz/?guid=' . $quiz->guid;  echo (isset($_GET["quiz_preview"]) && ('' != $_GET["quiz_preview"])) ? '&quiz_preview=true' : '';?>" class="btn btn-sm btn-primary">Return to the beginning</a></p>
                 <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5420b26c5d05a323"></script>
                 <!-- Go to www.addthis.com/dashboard to customize your tools -->

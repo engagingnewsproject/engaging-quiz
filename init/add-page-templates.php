@@ -7,13 +7,32 @@
 */
 function prefix_url_rewrite_templates() {
     $url = $_SERVER['REQUEST_URI'];
-    $find   = '/iframe-quiz/';
-    $pos = strpos($url, $find);
 
-    if ( $pos ) {
+    $iframe   = '/iframe-quiz/';
+    $iframe_quiz = strpos($url, $iframe);
+
+    $answer   = '/quiz-answer/';
+    $iframe_answer = strpos($url, $answer);
+
+    if ( $iframe_quiz ) {
+        // grab the iframe quiz template
         add_filter( 'template_include', function() {
             enp_quiz_get_template_part('iframe', 'quiz');
         });
+
+        // remove the adminbar and the margin top spacing
+        add_filter('show_admin_bar', '__return_false');
+        remove_action('wp_head', '_admin_bar_bump_cb');
+
+    } elseif($iframe_answer) {
+        // grab the iframe quiz template
+        add_filter( 'template_include', function() {
+            enp_quiz_get_template_part('iframe', 'quiz-answer');
+        });
+
+        // remove the adminbar and the margin top spacing
+        add_filter('show_admin_bar', '__return_false');
+        remove_action('wp_head', '_admin_bar_bump_cb');
     }
 }
 

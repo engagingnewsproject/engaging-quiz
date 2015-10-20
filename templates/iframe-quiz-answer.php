@@ -109,7 +109,7 @@ Template Name: Quiz Answer
         $question_text = $quiz->question;
         $answer_message = render_answer_response_message( $quiz->quiz_type, $quiz_response, $question_options );
 
-        include(locate_template('self-service-quiz/quiz-answer.php'));
+        enp_quiz_get_template_part('display', 'quiz-answer');
 
         $parentQuiz = ($parentQuiz) ? $parentQuiz : $_GET["guid"];
         $guidLink = ($nextGuid) ? $nextGuid->guid : $parentQuiz;

@@ -1,7 +1,7 @@
 <?php
 global $wpdb;
 
-if( $_POST['input-question'] ) {
+if( isset($_POST['input-question']) ) {
     $date = date('Y-m-d H:i:s');
     $quiz_updated = false;
     if ($_POST['input-guid']) {

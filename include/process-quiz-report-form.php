@@ -1,7 +1,12 @@
 <?php
 global $wpdb;
 
-$quiz_id = $_POST['input-id'];
+if(isset($_POST['input-id'])) {
+  $quiz_id = $_POST['input-id'];
+} else {
+  $quiz_id = false;
+}
+
 
 if( $quiz_id ) {
   $guid = $_POST['input-guid'];
@@ -16,7 +21,7 @@ if( $quiz_id ) {
 function processQuizReport($quiz_id, $date, $wpdb) {
   $wpdb->delete( 'enp_quiz_options', array( 'quiz_id' => $quiz_id, 'field' => 'report_ignored_ip_addresses'), array( '%d', '%s' ) );
 
-  $report_ignored_ip_addresses = $_POST['input-report-ip-addresses'];
+  (isset($_POST['input-report-ip-addresses']) ? $report_ignored_ip_addresses = $_POST['input-report-ip-addresses'] : $report_ignored_ip_addresses = false);
 
   // Add new options
   $wpdb->insert( 'enp_quiz_options', array( 'quiz_id' => $quiz_id, 'field' => 'report_ignored_ip_addresses',

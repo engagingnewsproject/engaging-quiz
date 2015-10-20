@@ -1,17 +1,20 @@
 <?php
 global $wpdb;
 
-if(isset($_GET['guid'])) {
+if(isset($_GET['guid']) && isset($_GET['deleteResponses'])) {
 
-  $guid = $_GET['guid'];
+    if($_GET['deleteResponses'] === 'true') {
+        $guid = $_GET['guid'];
 
-  $quiz = $wpdb->get_row("
-    SELECT * FROM enp_quiz
-    WHERE guid = '" . $guid . "' ");
+        $quiz = $wpdb->get_row("
+        SELECT * FROM enp_quiz
+        WHERE guid = '" . $guid . "' ");
 
-  deleteQuizResponses($quiz->ID, $wpdb);
+        deleteQuizResponses($quiz->ID, $wpdb);
 
-  header("Location: " . get_site_url() . "/quiz-report/?guid=" . $guid . '&message=responses_deleted');
+        header("Location: " . get_site_url() . "/quiz-report/?guid=" . $guid . '&message=responses_deleted');
+    }
+
 
 }
 
