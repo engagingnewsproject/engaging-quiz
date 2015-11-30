@@ -32,7 +32,7 @@ function enp_quiz_create_pages() {
   $create_a_quiz = array(
     'post_type'     => 'page',
     'post_title'    => 'Create a Quiz',
-    'post_content'  => '[create-a-quiz]',
+    'post_content'  => '[create_a_quiz]',
     'post_status'   => 'publish'
   );
 

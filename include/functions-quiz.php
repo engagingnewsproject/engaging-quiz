@@ -1,5 +1,4 @@
 <?php
-// include("include/quiz-shortcodes.php");
 
 // THIS IS NOT A GOOD SOLUTION, but we get an error message otherwise
 // Fatal error: Call to undefined function wp_get_current_user() in /wp-includes/capabilities.php on line 1441
