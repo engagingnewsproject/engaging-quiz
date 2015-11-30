@@ -36,6 +36,13 @@ function enp_quiz_create_pages() {
     'post_status'   => 'publish'
   );
 
+  $create_a_quiz_content = array(
+    'post_type'     => 'page',
+    'post_title'    => 'Create a Quiz Content',
+    'post_content'  => '<p>Please <a href="'.site_url().'/wp-login.php">login</a> or <a href="'.site_url().'/wp-login.php?action=register">register</a> to start creating quizzes!</p>',
+    'post_status'   => 'publish'
+  );
+
   $view_quiz = array(
     'post_type'     => 'page',
     'post_title'    => 'View Quiz',
@@ -58,6 +65,10 @@ function enp_quiz_create_pages() {
 
   if( !get_page_by_title('Create a Quiz') ) {
     wp_insert_post( $create_a_quiz, true);
+  }
+
+  if( !get_page_by_title('Create a Quiz Content') ) {
+    wp_insert_post( $create_a_quiz_content, true);
   }
 
   if( !get_page_by_title('View Quiz') ) {
