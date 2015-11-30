@@ -7,6 +7,8 @@
 	    $user_ID = get_current_user_id();
         $socialLogin = get_user_meta($user_ID, 'oa_social_login_identity_provider', true);
 
+		$quiz_notifications = ''; // sets default value
+
 	     // Delete Question
 	    if ( $user_ID && isset($_GET["delete_guid"]) ) {
         // Selects the question being deleted from the enp_quiz table

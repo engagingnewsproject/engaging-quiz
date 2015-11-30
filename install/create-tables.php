@@ -44,7 +44,9 @@ function enp_quiz_create_tables() {
       `enp_quiz_next` bigint(20) NOT NULL AUTO_INCREMENT,
       `curr_quiz_id` bigint(20) NOT NULL,
       `next_quiz_id` bigint(20) NOT NULL,
+      `parent_guid` varchar(80) NOT NULL,
       `date_added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      `newQuizFlag` int(11) NOT NULL DEFAULT 0,
       PRIMARY KEY (`enp_quiz_next`)
     );"; // ||KVB
 
