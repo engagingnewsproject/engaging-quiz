@@ -178,7 +178,7 @@ add_action('register_form', 'enp_require_tac_script');
 add_action('admin_menu', 'add_gcf_interface');
 
 function add_gcf_interface() {
-	add_options_page('Global Custom Fields', 'Global Custom Fields', '8', 'functions', 'editglobalcustomfields');
+	add_options_page('Global Custom Fields', 'Global Custom Fields', 'edit_pages', 'functions', 'editglobalcustomfields');
 }
 
 function editglobalcustomfields() {
@@ -463,4 +463,3 @@ function remove_iframe_admin_bar(){
   }
 }
 add_filter( 'show_admin_bar' , 'remove_iframe_admin_bar');
-
