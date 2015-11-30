@@ -181,6 +181,17 @@ function add_gcf_interface() {
 	add_options_page('Global Custom Fields', 'Global Custom Fields', 'edit_pages', 'functions', 'editglobalcustomfields');
 }
 
+// Create settings fields.
+add_action( 'admin_init', 'gcf_data' );
+function gcf_data() {
+    register_setting( 'gcf_data_settings', 'mc_correct_answer_message' );
+    register_setting( 'gcf_data_settings', 'mc_incorrect_answer_message' );
+    register_setting( 'gcf_data_settings', 'slider_correct_answer_message' );
+    register_setting( 'gcf_data_settings', 'slider_incorrect_answer_message' );
+    register_setting( 'gcf_data_settings', 'slider_range_correct_answer_message' );
+    register_setting( 'gcf_data_settings', 'slider_range_incorrect_answer_message' );
+}
+
 function editglobalcustomfields() {
 	?>
 	<div class='wrap'>
@@ -206,10 +217,16 @@ function editglobalcustomfields() {
 	<p><strong>Slider Range Incorrect Answer Message</strong><br />
 	<textarea class="form-control" rows="4" cols="50" name="slider_range_incorrect_answer_message" id="slider-range-correct-answer-message" placeholder="Enter Correct Answer Message"><?php echo get_option('slider_range_incorrect_answer_message') ? get_option('slider_range_incorrect_answer_message') : "Your answer is [user_answer], but the correct answer is [correct_value]."; ?></textarea></p>
 
-	<p><input type="submit" name="Submit" value="Update Options" /></p>
+    <?php settings_fields( 'gcf_data_settings' ); ?>
+    <?php do_settings_sections( 'gcf_data_settings' ); ?>
 
-	<input type="hidden" name="action" value="update" />
-	<input type="hidden" name="page_options" value="mc_correct_answer_message,mc_incorrect_answer_message,slider_correct_answer_message,slider_incorrect_answer_message,slider_range_correct_answer_message,slider_range_incorrect_answer_message" />
+    <?php submit_button(); ?>
+    <? /*
+    	<p><input type="submit" name="Submit" value="Update Options" /></p>
+
+    	<input type="hidden" name="action" value="update" />
+    	<input type="hidden" name="page_options" value="mc_correct_answer_message,mc_incorrect_answer_message,slider_correct_answer_message,slider_incorrect_answer_message,slider_range_correct_answer_message,slider_range_incorrect_answer_message" />
+    */?>
 
 	</form>
 	</div>
