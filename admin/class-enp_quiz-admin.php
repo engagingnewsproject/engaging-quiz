@@ -52,10 +52,10 @@ class Enp_quiz_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
-		// load admin styles
-		$this->enqueue_styles();
-		// load admin scripts
-		$this->enqueue_scripts();
+		// load take quiz styles
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
+		// load take quiz scripts
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
 
 	}
 

@@ -53,9 +53,10 @@ class Enp_quiz_Create {
 		$this->version = $version;
 
 		// load take quiz styles
-		$this->enqueue_styles();
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
-		$this->enqueue_scripts();
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+
 	}
 
 	/**

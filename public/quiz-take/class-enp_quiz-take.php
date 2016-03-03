@@ -53,9 +53,9 @@ class Enp_quiz_Take {
 		$this->version = $version;
 
 		// load take quiz styles
-		$this->enqueue_styles();
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
-		$this->enqueue_scripts();
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 	}
 
 	/**
@@ -64,11 +64,8 @@ class Enp_quiz_Take {
 	 * @since    0.0.1
 	 */
 	public function enqueue_styles() {
-
-
 		wp_register_style( $this->plugin_name.'-quiz-take', plugin_dir_url( __FILE__ ) . 'css/enp_quiz-take.css', array(), $this->version );
  	  	wp_enqueue_style( $this->plugin_name.'-quiz-take' );
-
 	}
 
 	/**
