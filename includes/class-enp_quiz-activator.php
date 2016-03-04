@@ -47,7 +47,7 @@ class Enp_quiz_Activator {
 	protected function create_tables($wpdb) {
 
 		$charset_collate = $wpdb->get_charset_collate();
-
+		// quiz table name
 		$quiz_table_name = $wpdb->prefix . 'enp_quiz';
 		$quiz_sql = "CREATE TABLE $quiz_table_name (
 					quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -68,6 +68,7 @@ class Enp_quiz_Activator {
 					quiz_score_average FLOAT(3) NOT NULL DEFAULT '0',
 					quiz_time_spent BIGINT(40) NOT NULL DEFAULT '0',
 					quiz_time_spent_average BIGINT(20) NOT NULL DEFAULT '0',
+					quiz_is_archived BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (quiz_id)
 				) $charset_collate;";
 
@@ -88,24 +89,24 @@ class Enp_quiz_Activator {
 					question_score_average BIGINT(20) NOT NULL,
 					question_time_spent BIGINT(40) NOT NULL,
 					question_time_spent_average BIGINT(20) NOT NULL,
+					question_is_archived BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (question_id),
 					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)
 				) $charset_collate;";
 
-
-		$mc_option_table_name = $wpdb->prefix . 'enp_mc_option';
+		$mc_option_table_name = $wpdb->prefix . 'enp_question_mc_option';
 		$mc_option_sql = "CREATE TABLE $mc_option_table_name (
 					mc_option_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
 					mc_option_content VARCHAR(255) NOT NULL,
 					mc_option_correct BOOLEAN NOT NULL,
 					mc_option_order BIGINT(3) NOT NULL,
+					mc_option_is_archived BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (mc_option_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-
-		$slider_table_name = $wpdb->prefix . 'enp_slider';
+		$slider_table_name = $wpdb->prefix . 'enp_question_slider';
 		$slider_sql = "CREATE TABLE $slider_table_name (
 					slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
@@ -116,6 +117,7 @@ class Enp_quiz_Activator {
 					slider_increment BIGINT(20) NOT NULL,
 					slider_prefix VARCHAR(70) NOT NULL,
 					slider_suffix VARCHAR(70) NOT NULL,
+					slider_is_archived BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (slider_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
@@ -125,23 +127,79 @@ class Enp_quiz_Activator {
 					response_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
 					response_correct BOOLEAN NOT NULL,
+					response_created_on DATETIME NOT NULL,
+					response_is_archived BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (response_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-				require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		$response_mc_table_name = $wpdb->prefix . 'enp_response_mc';
+		$response_mc_sql = "CREATE TABLE $response_mc_table_name (
+					response_mc_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					response_id BIGINT(20) NOT NULL,
+					mc_option_id BIGINT(20) NOT NULL,
+					PRIMARY KEY  (response_mc_id),
+					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id),
+					FOREIGN KEY  (mc_option_id) REFERENCES $mc_option_table_name (mc_option_id)
+				) $charset_collate;";
 
-				dbDelta($quiz_sql);
-				dbDelta($question_sql);
-				dbDelta($mc_option_sql);
-				dbDelta($slider_sql);
-				dbDelta($response_sql);
+		$response_slider_table_name = $wpdb->prefix . 'enp_response_slider';
+		$response_slider_sql = "CREATE TABLE $response_slider_table_name (
+					response_slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					response_id BIGINT(20) NOT NULL,
+					response_slider BIGINT(20) NOT NULL,
+					PRIMARY KEY  (response_slider_id),
+					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id)
+				) $charset_collate;";
 
+		// create a tables array,
+		// store all the table names and queries
+		$tables = array(
+					array(
+						'name'=>$quiz_table_name,
+		 				'sql'=>$quiz_sql
+					),
+					array(
+						'name'=>$question_table_name,
+		 				'sql'=>$question_sql
+					),
+					array(
+						'name'=>$mc_option_table_name,
+		 				'sql'=>$mc_option_sql
+					),
+					array(
+						'name'=>$slider_table_name,
+		 				'sql'=>$slider_sql
+					),
+					array(
+						'name'=>$response_table_name,
+		 				'sql'=>$response_sql
+					),
+					array(
+						'name'=>$response_mc_table_name,
+		 				'sql'=>$response_mc_sql
+					),
+					array(
+						'name'=>$response_slider_table_name,
+		 				'sql'=>$response_slider_sql
+					),
+				);
 
+		// require file that allows table creation
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		// loop through all of our tables and
+		// create them if they haven't already been created
+		foreach($tables as $table) {
+			$table_name = $table['name'];
+			$table_sql = $table['sql'];
+			// see if the table exists or not
+			if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
+				// it doesn't exist, so
+				// create the table
+				dbDelta($table_sql);
+			}
+		}
 	}
-
-
-
-
 
 }
