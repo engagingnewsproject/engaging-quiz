@@ -30,6 +30,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+// Define a Plugin Root File constant
+define( 'ENP_QUIZ_ROOT', plugin_dir_path( __FILE__ ) );
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-enp_quiz-activator.php
@@ -66,5 +69,14 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz.php';
 function run_enp_quiz() {
 	$plugin = new Enp_quiz();
 }
+
+/* For DEBUGGING
+*  creates log file with error output. Good for using on
+* The plugin generated xxxx characters of unexpected output messages
+
+add_action('activated_plugin','enp_log_error');
+function enp_log_error(){
+	file_put_contents(plugin_dir_path( __FILE__ ).'/error.txt', ob_get_contents());
+}*/
 
 run_enp_quiz();

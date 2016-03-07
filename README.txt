@@ -30,6 +30,20 @@ Using the Engaging Quiz Creator, you can easily create quizzes that you can embe
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to 'http://your-site.com/page/url/path' to create your first quiz!
 
+**Advanced Installation**
+The plugin will create two configuration files on plugin activation:
+- enp-quiz-config.php
+- enp-quiz-database-config.php
+
+*enp-quiz-config.php*
+This file is found in the wp-content folder. This is the main config file. You can change the path to your Template folders so you can change the views of the plugin. Templates default to the default plugin templates.
+
+*enp-quiz-database-config.php*
+This file is located in your DOCUMENT_ROOT. It's outside of your public_html or domain-name.com folder (depending on your host). This is to protect it from prying eyes. It is included by the enp-quiz-config.php file. Feel free to move it, but be sure to change the path in the enp-quiz-config.php file too, otherwise the plugin won't know how to connect to your database.
+
+This odd set-up will allow you to move your quiz database to an entirely different server if you ever get hit with a lot of usage. Also, the plugin is written with PDO as the database connection layer, so you could even run your quiz database as something other than MySQL if you want.
+
+
 == Frequently Asked Questions ==
 
 

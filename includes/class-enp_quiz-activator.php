@@ -38,6 +38,26 @@ class Enp_quiz_Activator {
 		global $wpdb;
 		$this->create_tables($wpdb);
 
+		// set enp-database-quiz-config file path
+		$this->enp_database_config_path = $this->get_enp_database_config_path();
+
+		$database_config_file_exists = $this->check_database_config_file();
+		// if doesn't exist, create it
+		if($database_config_file_exists === false) {
+			//create the config file
+			$this->create_database_config_file();
+		}
+
+		// set enp-quiz-config file path
+		$this->enp_config_path = WP_CONTENT_DIR.'/enp-quiz-config.php';
+
+		$config_file_exists = $this->check_config_file();
+		// if doesn't exist, create it
+		if($config_file_exists === false) {
+			//create the config file
+			$this->create_config_file();
+		}
+
 	}
 
 	protected function add_rewrite_rules() {
@@ -200,6 +220,67 @@ class Enp_quiz_Activator {
 				dbDelta($table_sql);
 			}
 		}
+	}
+
+	protected function get_enp_database_config_path() {
+		return $_SERVER["DOCUMENT_ROOT"].'/enp-quiz-database-config.php';
+	}
+
+	protected function check_database_config_file() {
+		// see if the file exists
+		if(file_exists($this->enp_database_config_path)) {
+			// if the file exists, return true
+			return true;
+		}
+		// if the file doesn't exist, return false
+		return false;
+	}
+
+	protected function create_database_config_file() {
+		// creates and opens the file for writing
+		$database_config_file = fopen($this->enp_database_config_path, "w");
+
+$database_connection = '<?php
+// Modify these to match your Quiz Database credentials
+$enp_db_name = "'.DB_NAME.'";
+$enp_db_user = "'.DB_USER.'";
+$enp_db_password = "'.DB_PASSWORD.'";
+$enp_db_host = "'.DB_HOST.'";
+;?>';
+
+		// write to the file
+		fwrite($database_config_file, $database_connection);
+		// close the file
+		fclose($database_config_file);
+		return true;
+	}
+
+	protected function check_config_file() {
+		// see if the file exists
+		if(file_exists($this->enp_config_path)) {
+			// if the file exists, return true
+			return true;
+		}
+		// if the file doesn't exist, return false
+		return false;
+	}
+
+	protected function create_config_file() {
+		// creates and opens the file for writing
+		$config_file = fopen($this->enp_config_path, "w");
+
+$config_contents =
+'<?php
+include("'.$this->enp_database_config_path.'");
+define("ENP_QUIZ_CREATE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-create/templates/");
+define("ENP_QUIZ_TAKE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/templates/");
+?>';
+
+		// write to the file
+		fwrite($config_file, $config_contents);
+		// close the file
+		fclose($config_file);
+		return true;
 	}
 
 }
