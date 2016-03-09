@@ -75,7 +75,7 @@ class Enp_quiz_Activator {
 		$enp_quiz_take_template_path = str_replace(ABSPATH,"",ENP_QUIZ_TAKE_TEMPLATES_PATH);
 		$enp_quiz_create_template_path = str_replace(ABSPATH,"",ENP_QUIZ_CREATE_TEMPLATES_PATH);
 		// Quiz Create
-		add_rewrite_rule('quiz-create/([^/]*)/?','?quiztemplate=$matches[1]','top');
+		add_rewrite_rule('quiz-create/([^/]*)/?','index.php?quiztemplate=$matches[1]','top');
 
 		// Quiz Take
 		add_rewrite_rule($quiz_url, $enp_quiz_take_template_path.'quiz.php','top');

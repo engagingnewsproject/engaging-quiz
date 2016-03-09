@@ -10,7 +10,7 @@
 ?>
 
 <div class="enp-container enp-publish-page-container">
-    <?php include('template/breadcrumbs.php');?>
+    <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quizCreateBreadcrumbs.php');?>
 
     <div class="enp-flex enp-publish-page-flex-container">
         <section class="enp-container enp-publish-container">

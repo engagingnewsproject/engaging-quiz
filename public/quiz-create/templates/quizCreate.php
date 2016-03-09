@@ -9,7 +9,7 @@
 ?>
 
 <section class="enp-container enp-quiz-form-container">
-    <?php include('template/breadcrumbs.php');?>
+    <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quizCreateBreadcrumbs.php');?>
 
     <form class="enp-form enp-quiz-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
 

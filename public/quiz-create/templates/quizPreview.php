@@ -9,7 +9,7 @@
 ?>
 
 <div class="enp-container enp-preview-page-container">
-    <?php include('template/breadcrumbs.php');?>
+    <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quizCreateBreadcrumbs.php');?>
     <div class="enp-flex enp-preview-page-flex-container">
         <section class="enp-container enp-quiz-settings-container">
             <h1 class="enp-quiz-settings__title">Quiz Settings</h1>
@@ -51,7 +51,7 @@
         <section class="enp-container enp-quiz-preview-container">
             <h2 class="enp-quiz-preview__title">Quiz Preview</h2>
 
-            <?php include 'template/quiz.php';?>
+            <?php include_once(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/quiz.php');?>
 
         </section>
     </div>

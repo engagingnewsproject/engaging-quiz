@@ -52,6 +52,8 @@ class Enp_quiz_Create {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		require_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
+		
 		// load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
@@ -69,7 +71,7 @@ class Enp_quiz_Create {
 	public function enqueue_styles() {
 
 
-		wp_register_style( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'css/enp_quiz-create.css', array(), $this->version );
+		wp_register_style( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'css/enp_quiz-create.min.css', array(), $this->version );
  	  	wp_enqueue_style( $this->plugin_name.'-quiz-create' );
 
 	}

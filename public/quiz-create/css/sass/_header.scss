@@ -1,0 +1,32 @@
+.header {
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.2);
+}
+
+.top-banner-container,
+.nav-banner-container {
+    @include _(container--wide);
+    position: relative;
+}
+
+.top-banner {
+    background: #E1E3E5;
+    height: 32px;
+    font-size: 0.95rem;
+}
+
+.nav-banner {
+    padding: .5em 0 .2em;
+    background: rgba(255,255,255,.2);
+}
+
+.logo {
+    width: 72px;
+}
+
+.enp-dashboard-link {
+    @include _(flex);
+    position: absolute;
+    right: 0;
+    top: 4px;
+}

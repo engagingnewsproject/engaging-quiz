@@ -1,0 +1,25 @@
+.no-questions-empty-state {
+    height: 0;
+    min-height: 0;
+    padding: 0;
+}
+
+.question-fields--hidden {
+    height: 0;
+    margin: 0 0 1.6rem;
+    padding: 0rem 3rem 0rem 2.2rem;;
+    overflow: hidden;
+}
+
+.question-fields--active {
+    height: auto;
+    overflow: visible;
+    padding-top: 1.6rem;
+    margin-bottom: 2rem;
+    animation: slideInTop .45s ease-out forwards;
+}
+
+.embed-code {
+    padding: 1.6rem;
+    line-height: 1.6;
+}
