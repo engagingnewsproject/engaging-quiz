@@ -57,6 +57,10 @@ class Enp_quiz_Create {
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 
+		/*add_filter( 'query_vars', array($this, 'quiz_rewrite_add_var' ));
+		add_action('init', array($this, 'add_quiz_rewrite_rule'));
+		add_action( 'template_redirect', array($this, 'quiz_rewrite_catch' ));*/
+
 	}
 
 	/**
@@ -82,6 +86,31 @@ class Enp_quiz_Create {
 		wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'js/enp_quiz-create.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-quiz-create' );
 
+	}
+
+
+	public function quiz_rewrite_add_var( $vars ) {
+		$vars[] = 'queez';
+		return $vars;
+	}
+
+	public function add_quiz_rewrite_rule(){
+		add_rewrite_tag( '%queez%', '([^&]+)' );
+		add_rewrite_rule(
+		    '^queez/([^/]*)/?',
+		    'index.php?queez=$matches[1]',
+		    'top'
+		  );
+	}
+
+	public function quiz_rewrite_catch() {
+		global $wp_query;
+
+		if ( array_key_exists( 'queez', $wp_query->query_vars ) ) {
+			var_dump('Queez!');
+		    include ( 'templates/quiz.php');
+		    exit;
+		}
 	}
 
 }

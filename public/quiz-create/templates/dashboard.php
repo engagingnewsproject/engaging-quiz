@@ -8,8 +8,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <section class="enp-container enp-dash-container">
     <header class="enp-dash__section-header">
@@ -126,6 +125,3 @@ get_header(); ?>
 
 
 <script src="js/dashboard.js"></script>
-
-<iframe id="CBC-iframe" src="http://www.cbc.ca/beta/arts/how-louis-riel-became-canada-s-first-ever-bestselling-graphic-novel-1.3406352?stayinside=true" width="100%" height="800px" frameborder="0">
-<?php get_footer(); ?>

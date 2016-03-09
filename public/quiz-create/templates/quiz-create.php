@@ -6,8 +6,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <section class="enp-container enp-quiz-form-container">
     <?php include('template/breadcrumbs.php');?>
@@ -109,4 +108,3 @@ get_header(); ?>
 </section>
 <script src="js/utilities/accordion.js"></script>
 <script src="js/add-questions.js"></script>
-<?php get_footer(); ?>

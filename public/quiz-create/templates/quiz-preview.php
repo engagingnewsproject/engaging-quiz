@@ -6,8 +6,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <div class="enp-container enp-preview-page-container">
     <?php include('template/breadcrumbs.php');?>
@@ -59,4 +58,3 @@ get_header(); ?>
 </div>
 
 <script src="js/quiz-preview.js"></script>
-<?php get_footer(); ?>

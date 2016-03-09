@@ -5,8 +5,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <h1 class="enp-page-title enp-results-title enp-results-title--ab">
     <? if(isset($_GET['a-b-name']) &&  !empty($_GET['a-b-name'])) {

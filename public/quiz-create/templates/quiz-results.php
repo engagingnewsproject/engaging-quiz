@@ -5,8 +5,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <h1 class="enp-page-title enp-results-title">How Much Do You Know About Syria?</h1>
 <section class="enp-container enp-results__container">

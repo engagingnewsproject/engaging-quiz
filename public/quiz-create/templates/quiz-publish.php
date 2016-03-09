@@ -7,8 +7,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <div class="enp-container enp-publish-page-container">
     <?php include('template/breadcrumbs.php');?>
@@ -51,8 +50,3 @@ get_header(); ?>
         </section>
     </div>
 </div>
-
-
-
-
-<?php get_footer(); ?>

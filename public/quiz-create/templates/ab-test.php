@@ -5,8 +5,7 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
-
-get_header(); ?>
+?>
 
 <div class="enp-container enp-ab-create__container">
     <h1 class="enp-screen-reader-text enp-page-title enp-ab-create__page-title">Create A/B Test</h1>
@@ -36,6 +35,3 @@ get_header(); ?>
 
     </form>
 </div>
-
-
-<?php get_footer(); ?>

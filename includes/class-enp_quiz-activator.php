@@ -30,11 +30,6 @@ class Enp_quiz_Activator {
 	 * @since    0.0.1
 	 */
 	public function __construct() {
-		// add our rewrite rules to htaccess
-		$this->add_rewrite_rules();
-		// hard flush on rewrite rules so it regenerates the htaccess file
-		flush_rewrite_rules();
-
 		global $wpdb;
 		$this->create_tables($wpdb);
 
@@ -58,10 +53,37 @@ class Enp_quiz_Activator {
 			$this->create_config_file();
 		}
 
+
+		// Set-up rewrite rules based on our config files
+		// add our rewrite rules to htaccess
+		$this->add_rewrite_rules();
+		// hard flush on rewrite rules so it regenerates the htaccess file
+		flush_rewrite_rules();
+
 	}
 
 	protected function add_rewrite_rules() {
-		add_rewrite_rule('quiz','wp-content/plugins/enp-quiz/public/quiz-take/templates/quiz.php','top');
+		$config_file_exists = $this->check_config_file();
+		//check to make sure the config file exists
+		if($config_file_exists === true) {
+			include($this->enp_config_path);
+		} else {
+   			die('Could not find the enp-quiz-config.php file in the wp-content folder. Try deactivating and re-activating the plugin. This should create the config file.');
+   		}
+		// path to quiz
+		// we have to remove the base path because add_rewrite_rule will start // at the base directory. Take ABSPATH and subtract it from our Config Template Path
+		$enp_quiz_take_template_path = str_replace(ABSPATH,"",ENP_QUIZ_TAKE_TEMPLATES_PATH);
+		$enp_quiz_create_template_path = str_replace(ABSPATH,"",ENP_QUIZ_CREATE_TEMPLATES_PATH);
+		// Quiz Create
+		add_rewrite_rule($quiz_dashboard_url, $enp_quiz_create_template_path.'dashboard.php','top');
+		add_rewrite_rule($quiz_create_url, $enp_quiz_create_template_path.'quiz-create.php','top');
+		add_rewrite_rule($quiz_preview_url, $enp_quiz_create_template_path.'quiz-preview.php','top');
+		add_rewrite_rule($quiz_publish_url, $enp_quiz_create_template_path.'quiz-publish.php','top');
+		add_rewrite_rule($quiz_results_url, $enp_quiz_create_template_path.'quiz-results.php','top');
+		add_rewrite_rule($ab_test_url, $enp_quiz_create_template_path.'ab-test.php','top');
+		add_rewrite_rule($ab_results_url, $enp_quiz_create_template_path.'ab-results.php','top');
+		// Quiz Take
+		add_rewrite_rule($quiz_url, $enp_quiz_take_template_path.'quiz.php','top');
 	}
 
 	protected function create_tables($wpdb) {
@@ -274,6 +296,15 @@ $config_contents =
 include("'.$this->enp_database_config_path.'");
 define("ENP_QUIZ_CREATE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-create/templates/");
 define("ENP_QUIZ_TAKE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/templates/");
+
+$quiz_dashboard_url = "quiz-dashboard/";
+$quiz_create_url = "quiz-create/";
+$quiz_preview_url = "quiz-preview/";
+$quiz_publish_url = "quiz-publish/";
+$quiz_results_url = "quiz-results/";
+$ab_test_url = "ab-test/";
+$ab_results_url = "ab-results/";
+$quiz_url = "quiz/";
 ?>';
 
 		// write to the file
