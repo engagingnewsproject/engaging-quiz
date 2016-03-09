@@ -67,6 +67,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz.php';
  * @since    0.0.1
  */
 function run_enp_quiz() {
+	require_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
 	$plugin = new Enp_quiz();
 }
 

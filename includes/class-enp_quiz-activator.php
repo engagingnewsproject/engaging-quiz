@@ -75,15 +75,12 @@ class Enp_quiz_Activator {
 		$enp_quiz_take_template_path = str_replace(ABSPATH,"",ENP_QUIZ_TAKE_TEMPLATES_PATH);
 		$enp_quiz_create_template_path = str_replace(ABSPATH,"",ENP_QUIZ_CREATE_TEMPLATES_PATH);
 		// Quiz Create
-		add_rewrite_rule($quiz_dashboard_url, $enp_quiz_create_template_path.'dashboard.php','top');
-		add_rewrite_rule($quiz_create_url, $enp_quiz_create_template_path.'quiz-create.php','top');
-		add_rewrite_rule($quiz_preview_url, $enp_quiz_create_template_path.'quiz-preview.php','top');
-		add_rewrite_rule($quiz_publish_url, $enp_quiz_create_template_path.'quiz-publish.php','top');
-		add_rewrite_rule($quiz_results_url, $enp_quiz_create_template_path.'quiz-results.php','top');
-		add_rewrite_rule($ab_test_url, $enp_quiz_create_template_path.'ab-test.php','top');
-		add_rewrite_rule($ab_results_url, $enp_quiz_create_template_path.'ab-results.php','top');
+		add_rewrite_rule('quiz-create/([^/]*)/?','?quiztemplate=$matches[1]','top');
+
 		// Quiz Take
 		add_rewrite_rule($quiz_url, $enp_quiz_take_template_path.'quiz.php','top');
+
+
 	}
 
 	protected function create_tables($wpdb) {
@@ -237,8 +234,7 @@ class Enp_quiz_Activator {
 			$table_sql = $table['sql'];
 			// see if the table exists or not
 			if($wpdb->get_var("show tables like '$table_name'") != $table_name) {
-				// it doesn't exist, so
-				// create the table
+				// it doesn't exist, so create the table
 				dbDelta($table_sql);
 			}
 		}
@@ -304,7 +300,7 @@ $quiz_publish_url = "quiz-publish/";
 $quiz_results_url = "quiz-results/";
 $ab_test_url = "ab-test/";
 $ab_results_url = "ab-results/";
-$quiz_url = "quiz/";
+$quiz_url = "quiz-embed/";
 ?>';
 
 		// write to the file
