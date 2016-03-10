@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery( document ).ready( function( $ ) {
     $('.view-toggle').click(function() {
         if(!$(this).hasClass('active')) {
             $(this).siblings().removeClass('active');

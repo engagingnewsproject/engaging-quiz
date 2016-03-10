@@ -106,5 +106,3 @@
 
     </form>
 </section>
-<script src="js/utilities/accordion.js"></script>
-<script src="js/add-questions.js"></script>

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery( document ).ready( function( $ ) {
     $(document).on('change', 'input[name="title-display"]', function(){
         if( $(this).val() === 'title-show' ) {
             $('.enp-quiz__title').show();

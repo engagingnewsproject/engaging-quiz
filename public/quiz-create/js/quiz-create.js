@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery( document ).ready( function( $ ) {
     // ready the questions as accordions
     $('.enp-question-content').each(function() {
         var accordion,
@@ -6,7 +6,7 @@ $(document).ready(function() {
             question_content;
 
         // get the value for the title
-        question_title = $('enp-question-title__textarea').val();
+        question_title = $('.enp-question-title__textarea').val();
         // if it's empty, set it as an empty string
         if(question_title === undefined) {
             question_title = '';

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery( document ).ready( function( $ ) {
 
     $(document).scroll(function() {
         var topDist = $(document).scrollTop();

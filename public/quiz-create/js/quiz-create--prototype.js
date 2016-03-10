@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery( document ).ready( function( $ ) {
     // add hidden to all questions by default
     $('.question-fields, .accordion-title').hide().addClass('question-fields--hidden');
 

@@ -46,7 +46,10 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'js/quiz-create.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-accordion' );
+
+        wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . '../js/quiz-create.min.js', array( 'jquery', $this->plugin_name.'-accordion' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-quiz-create' );
 
 	}

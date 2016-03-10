@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery( document ).ready( function( $ ) {
     // quiz preview page
     $(document).on('change', 'input[name="show-title"]', function(){
         if( $(this).val() === 'title' ) {

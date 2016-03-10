@@ -56,5 +56,3 @@
         </section>
     </div>
 </div>
-
-<script src="js/quiz-preview.js"></script>

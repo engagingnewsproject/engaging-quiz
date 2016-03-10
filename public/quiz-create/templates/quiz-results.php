@@ -43,7 +43,5 @@
         <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/question-results.php');?>
     </div>
 </section>
-<script src="js/Chart.min.js"></script>
-<script src="js/quiz-results.js"></script>
 
 <?php get_footer(); ?>
