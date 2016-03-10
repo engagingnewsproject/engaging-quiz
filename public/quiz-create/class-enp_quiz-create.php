@@ -130,6 +130,8 @@ class Enp_quiz_Create {
 	public function load_template() {
 		// load our default page template instead of their theme template
 		add_filter('template_include', array($this, 'load_page_template'), 1, 1);
+		// add enp-quiz class to the body
+		add_filter('body_class', array($this, 'add_enp_quiz_body_class'));
 		// check to make sure the template file exists
 		if(file_exists($this->template_file)) {
 			// set our classname to load (ie - load_dashboard)
@@ -140,6 +142,12 @@ class Enp_quiz_Create {
 			// if we can't find it, fallback to the dashboard
 			$this->load_dashboard();
 		}
+	}
+
+	public function add_enp_quiz_body_class($classes) {
+		$classes[] = 'enp-quiz';
+		$classes[] = 'enp-'.$this->template;
+		return $classes;
 	}
 
 	public function load_page_template() {
