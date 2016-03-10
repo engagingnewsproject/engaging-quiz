@@ -28,7 +28,31 @@ Using the Engaging Quiz Creator, you can easily create quizzes that you can embe
 
 1. Upload the 'engaging-quiz-creator' folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to 'http://your-site.com/page/url/path' to create your first quiz!
+3. Go to 'http://your-site.com/enp-quiz/dashboard' to get to your dashboard and start creating quizzes.
+
+**Default URLs**
+
+*Dashboard*
+http://your-site.com/enp-quiz/dashboard
+
+*Create/Edit Quiz*
+http://your-site.com/enp-quiz/quiz-create
+
+*Preview Quiz/Quiz Settings*
+http://your-site.com/enp-quiz/quiz-preview
+
+*Publish Quiz/Quiz Embed Code*
+http://your-site.com/enp-quiz/quiz-publish
+
+*Quiz Results*
+http://your-site.com/enp-quiz/quiz-results
+
+*Create/Edit AB Test*
+http://your-site.com/enp-quiz/ab-test
+
+*AB Test Results*
+http://your-site.com/enp-quiz/ab-results
+
 
 **Advanced Installation**
 The plugin will create two configuration files on plugin activation:
