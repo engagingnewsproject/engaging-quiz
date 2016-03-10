@@ -53,14 +53,14 @@ class Enp_quiz_Create {
 		$this->version = $version;
 
 		require_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
-		
+
 		// load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 
-		add_action('init', array($this, 'add_quiztemplate_rewrite_tag'));
-		add_action('template_redirect', array($this, 'quiztemplate_rewrite_catch' ));
+		add_action('init', array($this, 'add_enp_quiz_template_rewrite_tag'));
+		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
 	}
 
 	/**
@@ -88,15 +88,15 @@ class Enp_quiz_Create {
 
 	}
 	/*
-	*	Adds a quiztemplate parameter for WordPress to look for
-	*   ?quiztemplate=dashboard
+	*	Adds a enp_quiz_template parameter for WordPress to look for
+	*   ?enp_quiz_template=dashboard
 	*/
-	public function add_quiztemplate_rewrite_tag(){
-		add_rewrite_tag( '%quiztemplate%', '([^/]+)' );
+	public function add_enp_quiz_template_rewrite_tag(){
+		add_rewrite_tag( '%enp_quiz_template%', '([^/]+)' );
 	}
 
 	/*
-	* If we find a quiztemplate parameter, process it
+	* If we find a enp_quiz_template parameter, process it
 	* and use the right template file
 	* This deletes the_title and the_content and replaces it
 	* with our own HTML so we can use their default template, but
@@ -104,17 +104,19 @@ class Enp_quiz_Create {
 	*
 	* @since    0.0.1
 	*/
-	public function quiztemplate_rewrite_catch() {
+	public function enp_quiz_template_rewrite_catch() {
 		global $wp_query;
-		// see if quiztemplate is one of the query_vars posted
-		if ( array_key_exists( 'quiztemplate', $wp_query->query_vars ) ) {
+		// see if enp_quiz_template is one of the query_vars posted
+		if ( array_key_exists( 'enp_quiz_template', $wp_query->query_vars ) ) {
 			// if it's there, then see what the value is
-			$this->template = $wp_query->get( 'quiztemplate' );
+			$this->template = $wp_query->get( 'enp_quiz_template' );
 			$this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH.'/'.$this->template.'.php';
 			// make sure there's something there
 			if(!empty($this->template)) {
 				// remove the title of the page so we can use ours
 				add_filter( 'the_title', array($this, 'remove_title' ));
+				// convert the dashes (-) to underscores (_) so it will match a function
+				$this->template_underscored = str_replace('-','_',$this->template);
 				// load the template
 				$this->load_template();
 			}
@@ -131,7 +133,7 @@ class Enp_quiz_Create {
 		// check to make sure the template file exists
 		if(file_exists($this->template_file)) {
 			// set our classname to load (ie - load_dashboard)
-			$load_template = 'load_'.$this->template;
+			$load_template = 'load_'.$this->template_underscored;
 			// load the template dynamically based on the template name
 			$this->$load_template();
 		} else {
@@ -148,14 +150,14 @@ class Enp_quiz_Create {
 		return '';
 	}
 
-	public function load_abTest() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-abTest.php');
-		new Enp_quiz_abTest();
+	public function load_ab_test() {
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-ab_test.php');
+		new Enp_quiz_AB_test();
 	}
 
-	public function load_abResults() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-abResults.php');
-		new Enp_quiz_abResults();
+	public function load_ab_results() {
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-ab_results.php');
+		new Enp_quiz_AB_results();
 	}
 
 	public function load_dashboard() {
@@ -163,23 +165,23 @@ class Enp_quiz_Create {
 		new Enp_quiz_Dashboard();
 	}
 
-	public function load_quizCreate() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quizCreate.php');
-		new Enp_quiz_quizCreate();
+	public function load_quiz_create() {
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_create.php');
+		new Enp_quiz_Quiz_create();
 	}
 
-	public function load_quizPreview() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quizPreview.php');
-		new Enp_quiz_quizPreview();
+	public function load_quiz_preview() {
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_preview.php');
+		new Enp_quiz_Quiz_preview();
 	}
 
-	public function load_quizPublish() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quizPublish.php');
-		new Enp_quiz_quizPublish();
+	public function load_quiz_publish() {
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_publish.php');
+		new Enp_quiz_Quiz_publish();
 	}
 
-	public function load_quizResults() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quizResults.php');
-		new Enp_quiz_quizResults();
+	public function load_quiz_results() {
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_results.php');
+		new Enp_quiz_Quiz_results();
 	}
 }

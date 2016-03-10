@@ -9,7 +9,7 @@
 ?>
 
 <div class="enp-container enp-preview-page-container">
-    <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quizCreateBreadcrumbs.php');?>
+    <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');?>
     <div class="enp-flex enp-preview-page-flex-container">
         <section class="enp-container enp-quiz-settings-container">
             <h1 class="enp-quiz-settings__title">Quiz Settings</h1>

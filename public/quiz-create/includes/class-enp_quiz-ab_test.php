@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Loads and generates the quizPreview
+ * Loads and generates the AB_test
  *
  * @link       http://engagingnewsproject.org
  * @since      0.0.1
  *
  * @package    Enp_quiz
- * @subpackage Enp_quiz/public/quizPreview
+ * @subpackage Enp_quiz/public/AB_test
  */
 
 /**
@@ -17,10 +17,10 @@
  * and registers & enqueues quiz create scripts and styles
  *
  * @package    Enp_quiz
- * @subpackage Enp_quiz/public/quizPreview
+ * @subpackage Enp_quiz/public/AB_test
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_quizPreview extends Enp_quiz_Create {
+class Enp_quiz_AB_test extends Enp_quiz_Create {
     public function __construct() {
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
@@ -32,7 +32,7 @@ class Enp_quiz_quizPreview extends Enp_quiz_Create {
     }
 
     public function load_template() {
-        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quizPreview.php' );
+        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/ab-test.php' );
     }
 
     public function enqueue_styles() {
@@ -46,8 +46,8 @@ class Enp_quiz_quizPreview extends Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-quizPreview', plugin_dir_url( __FILE__ ) . 'js/quizPreview.min.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-quizPreview' );
+		wp_register_script( $this->plugin_name.'-ab-test', plugin_dir_url( __FILE__ ) . 'js/ab-test.min.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-ab-test' );
 
 	}
 

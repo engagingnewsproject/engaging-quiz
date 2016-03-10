@@ -40,7 +40,7 @@
 
 <section class="enp-results-questions__section">
     <div class="enp-container enp-results-questions__container">
-        <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/questionResults.php');?>
+        <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/question-results.php');?>
     </div>
 </section>
 <script src="js/Chart.min.js"></script>

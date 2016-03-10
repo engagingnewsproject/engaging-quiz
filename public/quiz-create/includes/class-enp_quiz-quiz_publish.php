@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Loads and generates the abResults
+ * Loads and generates the Quiz_publish
  *
  * @link       http://engagingnewsproject.org
  * @since      0.0.1
  *
  * @package    Enp_quiz
- * @subpackage Enp_quiz/public/abResults
+ * @subpackage Enp_quiz/public/Quiz_publish
  */
 
 /**
@@ -17,10 +17,10 @@
  * and registers & enqueues quiz create scripts and styles
  *
  * @package    Enp_quiz
- * @subpackage Enp_quiz/public/abResults
+ * @subpackage Enp_quiz/public/Quiz_publish
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_abResults extends Enp_quiz_Create {
+class Enp_quiz_Quiz_publish extends Enp_quiz_Create {
     public function __construct() {
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
@@ -32,7 +32,7 @@ class Enp_quiz_abResults extends Enp_quiz_Create {
     }
 
     public function load_template() {
-        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/abResults.php' );
+        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-publish.php' );
     }
 
     public function enqueue_styles() {
@@ -46,8 +46,8 @@ class Enp_quiz_abResults extends Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-abResults', plugin_dir_url( __FILE__ ) . 'js/abResults.min.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-abResults' );
+		wp_register_script( $this->plugin_name.'-quiz-publish', plugin_dir_url( __FILE__ ) . 'js/quiz-publish.min.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-quiz-publish' );
 
 	}
 
