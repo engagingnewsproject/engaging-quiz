@@ -113,8 +113,6 @@ class Enp_quiz_Create {
 			$this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH.'/'.$this->template.'.php';
 			// make sure there's something there
 			if(!empty($this->template)) {
-				// remove the title of the page so we can use ours
-				add_filter( 'the_title', array($this, 'remove_title' ));
 				// convert the dashes (-) to underscores (_) so it will match a function
 				$this->template_underscored = str_replace('-','_',$this->template);
 				// load the template
@@ -130,6 +128,8 @@ class Enp_quiz_Create {
 	* @since    0.0.1
 	*/
 	public function load_template() {
+		// load our default page template instead of their theme template
+		add_filter('template_include', array($this, 'load_page_template'), 1, 1);
 		// check to make sure the template file exists
 		if(file_exists($this->template_file)) {
 			// set our classname to load (ie - load_dashboard)
@@ -142,12 +142,8 @@ class Enp_quiz_Create {
 		}
 	}
 
-	/*
-	* Erases the title of the page so we have more control
-	* @since    0.0.1
-	*/
-	public function remove_title() {
-		return '';
+	public function load_page_template() {
+		return ENP_QUIZ_CREATE_TEMPLATES_PATH.'/enp-quiz-page.php';
 	}
 
 	public function load_ab_test() {
