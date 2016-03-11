@@ -52,7 +52,7 @@ class Enp_quiz_Create {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
-		require_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
+		include_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
 
 		// load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));

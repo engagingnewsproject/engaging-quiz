@@ -45,7 +45,7 @@
             <aside class="enp-aside enp-ab-ad__container">
                 <h3 class="enp-aside-title enp-ab-ad__title">A/B Test</h3>
                 <p class="enp-ab-ad__description">Some description on what an A/B Test is.</p>
-                <a class="enp-btn enp-ab-ad__link" href="a-b-test.php">New A/B Test</a>
+                <a class="enp-btn enp-ab-ad__link" href="<?echo ENP_AB_TEST_URL;?>">New A/B Test</a>
             </aside>
         </section>
     </div>

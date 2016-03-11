@@ -29,62 +29,14 @@
     </header>
     <ul class="enp-quiz-list">
         <li class="enp-dash-item enp-dash-item--add-new">
-            <a class="enp-dash-link--add-new enp-dash-link--add-new-quiz" href="quiz-add-question.php">
+            <a class="enp-dash-link--add-new enp-dash-link--add-new-quiz" href="<?php echo ENP_QUIZ_CREATE_URL;?>">
                 <svg class="enp-dash-link__icon enp-icon">
                   <use xlink:href="#icon-add" />
                 </svg>
                 New Quiz
             </a>
         </li>
-        <li class="enp-dash-item">
-            <h3 class="enp-dash-item__title"><a href="quiz-add-question.php?quiz-title=How+Much+Do+You+Know+About+Syria?"><span class="enp-screen-reader-text">Edit </span>How Much Do You Know About Syria? <svg class="enp-icon enp-dash-item__title__icon">
-              <use xlink:href="#icon-edit" />
-            </svg></a></h3>
-            <div class="enp-dash-item__controls">
-                <div class="enp-dash-item__status">Published</div>
-                <ul class="enp-dash-item__nav">
-                    <li class="enp-dash-item__nav__item"><a href="results.php">Results</a></li>
-                    <li class="enp-dash-item__nav__item"><a href="quiz-publish.php">Embed</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="enp-dash-item">
-            <h3 class="enp-dash-item__title"><a href="quiz-add-question.php?quiz-title=Do+You+Know+The+Facts+About+The+2016+Election?"><span class="enp-screen-reader-text">Edit </span>Do You Know The Facts? <svg class="enp-icon enp-dash-item__title__icon">
-              <use xlink:href="#icon-edit" />
-            </svg></a></h3>
-            <div class="enp-dash-item__controls">
-                <div class="enp-dash-item__status">Published</div>
-                <ul class="enp-dash-item__nav">
-                    <li class="enp-dash-item__nav__item"><a href="quiz-add-question.php">Add Questions</a></li>
-                    <li class="enp-dash-item__nav__item"><a href="quiz-preview.php">Preview</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="enp-dash-item">
-            <h3 class="enp-dash-item__title"><a href="quiz-add-question.php?quiz-title=How+Much+Do+You+Know+About+Syria?"><span class="enp-screen-reader-text">Edit </span>How Much Do You Know About Syria? <svg class="enp-icon enp-dash-item__title__icon">
-              <use xlink:href="#icon-edit" />
-            </svg></a></h3>
-            <div class="enp-dash-item__controls">
-                <div class="enp-dash-item__status">Published</div>
-                <ul class="enp-dash-item__nav">
-                    <li class="enp-dash-item__nav__item"><a href="results.php">Results</a></li>
-                    <li class="enp-dash-item__nav__item"><a href="quiz-publish.php">Embed</a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="enp-dash-item">
-            <h3 class="enp-dash-item__title"><a href="quiz-add-question.php?quiz-title=How+Much+Do+You+Know+About+Syria?"><span class="enp-screen-reader-text">Edit </span>How Much Do You Know About Syria? <svg class="enp-icon enp-dash-item__title__icon">
-              <use xlink:href="#icon-edit" />
-            </svg></a></h3>
-            <div class="enp-dash-item__controls">
-                <div class="enp-dash-item__status">Published</div>
-                <ul class="enp-dash-item__nav">
-                    <li class="enp-dash-item__nav__item"><a href="results.php">Results</a></li>
-                    <li class="enp-dash-item__nav__item"><a href="quiz-publish.php">Embed</a></li>
-                </ul>
-            </div>
-        </li>
-
+        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dash-quiz-item.php');?>
     </ul>
 </section>
 
@@ -111,14 +63,6 @@
               <use xlink:href="#icon-add" />
             </svg>New A/B Test</a>
         </li>
-        <li class="enp-dash-item">
-            <h3 class="enp-dash-item__title"><a href="a-b-results.php?a-b-name=Syria+Quiz+Title+Test">Syria Quiz Title Test</a></h3>
-            <div class="enp-dash-item__controls">
-                <ul class="enp-dash-item__nav">
-                    <li class="enp-dash-item__nav__item"><a href="a-b-results.php?a-b-name=Syria+Quiz+Title+Test">Results</a></li>
-                    <li class="enp-dash-item__nav__item"><a  href="a-b-results.php?a-b-name=Syria+Quiz+Title+Test#embed-code">Embed</a></li>
-                </ul>
-            </div>
-        </li>
+        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dash-ab-item.php');?>
     </ul>
 </section>

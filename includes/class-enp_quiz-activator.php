@@ -78,7 +78,7 @@ class Enp_quiz_Activator {
 		add_rewrite_rule('enp-quiz/([^/]*)/?','index.php?enp_quiz_template=$matches[1]','top');
 
 		// Quiz Take
-		add_rewrite_rule($quiz_url, $enp_quiz_take_template_path.'quiz.php','top');
+		add_rewrite_rule(ENP_QUIZ_URL, $enp_quiz_take_template_path.'quiz.php','top');
 
 
 	}
@@ -287,20 +287,20 @@ $enp_db_host = "'.DB_HOST.'";
 		// creates and opens the file for writing
 		$config_file = fopen($this->enp_config_path, "w");
 
+$site_url = site_url('enp-quiz');
 $config_contents =
 '<?php
 include("'.$this->enp_database_config_path.'");
 define("ENP_QUIZ_CREATE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-create/templates/");
 define("ENP_QUIZ_TAKE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/templates/");
-
-$quiz_dashboard_url = "quiz-dashboard/";
-$quiz_create_url = "quiz-create/";
-$quiz_preview_url = "quiz-preview/";
-$quiz_publish_url = "quiz-publish/";
-$quiz_results_url = "quiz-results/";
-$ab_test_url = "ab-test/";
-$ab_results_url = "ab-results/";
-$quiz_url = "quiz-embed/";
+define("ENP_QUIZ_DASHBOARD_URL", "'.$site_url.'/dashboard/");
+define("ENP_QUIZ_CREATE_URL", "'.$site_url.'/quiz-create/");
+define("ENP_QUIZ_PREVIEW_URL", "'.$site_url.'/quiz-preview/");
+define("ENP_QUIZ_PUBLISH_URL", "'.$site_url.'/quiz-publish/");
+define("ENP_QUIZ_RESULTS_URL", "'.$site_url.'/quiz-results/");
+define("ENP_AB_TEST_URL", "'.$site_url.'/ab-test/");
+define("ENP_AB_RESULTS_URL", "'.$site_url.'/ab-results/");
+define("ENP_QUIZ_URL", "'.$site_url.'/quiz-embed/");
 ?>';
 
 		// write to the file
