@@ -36,7 +36,7 @@
                 New Quiz
             </a>
         </li>
-        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dash-quiz-item.php');?>
+        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-quiz-item.php');?>
     </ul>
 </section>
 
@@ -63,6 +63,6 @@
               <use xlink:href="#icon-add" />
             </svg>New A/B Test</a>
         </li>
-        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dash-ab-item.php');?>
+        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-ab-item.php');?>
     </ul>
 </section>
