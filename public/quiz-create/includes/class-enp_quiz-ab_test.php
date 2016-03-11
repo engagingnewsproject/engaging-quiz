@@ -46,7 +46,7 @@ class Enp_quiz_AB_test extends Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-ab-test', plugin_dir_url( __FILE__ ) . 'js/ab-test.min.js', array( 'jquery' ), $this->version, true );
+		wp_register_script( $this->plugin_name.'-ab-test', plugin_dir_url( __FILE__ ) . '../js/ab-test.min.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-ab-test' );
 
 	}
