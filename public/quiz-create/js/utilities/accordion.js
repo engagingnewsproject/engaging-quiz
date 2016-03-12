@@ -16,7 +16,7 @@ jQuery( document ).ready( function( $ ) {
     *  @usage call within a each loop.
     *  @return new accordion object: {header: accordion.header, content: accordion.content}
     */
-    function enp_accordion__create_headers(accordion) {
+    window.enp_accordion__create_headers = function(accordion) {
         var new_accordion;
         // create the HTML for the header
         accordion_header = '<button class="enp-accordion-header">'+accordion.title+'</button>';
@@ -28,7 +28,7 @@ jQuery( document ).ready( function( $ ) {
         new_accordion = {header: accordion_header, content: accordion.content};
         // return the new accordion object
         return new_accordion;
-    }
+    };
 
     /*
     *  enp_accordion__setup
@@ -38,7 +38,7 @@ jQuery( document ).ready( function( $ ) {
     *                    var accordion = {header: $(this), content: $(this).next()};
     *  @usage call within a each loop.
     */
-    function enp_accordion__setup(accordion) {
+    window.enp_accordion__setup = function(accordion) {
         // switch out the html for a button
         // make sure we have a button, if not, replace the tag with a button tag
         var tag = $(accordion.header)[0].tagName;
@@ -54,7 +54,7 @@ jQuery( document ).ready( function( $ ) {
         // add the classes to our accordion content area
         accordion.content.addClass('enp-accordion-content enp-accordion-content--closed');
         accordion.content.attr('aria-hidden', true);
-    }
+    };
 
 
     /* @param accordion: accordion object containing
@@ -73,7 +73,7 @@ jQuery( document ).ready( function( $ ) {
     *                           }
     *                       }
     */
-    function enp_accordion(accordion) {
+    window.enp_accordion = function(accordion) {
         // check if the accordion is open or closed
         if(accordion.header.hasClass('enp-accordion-header--closed')) {
             // if it's closed, open it
@@ -90,7 +90,7 @@ jQuery( document ).ready( function( $ ) {
             accordion.content.addClass('enp-accordion-content--closed');
             accordion.content.attr('aria-hidden', true);
         }
-    }
+    };
 
     /*
     *   Default click function
@@ -118,7 +118,7 @@ jQuery( document ).ready( function( $ ) {
     *       tag: current tag (ie: 'p')
     *       replacementTag: what tag you want it to be changed to (ie: 'button')
     */
-    function enp_replaceTags(obj, tag, replacementTag) {
+    window.enp_replaceTags = function(obj, tag, replacementTag) {
 
         var outer = obj.outerHTML;
         // if it's a class it might return undefined, so try a different way
@@ -141,5 +141,5 @@ jQuery( document ).ready( function( $ ) {
         replacedObj = $(store_location).prev();
         // return the new obj
         return replacedObj;
-    }
+    };
 });
