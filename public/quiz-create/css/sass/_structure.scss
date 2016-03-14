@@ -61,10 +61,6 @@
     }
 }
 
-.enp-container {
-    @include _(container);
-}
-
 @include placeholder('flex-container') { // no pseudo element to clear and break spacing
     @extend %container;
 }
@@ -195,13 +191,19 @@
     padding-bottom: 0.5rem;
 }
 
+#enp-quiz {
+    
+    .enp-container {
+        @include _(container);
+    }
 
-.enp-aside {
-    @include _(well);
-    font-size: 1.2rem;
-}
+    .enp-aside {
+        @include _(well);
+        font-size: 1.2rem;
+    }
 
-.enp-aside-title {
-    @include _(small-uppercase);
-    font-weight: 600;
+    .enp-aside-title {
+        @include _(small-uppercase);
+        font-weight: 600;
+    }
 }

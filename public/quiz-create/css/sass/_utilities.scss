@@ -147,17 +147,6 @@ $placeholders: ();
     z-index: 100000;
 }
 
-.enp-screen-reader-text {
-    @include _(screen-reader-text);
-}
-
-.enp-screen-reader-text:hover,
-.enp-screen-reader-text:active,
-.enp-screen-reader-text:focus {
-    @include _(screen-reader-text--hover);
-}
-
-
 @include placeholder('xmargin-vertical') {
     margin-top: 2rem;
     margin-bottom: 2rem;
@@ -245,23 +234,6 @@ $placeholders: ();
     animation: slideInTop .45s ease-out forwards;
 }
 
-.enp-accordion-header {
-    @include _(accordion__header);
-}
-
-.enp-accordion-content {
-    @include _(accordion__content);
-}
-
-.enp-accordion-content--closed{
-    @include _(accordion__content--closed);
-}
-
-.enp-accordion-content--open{
-    @include _(accordion__content--open);
-}
-
-
 // Share Icons
 @mixin share_icons($rootBEM) {
 
@@ -302,4 +274,32 @@ $placeholders: ();
     padding-bottom: 3rem;
     margin-top: 3rem;
     margin-bottom: 3rem;
+}
+
+#enp-quiz {
+    .enp-screen-reader-text {
+        @include _(screen-reader-text);
+    }
+
+    .enp-screen-reader-text:hover,
+    .enp-screen-reader-text:active,
+    .enp-screen-reader-text:focus {
+        @include _(screen-reader-text--hover);
+    }
+
+    .enp-accordion-header {
+        @include _(accordion__header);
+    }
+
+    .enp-accordion-content {
+        @include _(accordion__content);
+    }
+
+    .enp-accordion-content--closed{
+        @include _(accordion__content--closed);
+    }
+
+    .enp-accordion-content--open{
+        @include _(accordion__content--open);
+    }
 }

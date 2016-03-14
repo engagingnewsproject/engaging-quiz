@@ -11,4 +11,23 @@ body #enp-quiz {
     *, *:before, *:after {
       box-sizing: inherit;
     }
+
+    ul, ol {
+        margin: 0 0 1.6rem 1.25rem;
+    }
+
+    textarea {
+        margin-bottom: 1rem;
+    }
+    
+    button, input[type="button"], input[type="reset"], input[type="submit"] {
+        background: transparent;
+        border: none;
+        &:active,
+        &:focus,
+        &:hover {
+            background: transparent;
+            border: none;
+        }
+    }
 }

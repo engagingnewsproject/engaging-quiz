@@ -1,3 +1,8 @@
+#enp-quiz fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
 
 // enter the root BEM class and this will output the correct CSS for you
 @mixin radio-block($rootBEM) {
