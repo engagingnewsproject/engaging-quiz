@@ -13,7 +13,7 @@
     <div class="enp-flex enp-preview-page-flex-container">
         <section class="enp-container enp-quiz-settings-container">
             <h1 class="enp-quiz-settings__title">Quiz Settings</h1>
-            <form class="enp-form enp-quiz-settings__form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+            <form class="enp-form enp-quiz-settings__form" action="<?php echo htmlentities(site_url('enp-quiz/quiz-preview')); ?>">
                 <fieldset class="enp-fieldset enp-title-display">
                     <legend class="enp-legend enp-title-display__legend">Title Display</legend>
                     <input id="enp-quiz-title-show" class="enp-radio enp-title-display__input enp-title-display__input--title-display" type="radio" name="title-display" value="title-show" checked="checked"/>

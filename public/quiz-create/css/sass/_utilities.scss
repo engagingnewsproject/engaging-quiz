@@ -302,4 +302,20 @@ $placeholders: ();
     .enp-accordion-content--open{
         @include _(accordion__content--open);
     }
+
+    .enp-quiz-errors {
+        background: #FF9494;
+        color: #611500;
+        padding: 1rem;
+    }
+
+    .enp-quiz-errors__title {
+        @include _(small-uppercase);
+        color: #611500;
+    }
+
+    .enp-errors__list {
+        @include _(ul-no-style);
+        margin-bottom: 0;
+    }
 }

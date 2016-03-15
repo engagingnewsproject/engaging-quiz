@@ -9,9 +9,12 @@
 ?>
 
 <section class="enp-container enp-quiz-form-container">
-    <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');?>
+    <?php
+    include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');
+    ?>
 
-    <form class="enp-form enp-quiz-form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+
+    <form class="enp-form enp-quiz-form" method="post" action="<?php echo htmlentities(site_url('enp-quiz/quiz-create')); ?>">
 
         <fieldset class="enp-fieldset enp-quiz-title">
             <label class="enp-label enp-quiz-title__label" for="quiz-title">
@@ -95,11 +98,13 @@
             </div>
         </section>
 
-        <button class="enp-btn--add enp-quiz-form__add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon">
+        <input type="hidden" name="save_type" value="insert" />
+
+        <button type="submit" class="enp-btn--add enp-quiz-form__add-question" name="enp-add-question" value="enp-add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon">
           <use xlink:href="#icon-add" />
         </svg> Add Question</button>
 
-        <button type="submit" class="enp-btn--submit enp-btn--next-step enp-quiz-form__submit">Preview <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-quiz-form__submit__icon">
+        <button type="submit" class="enp-btn--submit enp-btn--next-step enp-quiz-form__submit" name="enp-quiz-preview" value="enp-quiz-preview">Preview <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-quiz-form__submit__icon">
           <use xlink:href="#icon-chevron-right" />
         </svg></button>
 

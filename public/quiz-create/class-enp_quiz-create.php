@@ -70,7 +70,6 @@ class Enp_quiz_Create {
 	 */
 	public function enqueue_styles() {
 
-
 		wp_register_style( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'css/enp_quiz-create.min.css', array(), $this->version );
  	  	wp_enqueue_style( $this->plugin_name.'-quiz-create' );
 
