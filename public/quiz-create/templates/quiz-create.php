@@ -48,46 +48,10 @@
                 <label class="enp-label enp-question-type__label enp-question-type__label--slider" for="enp-question-type__slider">Slider</label>
 
 
-                <fieldset class="enp-mc-options">
-                    <legend class="enp-legend enp-mc-options__legend">Multiple Choice Options</legend>
-                    <ul class="enp-mc-options__list">
-                        <li class="enp-mc-option">
-                            <button class="enp-mc-option__button enp-mc-option__button--correct"  name="enp-quiz-submit" value="mc-option--correct">
-                                <svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check" /></svg>
-                            </button>
-                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option" placeholder="It's one of the great mysteries of the universe."/>
-                            <button class="enp-mc-option__button enp-mc-option__button--delete" name="enp-quiz-submit" value="mc-option--delete">
-                                <svg class="enp-icon enp-icon--delete enp-mc-option__icon enp-mc-option__icon--delete"><use xlink:href="#icon-delete" /></svg>
-                            </button>
-                        </li>
-                        <li class="enp-mc-option">
-                            <button class="enp-mc-option__button enp-mc-option__button--correct" name="enp-quiz-submit" value="mc-option--correct">
-                                <svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check" /></svg>
-                            </button>
-                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option" placeholder="Your cerebellum can predict your own movements."/>
-                            <button class="enp-mc-option__button enp-mc-option__button--delete" name="enp-quiz-submit" value="mc-option--delete">
-                                <svg class="enp-icon enp-icon--delete enp-mc-option__icon enp-mc-option__icon--delete"><use xlink:href="#icon-delete" /></svg>
-                            </button>
-                        </li>
-                        <li class="enp-mc-option">
-                            <button class="enp-mc-option__button enp-mc-option__button--correct" name="enp-quiz-submit" value="mc-option--correct">
-                                <svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check" /></svg>
-                            </button>
-                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option" placeholder="I think I'm just bad at tickling."/>
-                            <button class="enp-mc-option__button enp-mc-option__button--delete" name="enp-quiz-submit" value="mc-option--delete">
-                                <svg class="enp-icon enp-icon--delete enp-mc-option__icon enp-mc-option__icon--delete"><use xlink:href="#icon-delete" /></svg>
-                            </button>
-                        </li>
-                        <li class="enp-mc-option enp-mc-option--add">
-                            <button class="enp-btn--add enp-mc-option__add" name="enp-quiz-submit" value="mc-option__add"><svg class="enp-icon enp-icon--add enp-mc-option__add__icon"><use xlink:href="#icon-add" /></svg> Add Another Option</button>
-                        </li>
-                    </ul>
-                </fieldset>
-
-                <fieldset class="enp-slider-options">
-                    <legend class="enp-legend enp-mc-options__legend">Slider Options</legend>
-                    <h1>Slider stuff!</h1>
-                </fieldset>
+                <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc.php');
+                
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
+                ?>
             </div>
 
             <div class="enp-question-inner enp-answer-explanation">
