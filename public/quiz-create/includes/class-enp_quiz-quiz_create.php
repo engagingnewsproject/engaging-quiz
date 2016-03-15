@@ -76,8 +76,8 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 	}
 
     public function save_quiz() {
-        // make sure they're logged in
-        $this->validate_user();
+        // make sure they're logged in. returns current_user_id
+        $user_id = $this->validate_user();
 
         // get access to wpdb
         global $wpdb;
@@ -85,10 +85,13 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // start an empty errors array. return the errors array at the end if they exist
         $this->errors = array();
 
-
+        // get all the tables we'll need ready
         $quiz_table_name = $wpdb->prefix . 'enp_quiz';
-        $questions_table_name = $wpdb->prefix . 'enp_questions';
-        $user_id = get_current_user_id();
+        $question_table_name = $wpdb->prefix . 'enp_question';
+        $mc_option_table_name = $wpdb->prefix . 'enp_question_mc_option';
+        $slider_table_name = $wpdb->prefix . 'enp_question_slider';
+
+
 
         $db = new enp_quiz_Db();
         if(isset($_POST['save_type']) && $_POST['save_type'] === 'insert') {
@@ -147,6 +150,13 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
     }
 
+    /**
+	 * Process a string to get it ready for saving. Checks if isset
+     * and sanitizes it.
+     *
+	 * @return   sanitized string or default
+	 * @since    0.0.1
+	 */
     public function process_string($posted_string, $default) {
         $string = $default;
         if(isset($posted_string)) {
@@ -158,10 +168,17 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         return $string;
     }
 
+    /**
+	 * Validate that the user is allowed to be doing this
+	 * @return   get_current_user_id(); OR Redirect to login page
+	 * @since    0.0.1
+	 */
     public function validate_user() {
         if(is_user_logged_in() === false) {
             wp_redirect( home_url( '/login/' ) );
             exit;
+        } else {
+            return get_current_user_id();
         }
     }
 
