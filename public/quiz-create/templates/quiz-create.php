@@ -20,7 +20,7 @@
             <label class="enp-label enp-quiz-title__label" for="quiz-title">
                 Quiz Title
             </label>
-            <textarea class="enp-textarea enp-quiz-title__textarea" type="text" name="enp-quiz-title" placeholder="My Engaging Quiz Title"/><? echo (isset($_GET['enp-quiz-title']) ? $_GET['enp-quiz-title'] : '');?></textarea>
+            <textarea class="enp-textarea enp-quiz-title__textarea" type="text" name="enp-quiz-title" placeholder="My Engaging Quiz Title"/></textarea>
         </fieldset>
 
         <section class="enp-question-content">
@@ -36,7 +36,7 @@
                 <svg class="enp-icon enp-icon--add enp-image-upload__icon--add">
                     <use xlink:href="#icon-add" />
                 </svg> Add Image</label>
-                <input type="file" class="enp-image-upload__input" name="enp-image-upload">
+                <input type="file" class="enp-image-upload__input" name="enp-question-image">
 
 
                 <h4 class="enp-legend enp-question-type__legend">Question Type</h4>
@@ -55,7 +55,7 @@
                             <button class="enp-mc-option__button enp-mc-option__button--correct"  name="enp-quiz-submit" value="mc-option--correct">
                                 <svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check" /></svg>
                             </button>
-                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option__input" placeholder="It's one of the great mysteries of the universe."/>
+                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option" placeholder="It's one of the great mysteries of the universe."/>
                             <button class="enp-mc-option__button enp-mc-option__button--delete" name="enp-quiz-submit" value="mc-option--delete">
                                 <svg class="enp-icon enp-icon--delete enp-mc-option__icon enp-mc-option__icon--delete"><use xlink:href="#icon-delete" /></svg>
                             </button>
@@ -64,7 +64,7 @@
                             <button class="enp-mc-option__button enp-mc-option__button--correct" name="enp-quiz-submit" value="mc-option--correct">
                                 <svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check" /></svg>
                             </button>
-                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option__input" placeholder="Your cerebellum can predict your own movements."/>
+                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option" placeholder="Your cerebellum can predict your own movements."/>
                             <button class="enp-mc-option__button enp-mc-option__button--delete" name="enp-quiz-submit" value="mc-option--delete">
                                 <svg class="enp-icon enp-icon--delete enp-mc-option__icon enp-mc-option__icon--delete"><use xlink:href="#icon-delete" /></svg>
                             </button>
@@ -73,7 +73,7 @@
                             <button class="enp-mc-option__button enp-mc-option__button--correct" name="enp-quiz-submit" value="mc-option--correct">
                                 <svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check" /></svg>
                             </button>
-                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option__input" placeholder="I think I'm just bad at tickling."/>
+                            <input type="text" class="enp-input enp-mc-option__input" name="enp-mc-option" placeholder="I think I'm just bad at tickling."/>
                             <button class="enp-mc-option__button enp-mc-option__button--delete" name="enp-quiz-submit" value="mc-option--delete">
                                 <svg class="enp-icon enp-icon--delete enp-mc-option__icon enp-mc-option__icon--delete"><use xlink:href="#icon-delete" /></svg>
                             </button>
@@ -93,7 +93,7 @@
             <div class="enp-question-inner enp-answer-explanation">
                 <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
                     <label class="enp-label enp-answer-explanation__label">Answer Explanation</label>
-                    <textarea class="enp-textarea enp-answer-explanation__textarea" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."></textarea>
+                    <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp-answer-explanation" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."></textarea>
                 </fieldset>
             </div>
         </section>
