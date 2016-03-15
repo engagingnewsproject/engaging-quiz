@@ -83,13 +83,8 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         global $wpdb;
 
         // start an empty errors array. return the errors array at the end if they exist
-        $this->errors = array('No Title');
+        $this->errors = array();
 
-
-
-        if(!empty($this->errors)) {
-            return false;
-        }
 
         $quiz_table_name = $wpdb->prefix . 'enp_quiz';
         $questions_table_name = $wpdb->prefix . 'enp_questions';
@@ -131,6 +126,25 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
             $db->update($quiz_table_name, $quiz);
         }
 
+        // check to see if there are errors
+        if(!empty($this->errors)) {
+            // exits the process and returns them to the same page
+            return false;
+        } else {
+            // figure out where they want to go
+            if(isset($_POST['enp-quiz-submit'])) {
+                // get the value of the button they clicked
+                $button_clicked = $_POST['enp-quiz-submit'];
+                // if it = preview, send them to the preview page
+                if($button_clicked === 'quiz-preview') {
+                    wp_redirect( site_url( '/enp-quiz/quiz-preview' ) );
+                    exit;
+                }
+
+            }
+
+        }
+
     }
 
     public function process_string($posted_string, $default) {
@@ -147,7 +161,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     public function validate_user() {
         if(is_user_logged_in() === false) {
             wp_redirect( home_url( '/login/' ) );
-            exit();
+            exit;
         }
     }
 
