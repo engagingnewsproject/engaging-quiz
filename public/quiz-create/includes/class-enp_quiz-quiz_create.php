@@ -85,50 +85,28 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // start an empty errors array. return the errors array at the end if they exist
         $this->errors = array();
 
-        // get all the tables we'll need ready
-        $quiz_table_name = $wpdb->prefix . 'enp_quiz';
-        $question_table_name = $wpdb->prefix . 'enp_question';
-        $mc_option_table_name = $wpdb->prefix . 'enp_question_mc_option';
-        $slider_table_name = $wpdb->prefix . 'enp_question_slider';
+        $quiz_save = new Enp_quiz_Quiz_save();
+        // extract values
+        $quiz_id = $quiz_save->process_int('enp-quiz-id', 0);
+        $quiz_title = $quiz_save->process_string('enp-quiz-title', 'Untitled');
+        $question_title = $quiz_save->process_string('enp-question[0]["question_title"]', 'Untitled');
 
+        $date_time = date("Y-m-d H:i:s");
+        // build our array to save
+        $quiz = array(
+            'quiz_id' => $quiz_id,
+            'quiz_title' => $quiz_title,
+            'questions' => array(
+                                array(
+                                    'question_title' => $question_title,
+                                )
+                            ),
+            'quiz_updated_by' => $user_id,
+            'quiz_updated_at' => $date_time,
+        );
 
-
-        $db = new enp_quiz_Db();
-        if(isset($_POST['save_type']) && $_POST['save_type'] === 'insert') {
-            // process quiz
-            $quiz = array(
-                'quiz_title' => $this->set_title(),
-                'quiz_status'=> 'draft',
-                'quiz_owner' => $user_id,
-                'quiz_created_by' => $user_id,
-            );
-
-            $db->insert($quiz_table_name, $quiz);
-        } elseif(isset($_POST['save_type']) && $_POST['save_type'] === 'update') {
-            // get the current quiz from the database
-
-            // check to make sure the current user matches the quiz_owner
-
-            // update the quiz entry
-
-            // update or insert the question entry
-
-                // update or insert mc or slider
-
-
-            $quiz = array(
-                'quiz_title' => 'Wuteverz Save Updated',
-                'quiz_status'=> 'draft',
-            );
-
-            $bind = array(
-                ":quiz_id" => 1,
-                ":quiz_owner" => $user_id
-            );
-
-            $db->update($quiz_table_name, $quiz);
-        }
-
+        $this->quiz_save_response = $quiz_save->save_quiz($quiz);
+        $this->errors = $this->quiz_save_response['errors'];
         // check to see if there are errors
         if(!empty($this->errors)) {
             // exits the process and returns them to the same page
@@ -150,23 +128,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
     }
 
-    /**
-	 * Process a string to get it ready for saving. Checks if isset
-     * and sanitizes it.
-     *
-	 * @return   sanitized string or default
-	 * @since    0.0.1
-	 */
-    public function process_string($posted_string, $default) {
-        $string = $default;
-        if(isset($posted_string)) {
-            $posted_string = sanitize_text_field($posted_string);
-            if(!empty($posted_string)) {
-                $string = $posted_string;
-            }
-        }
-        return $string;
-    }
 
     /**
 	 * Validate that the user is allowed to be doing this

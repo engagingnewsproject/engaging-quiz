@@ -87,7 +87,8 @@ class Enp_quiz_Activator {
 
 		$charset_collate = $wpdb->get_charset_collate();
 		// quiz table name
-		$quiz_table_name = $wpdb->prefix . 'enp_quiz';
+		$this->quiz_table_name = $wpdb->prefix . 'enp_quiz';
+		$quiz_table_name = $this->quiz_table_name;
 		$quiz_sql = "CREATE TABLE $quiz_table_name (
 					quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					quiz_title VARCHAR(255) NOT NULL,
@@ -111,7 +112,8 @@ class Enp_quiz_Activator {
 					PRIMARY KEY  (quiz_id)
 				) $charset_collate;";
 
-		$question_table_name = $wpdb->prefix . 'enp_question';
+		$this->question_table_name = $wpdb->prefix . 'enp_question';
+		$question_table_name = $this->question_table_name;
 		$question_sql = "CREATE TABLE $question_table_name (
 					question_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					quiz_id BIGINT(20) NOT NULL,
@@ -133,7 +135,8 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)
 				) $charset_collate;";
 
-		$mc_option_table_name = $wpdb->prefix . 'enp_question_mc_option';
+		$this->mc_option_table_name = $wpdb->prefix . 'enp_question_mc_option';
+		$mc_option_table_name = $this->mc_option_table_name;
 		$mc_option_sql = "CREATE TABLE $mc_option_table_name (
 					mc_option_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
@@ -145,7 +148,8 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-		$slider_table_name = $wpdb->prefix . 'enp_question_slider';
+		$this->slider_table_name = $wpdb->prefix . 'enp_question_slider';
+		$slider_table_name = $this->slider_table_name;
 		$slider_sql = "CREATE TABLE $slider_table_name (
 					slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
@@ -161,7 +165,8 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-		$response_table_name = $wpdb->prefix . 'enp_response';
+		$this->response_table_name = $wpdb->prefix . 'enp_response';
+		$response_table_name = $this->response_table_name;
 		$response_sql = "CREATE TABLE $response_table_name (
 					response_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
@@ -172,7 +177,8 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-		$response_mc_table_name = $wpdb->prefix . 'enp_response_mc';
+		$this->response_mc_table_name = $wpdb->prefix . 'enp_response_mc';
+		$response_mc_table_name = $this->response_mc_table_name;
 		$response_mc_sql = "CREATE TABLE $response_mc_table_name (
 					response_mc_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					response_id BIGINT(20) NOT NULL,
@@ -182,7 +188,8 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (mc_option_id) REFERENCES $mc_option_table_name (mc_option_id)
 				) $charset_collate;";
 
-		$response_slider_table_name = $wpdb->prefix . 'enp_response_slider';
+		$this->response_slider_table_name = $wpdb->prefix . 'enp_response_slider';
+		$response_slider_table_name = $this->response_slider_table_name;
 		$response_slider_sql = "CREATE TABLE $response_slider_table_name (
 					response_slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					response_id BIGINT(20) NOT NULL,
@@ -195,31 +202,31 @@ class Enp_quiz_Activator {
 		// store all the table names and queries
 		$tables = array(
 					array(
-						'name'=>$quiz_table_name,
+						'name'=>$this->quiz_table_name,
 		 				'sql'=>$quiz_sql
 					),
 					array(
-						'name'=>$question_table_name,
+						'name'=>$this->question_table_name,
 		 				'sql'=>$question_sql
 					),
 					array(
-						'name'=>$mc_option_table_name,
+						'name'=>$this->mc_option_table_name,
 		 				'sql'=>$mc_option_sql
 					),
 					array(
-						'name'=>$slider_table_name,
+						'name'=>$this->slider_table_name,
 		 				'sql'=>$slider_sql
 					),
 					array(
-						'name'=>$response_table_name,
+						'name'=>$this->response_table_name,
 		 				'sql'=>$response_sql
 					),
 					array(
-						'name'=>$response_mc_table_name,
+						'name'=>$this->response_mc_table_name,
 		 				'sql'=>$response_mc_sql
 					),
 					array(
-						'name'=>$response_slider_table_name,
+						'name'=>$this->response_slider_table_name,
 		 				'sql'=>$response_slider_sql
 					),
 				);
@@ -264,6 +271,13 @@ $enp_db_name = "'.DB_NAME.'";
 $enp_db_user = "'.DB_USER.'";
 $enp_db_password = "'.DB_PASSWORD.'";
 $enp_db_host = "'.DB_HOST.'";
+$enp_quiz_table_quiz = "'.$this->quiz_table_name.'";
+$enp_quiz_table_question = "'.$this->question_table_name.'";
+$enp_quiz_table_question_mc_option = "'.$this->mc_option_table_name.'";
+$enp_quiz_table_question_slider = "'.$this->slider_table_name.'";
+$enp_quiz_table_response = "'.$this->response_table_name.'";
+$enp_quiz_table_response_mc = "'.$this->response_mc_table_name.'";
+$enp_quiz_table_response_slider = "'.$this->response_slider_table_name.'";
 ;?>';
 
 		// write to the file
