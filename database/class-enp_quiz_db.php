@@ -16,6 +16,13 @@ class enp_quiz_Db extends PDO {
 		try {
 			include($_SERVER["DOCUMENT_ROOT"].'/enp-quiz-database-config.php');
 			$this->quiz_table = $enp_quiz_table_quiz;
+			$this->question_table = $enp_quiz_table_question;
+			$this->question_mc_option_table = $enp_quiz_table_question_mc_option;
+			$this->question_slider_table = $enp_quiz_table_question_slider;
+			$this->response_table = $enp_quiz_table_response;
+			$this->response_mc_option_table = $enp_quiz_table_response_mc;
+			$this->response_slider_table = $enp_quiz_table_response_slider;
+
 			parent::__construct(
 							'mysql:host='.$enp_db_host.';dbname='.$enp_db_name, $enp_db_user,
 							$enp_db_password,

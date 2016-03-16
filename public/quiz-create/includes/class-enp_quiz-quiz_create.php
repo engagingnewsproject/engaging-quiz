@@ -102,7 +102,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
                                 )
                             ),
             'quiz_updated_by' => $user_id,
-            'quiz_updated_at' => $date_time,
+            'quiz_updated_on' => $date_time,
         );
 
         $this->quiz_save_response = $quiz_save->save_quiz($quiz);

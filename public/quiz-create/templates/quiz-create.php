@@ -26,7 +26,6 @@
         <?php
             $i = 0;
             include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');?>
-        <input type="hidden" name="save_type" value="insert" />
 
         <button type="submit" class="enp-btn--add enp-quiz-form__add-question" name="enp-quiz-submit" value="add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon">
           <use xlink:href="#icon-add" />
