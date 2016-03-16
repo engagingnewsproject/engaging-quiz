@@ -19,7 +19,7 @@
 class Enp_quiz_Quiz_save {
 
     public function __construct() {
-        $this->db = new enp_quiz_Db();
+        $this->pdo = new enp_quiz_Db();
     }
 
     public function save_quiz($quiz) {
@@ -94,7 +94,7 @@ class Enp_quiz_Quiz_save {
             $bind = array(
             	":quiz_id" => $quiz_id
             );
-            $quiz_row = $this->db->select('wp_enp_quiz', "quiz_id = :quiz_id", $bind);
+            $quiz_row = $this->pdo->select('wp_enp_quiz', "quiz_id = :quiz_id", $bind);
         }
         // return our found quiz row (or not)
         return $quiz_row;
@@ -123,8 +123,53 @@ class Enp_quiz_Quiz_save {
     }
 
     public function insert_quiz($quiz) {
-        $insert_quiz = $this->db->insert($this->db->quiz_table, $quiz);
-        $response = $this->generate_response();
+        // Get our Parameters ready
+        $params = array(':quiz_title'       => $quiz['quiz_title'],
+                        ':quiz_status'      => $quiz['quiz_status'],
+                        ':quiz_finish_message' => $quiz['quiz_finish_message'],
+                        ':quiz_color_bg'    => $quiz['quiz_color_bg'],
+                        ':quiz_color_text'  => $quiz['quiz_color_text'],
+                        ':quiz_color_border'=> $quiz['quiz_color_border'],
+                        ':quiz_owner'       => $quiz['quiz_owner'],
+                        ':quiz_created_by'  => $quiz['quiz_created_by'],
+                        ':quiz_created_on'  => $quiz['quiz_created_on'],
+                        ':quiz_updated_by'  => $quiz['quiz_updated_by'],
+                        ':quiz_updated_on'  => $quiz['quiz_updated_on']
+                    );
+        // write our SQL statement
+        $sql = "INSERT INTO ".$this->pdo->quiz_table." (
+                                            quiz_title,
+                                            quiz_status,
+                                            quiz_finish_message,
+                                            quiz_color_bg,
+                                            quiz_color_text,
+                                            quiz_color_border,
+                                            quiz_owner,
+                                            quiz_created_by,
+                                            quiz_created_on,
+                                            quiz_updated_by,
+                                            quiz_updated_on
+                                        )
+                                        VALUES(
+                                            :quiz_title,
+                                            :quiz_status,
+                                            :quiz_finish_message,
+                                            :quiz_color_bg,
+                                            :quiz_color_text,
+                                            :quiz_color_border,
+                                            :quiz_owner,
+                                            :quiz_created_by,
+                                            :quiz_created_on,
+                                            :quiz_updated_by,
+                                            :quiz_updated_on
+                                        )";
+        // insert the quiz into the database
+        $stmt = $this->pdo->query($sql, $params);
+        $generate_response = array(
+                                    'quiz_id'=> $this->pdo->lastInsertId(),
+                                );
+
+        $response = $this->generate_response($generate_response);
         return $response;
     }
 
@@ -139,7 +184,9 @@ class Enp_quiz_Quiz_save {
             ":quiz_owner" => $user_id
         );
 
-        $this->db->update($this->db->quiz_table, $quiz);
+        $this->pdo->query(
+            // UPDATE... update query!
+        );
     }
 
     /**
@@ -194,11 +241,11 @@ class Enp_quiz_Quiz_save {
      * @return   ID of saved slider or false if error
      * @since    0.0.1
      */
-    public function generate_response() {
-        $response = array(
-                        'quiz_id' => 1,
+    public function generate_response($response = array()) {
+        $response_defaults = array(
                         'errors' => array(),
         );
+        $response = array_merge($response_defaults, $response);
         return $response;
     }
 

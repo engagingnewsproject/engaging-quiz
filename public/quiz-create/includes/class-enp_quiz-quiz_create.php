@@ -24,7 +24,11 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     public function __construct() {
         // we're including this as a fallback for the other pages.
         // process save, if necessary
-        add_action('template_redirect', array($this, 'save_quiz'), 1);
+        // if the enp-quiz-submit is posted, then they probably want to try to
+        // save the quiz. Be nice, try to save the quiz.
+        if(isset($_POST['enp-quiz-submit'])) {
+            add_action('template_redirect', array($this, 'save_quiz'), 1);
+        }
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_template' ));
         // runs after load_template because load_template clears out the content
