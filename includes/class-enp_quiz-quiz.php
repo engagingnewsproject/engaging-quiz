@@ -86,7 +86,7 @@ class Enp_quiz_Quiz {
     * @return quiz_title field from the database
     */
     public function set_quiz_title($quiz) {
-        $quiz_title = $quiz['quiz_title'];
+        $quiz_title = stripslashes($quiz['quiz_title']);
         return $quiz_title;
     }
 
@@ -109,7 +109,7 @@ class Enp_quiz_Quiz {
     * @return quiz_finish_message field from the database
     */
     public function set_quiz_finish_message($quiz) {
-        $quiz_finish_message = $quiz['quiz_finish_message'];
+        $quiz_finish_message = stripslashes($quiz['quiz_finish_message']);
         return $quiz_finish_message;
     }
 
