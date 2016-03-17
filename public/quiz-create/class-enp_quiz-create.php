@@ -222,4 +222,77 @@ class Enp_quiz_Create {
 		new Enp_quiz_Quiz_results();
 	}
 
+	
+	public function save_quiz() {
+		// make sure they're logged in. returns current_user_id
+		$user_id = $this->validate_user();
+
+		// get access to wpdb
+		global $wpdb;
+
+		// start an empty errors array. return the errors array at the end if they exist
+		$this->errors = array();
+
+		$quiz_save = new Enp_quiz_Save_quiz();
+		// extract values
+		$quiz_id = $quiz_save->process_int('enp-quiz-id', 0);
+		$quiz_title = $quiz_save->process_string('enp-quiz-title', 'Untitled');
+		$question_title = $quiz_save->process_string('enp-question[0]["question_title"]', 'Untitled');
+
+		$date_time = date("Y-m-d H:i:s");
+		// build our array to save
+		$quiz = array(
+			'quiz_id' => $quiz_id,
+			'quiz_title' => $quiz_title,
+			'questions' => array(
+								array(
+									'question_title' => $question_title,
+								)
+							),
+			'quiz_updated_by' => $user_id,
+			'quiz_updated_at' => $date_time,
+		);
+
+		$this->quiz_save_response = $quiz_save->save_quiz($quiz);
+		$this->errors = $this->quiz_save_response['errors'];
+		// check to see if there are errors
+		if(!empty($this->errors)) {
+			// exits the process and returns them to the same page
+			return false;
+		} else {
+			// get the ID of the quiz that was just created
+			$this->saved_quiz_id = $this->quiz_save_response['quiz_id'];
+			// figure out where they want to go
+			if(isset($_POST['enp-quiz-submit'])) {
+				// get the value of the button they clicked
+				$button_clicked = $_POST['enp-quiz-submit'];
+				// if it = preview, send them to the preview page
+				if($button_clicked === 'quiz-preview') {
+					wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$this->saved_quiz_id.'/' ) );
+					exit;
+				} else {
+					// they just updated the same page.
+					wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/' ) );
+					exit;
+				}
+			}
+		}
+
+	}
+
+
+	/**
+	 * Validate that the user is allowed to be doing this
+	 * @return   get_current_user_id(); OR Redirect to login page
+	 * @since    0.0.1
+	 */
+	public function validate_user() {
+		if(is_user_logged_in() === false) {
+			wp_redirect( home_url( '/login/' ) );
+			exit;
+		} else {
+			return get_current_user_id();
+		}
+	}
+
 }

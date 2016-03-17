@@ -9,7 +9,7 @@
  * Data available to this view:
  * $quiz = quiz object (if exits), false if new quiz
  */
- var_dump($quiz);
+ //var_dump($quiz);
  if(is_numeric($quiz->get_quiz_id()) || is_int($quiz->get_quiz_id())) {
      $quiz_action_url = site_url('enp-quiz/quiz-create/').$quiz->get_quiz_id().'/';
  } else {
