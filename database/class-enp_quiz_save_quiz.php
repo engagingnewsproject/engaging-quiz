@@ -19,28 +19,29 @@
 class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
     public function __construct() {
-        $this->pdo = new enp_quiz_Db();
+
     }
 
     public function save_quiz($quiz) {
-        /* These should get generated after checking if the quiz exists */
-        $quiz = $this->set_quiz_defaults($quiz);
 
         // Check if we should update or insert
-        // If we have a row for the entry, then it exists
-        $quiz_row = $this->get_quiz_row($quiz['quiz_id']);
+        // If we get a full, returned object, then it exists
+        $quiz_obj = new Enp_quiz_Quiz($quiz['quiz_id']);
 
-        //  If it doesn't exist (PDO returns false if not found), then insert it. If it does exist, update it
-        if($quiz_row === false) {
+        //  If it doesn't exist the quiz object will set the quiz_id as null
+        if($quiz_obj->get_quiz_id() === null) {
             // check to make sure they're not passing a high number to just guess about a quiz to update
             if($quiz['quiz_id'] === 0 ) {
+                // Add the defaults in
+                $quiz = $this->set_quiz_defaults($quiz);
+                // Congratulations, quiz! You're ready for insert!
                 $response = $this->insert_quiz($quiz);
             } else {
                 $response['errors'][] = 'Quiz ID does not exist.';
             }
         } else {
             // check to make sure that the quiz owner matches
-            $allow_update = $this->quiz_owned_by_current_user($quiz_row[0]['quiz_owner'], $quiz['quiz_updated_by']);
+            $allow_update = $this->quiz_owned_by_current_user($quiz_obj->get_quiz_owner(), $quiz['quiz_updated_by']);
             // update a quiz entry
             if($allow_update === true) {
                 // the current user matches the quiz owner
@@ -80,25 +81,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     }
 
     /**
-     * Check to see if the quiz exists or not
-     *
-     * @param    $quiz_id
-     * @return   returns quiz row from database if exists, false if not
-     * @since    0.0.1
-     */
-    public function get_quiz_row($quiz_id = false) {
-        // check to see if the quiz
-        if($quiz_id === false || $quiz_id === 0) {
-            $quiz_row = false;
-        } else {
-            $quiz = new Enp_quiz_Quiz();
-            $quiz_row = $quiz->select_quiz_by_id($quiz_id);
-        }
-        // return our found quiz row (or false if not found (PDO default))
-        return $quiz_row;
-    }
-
-    /**
      * Check to see if the owner of the submitted quiz matches
      * the one they want to update
      *
@@ -110,9 +92,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     public function quiz_owned_by_current_user($quiz_owner_id = false, $current_user_id = false) {
         // set it to false to start. Guilty til proven innocent.
         $quiz_owned_by_current_user = false;
-
+        // check to make sure we have values for each
         if($quiz_owner_id !== false && $current_user_id !== false) {
+            // check to see if the owner and user match
             if($quiz_owner_id === $current_user_id) {
+                // if they match, then it's legit
                 $quiz_owned_by_current_user = true;
             }
         }
@@ -121,6 +105,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     }
 
     public function insert_quiz($quiz) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
         // Get our Parameters ready
         $params = array(':quiz_title'       => $quiz['quiz_title'],
                         ':quiz_status'      => $quiz['quiz_status'],
@@ -135,7 +121,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                         ':quiz_updated_at'  => $quiz['quiz_updated_at']
                     );
         // write our SQL statement
-        $sql = "INSERT INTO ".$this->pdo->quiz_table." (
+        $sql = "INSERT INTO ".$pdo->quiz_table." (
                                             quiz_title,
                                             quiz_status,
                                             quiz_finish_message,
@@ -162,9 +148,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                             :quiz_updated_at
                                         )";
         // insert the quiz into the database
-        $stmt = $this->pdo->query($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $generate_response = array(
-                                    'quiz_id'=> $this->pdo->lastInsertId(),
+                                    'quiz_id'=> $pdo->lastInsertId(),
                                 );
 
         $response = $this->generate_response($generate_response);
@@ -172,6 +158,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     }
 
     public function update_quiz($quiz) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+
         $quiz = array(
             'quiz_title' => 'Wuteverz Save Updated',
             'quiz_status'=> 'draft',
@@ -182,7 +171,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             ":quiz_owner" => $user_id
         );
 
-        $this->pdo->query(
+        $pdo->query(
             // UPDATE... update query!
         );
     }

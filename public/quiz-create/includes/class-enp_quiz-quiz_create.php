@@ -117,18 +117,21 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
             // exits the process and returns them to the same page
             return false;
         } else {
+            // get the ID of the quiz that was just created
+            $this->saved_quiz_id = $this->quiz_save_response['quiz_id'];
             // figure out where they want to go
             if(isset($_POST['enp-quiz-submit'])) {
                 // get the value of the button they clicked
                 $button_clicked = $_POST['enp-quiz-submit'];
                 // if it = preview, send them to the preview page
                 if($button_clicked === 'quiz-preview') {
-                    wp_redirect( site_url( '/enp-quiz/quiz-preview' ) );
+                    wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$this->saved_quiz_id.'/' ) );
+                    exit;
+                } else {
+                    wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/' ) );
                     exit;
                 }
-
             }
-
         }
 
     }

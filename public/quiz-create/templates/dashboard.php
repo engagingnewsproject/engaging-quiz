@@ -29,7 +29,7 @@
     </header>
     <ul class="enp-quiz-list">
         <li class="enp-dash-item enp-dash-item--add-new">
-            <a class="enp-dash-link--add-new enp-dash-link--add-new-quiz" href="<?php echo ENP_QUIZ_CREATE_URL;?>">
+            <a class="enp-dash-link--add-new enp-dash-link--add-new-quiz" href="<?php echo ENP_QUIZ_CREATE_URL;?>new/">
                 <svg class="enp-dash-link__icon enp-icon">
                   <use xlink:href="#icon-add" />
                 </svg>
@@ -59,7 +59,7 @@
     </header>
     <ul class="enp-ab-list">
         <li class="enp-dash-item enp-dash-item--add-new">
-            <a class="enp-dash-link--add-new enp-dash-link--add-new-ab-test" href="a-b-test.php"><svg class="enp-dash-link__icon enp-icon">
+            <a class="enp-dash-link--add-new enp-dash-link--add-new-ab-test" href="<?php echo ENP_AB_TEST_URL;?>new/"><svg class="enp-dash-link__icon enp-icon">
               <use xlink:href="#icon-add" />
             </svg>New A/B Test</a>
         </li>
