@@ -59,7 +59,7 @@ class Enp_quiz_Create {
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 
-		add_action('init', array($this, 'add_enp_quiz_template_rewrite_tag'));
+		add_action('init', array($this, 'add_enp_quiz_rewrite_tags'));
 		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
 	}
 
@@ -90,8 +90,9 @@ class Enp_quiz_Create {
 	*	Adds a enp_quiz_template parameter for WordPress to look for
 	*   ?enp_quiz_template=dashboard
 	*/
-	public function add_enp_quiz_template_rewrite_tag(){
+	public function add_enp_quiz_rewrite_tags(){
 		add_rewrite_tag( '%enp_quiz_template%', '([^/]+)' );
+		add_rewrite_tag( '%enp_quiz_id%', '([^/]+)' );
 	}
 
 	/*
@@ -117,8 +118,34 @@ class Enp_quiz_Create {
 				// load the template
 				$this->load_template();
 			}
-
 		}
+	}
+
+	/**
+	* Get the requested quiz_id from the URL
+	* @return	quiz_id if found, else false
+	* @since    0.0.1
+	**/
+	public function enp_quiz_id_rewrite_catch() {
+		global $wp_query;
+		$quiz_id = false;
+		// see if enp_quiz_template is one of the query_vars posted
+		if ( array_key_exists( 'enp_quiz_id', $wp_query->query_vars ) ) {
+			// if it's there, then see what the value is
+			$quiz_id = $wp_query->get( 'enp_quiz_id' );
+		}
+
+		return $quiz_id;
+	}
+
+	/**
+	* Get the requested ab_test_id from the URL
+	* @return	quiz_id if found, else false
+	* @since    0.0.1
+	**/
+	public function enp_ab_test_id_rewrite_catch() {
+		// same as the quiz_id request right now
+		return enp_quiz_id_rewrite_catch();
 	}
 
 	/*
@@ -142,6 +169,13 @@ class Enp_quiz_Create {
 			$this->load_dashboard();
 		}
 	}
+
+	public function load_quiz() {
+        // prepare the quiz object
+        $quiz_id = $this->enp_quiz_id_rewrite_catch();
+        $quiz = new Enp_quiz_Quiz($quiz_id);
+        return $quiz;
+    }
 
 	public function add_enp_quiz_body_class($classes) {
 		$classes[] = 'enp-quiz';
@@ -187,4 +221,5 @@ class Enp_quiz_Create {
 		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_results.php');
 		new Enp_quiz_Quiz_results();
 	}
+
 }

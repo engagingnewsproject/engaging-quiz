@@ -41,6 +41,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     }
 
     public function load_template() {
+        $quiz = $this->load_quiz();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
     }
 
@@ -89,7 +90,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // start an empty errors array. return the errors array at the end if they exist
         $this->errors = array();
 
-        $quiz_save = new Enp_quiz_Quiz_save();
+        $quiz_save = new Enp_quiz_Save_quiz();
         // extract values
         $quiz_id = $quiz_save->process_int('enp-quiz-id', 0);
         $quiz_title = $quiz_save->process_string('enp-quiz-title', 'Untitled');
@@ -106,7 +107,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
                                 )
                             ),
             'quiz_updated_by' => $user_id,
-            'quiz_updated_on' => $date_time,
+            'quiz_updated_at' => $date_time,
         );
 
         $this->quiz_save_response = $quiz_save->save_quiz($quiz);

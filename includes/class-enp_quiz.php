@@ -93,8 +93,7 @@ class Enp_quiz {
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing quiz-create functionality
-	 * of the plugin.
+	 * Load the quiz_create public facing class
 	 *
 	 * @since    0.0.1
 	 * @access   private
@@ -111,8 +110,7 @@ class Enp_quiz {
 	}
 
 	/**
-	 * Register all of the hooks related to the public-facing quiz-take functionality
-	 * of the plugin.
+	 * Load the quiz_take public facing class
 	 *
 	 * @since    0.0.1
 	 * @access   private

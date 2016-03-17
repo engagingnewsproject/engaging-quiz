@@ -16,7 +16,7 @@
  * @subpackage Enp_quiz/database
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Quiz_save {
+class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
     public function __construct() {
         $this->pdo = new enp_quiz_Db();
@@ -27,6 +27,7 @@ class Enp_quiz_Quiz_save {
         $quiz = $this->set_quiz_defaults($quiz);
 
         // Check if we should update or insert
+        // If we have a row for the entry, then it exists
         $quiz_row = $this->get_quiz_row($quiz['quiz_id']);
 
         //  If it doesn't exist (PDO returns false if not found), then insert it. If it does exist, update it
@@ -69,7 +70,7 @@ class Enp_quiz_Quiz_save {
             'quiz_color_text' => '#333333',
             'quiz_color_border' => '0',
             'quiz_created_by' => $quiz['quiz_updated_by'],
-            'quiz_created_on' => $quiz['quiz_updated_on'],
+            'quiz_created_at' => $quiz['quiz_updated_at'],
         );
 
         // merge the posted values with any defaults. Posted values will override our defaults
@@ -82,7 +83,7 @@ class Enp_quiz_Quiz_save {
      * Check to see if the quiz exists or not
      *
      * @param    $quiz_id
-     * @return   returns quiz row if exists, false if not
+     * @return   returns quiz row from database if exists, false if not
      * @since    0.0.1
      */
     public function get_quiz_row($quiz_id = false) {
@@ -90,13 +91,10 @@ class Enp_quiz_Quiz_save {
         if($quiz_id === false || $quiz_id === 0) {
             $quiz_row = false;
         } else {
-            // Do a select query to see if we get a returned row
-            $bind = array(
-            	":quiz_id" => $quiz_id
-            );
-            $quiz_row = $this->pdo->select('wp_enp_quiz', "quiz_id = :quiz_id", $bind);
+            $quiz = new Enp_quiz_Quiz();
+            $quiz_row = $quiz->select_quiz_by_id($quiz_id);
         }
-        // return our found quiz row (or not)
+        // return our found quiz row (or false if not found (PDO default))
         return $quiz_row;
     }
 
@@ -132,9 +130,9 @@ class Enp_quiz_Quiz_save {
                         ':quiz_color_border'=> $quiz['quiz_color_border'],
                         ':quiz_owner'       => $quiz['quiz_owner'],
                         ':quiz_created_by'  => $quiz['quiz_created_by'],
-                        ':quiz_created_on'  => $quiz['quiz_created_on'],
+                        ':quiz_created_at'  => $quiz['quiz_created_at'],
                         ':quiz_updated_by'  => $quiz['quiz_updated_by'],
-                        ':quiz_updated_on'  => $quiz['quiz_updated_on']
+                        ':quiz_updated_at'  => $quiz['quiz_updated_at']
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$this->pdo->quiz_table." (
@@ -146,9 +144,9 @@ class Enp_quiz_Quiz_save {
                                             quiz_color_border,
                                             quiz_owner,
                                             quiz_created_by,
-                                            quiz_created_on,
+                                            quiz_created_at,
                                             quiz_updated_by,
-                                            quiz_updated_on
+                                            quiz_updated_at
                                         )
                                         VALUES(
                                             :quiz_title,
@@ -159,9 +157,9 @@ class Enp_quiz_Quiz_save {
                                             :quiz_color_border,
                                             :quiz_owner,
                                             :quiz_created_by,
-                                            :quiz_created_on,
+                                            :quiz_created_at,
                                             :quiz_updated_by,
-                                            :quiz_updated_on
+                                            :quiz_updated_at
                                         )";
         // insert the quiz into the database
         $stmt = $this->pdo->query($sql, $params);
@@ -247,44 +245,6 @@ class Enp_quiz_Quiz_save {
         );
         $response = array_merge($response_defaults, $response);
         return $response;
-    }
-
-    /**
-     * Process a string to get it ready for saving. Checks if isset
-     * and sanitizes it.
-     *
-     * @return   sanitized string or default
-     * @since    0.0.1
-     */
-    public function process_string($posted_string, $default) {
-        $string = $default;
-        if(isset($_POST[$posted_string])) {
-            $posted_string = sanitize_text_field($_POST[$posted_string]);
-            if(!empty($posted_string)) {
-                $string = $posted_string;
-            }
-        }
-        return $string;
-    }
-
-    /**
-     * Process an integer to get it ready for saving. Checks if isset
-     * and casts it as an integer.
-     *
-     * @return   sanitized integer or default
-     * @since    0.0.1
-     */
-    public function process_int($posted_int, $default) {
-        $int = $default;
-        if(isset($_POST[$posted_int])) {
-            $posted_int = intval($_POST[$posted_int]);
-            // if the $posted_int is greater than 0,
-            // then it's a potentially valid quiz_id
-            if( 0 < $posted_int ) {
-                $int = $posted_int;
-            }
-        }
-        return $int;
     }
 
 }

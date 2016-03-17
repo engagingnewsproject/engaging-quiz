@@ -75,7 +75,7 @@ class Enp_quiz_Activator {
 		$enp_quiz_take_template_path = str_replace(ABSPATH,"",ENP_QUIZ_TAKE_TEMPLATES_PATH);
 		$enp_quiz_create_template_path = str_replace(ABSPATH,"",ENP_QUIZ_CREATE_TEMPLATES_PATH);
 		// Quiz Create
-		add_rewrite_rule('enp-quiz/([^/]*)/?','index.php?enp_quiz_template=$matches[1]','top');
+		add_rewrite_rule('enp-quiz/([^/]*)/([^/]*)?','index.php?enp_quiz_template=$matches[1]&enp_quiz_id=$matches[2]','top');
 
 		// Quiz Take
 		add_rewrite_rule(ENP_QUIZ_URL, $enp_quiz_take_template_path.'quiz.php','top');
@@ -99,9 +99,9 @@ class Enp_quiz_Activator {
 					quiz_color_border VARCHAR(7) NOT NULL,
 					quiz_owner BIGINT(20) NOT NULL,
 					quiz_created_by BIGINT(20) NOT NULL,
-					quiz_created_on DATETIME NOT NULL,
+					quiz_created_at DATETIME NOT NULL,
 					quiz_updated_by BIGINT(20) NOT NULL,
-					quiz_updated_on DATETIME NOT NULL,
+					quiz_updated_at DATETIME NOT NULL,
 					quiz_views BIGINT(20) NOT NULL DEFAULT '0',
 					quiz_starts BIGINT(20) NOT NULL DEFAULT '0',
 					quiz_finishes BIGINT(20) NOT NULL DEFAULT '0',
@@ -171,7 +171,7 @@ class Enp_quiz_Activator {
 					response_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
 					response_correct BOOLEAN NOT NULL,
-					response_created_on DATETIME NOT NULL,
+					response_created_at DATETIME NOT NULL,
 					response_is_archived BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (response_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
@@ -196,6 +196,33 @@ class Enp_quiz_Activator {
 					response_slider BIGINT(20) NOT NULL,
 					PRIMARY KEY  (response_slider_id),
 					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id)
+				) $charset_collate;";
+
+		$this->ab_test_table_name = $wpdb->prefix . 'enp_ab_test';
+		$ab_test_table_name = $this->ab_test_table_name;
+		$ab_test_sql = "CREATE TABLE $ab_test_table_name (
+					ab_test_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					ab_test_title VARCHAR(255) NOT NULL,
+					quiz_id_a BIGINT(20) NOT NULL,
+					quiz_id_b BIGINT(20) NOT NULL,
+					ab_test_created_by BIGINT(20) NOT NULL,
+					ab_test_created_at DATETIME NOT NULL,
+					ab_test_updated_by BIGINT(20) NOT NULL,
+					ab_test_updated_at DATETIME NOT NULL,
+					PRIMARY KEY  (ab_test_id),
+					FOREIGN KEY  (quiz_id_a) REFERENCES $quiz_table_name (quiz_id),
+					FOREIGN KEY  (quiz_id_b) REFERENCES $quiz_table_name (quiz_id)
+				) $charset_collate;";
+
+		$this->ab_test_response_table_name = $wpdb->prefix . 'enp_response_ab_test';
+		$ab_test_response_table_name = $this->ab_test_response_table_name;
+		$ab_test_response_sql = "CREATE TABLE $ab_test_response_table_name (
+					response_ab_test_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					response_id BIGINT(20) NOT NULL,
+					ab_test_id BIGINT(20) NOT NULL,
+					PRIMARY KEY  (response_ab_test_id),
+					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id),
+					FOREIGN KEY  (ab_test_id) REFERENCES $ab_test_table_name (ab_test_id)
 				) $charset_collate;";
 
 		// create a tables array,
@@ -228,6 +255,14 @@ class Enp_quiz_Activator {
 					array(
 						'name'=>$this->response_slider_table_name,
 		 				'sql'=>$response_slider_sql
+					),
+					array(
+						'name'=>$this->ab_test_table_name,
+		 				'sql'=>$ab_test_sql
+					),
+					array(
+						'name'=>$this->ab_test_response_table_name,
+		 				'sql'=>$ab_test_response_sql
 					),
 				);
 

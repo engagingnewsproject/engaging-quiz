@@ -32,6 +32,7 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
     }
 
     public function load_template() {
+        $quiz = $this->load_quiz();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-preview.php' );
     }
 

@@ -5,11 +5,16 @@
  *
  * @since             0.0.1
  * @package           Enp_quiz
+ *
+ * Data available to this view:
+ * $quiz = quiz object (if exits), false if new quiz
  */
+ var_dump($quiz);
 ?>
 
 <section class="enp-container enp-quiz-form-container">
     <?php
+
     include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');
     ?>
 
@@ -20,7 +25,7 @@
             <label class="enp-label enp-quiz-title__label" for="quiz-title">
                 Quiz Title
             </label>
-            <textarea class="enp-textarea enp-quiz-title__textarea" type="text" name="enp-quiz-title" placeholder="My Engaging Quiz Title"/></textarea>
+            <textarea class="enp-textarea enp-quiz-title__textarea" type="text" name="enp-quiz-title" placeholder="My Engaging Quiz Title"/><? echo $quiz->get_quiz_title();?></textarea>
         </fieldset>
 
         <?php
