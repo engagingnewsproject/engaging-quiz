@@ -233,32 +233,26 @@ class Enp_quiz_Create {
 		// start an empty errors array. return the errors array at the end if they exist
 		$this->errors = array();
 
-		// a processing class for quizzes. We can't pass it straight to
-		// Enp_quiz_Save_quiz bc we don't know if there's a quiz id yet
-		$save = new Enp_quiz_Save();
 		// extract values
-		$quiz_id = $save->process_int('enp-quiz-id', 0);
-		$quiz_title = $save->process_string('enp-quiz-title', 'Untitled');
-		$question_title = $save->process_string('enp-question[0]["question_title"]', 'Untitled');
 		// set the date_time to pass
 		$date_time = date("Y-m-d H:i:s");
 		// build our array to save
-		$quiz = array(
-			'quiz_id' => $quiz_id,
-			'quiz_title' => $quiz_title,
-			'questions' => array(
-								array(
-									'question_title' => $question_title,
-								)
-							),
-			'quiz_updated_by' => $user_id,
-			'quiz_updated_at' => $date_time,
-		);
+		if(isset($_POST['enp_quiz'])) {
+			$quiz = array(
+						'quiz' => $_POST['enp_quiz'],
+						'quiz_updated_by' => $user_id,
+						'quiz_updated_at' => $date_time,
+					);
+		}
 
-		// actual save function for quizzes
-		$quiz_save = new Enp_quiz_Save_quiz($quiz);
+		if(isset($_POST['enp_question'])) {
+			$quiz['questions'] = $_POST['enp_question'];
+		}
 
-		$this->quiz_save_response = $quiz_save->save_quiz();
+		// pass our quiz array to our quiz save class
+		$save_quiz = new Enp_quiz_Save_quiz($quiz);
+
+		$this->quiz_save_response = $save_quiz->save_quiz();
 		// check to see if there is an errors array in the response
 		if(array_key_exists('errors', $this->quiz_save_response)) {
 			// exits the process and returns them to the same page
