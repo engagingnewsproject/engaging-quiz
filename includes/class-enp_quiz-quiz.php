@@ -63,11 +63,9 @@ class Enp_quiz_Quiz {
         $this->quiz_created_at = $this->set_quiz_created_at($quiz);
         $this->quiz_updated_by = $this->set_quiz_updated_by($quiz);
         $this->quiz_updated_at = $this->set_quiz_updated_at($quiz);
-        /* TODO: Get these set
-        $this->quiz_color_bg =
-        $this->quiz_color_text =
-        $this->quiz_color_border =
-        */
+        $this->quiz_color_bg = $this->set_quiz_color_bg($quiz);
+        $this->quiz_color_text = $this->set_quiz_color_text($quiz);
+        $this->quiz_color_border = $this->set_quiz_color_border($quiz);
     }
 
     /**
@@ -175,6 +173,28 @@ class Enp_quiz_Quiz {
     }
 
     /**
+    * Set the quiz_color_text for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return quiz_color_text field from the database
+    */
+    public function set_quiz_color_text($quiz) {
+        // TODO: Validate HEX
+        $quiz_color_text = $quiz['quiz_color_text'];
+        return $quiz_color_text;
+    }
+
+    /**
+    * Set the quiz_color_border for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return quiz_color_border field from the database
+    */
+    public function set_quiz_color_border($quiz) {
+        // TODO: Validate HEX
+        $quiz_color_border = $quiz['quiz_color_border'];
+        return $quiz_color_border;
+    }
+
+    /**
     * Get the quiz_id for our Quiz Object
     * @param $quiz = quiz object
     * @return quiz_id from the object
@@ -262,6 +282,36 @@ class Enp_quiz_Quiz {
     public function get_quiz_updated_at() {
         $quiz_updated_at = $this->quiz_updated_at;
         return $quiz_updated_at;
+    }
+
+    /**
+    * Get the quiz_color_bg for our Quiz Object
+    * @param $quiz = quiz object
+    * @return #hex code
+    */
+    public function get_quiz_color_bg() {
+        $quiz_color_bg = $this->quiz_color_bg;
+        return $quiz_color_bg;
+    }
+
+    /**
+    * Get the quiz_color_text for our Quiz Object
+    * @param $quiz = quiz object
+    * @return #hex code
+    */
+    public function get_quiz_color_text() {
+        $quiz_color_text = $this->quiz_color_text;
+        return $quiz_color_text;
+    }
+
+    /**
+    * Get the quiz_color_border for our Quiz Object
+    * @param $quiz = quiz object
+    * @return #hex code
+    */
+    public function get_quiz_color_border() {
+        $quiz_color_border = $this->quiz_color_border;
+        return $quiz_color_border;
     }
 
 

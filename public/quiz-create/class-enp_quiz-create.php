@@ -222,7 +222,7 @@ class Enp_quiz_Create {
 		new Enp_quiz_Quiz_results();
 	}
 
-	
+
 	public function save_quiz() {
 		// make sure they're logged in. returns current_user_id
 		$user_id = $this->validate_user();
@@ -233,12 +233,14 @@ class Enp_quiz_Create {
 		// start an empty errors array. return the errors array at the end if they exist
 		$this->errors = array();
 
-		$quiz_save = new Enp_quiz_Save_quiz();
+		// a processing class for quizzes. We can't pass it straight to
+		// Enp_quiz_Save_quiz bc we don't know if there's a quiz id yet
+		$save = new Enp_quiz_Save();
 		// extract values
-		$quiz_id = $quiz_save->process_int('enp-quiz-id', 0);
-		$quiz_title = $quiz_save->process_string('enp-quiz-title', 'Untitled');
-		$question_title = $quiz_save->process_string('enp-question[0]["question_title"]', 'Untitled');
-
+		$quiz_id = $save->process_int('enp-quiz-id', 0);
+		$quiz_title = $save->process_string('enp-quiz-title', 'Untitled');
+		$question_title = $save->process_string('enp-question[0]["question_title"]', 'Untitled');
+		// set the date_time to pass
 		$date_time = date("Y-m-d H:i:s");
 		// build our array to save
 		$quiz = array(
@@ -253,11 +255,14 @@ class Enp_quiz_Create {
 			'quiz_updated_at' => $date_time,
 		);
 
-		$this->quiz_save_response = $quiz_save->save_quiz($quiz);
-		$this->errors = $this->quiz_save_response['errors'];
-		// check to see if there are errors
-		if(!empty($this->errors)) {
+		// actual save function for quizzes
+		$quiz_save = new Enp_quiz_Save_quiz($quiz);
+
+		$this->quiz_save_response = $quiz_save->save_quiz();
+		// check to see if there is an errors array in the response
+		if(array_key_exists('errors', $this->quiz_save_response)) {
 			// exits the process and returns them to the same page
+			$this->errors = $this->quiz_save_response['errors'];
 			return false;
 		} else {
 			// get the ID of the quiz that was just created
