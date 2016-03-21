@@ -52,7 +52,6 @@ class Enp_quiz_Create {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 		include_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
 		// load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
@@ -311,26 +310,38 @@ class Enp_quiz_Create {
         if(!empty(self::$errors)) {
             $message_type = 'errors';
             $messages = self::$errors;
-        } elseif(isset($_GET['enp_success_message'])) {
+			$message_content .= $this->display_message_html($messages, $message_type);
+        }
+		if(isset($_GET['enp_success_message'])) {
             $message_type = 'success';
             $messages = array($_GET['enp_success_message']);
+			$message_content .= $this->display_message_html($messages, $message_type);
+        }
+
+        if(!empty($message_content)) {
+            echo $message_content;
         } else {
-            return false;
-        }
+			return false;
+		}
 
-        if(!empty($messages)) {
-            $message_content .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
-                        <h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
-                        <ul class="enp-message__list enp-message__list--'.$message_type.'">';
-                foreach($messages as $message) {
-                    $message_content .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.$message.'</li>';
-                }
-            $message_content .='</ul>
-                    </section>';
-        }
 
-        echo $message_content;
     }
+
+	public function display_message_html($messages, $message_type) {
+		$message_html = '';
+		if(!empty($messages) && !empty($message_type)) {
+			$message_html .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
+						<h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
+						<ul class="enp-message__list enp-message__list--'.$message_type.'">';
+				foreach($messages as $message) {
+					$message_html .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.$message.'</li>';
+				}
+			$message_html .='</ul>
+					</section>';
+		}
+
+		return $message_html;
+	}
 
 
 	/**

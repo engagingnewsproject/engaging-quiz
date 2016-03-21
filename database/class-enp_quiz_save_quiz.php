@@ -22,7 +22,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                     $response;
 
     public function __construct() {
-        
+
     }
 
     public function save($quiz) {
@@ -154,6 +154,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(self::$quiz_obj->get_quiz_id() === null) {
             // Congratulations, quiz! You're ready for insert!
             self::$response = $this->insert_quiz();
+            
         } else {
             // check to make sure that the quiz owner matches
             $allow_update = $this->quiz_owned_by_current_user();
