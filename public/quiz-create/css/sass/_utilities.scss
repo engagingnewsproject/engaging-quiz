@@ -304,7 +304,12 @@ $placeholders: ();
     }
 
     .enp-quiz-message {
-        padding: 1rem;
+        @include _(container--thin);
+        background: #fff;
+        border: 1px solid #eee;
+        border-bottom: 1px solid #ccc;
+        padding: 1rem 0.375rem;
+        margin-bottom: 1.6rem;
     }
 
     .enp-quiz-message__title {
@@ -317,20 +322,20 @@ $placeholders: ();
     }
 
     .enp-quiz-message--errors {
-        background: #FF9494;
-        color: #611500;
+        border-left: 6px solid $red;
+        color: $dark_red;
     }
 
     .enp-quiz-message__title--errors {
-        color: #611500;
+        color: $dark_red;
     }
 
     .enp-quiz-message--success {
-        background: #C0ECCD;
-        color: #225231;
+        border-left: 6px solid $green;
+        color: $dark_green;
     }
 
     .enp-quiz-message__title--success {
-        color: #225231;
+        color: $dark_green;
     }
 }

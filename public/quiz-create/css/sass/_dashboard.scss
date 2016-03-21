@@ -3,6 +3,7 @@
     .enp-dash-container {
         @include _(container--wide);
         @include _(xpadding-vertical);
+        background: $really_light_gray;
     }
 
     .enp-dash__section-header {

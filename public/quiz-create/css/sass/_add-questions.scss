@@ -6,6 +6,7 @@
         position: relative;
         padding-top: 6rem;
         padding-bottom: 4rem;
+        background: $really_light_gray;
 
         @include media(max-small) {
             padding-left: 8px;

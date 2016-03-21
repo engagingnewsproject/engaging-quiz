@@ -30,9 +30,9 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
             add_action('template_redirect', array($this, 'save_quiz'), 1);
         }
         // Other page classes will not need to do this
-        add_filter( 'the_content', array($this, 'load_template' ));
-        // runs after load_template because load_template clears out the content
-        add_filter( 'the_content', array($this, 'display_message' ), 11);
+        add_filter( 'the_content', array($this, 'load_content' ));
+        // runs after load_content because load_content clears out the content
+        add_action( 'enp_quiz_display_messages', array($this, 'display_message' ));
         // load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
@@ -40,12 +40,18 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
     }
 
-    public function load_template() {
+    public function load_content($content) {
+
+        ob_start();
         $quiz = $this->load_quiz();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        return $content;
     }
 
-    public function display_message($content) {
+    public function display_message() {
         $message_content = '';
         if(!empty($this->errors)) {
             $message_type = 'errors';
@@ -56,7 +62,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         } else {
             return false;
         }
-
 
         if(!empty($messages)) {
             $message_content .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
@@ -69,8 +74,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
                     </section>';
         }
 
-        $content = $content . $message_content;
-        return $content;
+        echo $message_content;
     }
 
     public function enqueue_styles() {
