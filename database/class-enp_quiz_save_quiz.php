@@ -17,25 +17,25 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Save_quiz extends Enp_quiz_Save {
-    private $quiz,
-            $quiz_obj,
-            $response;
+    private static  $quiz,
+                    $quiz_obj,
+                    $response;
 
-    public function __construct($quiz) {
+    public function __construct() {
+
+    }
+
+    public function save($quiz) {
         // first off, sanitize the whole submitted thang
-        $this->quiz = $this->sanitize_array($quiz);
+        self::$quiz = $this->sanitize_array($quiz);
         // flatten it out to make it easier to work with
-        $this->quiz = $this->flatten_quiz_array($this->quiz);
+        self::$quiz = $this->flatten_quiz_array(self::$quiz);
         // create our object
-        $this->quiz_obj = new Enp_quiz_Quiz($this->quiz['quiz_id']);
+        self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
         // fill the quiz with all the values
-        $this->quiz = $this->prepare_submitted_quiz($this->quiz);
-        /* TODO
-        *  have save_quiz() be called from here and return the response somehow
-        *  because save_quiz should be a private method.
-        */
-
-
+        self::$quiz = $this->prepare_submitted_quiz(self::$quiz);
+        // actually save the quiz, and return the response
+        return $this->save_quiz();
     }
 
     /**
@@ -51,7 +51,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *        );
     * @return nicely formatted and value validated quiz array ready for saving
     */
-    public function prepare_submitted_quiz($quiz) {
+    protected function prepare_submitted_quiz($quiz) {
 
         $quiz_id = $this->set_quiz_value('quiz_id', 0);
         $quiz_title = $this->set_quiz_value('quiz_title', 'Untitled');
@@ -93,7 +93,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * becomes
     * array('quiz_id'=>0, quiz_title' => 'Untitled'...)
     */
-    public function flatten_quiz_array($submitted_quiz) {
+    protected function flatten_quiz_array($submitted_quiz) {
         $flattened_quiz = array();
         if(array_key_exists('quiz', $submitted_quiz) && is_array($submitted_quiz['quiz'])) {
             // Flatten the submitted arrays a bit to make it easier to understand
@@ -118,7 +118,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     /*
     * Sanitize all keys and values of an array. Loops through ALL arrays (even nested)
     */
-    public function sanitize_array($array) {
+    protected function sanitize_array($array) {
         $sanitized_array = array();
         // check to make sure it's an array
         if (!is_array($array) || !count($array)) {
@@ -149,25 +149,25 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *
     * @return response array of quiz_id, action, status, and errors (if any)
     */
-    public function save_quiz() {
+    private function save_quiz() {
         //  If the quiz_obj doesn't exist the quiz object will set the quiz_id as null
-        if($this->quiz_obj->get_quiz_id() === null) {
+        if(self::$quiz_obj->get_quiz_id() === null) {
             // Congratulations, quiz! You're ready for insert!
-            $this->response = $this->insert_quiz();
+            self::$response = $this->insert_quiz();
         } else {
             // check to make sure that the quiz owner matches
             $allow_update = $this->quiz_owned_by_current_user();
             // update a quiz entry
             if($allow_update === true) {
                 // the current user matches the quiz owner
-                $this->response = $this->update_quiz();
+                self::$response = $this->update_quiz();
             } else {
                 // Hmm... the user is trying to update a quiz that isn't theirs
-                $this->response['errors'][] = 'Quiz Update not Allowed';
+                self::$response['errors'][] = 'Quiz Update not Allowed';
             }
         }
 
-        return $this->response;
+        return self::$response;
     }
 
     /**
@@ -179,10 +179,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
      * @return   returns quiz row if exists, false if not
      * @since    0.0.1
      */
-    public function quiz_owned_by_current_user() {
+    protected function quiz_owned_by_current_user() {
         // cast to integers to make sure we're talkin the same talk here
-        $quiz_owner_id = (int) $this->quiz_obj->get_quiz_owner();
-        $current_user_id = (int) $this->quiz['quiz_updated_by'];
+        $quiz_owner_id = (int) self::$quiz_obj->get_quiz_owner();
+        $current_user_id = (int) self::$quiz['quiz_updated_by'];
         // set it to false to start. Guilty til proven innocent.
         $quiz_owned_by_current_user = false;
         // check to make sure we have values for each
@@ -197,21 +197,21 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $quiz_owned_by_current_user;
     }
 
-    public function insert_quiz() {
+    protected function insert_quiz() {
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
-        $params = array(':quiz_title'       => $this->quiz['quiz_title'],
-                        ':quiz_status'      => $this->quiz['quiz_status'],
-                        ':quiz_finish_message' => $this->quiz['quiz_finish_message'],
-                        ':quiz_color_bg'    => $this->quiz['quiz_color_bg'],
-                        ':quiz_color_text'  => $this->quiz['quiz_color_text'],
-                        ':quiz_color_border'=> $this->quiz['quiz_color_border'],
-                        ':quiz_owner'       => $this->quiz['quiz_owner'],
-                        ':quiz_created_by'  => $this->quiz['quiz_created_by'],
-                        ':quiz_created_at'  => $this->quiz['quiz_created_at'],
-                        ':quiz_updated_by'  => $this->quiz['quiz_updated_by'],
-                        ':quiz_updated_at'  => $this->quiz['quiz_updated_at']
+        $params = array(':quiz_title'       => self::$quiz['quiz_title'],
+                        ':quiz_status'      => self::$quiz['quiz_status'],
+                        ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
+                        ':quiz_color_bg'    => self::$quiz['quiz_color_bg'],
+                        ':quiz_color_text'  => self::$quiz['quiz_color_text'],
+                        ':quiz_color_border'=> self::$quiz['quiz_color_border'],
+                        ':quiz_owner'       => self::$quiz['quiz_owner'],
+                        ':quiz_created_by'  => self::$quiz['quiz_created_by'],
+                        ':quiz_created_at'  => self::$quiz['quiz_created_at'],
+                        ':quiz_updated_by'  => self::$quiz['quiz_updated_by'],
+                        ':quiz_updated_at'  => self::$quiz['quiz_updated_at']
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->quiz_table." (
@@ -245,17 +245,17 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            $this->response['quiz_id'] = $pdo->lastInsertId();
-            $this->response['status'] = 'success';
-            $this->response['action'] = 'insert';
+            self::$response['quiz_id'] = $pdo->lastInsertId();
+            self::$response['status'] = 'success';
+            self::$response['action'] = 'insert';
         } else {
-            $this->response['errors'][] = 'Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response['errors'][] = 'Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
 
-        return $this->response;
+        return self::$response;
     }
 
-    public function update_quiz() {
+    protected function update_quiz() {
         // connect to PDO
         $pdo = new enp_quiz_Db();
 
@@ -279,14 +279,14 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            $this->response['quiz_id'] = $this->quiz['quiz_id'];
-            $this->response['status'] = 'success';
-            $this->response['action'] = 'update';
+            self::$response['quiz_id'] = self::$quiz['quiz_id'];
+            self::$response['status'] = 'success';
+            self::$response['action'] = 'update';
         } else {
-            $this->response['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
 
-        return $this->response;
+        return self::$response;
     }
 
     /**
@@ -299,7 +299,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
      * @return   ID of saved question or false if error
      * @since    0.0.1
      */
-    public function save_question($question) {
+    protected function save_question($question) {
 
     }
 
@@ -313,7 +313,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
      * @return   ID of saved mc_option or false if error
      * @since    0.0.1
      */
-    public function save_mc_option($mc_option) {
+    protected function save_mc_option($mc_option) {
 
     }
 
@@ -326,13 +326,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
      * @return   ID of saved slider or false if error
      * @since    0.0.1
      */
-    public function save_slider($slider) {
+    protected function save_slider($slider) {
 
     }
 
     /**
-     * Populate $this->quiz array with values
-     * from $this->quiz_obj if they're not present in $this->quiz
+     * Populate self::$quiz array with values
+     * from self::$quiz_obj if they're not present in self::$quiz
      * We need all the values to brute update, but don't want to have to pass the
      * values in every form.
      *
@@ -340,43 +340,43 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
      * @return   ID of saved slider or false if error
      * @since    0.0.1
      */
-    public function set_update_quiz_params() {
-        $params = array(':quiz_id'          => $this->quiz_obj->get_quiz_id(),
-                        ':quiz_title'       => $this->quiz['quiz_title'],
-                        ':quiz_status'      => $this->quiz['quiz_status'],
-                        ':quiz_finish_message' => $this->quiz['quiz_finish_message'],
-                        ':quiz_color_bg'    => $this->quiz['quiz_color_bg'],
-                        ':quiz_color_text'  => $this->quiz['quiz_color_text'],
-                        ':quiz_color_border'=> $this->quiz['quiz_color_border'],
-                        ':quiz_owner'       => $this->quiz['quiz_owner'],
-                        ':quiz_updated_by'  => $this->quiz['quiz_updated_by'],
-                        ':quiz_updated_at'  => $this->quiz['quiz_updated_at']
+    protected function set_update_quiz_params() {
+        $params = array(':quiz_id'          => self::$quiz_obj->get_quiz_id(),
+                        ':quiz_title'       => self::$quiz['quiz_title'],
+                        ':quiz_status'      => self::$quiz['quiz_status'],
+                        ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
+                        ':quiz_color_bg'    => self::$quiz['quiz_color_bg'],
+                        ':quiz_color_text'  => self::$quiz['quiz_color_text'],
+                        ':quiz_color_border'=> self::$quiz['quiz_color_border'],
+                        ':quiz_owner'       => self::$quiz['quiz_owner'],
+                        ':quiz_updated_by'  => self::$quiz['quiz_updated_by'],
+                        ':quiz_updated_at'  => self::$quiz['quiz_updated_at']
                     );
         return $params;
     }
 
     /**
-    * Check to see if a value was passed in $this->quiz array
+    * Check to see if a value was passed in self::$quiz array
     * If it was, set it as the value. If it wasn't, set the value
-    * from $this->quiz_obj
+    * from self::$quiz_obj
     *
     * @param $key = key that should be set in the quiz array.
     * @param $default = int or string of default value if nothing is found
-    * @return value from either $this->quiz[$key] or $this->quiz_obj->get_quiz_$key()
+    * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
     */
-    public function set_quiz_value($key, $default) {
+    protected function set_quiz_value($key, $default) {
         $param_value = $default;
         // see if the value is already in our submitted quiz
-        if(array_key_exists($key, $this->quiz) && $this->quiz[$key] !== "") {
-            $param_value = $this->quiz[$key];
+        if(array_key_exists($key, self::$quiz) && self::$quiz[$key] !== "") {
+            $param_value = self::$quiz[$key];
         } else {
             // check to see if there's even an object
-            if($this->quiz_obj->get_quiz_id() !== null) {
+            if(self::$quiz_obj->get_quiz_id() !== null) {
                 // if it's not in our submited quiz, try to get it from the object
                 // dynamically create the quiz getter function
                 $get_obj_value = 'get_'.$key;
                 // get the quiz object value
-                $obj_value = $this->quiz_obj->$get_obj_value();
+                $obj_value = self::$quiz_obj->$get_obj_value();
 
                 if($obj_value !== null) {
                     $param_value = $obj_value;

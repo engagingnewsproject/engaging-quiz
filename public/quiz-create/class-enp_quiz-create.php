@@ -250,9 +250,9 @@ class Enp_quiz_Create {
 		}
 
 		// pass our quiz array to our quiz save class
-		$save_quiz = new Enp_quiz_Save_quiz($quiz);
+		$save_quiz = new Enp_quiz_Save_quiz();
 
-		$this->quiz_save_response = $save_quiz->save_quiz();
+		$this->quiz_save_response = $save_quiz->save($quiz);
 		// check to see if there is an errors array in the response
 		if(array_key_exists('errors', $this->quiz_save_response)) {
 			// exits the process and returns them to the same page
