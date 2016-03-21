@@ -34,6 +34,7 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
     public function load_content($content) {
         ob_start();
         $quiz = $this->load_quiz();
+        $enp_current_page = 'preview';
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-preview.php' );
         $content = ob_get_contents();
         ob_end_clean();

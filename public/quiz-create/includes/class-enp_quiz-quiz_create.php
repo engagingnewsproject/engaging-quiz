@@ -35,6 +35,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
         ob_start();
         $quiz = $this->load_quiz();
+        $enp_current_page = 'create';
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
         $content = ob_get_contents();
         ob_end_clean();

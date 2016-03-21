@@ -303,6 +303,8 @@ class Enp_quiz_Create {
 	* @return false if message, HTML output with messages if found
 	* @usage Display in templates using an action hook
 	*   	 do_action('enp_quiz_display_messages');
+	*		 To set error messages from child classes, add
+	*		 parent::$errors = array('error', 'messages')
 	*/
 	public function display_message() {
         $message_content = '';

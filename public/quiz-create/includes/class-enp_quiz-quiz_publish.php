@@ -24,15 +24,22 @@ class Enp_quiz_Quiz_publish extends Enp_quiz_Create {
     public function __construct() {
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
-        add_filter( 'the_content', array($this, 'load_template' ));
+        add_filter( 'the_content', array($this, 'load_content' ));
         // load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
     }
 
-    public function load_template() {
+    public function load_content($content) {
+        ob_start();
+        $quiz = $this->load_quiz();
+        $enp_current_page = 'publish';
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-publish.php' );
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        return $content;
     }
 
     public function enqueue_styles() {

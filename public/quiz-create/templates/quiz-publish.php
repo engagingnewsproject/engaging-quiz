@@ -6,6 +6,8 @@
  *
  * @since             0.0.1
  * @package           Enp_quiz
+ * Data available to this view:
+ * $quiz = quiz object (if exits), error page if it doesn't (TODO)
  */
 ?>
 
