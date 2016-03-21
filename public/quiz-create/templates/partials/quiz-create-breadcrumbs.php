@@ -1,6 +1,7 @@
 <?
 // we need to set a few states here to figure out what links are allowed
 // And what those links should be
+// $enp_current_page is set in the public/includes/class that loads the page
 $enp_create_url = ENP_QUIZ_CREATE_URL.$quiz->get_quiz_id().'/';
 $enp_create_class = ($enp_current_page === 'create' ? ' enp-quiz-breadcrumbs__link--active' : ' enp-quiz-breadcrumbs__link--disabled');
 $enp_preview_url = ENP_QUIZ_PREVIEW_URL.$quiz->get_quiz_id().'/';
