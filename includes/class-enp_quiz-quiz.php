@@ -53,7 +53,7 @@ class Enp_quiz_Quiz {
         return $quiz;
     }
 
-    public function set_quiz_object_values($quiz) {
+    protected function set_quiz_object_values($quiz) {
         $this->quiz_id = $this->set_quiz_id($quiz);
         $this->quiz_title = $this->set_quiz_title($quiz);
         $this->quiz_status = $this->set_quiz_status($quiz);
@@ -73,7 +73,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_id field from the database
     */
-    public function set_quiz_id($quiz) {
+    protected function set_quiz_id($quiz) {
         $quiz_id = $quiz['quiz_id'];
         return $quiz_id;
     }
@@ -83,7 +83,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_title field from the database
     */
-    public function set_quiz_title($quiz) {
+    protected function set_quiz_title($quiz) {
         $quiz_title = stripslashes($quiz['quiz_title']);
         return $quiz_title;
     }
@@ -93,7 +93,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return 'published' or 'draft'
     */
-    public function set_quiz_status($quiz) {
+    protected function set_quiz_status($quiz) {
         $quiz_status = $quiz['quiz_status'];
         if($quiz_status !== 'published') {
             $quiz_status = 'draft';
@@ -106,7 +106,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_finish_message field from the database
     */
-    public function set_quiz_finish_message($quiz) {
+    protected function set_quiz_finish_message($quiz) {
         $quiz_finish_message = stripslashes($quiz['quiz_finish_message']);
         return $quiz_finish_message;
     }
@@ -116,7 +116,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_owner field from the database
     */
-    public function set_quiz_owner($quiz) {
+    protected function set_quiz_owner($quiz) {
         $quiz_owner = $quiz['quiz_owner'];
         return $quiz_owner;
     }
@@ -126,7 +126,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return created_by field from the database
     */
-    public function set_quiz_created_by($quiz) {
+    protected function set_quiz_created_by($quiz) {
         $created_by = $quiz['quiz_created_by'];
         return $created_by;
     }
@@ -136,7 +136,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return created_at field from the database
     */
-    public function set_quiz_created_at($quiz) {
+    protected function set_quiz_created_at($quiz) {
         $created_at = $quiz['quiz_created_at'];
         return $created_at;
     }
@@ -146,7 +146,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return updated_by field from the database
     */
-    public function set_quiz_updated_by($quiz) {
+    protected function set_quiz_updated_by($quiz) {
         $updated_by = $quiz['quiz_updated_by'];
         return $updated_by;
     }
@@ -156,7 +156,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return updated_at field from the database
     */
-    public function set_quiz_updated_at($quiz) {
+    protected function set_quiz_updated_at($quiz) {
         $updated_at = $quiz['quiz_updated_at'];
         return $updated_at;
     }
@@ -166,7 +166,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_bg field from the database
     */
-    public function set_quiz_color_bg($quiz) {
+    protected function set_quiz_color_bg($quiz) {
         // TODO: Validate HEX
         $quiz_color_bg = $quiz['quiz_color_bg'];
         return $quiz_color_bg;
@@ -177,7 +177,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_text field from the database
     */
-    public function set_quiz_color_text($quiz) {
+    protected function set_quiz_color_text($quiz) {
         // TODO: Validate HEX
         $quiz_color_text = $quiz['quiz_color_text'];
         return $quiz_color_text;
@@ -188,7 +188,7 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_border field from the database
     */
-    public function set_quiz_color_border($quiz) {
+    protected function set_quiz_color_border($quiz) {
         // TODO: Validate HEX
         $quiz_color_border = $quiz['quiz_color_border'];
         return $quiz_color_border;

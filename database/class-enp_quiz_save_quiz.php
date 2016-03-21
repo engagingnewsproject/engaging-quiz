@@ -30,6 +30,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $this->quiz_obj = new Enp_quiz_Quiz($this->quiz['quiz_id']);
         // fill the quiz with all the values
         $this->quiz = $this->prepare_submitted_quiz($this->quiz);
+        /* TODO
+        *  have save_quiz() be called from here and return the response somehow
+        *  because save_quiz should be a private method.
+        */
+
 
     }
 
