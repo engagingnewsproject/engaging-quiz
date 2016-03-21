@@ -9,7 +9,7 @@
 
 <div class="enp-container enp-ab-create__container">
     <h1 class="enp-screen-reader-text enp-page-title enp-ab-create__page-title">Create A/B Test</h1>
-    <form class="enp-form enp-ab-create__form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+    <form class="enp-form enp-ab-create__form" method="post" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
         <fieldset class="enp-fieldset enp-ab-create-title">
             <label class="enp-label enp-ab-create__label enp-ab-create-title__label" for="enp-ab-name">
                 A/B Test Name
