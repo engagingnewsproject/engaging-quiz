@@ -22,17 +22,8 @@
  */
 class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     public function __construct() {
-        // we're including this as a fallback for the other pages.
-        // process save, if necessary
-        // if the enp-quiz-submit is posted, then they probably want to try to
-        // save the quiz. Be nice, try to save the quiz.
-        if(isset($_POST['enp-quiz-submit'])) {
-            add_action('template_redirect', array($this, 'save_quiz'), 1);
-        }
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
-        // runs after load_content because load_content clears out the content
-        add_action( 'enp_quiz_display_messages', array($this, 'display_message' ));
         // load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
@@ -49,32 +40,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         ob_end_clean();
 
         return $content;
-    }
-
-    public function display_message() {
-        $message_content = '';
-        if(!empty($this->errors)) {
-            $message_type = 'errors';
-            $messages = $this->errors;
-        } elseif(!empty($this->success)) {
-            $message_type = 'success';
-            $messages = $this->success;
-        } else {
-            return false;
-        }
-
-        if(!empty($messages)) {
-            $message_content .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
-                        <h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
-                        <ul class="enp-message__list enp-message__list--'.$message_type.'">';
-                foreach($messages as $message) {
-                    $message_content .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.$message.'</li>';
-                }
-            $message_content .='</ul>
-                    </section>';
-        }
-
-        echo $message_content;
     }
 
     public function enqueue_styles() {

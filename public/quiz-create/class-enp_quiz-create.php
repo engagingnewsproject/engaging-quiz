@@ -39,6 +39,7 @@ class Enp_quiz_Create {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	protected $version;
+	public static $errors;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -53,7 +54,6 @@ class Enp_quiz_Create {
 		$this->version = $version;
 
 		include_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
-
 		// load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
@@ -61,6 +61,15 @@ class Enp_quiz_Create {
 
 		add_action('init', array($this, 'add_enp_quiz_rewrite_tags'));
 		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
+		// we're including this as a fallback for the other pages.
+        // process save, if necessary
+        // if the enp-quiz-submit is posted, then they probably want to try to
+        // save the quiz. Be nice, try to save the quiz.
+        if(isset($_POST['enp-quiz-submit'])) {
+            add_action('template_redirect', array($this, 'save_quiz'), 1);
+        }
+		// custom action hook for displaying messages
+        add_action( 'enp_quiz_display_messages', array($this, 'display_message' ));
 	}
 
 	/**
@@ -230,10 +239,6 @@ class Enp_quiz_Create {
 		// get access to wpdb
 		global $wpdb;
 
-		// start an empty errors array. return the errors array at the end if they exist
-		$this->errors = array();
-		$this->success = array();
-
 		// extract values
 		// set the date_time to pass
 		$date_time = date("Y-m-d H:i:s");
@@ -253,22 +258,15 @@ class Enp_quiz_Create {
 		// initiate the save_quiz object
 		$save_quiz = new Enp_quiz_Save_quiz();
 		// save the quiz by passing our $quiz array to the save function
-		$this->quiz_save_response = $save_quiz->save($quiz);
+		$quiz_save_response = $save_quiz->save($quiz);
 		// check to see if there is an errors array in the response
-		if(array_key_exists('errors', $this->quiz_save_response)) {
+		if(array_key_exists('errors', $quiz_save_response)) {
 			// exits the process and returns them to the same page
-			$this->errors = $this->quiz_save_response['errors'];
-			return false;
-		} elseif($this->quiz_save_response['status'] === 'success') {
-			if($this->quiz_save_response['action'] === 'update') {
-				$this->success[] = 'Quiz updated.';
-			} else {
-				$this->success[] = 'Quiz created.';
-			}
+			self::$errors = $quiz_save_response['errors'];
 			return false;
 		} else {
 			// get the ID of the quiz that was just created
-			$this->saved_quiz_id = $this->quiz_save_response['quiz_id'];
+			$this->saved_quiz_id = $quiz_save_response['quiz_id'];
 			// figure out where they want to go
 			if(isset($_POST['enp-quiz-submit'])) {
 				// get the value of the button they clicked
@@ -277,15 +275,60 @@ class Enp_quiz_Create {
 				if($button_clicked === 'quiz-preview') {
 					wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$this->saved_quiz_id.'/' ) );
 					exit;
+				} elseif($button_clicked === 'quiz-publish') {
+					wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$this->saved_quiz_id.'/' ) );
+					exit;
 				} else {
+					if($quiz_save_response['status'] === 'success') {
+						if($quiz_save_response['action'] === 'update') {
+							$message = 'Quiz updated.';
+						} else {
+							$message = 'Quiz created.';
+						}
+
+						$message = urlencode($message);
+					}
 					// they just updated the same page.
-					wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/' ) );
+					wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/?enp_success_message='.$message ) );
 					exit;
 				}
 			}
 		}
 
 	}
+
+	/**
+	* Process any error/success messages and output
+	* them to the browser.
+	* @return false if message, HTML output with messages if found
+	* @usage Display in templates using an action hook
+	*   	 do_action('enp_quiz_display_messages');
+	*/
+	public function display_message() {
+        $message_content = '';
+        if(!empty(self::$errors)) {
+            $message_type = 'errors';
+            $messages = self::$errors;
+        } elseif(isset($_GET['enp_success_message'])) {
+            $message_type = 'success';
+            $messages = array($_GET['enp_success_message']);
+        } else {
+            return false;
+        }
+
+        if(!empty($messages)) {
+            $message_content .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
+                        <h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
+                        <ul class="enp-message__list enp-message__list--'.$message_type.'">';
+                foreach($messages as $message) {
+                    $message_content .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.$message.'</li>';
+                }
+            $message_content .='</ul>
+                    </section>';
+        }
+
+        echo $message_content;
+    }
 
 
 	/**

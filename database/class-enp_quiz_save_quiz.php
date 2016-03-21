@@ -22,7 +22,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                     $response;
 
     public function __construct() {
-
+        
     }
 
     public function save($quiz) {
