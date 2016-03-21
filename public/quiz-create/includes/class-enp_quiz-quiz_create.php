@@ -32,7 +32,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_template' ));
         // runs after load_template because load_template clears out the content
-        add_filter( 'the_content', array($this, 'display_errors' ), 11);
+        add_filter( 'the_content', array($this, 'display_message' ), 11);
         // load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
@@ -45,19 +45,31 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
     }
 
-    public function display_errors($content) {
-        $errors = '';
+    public function display_message($content) {
+        $message_content = '';
         if(!empty($this->errors)) {
-            $errors = '<section class="enp-quiz-errors enp-container">
-                        <h2 class="enp-quiz-errors__title">Form Errors</h2>
-                        <ul class="enp-errors__list">';
-                foreach($this->errors as $error) {
-                    $errors .= '<li class="enp-errors__item">'.$error.'</li>';
+            $message_type = 'errors';
+            $messages = $this->errors;
+        } elseif(!empty($this->success)) {
+            $message_type = 'success';
+            $messages = $this->success;
+        } else {
+            return false;
+        }
+
+
+        if(!empty($messages)) {
+            $message_content .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
+                        <h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
+                        <ul class="enp-message__list enp-message__list--'.$message_type.'">';
+                foreach($messages as $message) {
+                    $message_content .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.$message.'</li>';
                 }
-            $errors .='</ul>
+            $message_content .='</ul>
                     </section>';
         }
-        $content = $content . $errors;
+
+        $content = $content . $message_content;
         return $content;
     }
 

@@ -303,19 +303,34 @@ $placeholders: ();
         @include _(accordion__content--open);
     }
 
-    .enp-quiz-errors {
-        background: #FF9494;
-        color: #611500;
+    .enp-quiz-message {
         padding: 1rem;
     }
 
-    .enp-quiz-errors__title {
+    .enp-quiz-message__title {
         @include _(small-uppercase);
+    }
+
+    .enp-message__list {
+        @include _(ul-no-style);
+        margin-bottom: 0;
+    }
+
+    .enp-quiz-message--errors {
+        background: #FF9494;
         color: #611500;
     }
 
-    .enp-errors__list {
-        @include _(ul-no-style);
-        margin-bottom: 0;
+    .enp-quiz-message__title--errors {
+        color: #611500;
+    }
+
+    .enp-quiz-message--success {
+        background: #C0ECCD;
+        color: #225231;
+    }
+
+    .enp-quiz-message__title--success {
+        color: #225231;
     }
 }

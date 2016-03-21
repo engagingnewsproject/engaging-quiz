@@ -232,6 +232,7 @@ class Enp_quiz_Create {
 
 		// start an empty errors array. return the errors array at the end if they exist
 		$this->errors = array();
+		$this->success = array();
 
 		// extract values
 		// set the date_time to pass
@@ -249,14 +250,21 @@ class Enp_quiz_Create {
 			$quiz['questions'] = $_POST['enp_question'];
 		}
 
-		// pass our quiz array to our quiz save class
+		// initiate the save_quiz object
 		$save_quiz = new Enp_quiz_Save_quiz();
-
+		// save the quiz by passing our $quiz array to the save function
 		$this->quiz_save_response = $save_quiz->save($quiz);
 		// check to see if there is an errors array in the response
 		if(array_key_exists('errors', $this->quiz_save_response)) {
 			// exits the process and returns them to the same page
 			$this->errors = $this->quiz_save_response['errors'];
+			return false;
+		} elseif($this->quiz_save_response['status'] === 'success') {
+			if($this->quiz_save_response['action'] === 'update') {
+				$this->success[] = 'Quiz updated.';
+			} else {
+				$this->success[] = 'Quiz created.';
+			}
 			return false;
 		} else {
 			// get the ID of the quiz that was just created
