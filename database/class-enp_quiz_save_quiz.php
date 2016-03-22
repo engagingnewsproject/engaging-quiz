@@ -407,13 +407,50 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            self::$response['questions'][] = $pdo->lastInsertId();
-            self::$response['status'] = 'success';
-            self::$response['action'] = 'insert';
-            self::$response['messages']['success'][] = 'Question id '.$pdo->lastInsertId().' created.';
-
+            self::$response['questions'][$question['question_order']]['question_id'] = $pdo->lastInsertId();
+            self::$response['questions'][$question['question_order']]['status'] = 'success';
+            self::$response['questions'][$question['question_order']]['action'] = 'insert';
         } else {
-            self::$response['messages']['errors'][] = 'Question could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response['messages']['errors'][] = 'Question number '.$question['question_order'].' could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+        }
+
+        return self::$response;
+    }
+
+    /**
+    * Connects to DB and updates the question.
+    * @param $question = formatted question array
+    * @param $quiz_id = which quiz this question goes with
+    * @return builds and returns a response message
+    */
+    protected function update_question($question) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(':question_id'      => $question['question_id'],
+                        ':question_title'   => $question['question_title'],
+                        ':question_type'    => $question['question_type'],
+                        ':question_explanation' => $question['question_explanation'],
+                        ':question_order'   => $question['question_order']
+                    );
+        // write our SQL statement
+        $sql = "UPDATE ".$pdo->question_table."
+                   SET  question_title = :question_title,
+                        question_type = :question_type,
+                        question_explanation = :question_explanation,
+                        question_order = :question_order
+
+                 WHERE  question_id = :question_id";
+        // insert the quiz into the database
+        $stmt = $pdo->query($sql, $params);
+
+        // success!
+        if($stmt !== false) {
+            self::$response['questions'][$question['question_order']]['question_id'] = $question['question_id'];
+            self::$response['questions'][]['status'] = 'success';
+            self::$response['questions'][$question['question_order']]['action'] = 'update';
+        } else {
+            self::$response['messages']['errors'][] = 'Question number '.$question['question_order'].' could not be updated.';
         }
 
         return self::$response;

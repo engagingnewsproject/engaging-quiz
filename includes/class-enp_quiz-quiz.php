@@ -226,7 +226,7 @@ class Enp_quiz_Quiz {
 
         $questions = array();
         foreach($question_rows as $row => $question) {
-            $questions[] = $question['question_id'];
+            $questions[] = (int) $question['question_id'];
         }
         return $questions;
     }
@@ -349,6 +349,16 @@ class Enp_quiz_Quiz {
     public function get_quiz_color_border() {
         $quiz_color_border = $this->quiz_color_border;
         return $quiz_color_border;
+    }
+
+    /**
+    * Get the questions for our Quiz Object
+    * @param $quiz = quiz object
+    * @return array of question_id's as integers
+    */
+    public function get_questions() {
+        $questions = $this->questions;
+        return $questions;
     }
 
 

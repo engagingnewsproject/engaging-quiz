@@ -61,7 +61,7 @@ class Enp_quiz_Question {
         $this->question_id = $this->set_question_id();
         $this->question_title = $this->set_question_title();
         $this->question_type = $this->set_question_type();
-        $this->question_type = $this->set_question_type();
+        $this->question_explanation = $this->set_question_explanation();
         $this->question_order = $this->set_question_order();
     }
 

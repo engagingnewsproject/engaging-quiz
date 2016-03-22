@@ -1,9 +1,20 @@
+<?
+    if(!empty($question_array[$i])) {
+        $question_number = $question_array[$i];
+    } else {
+        $question_number = 0;
+    }
+    $question = new Enp_quiz_Question($question_number);
+?>
+
 <section class="enp-question-content">
+    <input type="hidden" name="enp_question[<?echo $i;?>]['question_id']" value="<? echo $question->get_question_id();?>" />
+
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title">
             Question
         </label>
-        <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $i;?>]['question_title']" placeholder="Why can't we tickle ourselves?"/></textarea>
+        <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $i;?>]['question_title']" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_question_title();?></textarea>
 
         <label for="enp-image-upload" class="enp-btn--add enp-image-upload"><svg class="enp-icon enp-icon--photo enp-image-upload__icon--photo">
             <use xlink:href="#icon-photo" />
@@ -34,7 +45,7 @@
     <div class="enp-question-inner enp-answer-explanation">
         <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label">Answer Explanation</label>
-            <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $i;?>]['question_explanation']" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."></textarea>
+            <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $i;?>]['question_explanation']" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_question_explanation();?></textarea>
         </fieldset>
     </div>
 </section>

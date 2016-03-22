@@ -9,7 +9,7 @@
  * Data available to this view:
  * $quiz = quiz object (if exits), false if new quiz
  */
- //var_dump($quiz);
+// var_dump($quiz);
  if(is_numeric($quiz->get_quiz_id()) || is_int($quiz->get_quiz_id())) {
      $quiz_action_url = site_url('enp-quiz/quiz-create/').$quiz->get_quiz_id().'/';
  } else {
@@ -38,7 +38,15 @@
 
         <?php
             $i = 0;
-            include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');?>
+            // count the number of questions
+            $question_array = $quiz->get_questions();
+            $question_count = count($question_array);
+            // even if it's zero, a do loop will do the loop once before checking for condition
+            do {
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
+                $i++;
+            } while($i < $question_count);
+        ?>
 
         <button type="submit" class="enp-btn--add enp-quiz-form__add-question" name="enp-quiz-submit" value="add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon">
           <use xlink:href="#icon-add" />
