@@ -154,7 +154,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(self::$quiz_obj->get_quiz_id() === null) {
             // Congratulations, quiz! You're ready for insert!
             self::$response = $this->insert_quiz();
-            
+
         } else {
             // check to make sure that the quiz owner matches
             $allow_update = $this->quiz_owned_by_current_user();
@@ -164,7 +164,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                 self::$response = $this->update_quiz();
             } else {
                 // Hmm... the user is trying to update a quiz that isn't theirs
-                self::$response['errors'][] = 'Quiz Update not Allowed';
+                self::$response['messages']['errors'][] = 'Quiz Update not Allowed';
             }
         }
 
@@ -249,8 +249,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response['quiz_id'] = $pdo->lastInsertId();
             self::$response['status'] = 'success';
             self::$response['action'] = 'insert';
+            self::$response['messages']['success'][] = 'Quiz created.';
         } else {
-            self::$response['errors'][] = 'Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response['messages']['errors'][] = 'Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
 
         return self::$response;
@@ -283,8 +284,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response['quiz_id'] = self::$quiz['quiz_id'];
             self::$response['status'] = 'success';
             self::$response['action'] = 'update';
+            self::$response['messages']['success'][] = 'Quiz updated.';
         } else {
-            self::$response['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response['messages']['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
 
         return self::$response;

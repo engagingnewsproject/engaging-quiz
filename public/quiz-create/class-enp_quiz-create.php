@@ -39,7 +39,7 @@ class Enp_quiz_Create {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	protected $version;
-	public static $errors;
+	public static $messages;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -68,7 +68,7 @@ class Enp_quiz_Create {
             add_action('template_redirect', array($this, 'save_quiz'), 1);
         }
 		// custom action hook for displaying messages
-        add_action( 'enp_quiz_display_messages', array($this, 'display_message' ));
+        add_action( 'enp_quiz_display_messages', array($this, 'display_messages' ));
 	}
 
 	/**
@@ -258,12 +258,14 @@ class Enp_quiz_Create {
 		$save_quiz = new Enp_quiz_Save_quiz();
 		// save the quiz by passing our $quiz array to the save function
 		$quiz_save_response = $save_quiz->save($quiz);
-		// check to see if there is an errors array in the response
-		if(array_key_exists('errors', $quiz_save_response)) {
-			// exits the process and returns them to the same page
-			self::$errors = $quiz_save_response['errors'];
-			return false;
-		} else {
+
+		// set it as our messages to return to the user
+		self::$messages = $quiz_save_response['messages'];
+
+		// check to see if we have a successful save response from the save class
+		// REMEMBER: A successful save can still have an error message
+		// such as "Quiz Updated. Hey! You don't have any questions though!"
+		if($quiz_save_response['status'] === 'success') {
 			// get the ID of the quiz that was just created
 			$this->saved_quiz_id = $quiz_save_response['quiz_id'];
 			// figure out where they want to go
@@ -278,20 +280,28 @@ class Enp_quiz_Create {
 					wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$this->saved_quiz_id.'/' ) );
 					exit;
 				} else {
-					if($quiz_save_response['status'] === 'success') {
-						if($quiz_save_response['action'] === 'update') {
-							$message = 'Quiz updated.';
-						} else {
-							$message = 'Quiz created.';
-						}
 
-						$message = urlencode($message);
+					if($quiz_save_response['action'] === 'update') {
+						// we're updating, so we can return them to the same page
+						// Displays success/error message from self::$messages
+						return false;
+					} else {
+						// we need to redirect them, because they created a quiz
+						// set a messages array to pass to url on redirect
+						$url_query = http_build_query(array('enp_messages' => self::$messages));
+						// they just created a new page (quiz) so we need to redirect them to it and post our messages
+						wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/?'.$url_query ) );
+						exit;
 					}
-					// they just updated the same page.
-					wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/?enp_success_message='.$message ) );
-					exit;
+
 				}
+			} else {
+				// no submit button clicked? Should never happen
+				return false;
 			}
+		} else {
+			// No successful save, so return them to the same page and display error messages
+			return false;
 		}
 
 	}
@@ -303,19 +313,31 @@ class Enp_quiz_Create {
 	* @usage Display in templates using an action hook
 	*   	 do_action('enp_quiz_display_messages');
 	*		 To set error messages from child classes, add
-	*		 parent::$errors = array('error', 'messages')
+	*		 parent::$messages['errors'][] = 'error message';
 	*/
-	public function display_message() {
+	public function display_messages() {
+		// try to get self::$messages first bc they might
+		// have reloaded a page with a $_GET variable or something
+		// and we want our self::$messages ones to override that
+		if(!empty(self::$messages)) {
+			// check for self first
+			$messages = self::$messages;
+		} elseif(isset($_GET['enp_messages'])) {
+			// check URL second
+			$messages = $_GET['enp_messages'];
+		} else {
+			// no messages. Fail.
+			return false;
+		}
+
         $message_content = '';
-        if(!empty(self::$errors)) {
+        if(!empty($messages['errors'])) {
             $message_type = 'errors';
-            $messages = self::$errors;
-			$message_content .= $this->display_message_html($messages, $message_type);
+			$message_content .= $this->display_message_html($messages['errors'], $message_type);
         }
-		if(isset($_GET['enp_success_message'])) {
+		if(!empty($messages['success'])) {
             $message_type = 'success';
-            $messages = array($_GET['enp_success_message']);
-			$message_content .= $this->display_message_html($messages, $message_type);
+			$message_content .= $this->display_message_html($messages['success'], $message_type);
         }
 
         if(!empty($message_content)) {
@@ -323,7 +345,6 @@ class Enp_quiz_Create {
         } else {
 			return false;
 		}
-
 
     }
 
