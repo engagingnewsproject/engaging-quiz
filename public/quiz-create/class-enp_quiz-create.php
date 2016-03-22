@@ -274,8 +274,16 @@ class Enp_quiz_Create {
 				$button_clicked = $_POST['enp-quiz-submit'];
 				// if it = preview, send them to the preview page
 				if($button_clicked === 'quiz-preview') {
-					wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$this->saved_quiz_id.'/' ) );
-					exit;
+					// they want to preview. Let's see if we have any errors
+					if(!empty(self::$messages['errors'])){
+						// there are errors, let's return them to the current page to fix it
+						return false;
+					} else {
+						// success! no errors. Move on.
+						wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$this->saved_quiz_id.'/' ) );
+						exit;
+					}
+
 				} elseif($button_clicked === 'quiz-publish') {
 					wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$this->saved_quiz_id.'/' ) );
 					exit;

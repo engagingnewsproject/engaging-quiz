@@ -250,6 +250,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response['status'] = 'success';
             self::$response['action'] = 'insert';
             self::$response['messages']['success'][] = 'Quiz created.';
+
         } else {
             self::$response['messages']['errors'][] = 'Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
@@ -288,8 +289,133 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         } else {
             self::$response['messages']['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
+        // runs all checks to build error messages (if any)
+        $this->build_messages();
 
         return self::$response;
+    }
+    /**
+    * Runs all checks to build error messages on quiz form
+    * All the functions it runs either return false or
+    * add to the self::$response array
+    * @return false
+    */
+    protected function build_messages() {
+        // check to see if they need to add questions
+        if($this->check_for_questions_message() === 'has_questions') {
+            // we have a question title and explanation in the first question,
+            // so let's check more in depth. This checks for all errors
+            // in all questions
+            $this->check_question_errors();
+        }
+
+        // we don't need to return anything since the functions
+        // themselves are building the response messages
+        return false;
+    }
+
+    /**
+    * Checks to see if the first question is empty. If it is, add an error
+    * @return 'has_questions' if question found, false if there are questions
+    *
+    */
+    protected function check_for_questions_message() {
+        if(empty(self::$quiz['questions'][0]['question-title']) && empty(self::$quiz['questions'][0]['answer-explanation'])) {
+            self::$response['messages']['errors'][] = 'You need to add a question to your quiz';
+            return false;
+        }
+        return 'has_questions';
+    }
+
+    protected function check_question_errors() {
+        $i = 1;
+        // this is weird to set it as OK initially, but...
+        $return_message = 'no_errors';
+        // loop through all questions and check for titles, answer explanations, etc
+        foreach(self::$quiz['questions'] as $question) {
+            // checks if the title is empty or not
+            $check_title = $this->check_question_title($question['question-title'], $i);
+            if($check_title === 'no_title') {
+                $return_message = 'has_errors';
+            }
+            // checks if the answer explanation is empty or not
+            $check_explanation = $this->check_question_answer_explanation($question['answer-explanation'], $i);
+            if($check_explanation === 'no_answer_explanation') {
+                $return_message = 'has_errors';
+            }
+
+            // check to see if the question is a slider or mc choice
+            if($question['question-type'] === 'mc') {
+                $this->check_question_mc_options($question['mc-options'], $i);
+            } elseif($question['question-type'] === 'slider') {
+                // TODO: create sliders...
+                self::$response['messages']['errors'][] = 'Question '.$i.' does not have a complete slider because that functionality does not exist yet.';
+            } else {
+                // should never happen...
+                self::$response['messages']['errors'][] = 'Question '.$i.' does not have a question type (multiple choice, slider, etc).';
+            }
+            $i++;
+        }
+
+        return $return_message;
+    }
+
+    /**
+    * Checks questions for titles
+    * @return true if no question, false if there are questions
+    *
+    */
+    protected function check_question_title($question_title, $question_number) {
+        $return_message = 'has_title';
+        if(empty($question_title)) {
+            self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing an actual question.';
+            $return_message = 'no_title';
+        }
+
+        return $return_message;
+    }
+
+    /**
+    * Checks questions for answer explanation
+    * @return string 'has_answer_explanation' if found, 'no_answer_explanation' if not found
+    *
+    */
+    protected function check_question_answer_explanation($answer_explanation, $question_number) {
+        $return_message = 'has_answer_explanation';
+        if(empty($answer_explanation)) {
+            self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing an answer explanation.';
+            $return_message = 'no_answer_explanation';
+        }
+
+        return $return_message;
+    }
+
+    /**
+    * Checks questions for answer explanation
+    * @return string 'has_mc_options' if found, 'no_mc_options' if not found
+    *
+    */
+    protected function check_question_mc_options($mc_options, $question_number) {
+        $return_message = 'no_mc_options';
+        if(empty($mc_options)) {
+            self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing multiple choice options.';
+            $return_message = 'no_mc_options';
+            return $return_message;
+        }
+
+        if(count($mc_options) === 1) {
+            self::$response['messages']['errors'][] = 'Question '.$question_number.' does not have enough multiple choice options.';
+        } else {
+            foreach($mc_options as $option) {
+                // check to see if one has been chosen
+                if($option['correct']) {
+                    // we have a correct option! yay! Everything is good.
+                    $return_message = 'has_mc_options';
+                }
+            }
+        }
+
+        return $return_message;
     }
 
     /**
