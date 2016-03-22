@@ -1,5 +1,9 @@
 <?
-
+/**
+* Create a quiz object
+* @param $quiz_id = the id of the quiz you want to get
+* @return quiz object
+*/
 class Enp_quiz_Quiz {
     public  $quiz_id,
             $quiz_title,
@@ -12,11 +16,28 @@ class Enp_quiz_Quiz {
             $quiz_created_by,
             $quiz_created_at,
             $quiz_updated_by,
-            $quiz_updated_at;
+            $quiz_updated_at,
+            $questions;
+
+    protected static $quiz;
 
     public function __construct($quiz_id) {
         // returns false if no quiz found
         $this->get_quiz_by_id($quiz_id);
+    }
+
+    /**
+    *   Build quiz object by id
+    *
+    *   @param  $quiz_id = quiz_id that you want to select
+    *   @return quiz object, false if not found
+    **/
+    public function get_quiz_by_id($quiz_id) {
+        self::$quiz = $this->select_quiz_by_id($quiz_id);
+        if(self::$quiz !== false) {
+            self::$quiz = $this->set_quiz_object_values();
+        }
+        return self::$quiz;
     }
 
     /**
@@ -40,32 +61,23 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    *   Build quiz object by id
-    *
-    *   @param  $quiz_id = quiz_id that you want to select
-    *   @return quiz object, false if not found
-    **/
-    public function get_quiz_by_id($quiz_id) {
-        $quiz = $this->select_quiz_by_id($quiz_id);
-        if($quiz !== false) {
-            $quiz = $this->set_quiz_object_values($quiz);
-        }
-        return $quiz;
-    }
-
-    protected function set_quiz_object_values($quiz) {
-        $this->quiz_id = $this->set_quiz_id($quiz);
-        $this->quiz_title = $this->set_quiz_title($quiz);
-        $this->quiz_status = $this->set_quiz_status($quiz);
-        $this->quiz_finish_message = $this->set_quiz_finish_message($quiz);
-        $this->quiz_owner = $this->set_quiz_owner($quiz);
-        $this->quiz_created_by = $this->set_quiz_created_by($quiz);
-        $this->quiz_created_at = $this->set_quiz_created_at($quiz);
-        $this->quiz_updated_by = $this->set_quiz_updated_by($quiz);
-        $this->quiz_updated_at = $this->set_quiz_updated_at($quiz);
-        $this->quiz_color_bg = $this->set_quiz_color_bg($quiz);
-        $this->quiz_color_text = $this->set_quiz_color_text($quiz);
-        $this->quiz_color_border = $this->set_quiz_color_border($quiz);
+    * Hook up all the values for the object
+    * @param $quiz = row from the quiz_table
+    */
+    protected function set_quiz_object_values() {
+        $this->quiz_id = $this->set_quiz_id();
+        $this->quiz_title = $this->set_quiz_title();
+        $this->quiz_status = $this->set_quiz_status();
+        $this->quiz_finish_message = $this->set_quiz_finish_message();
+        $this->quiz_owner = $this->set_quiz_owner();
+        $this->quiz_created_by = $this->set_quiz_created_by();
+        $this->quiz_created_at = $this->set_quiz_created_at();
+        $this->quiz_updated_by = $this->set_quiz_updated_by();
+        $this->quiz_updated_at = $this->set_quiz_updated_at();
+        $this->quiz_color_bg = $this->set_quiz_color_bg();
+        $this->quiz_color_text = $this->set_quiz_color_text();
+        $this->quiz_color_border = $this->set_quiz_color_border();
+        $this->questions = $this->set_questions();
     }
 
     /**
@@ -73,8 +85,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_id field from the database
     */
-    protected function set_quiz_id($quiz) {
-        $quiz_id = $quiz['quiz_id'];
+    protected function set_quiz_id() {
+        $quiz_id = self::$quiz['quiz_id'];
         return $quiz_id;
     }
 
@@ -83,8 +95,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_title field from the database
     */
-    protected function set_quiz_title($quiz) {
-        $quiz_title = stripslashes($quiz['quiz_title']);
+    protected function set_quiz_title() {
+        $quiz_title = stripslashes(self::$quiz['quiz_title']);
         return $quiz_title;
     }
 
@@ -93,8 +105,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return 'published' or 'draft'
     */
-    protected function set_quiz_status($quiz) {
-        $quiz_status = $quiz['quiz_status'];
+    protected function set_quiz_status() {
+        $quiz_status = self::$quiz['quiz_status'];
         if($quiz_status !== 'published') {
             $quiz_status = 'draft';
         }
@@ -106,8 +118,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_finish_message field from the database
     */
-    protected function set_quiz_finish_message($quiz) {
-        $quiz_finish_message = stripslashes($quiz['quiz_finish_message']);
+    protected function set_quiz_finish_message() {
+        $quiz_finish_message = stripslashes(self::$quiz['quiz_finish_message']);
         return $quiz_finish_message;
     }
 
@@ -116,8 +128,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_owner field from the database
     */
-    protected function set_quiz_owner($quiz) {
-        $quiz_owner = $quiz['quiz_owner'];
+    protected function set_quiz_owner() {
+        $quiz_owner = self::$quiz['quiz_owner'];
         return $quiz_owner;
     }
 
@@ -126,8 +138,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return created_by field from the database
     */
-    protected function set_quiz_created_by($quiz) {
-        $created_by = $quiz['quiz_created_by'];
+    protected function set_quiz_created_by() {
+        $created_by = self::$quiz['quiz_created_by'];
         return $created_by;
     }
 
@@ -136,8 +148,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return created_at field from the database
     */
-    protected function set_quiz_created_at($quiz) {
-        $created_at = $quiz['quiz_created_at'];
+    protected function set_quiz_created_at() {
+        $created_at = self::$quiz['quiz_created_at'];
         return $created_at;
     }
 
@@ -146,8 +158,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return updated_by field from the database
     */
-    protected function set_quiz_updated_by($quiz) {
-        $updated_by = $quiz['quiz_updated_by'];
+    protected function set_quiz_updated_by() {
+        $updated_by = self::$quiz['quiz_updated_by'];
         return $updated_by;
     }
 
@@ -156,8 +168,8 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return updated_at field from the database
     */
-    protected function set_quiz_updated_at($quiz) {
-        $updated_at = $quiz['quiz_updated_at'];
+    protected function set_quiz_updated_at() {
+        $updated_at = self::$quiz['quiz_updated_at'];
         return $updated_at;
     }
 
@@ -166,9 +178,9 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_bg field from the database
     */
-    protected function set_quiz_color_bg($quiz) {
+    protected function set_quiz_color_bg() {
         // TODO: Validate HEX
-        $quiz_color_bg = $quiz['quiz_color_bg'];
+        $quiz_color_bg = self::$quiz['quiz_color_bg'];
         return $quiz_color_bg;
     }
 
@@ -177,9 +189,9 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_text field from the database
     */
-    protected function set_quiz_color_text($quiz) {
+    protected function set_quiz_color_text() {
         // TODO: Validate HEX
-        $quiz_color_text = $quiz['quiz_color_text'];
+        $quiz_color_text = self::$quiz['quiz_color_text'];
         return $quiz_color_text;
     }
 
@@ -188,10 +200,35 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_border field from the database
     */
-    protected function set_quiz_color_border($quiz) {
+    protected function set_quiz_color_border() {
         // TODO: Validate HEX
-        $quiz_color_border = $quiz['quiz_color_border'];
+        $quiz_color_border = self::$quiz['quiz_color_border'];
         return $quiz_color_border;
+    }
+
+    /**
+    * Set the questions for our Quiz Object
+    * @param $quiz_id
+    * @return questions array of ids array(3,4,5) from the database
+    */
+    protected function set_questions() {
+        $quiz_id = self::$quiz['quiz_id'];
+
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":quiz_id" => $quiz_id
+        );
+        $sql = "SELECT question_id from ".$pdo->question_table." WHERE
+                quiz_id = :quiz_id";
+        $stmt = $pdo->query($sql, $params);
+        $question_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $questions = array();
+        foreach($question_rows as $row => $question) {
+            $questions[] = $question['question_id'];
+        }
+        return $questions;
     }
 
     /**

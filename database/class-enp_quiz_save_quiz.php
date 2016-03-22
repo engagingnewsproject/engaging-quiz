@@ -34,13 +34,14 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
         // fill the quiz with all the values
         self::$quiz = $this->prepare_submitted_quiz(self::$quiz);
+        self::$quiz = $this->prepare_submitted_questions(self::$quiz);
         // actually save the quiz, and return the response
         return $this->save_quiz();
     }
 
     /**
     * The quiz they submit isn't in the exact format we want it in
-    * so we need to reindex it to a nice format and check their values
+    * so we need to reindex it to a nice format and set their values
     *
     * @param $quiz = array() in this format:
     *        $quiz = array(
@@ -86,6 +87,46 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         return $quiz;
     }
+    /**
+    * Reformat and set values for all submitted questions
+    *
+    * @param $questions = array() in this format:
+    *        $questions = array(
+    *                        array(
+    *                            'question_title' => $_POST['enp_quiz'],
+    *                            'question_type' => $_POST['enp_question'], // array of questions
+    *                            'question_explanation' => $user_id,
+    *                        ),
+    *                    );
+    * @return nicely formatted and value validated questions array ready for saving
+    */
+    protected function prepare_submitted_questions($quiz) {
+        $i = 0;
+        $default_questions = array();
+        foreach(self::$quiz['questions'] as $question) {
+            // set the defaults/get the submitted values
+            $question_id = $this->set_question_value('question_id', $i, 0);
+            $question_title = $this->set_question_value('question_title', $i, 'Untitled');
+            $question_type = $this->set_question_value('question_type', $i, '');
+            $question_explanation = $this->set_question_value('question_explanation', $i, '');
+
+            $default_questions['questions'][$i] =  array(
+                                        'question_id' => $question_id,
+                                        'question_title' => $question_title,
+                                        'question_type' => $question_type,
+                                        'question_explanation' => $question_explanation,
+                                        'question_order' => $i,
+                                    );
+            $i++;
+        }
+
+        // We don't want to lose anything that was in the sent quiz
+        // so we'll merge them to make sure we don't lose anything
+        $quiz = array_merge($quiz, $default_questions);
+
+        return $quiz;
+
+    }
 
     /**
     * Reformats quiz array into something easier to work with
@@ -102,11 +143,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             unset($submitted_quiz['quiz']);
         }
 
-        if(array_key_exists('question', $submitted_quiz) && is_array($submitted_quiz['question'])) {
+        if(array_key_exists('questions', $submitted_quiz) && is_array($submitted_quiz['questions'])) {
             // get the questions
             $flattened_quiz['questions'] = $submitted_quiz['questions'];
             // unset (delete) the quiz
-            unset($submitted_quiz['question']);
+            unset($submitted_quiz['questions']);
         }
 
         // merge the remainder
@@ -154,7 +195,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(self::$quiz_obj->get_quiz_id() === null) {
             // Congratulations, quiz! You're ready for insert!
             self::$response = $this->insert_quiz();
-
+            // set the quiz_id on our array self::quiz array now that we have one
+            self::$quiz['quiz_id'] = self::$response['quiz_id'];
         } else {
             // check to make sure that the quiz owner matches
             $allow_update = $this->quiz_owned_by_current_user();
@@ -165,8 +207,37 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             } else {
                 // Hmm... the user is trying to update a quiz that isn't theirs
                 self::$response['messages']['errors'][] = 'Quiz Update not Allowed';
+                return false;
             }
         }
+
+        // save all of our questions
+        // check to make sure a quiz_id is there
+        if(self::$quiz['quiz_id'] !== 0) {
+            // check to see if we HAVE questions to save
+            if(!empty(self::$quiz['questions'])){
+                // loop through the questions and save each one
+                foreach(self::$quiz['questions'] as $question) {
+                    // insert the question
+                    if($question['question_id'] === 0) {
+                        self::$response = $this->insert_question($question);
+                    } else {
+                        self::$response = $this->update_question($question);
+                    }
+                }
+            } else {
+
+            }
+
+        } else {
+            // hopefully won't ever happen... this would mean that the quiz_insert failed
+            // so we don't have a quiz to assign these questions to
+            self::$response['messages']['errors'][] = 'Questions could not be saved to your quiz.';
+            return false;
+        }
+
+        // runs all checks to build error messages (if any)
+        $this->build_messages();
 
         return self::$response;
     }
@@ -197,7 +268,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         return $quiz_owned_by_current_user;
     }
-
+    /**
+    * Connects to DB and inserts the quiz.
+    * @return builds and returns a response message
+    */
     protected function insert_quiz() {
         // connect to PDO
         $pdo = new enp_quiz_Db();
@@ -258,6 +332,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return self::$response;
     }
 
+    /**
+    * Connects to DB and updates the quiz.
+    * @return builds and returns a response message
+    */
     protected function update_quiz() {
         // connect to PDO
         $pdo = new enp_quiz_Db();
@@ -289,11 +367,58 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         } else {
             self::$response['messages']['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
         }
-        // runs all checks to build error messages (if any)
-        $this->build_messages();
 
         return self::$response;
     }
+
+    /**
+    * Connects to DB and inserts the question.
+    * @param $question = formatted question array
+    * @param $quiz_id = which quiz this question goes with
+    * @return builds and returns a response message
+    */
+    protected function insert_question($question) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(':quiz_id'          => self::$quiz['quiz_id'],
+                        ':question_title'   => $question['question_title'],
+                        ':question_type'    => $question['question_type'],
+                        ':question_explanation' => $question['question_explanation'],
+                        ':question_order'   => $question['question_order'],
+                    );
+        // write our SQL statement
+        $sql = "INSERT INTO ".$pdo->question_table." (
+                                            quiz_id,
+                                            question_title,
+                                            question_type,
+                                            question_explanation,
+                                            question_order
+                                        )
+                                        VALUES(
+                                            :quiz_id,
+                                            :question_title,
+                                            :question_type,
+                                            :question_explanation,
+                                            :question_order
+                                        )";
+        // insert the quiz into the database
+        $stmt = $pdo->query($sql, $params);
+
+        // success!
+        if($stmt !== false) {
+            self::$response['questions'][] = $pdo->lastInsertId();
+            self::$response['status'] = 'success';
+            self::$response['action'] = 'insert';
+            self::$response['messages']['success'][] = 'Question id '.$pdo->lastInsertId().' created.';
+
+        } else {
+            self::$response['messages']['errors'][] = 'Question could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+        }
+
+        return self::$response;
+    }
+
     /**
     * Runs all checks to build error messages on quiz form
     * All the functions it runs either return false or
@@ -320,7 +445,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *
     */
     protected function check_for_questions_message() {
-        if(empty(self::$quiz['questions'][0]['question-title']) && empty(self::$quiz['questions'][0]['answer-explanation'])) {
+        if(empty(self::$quiz['questions'][0]['question_title']) && empty(self::$quiz['questions'][0]['question_explanation'])) {
             self::$response['messages']['errors'][] = 'You need to add a question to your quiz';
             return false;
         }
@@ -334,20 +459,22 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // loop through all questions and check for titles, answer explanations, etc
         foreach(self::$quiz['questions'] as $question) {
             // checks if the title is empty or not
-            $check_title = $this->check_question_title($question['question-title'], $i);
+            $check_title = $this->check_question_title($question['question_title'], $i);
             if($check_title === 'no_title') {
                 $return_message = 'has_errors';
             }
             // checks if the answer explanation is empty or not
-            $check_explanation = $this->check_question_answer_explanation($question['answer-explanation'], $i);
-            if($check_explanation === 'no_answer_explanation') {
+            $check_explanation = $this->check_question_question_explanation($question['question_explanation'], $i);
+            if($check_explanation === 'no_question_explanation') {
                 $return_message = 'has_errors';
             }
 
             // check to see if the question is a slider or mc choice
-            if($question['question-type'] === 'mc') {
-                $this->check_question_mc_options($question['mc-options'], $i);
-            } elseif($question['question-type'] === 'slider') {
+            if($question['question_type'] === 'mc') {
+                //TODO
+                // add mc_options if mc question type
+                // $this->check_question_mc_options($question['mc_options'], $i);
+            } elseif($question['question_type'] === 'slider') {
                 // TODO: create sliders...
                 self::$response['messages']['errors'][] = 'Question '.$i.' does not have a complete slider because that functionality does not exist yet.';
             } else {
@@ -377,14 +504,14 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
     /**
     * Checks questions for answer explanation
-    * @return string 'has_answer_explanation' if found, 'no_answer_explanation' if not found
+    * @return string 'has_question_explanation' if found, 'no_question_explanation' if not found
     *
     */
-    protected function check_question_answer_explanation($answer_explanation, $question_number) {
-        $return_message = 'has_answer_explanation';
-        if(empty($answer_explanation)) {
+    protected function check_question_question_explanation($question_explanation, $question_number) {
+        $return_message = 'has_question_explanation';
+        if(empty($question_explanation)) {
             self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing an answer explanation.';
-            $return_message = 'no_answer_explanation';
+            $return_message = 'no_question_explanation';
         }
 
         return $return_message;
@@ -511,7 +638,40 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                     $param_value = $obj_value;
                 }
             }
+        }
 
+        return $param_value;
+    }
+
+
+    /**
+    * Check to see if a value was passed in self::$quiz['questions'] array
+    * If it was, set it as the value. If it wasn't, set the value
+    * from self::$quiz_obj
+    *
+    * @param $key = key that should be set in the quiz['questions'] array.
+    * @param $default = int or string of default value if nothing is found
+    * @return value from either self::$quiz['questions'][$question_number][$key] or self::$quiz_obj->get_question_$key()
+    */
+    protected function set_question_value($key, $question_number, $default) {
+        $param_value = $default;
+        // see if the value is already in our submitted quiz
+        if(array_key_exists($key, self::$quiz['questions'][$question_number]) && self::$quiz['questions'][$question_number][$key] !== "") {
+            $param_value = self::$quiz['questions'][$question_number][$key];
+        } else {
+            // check to see if there's even a question_id to try to get
+            if(array_key_exists('question_id', self::$quiz['questions'][$question_number]) &&  self::$quiz['questions'][$question_number]['question_id'] !== 0) {
+                // if it's not in our submited quiz, try to get it from the object
+                // dynamically create the quiz getter function
+                $question_obj = new Enp_quiz_Question(self::$quiz['questions'][$question_number]['question_id']);
+                $get_obj_value = 'get_'.$key;
+                // get the quiz object value
+                $obj_value = $question_obj->$get_obj_value();
+                // if the object value isn't null, then we have a value to set
+                if($obj_value !== null) {
+                    $param_value = $obj_value;
+                }
+            }
         }
 
         return $param_value;
