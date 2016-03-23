@@ -118,10 +118,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $default_questions = array();
         foreach(self::$quiz['questions'] as $question) {
             // set the defaults/get the submitted values
-            $question_id = $this->set_question_value('question_id', $i, 0);
-            $question_title = $this->set_question_value('question_title', $i, '');
-            $question_type = $this->set_question_value('question_type', $i, '');
-            $question_explanation = $this->set_question_value('question_explanation', $i, '');
+            $question_id = $this->set_question_value('question_id', $question, 0);
+            $question_title = $this->set_question_value('question_title', $question, '');
+            $question_type = $this->set_question_value('question_type', $question, '');
+            $question_explanation = $this->set_question_value('question_explanation', $question, '');
 
             $default_questions['questions'][$i] =  array(
                                         'question_id' => $question_id,
@@ -132,7 +132,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                     );
 
             if($question_type === 'mc') {
-                $default_questions['questions'][$i]['mc_option'] = $this->prepare_submitted_mc_options(self::$quiz['questions'][$i], $i);
+                $default_questions['questions'][$i]['mc_option'] = $this->prepare_submitted_mc_options(self::$quiz['questions'][$i]['mc_option'], $i);
             } elseif($question_type === 'slider') {
                 // TODO: Process sliders
             }
@@ -161,15 +161,15 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *                    );
     * @return nicely formatted and value validated questions array ready for saving
     */
-    protected function prepare_submitted_mc_options($question, $question_i) {
+    protected function prepare_submitted_mc_options($mc_options, $question_i) {
         $i = 0;
         $default_mc_options = array();
 
-        foreach($question['mc_option'] as $mc_option) {
+        foreach($mc_options as $mc_option) {
             // set the defaults/get the submitted values
-            $mc_option_id = $this->set_mc_option_value('mc_option_id', $question, $i, 0);
-            $mc_option_content = $this->set_mc_option_value('mc_option_content', $question, $i, '');
-            $mc_option_correct = $this->set_mc_option_value('mc_option_correct', $question, $i, 0);
+            $mc_option_id = $this->set_mc_option_value('mc_option_id', $mc_option, $i, 0);
+            $mc_option_content = $this->set_mc_option_value('mc_option_content', $mc_option, $i, '');
+            $mc_option_correct = $this->set_mc_option_value('mc_option_correct', $mc_option, $i, 0);
 
             $default_mc_options[$i] =  array(
                                         'mc_option_id' => $mc_option_id,
@@ -182,9 +182,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         ///var_dump($default_mc_options);
         // We don't want to lose anything that was in the sent quiz
         // so we'll merge them to make sure we don't lose anything
-        $question['mc_option'] = $default_mc_options;
+        $mc_options = $default_mc_options;
 
-        return $question['mc_option'];
+        return $mc_options;
 
     }
 
@@ -284,6 +284,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(self::$quiz['quiz_id'] !== 0) {
             // check to see if we HAVE questions to save
             if(!empty(self::$quiz['questions'])){
+                var_dump(self::$quiz['questions']);
                 // loop through the questions and save each one
                 foreach(self::$quiz['questions'] as $question) {
 
@@ -752,9 +753,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * @param $default = int or string of default value if nothing is found
     * @return value from either self::$quiz['questions'][$question_number][$key] or self::$quiz_obj->get_question_$key()
     */
-    protected function set_question_value($key, $question_number, $default) {
+    protected function set_question_value($key, $question, $default) {
         $param_value = $default;
-        $question = self::$quiz['questions'][$question_number];
         // see if the value is already in our submitted quiz
         if(array_key_exists($key, $question) && $question[$key] !== "") {
             $param_value = $question[$key];
@@ -786,10 +786,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * @param $default = int or string of default value if nothing is found
     * @return value from eitherself::$quiz['questions'][$question_i]['mc_option'][$mc_option_i] or $mc_option_obj->get_mc_option_$key()
     */
-    protected function set_mc_option_value($key, $question, $mc_option_i, $default) {
+    protected function set_mc_option_value($key, $mc_option, $default) {
         $param_value = $default;
-        // OMG ARRAYZ
-        $mc_option = $question['mc_option'][$mc_option_i];
 
         // see if the value is already in our submitted quiz
         if(array_key_exists($key, $mc_option) && $mc_option[$key] !== "") {
