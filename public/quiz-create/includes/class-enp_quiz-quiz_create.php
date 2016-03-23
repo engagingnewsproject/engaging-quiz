@@ -28,13 +28,13 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-
     }
 
     public function load_content($content) {
 
         ob_start();
         $quiz = $this->load_quiz();
+        $user_action = $this->load_user_action();
         $enp_current_page = 'create';
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
         $content = ob_get_contents();

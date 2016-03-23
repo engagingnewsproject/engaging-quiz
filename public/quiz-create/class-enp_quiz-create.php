@@ -40,7 +40,8 @@ class Enp_quiz_Create {
 	 */
 	protected $version;
 	public static $messages,
-				  $saved_quiz_id;
+				  $saved_quiz_id,
+				  $user_action;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -182,9 +183,22 @@ class Enp_quiz_Create {
 	public function load_quiz() {
         // prepare the quiz object
         $quiz_id = $this->enp_quiz_id_rewrite_catch();
+		// set-up variables
         $quiz = new Enp_quiz_Quiz($quiz_id);
         return $quiz;
     }
+
+	/*
+	* for child classes to set the variable on the user_action
+	*/
+	public function load_user_action() {
+		if(!empty(self::$user_action)) {
+			return self::$user_action;
+		} else {
+			return false;
+		}
+
+	}
 
 	public function add_enp_quiz_body_class($classes) {
 		$classes[] = 'enp-quiz';
@@ -289,15 +303,15 @@ class Enp_quiz_Create {
 		// get the ID of the quiz that was just created
 		self::$saved_quiz_id = $quiz_save_response['quiz_id'];
 		$save_action = $quiz_save_response['action'];
-		$user_action = $quiz_save_response['user_action'];
+		self::$user_action = $quiz_save_response['user_action'];
 
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
-		if($user_action['element'] === 'preview' && $user_action['details']['status'] === 'success') {
+		if(self::$user_action['element'] === 'preview' && empty(self::$messages['errors'])) {
 			$this->redirect_to_quiz_preview();
 		}
 		// if they want to move on to the quiz-publish page and there are no errors, let them
-		elseif($user_action['element'] === 'publish' && $user_action['details']['status'] === 'success') {
+		elseif(self::$user_action['element'] === 'publish' && empty(self::$messages['errors'])) {
 			$this->redirect_to_quiz_publish();
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page

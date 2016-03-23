@@ -361,5 +361,33 @@ class Enp_quiz_Quiz {
         return $questions;
     }
 
+    /**
+    * Get the value we should be saving on a quiz
+    * get posted if present, if not, get object. This is so we give them their
+    * current entry if we don't *actually* save yet.
+    * @param $string = what you want to get ('quiz_title', 'quiz_status', whatever)
+    * @return $value
+    */
+    public function get_value($string) {
+        $value = '';
+        if(isset($_POST['enp_quiz'])) {
+            $posted_value = $_POST['enp_quiz'];
+            if(!empty($posted_value[$string])) {
+                $value = stripslashes($posted_value[$string]);
+            }
+
+        }
+        // if the value didn't get set, try with our object
+        if($value === '') {
+            $get_obj_value = 'get_'.$string;
+            $obj_value = $this->$get_obj_value();
+            if($obj_value !== null) {
+                $value = $obj_value;
+            }
+        }
+        // send them back whatever the value should be
+        return $value;
+    }
+
 
 }

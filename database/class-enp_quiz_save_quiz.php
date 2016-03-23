@@ -19,7 +19,11 @@
 class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     private static  $quiz,
                     $quiz_obj,
-                    $response;
+                    $response = array(
+                                    'quiz_id' => 0,
+                                    'status' => 'error',
+                                    'action' => '',
+                                );
 
     public function __construct() {
 
@@ -35,8 +39,14 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // fill the quiz with all the values
         self::$quiz = $this->prepare_submitted_quiz(self::$quiz);
         self::$quiz = $this->prepare_submitted_questions(self::$quiz);
+
+        // Check if we're allowed to save. If any glaring errors, return the errors here
+        // TODO: Check to make sure we can save. If there are errors, just return to page!
+        // Alrighty!
         // actually save the quiz
         $this->save_quiz();
+        // build any messages we need
+        $this->build_messages();
         // setup the user_action response
         $this->set_user_action_response();
         return self::$response;
@@ -58,7 +68,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected function prepare_submitted_quiz($quiz) {
 
         $quiz_id = $this->set_quiz_value('quiz_id', 0);
-        $quiz_title = $this->set_quiz_value('quiz_title', 'Untitled');
+        $quiz_title = $this->set_quiz_value('quiz_title', '');
         $quiz_status = $this->set_quiz_value('quiz_status', 'draft');
         $quiz_finish_message = $this->set_quiz_value('quiz_finish_message', 'Thanks for taking our quiz!');
         $quiz_color_bg    = $this->set_quiz_value('quiz_color_bg', '#ffffff');
@@ -109,7 +119,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         foreach(self::$quiz['questions'] as $question) {
             // set the defaults/get the submitted values
             $question_id = $this->set_question_value('question_id', $i, 0);
-            $question_title = $this->set_question_value('question_title', $i, 'Untitled');
+            $question_title = $this->set_question_value('question_title', $i, '');
             $question_type = $this->set_question_value('question_type', $i, '');
             $question_explanation = $this->set_question_value('question_explanation', $i, '');
 
@@ -194,6 +204,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * @return response array of quiz_id, action, status, and errors (if any)
     */
     private function save_quiz() {
+        if(self::$quiz['quiz_title'] === '') {
+            // You had ONE job...
+            self::$response['messages']['errors'][] = 'Please enter a quiz title.';
+            return false;
+        }
+
+
         //  If the quiz_obj doesn't exist the quiz object will set the quiz_id as null
         if(self::$quiz_obj->get_quiz_id() === null) {
             // Congratulations, quiz! You're ready for insert!
@@ -228,8 +245,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                         self::$response = $this->update_question($question);
                     }
                 }
-            } else {
-
             }
 
         } else {
@@ -238,11 +253,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response['messages']['errors'][] = 'Questions could not be saved to your quiz.';
             return false;
         }
-
-        // runs all checks to build error messages (if any)
-        $this->build_messages();
-
-        return self::$response;
     }
 
     /**
@@ -450,7 +460,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // success!
         if($stmt !== false) {
             self::$response['questions'][$question['question_order']]['question_id'] = $question['question_id'];
-            self::$response['questions'][]['status'] = 'success';
+            self::$response['questions'][$question['question_order']]['status'] = 'success';
             self::$response['questions'][$question['question_order']]['action'] = 'update';
         } else {
             self::$response['messages']['errors'][] = 'Question number '.$question['question_order'].' could not be updated.';
@@ -727,13 +737,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $element = null;
         $details = array();
 
-        // check for errors and set the status
-        if(!empty(self::$response['messages']['errors'])) {
-            $details['status'] = 'error';
-        } else {
-            $details['status'] = 'success';
-        }
-
         // if they want to preview, then see if they're allowed to go on
         if(self::$quiz['user_action'] === 'quiz-preview') {
             $action = 'next';
@@ -743,8 +746,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         elseif(self::$quiz['user_action'] === 'quiz-publish') {
             $action = 'next';
             $element = 'publish';
-        } else {
+        } elseif(self::$quiz['user_action'] === 'add-question') {
             // what else do we want to do?
+            $action = 'add';
+            $element = 'question';
         }
 
         self::$response['user_action'] = array(

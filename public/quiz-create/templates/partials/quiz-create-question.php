@@ -14,7 +14,7 @@
         <label class="enp-label enp-question-title__label" for="question-title">
             Question
         </label>
-        <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $i;?>]['question_title']" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_question_title();?></textarea>
+        <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $i;?>][question_title]" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_value('question_title', $i);?></textarea>
 
         <label for="enp-image-upload" class="enp-btn--add enp-image-upload"><svg class="enp-icon enp-icon--photo enp-image-upload__icon--photo">
             <use xlink:href="#icon-photo" />
@@ -45,7 +45,7 @@
     <div class="enp-question-inner enp-answer-explanation">
         <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label">Answer Explanation</label>
-            <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $i;?>]['question_explanation']" maxlength="255" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_question_explanation();?></textarea>
+            <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $i;?>][question_explanation]" maxlength="255" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_value('question_explanation', $i);?></textarea>
         </fieldset>
     </div>
 </section>
