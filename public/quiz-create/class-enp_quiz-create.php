@@ -39,7 +39,8 @@ class Enp_quiz_Create {
 	 * @var      string    $version    The current version of this plugin.
 	 */
 	protected $version;
-	public static $messages;
+	public static $messages,
+				  $saved_quiz_id;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -262,56 +263,72 @@ class Enp_quiz_Create {
 		// set it as our messages to return to the user
 		self::$messages = $quiz_save_response['messages'];
 
-		// check to see if we have a successful save response from the save class
-		// REMEMBER: A successful save can still have an error message
-		// such as "Quiz Updated. Hey! You don't have any questions though!"
-		if($quiz_save_response['status'] === 'success') {
-			// get the ID of the quiz that was just created
-			$this->saved_quiz_id = $quiz_save_response['quiz_id'];
-			// figure out where they want to go
-			if(isset($_POST['enp-quiz-submit'])) {
-				// get the value of the button they clicked
-				$button_clicked = $_POST['enp-quiz-submit'];
-				// if it = preview, send them to the preview page
-				if($button_clicked === 'quiz-preview') {
-					// they want to preview. Let's see if we have any errors
-					if(!empty(self::$messages['errors'])){
-						// there are errors, let's return them to the current page to fix it
-						return false;
-					} else {
-						// success! no errors. Move on.
-						wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$this->saved_quiz_id.'/' ) );
-						exit;
-					}
-
-				} elseif($button_clicked === 'quiz-publish') {
-					wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$this->saved_quiz_id.'/' ) );
-					exit;
-				} else {
-
-					if($quiz_save_response['action'] === 'update') {
-						// we're updating, so we can return them to the same page
-						// Displays success/error message from self::$messages
-						return false;
-					} else {
-						// we need to redirect them, because they created a quiz
-						// set a messages array to pass to url on redirect
-						$url_query = http_build_query(array('enp_messages' => self::$messages));
-						// they just created a new page (quiz) so we need to redirect them to it and post our messages
-						wp_redirect( site_url( '/enp-quiz/quiz-create/'.$this->saved_quiz_id.'/?'.$url_query ) );
-						exit;
-					}
-
-				}
-			} else {
-				// no submit button clicked? Should never happen
-				return false;
-			}
+		if(isset($_POST['enp-quiz-submit'])) {
+			// get the value of the button they clicked
+			$button_clicked = $_POST['enp-quiz-submit'];
 		} else {
-			// No successful save, so return them to the same page and display error messages
+			// no submit button clicked? Should never happen
+			self::$messages['errors'][] = 'The form was not submitted right. Please contact our support and let them know how you reached this error';
 			return false;
 		}
 
+		// check to see if we have a successful save response from the save class
+		// REMEMBER: A successful save can still have an error message
+		// such as "Quiz Updated. Hey! You don't have any questions though!"
+		if($quiz_save_response['status'] !== 'success') {
+			// No successful save, so return them to the same page and display error messages
+			return false;
+		}
+		  //*************************//
+		 //  SUCCESS! Now what...?  //
+		//*************************//
+
+		// get the ID of the quiz that was just created
+		self::$saved_quiz_id = $quiz_save_response['quiz_id'];
+
+		// if they're inserting, we either need to go to the preview page
+		// or back to the create page
+		if($quiz_save_response['action'] === 'insert') {
+			// if they want to go to the preview page AND there are no errors,
+			// let them move on to the preview page
+			if($button_clicked === 'quiz-preview' && empty(self::$messages['errors'])) {
+				$this->redirect_to_quiz_preview();
+			} else {
+				// they don't want to move on yet, but they're inserting,
+				// so we need to send them to their newly created quiz create page
+				$this->redirect_to_quiz_create();
+			}
+		} elseif($quiz_save_response['action'] === 'update') {
+			if(!empty(self::$messages['errors'])){
+				// we have errors! Oh no! Send them back to fix it
+				return false;
+
+			// No errors! Yay!
+			// figure out where they want to go...
+			} elseif($button_clicked === 'quiz-preview') {
+				$this->redirect_to_quiz_preview();
+			} elseif($button_clicked === 'quiz-publish') {
+				$this->redirect_to_quiz_publish();
+			}
+		}
+	}
+
+	protected function redirect_to_quiz_create() {
+		// set a messages array to pass to url on redirect
+		$url_query = http_build_query(array('enp_messages' => self::$messages));
+		// they just created a new page (quiz) so we need to redirect them to it and post our messages
+		wp_redirect( site_url( '/enp-quiz/quiz-create/'.self::$saved_quiz_id.'/?'.$url_query ) );
+		exit;
+	}
+
+	protected function redirect_to_quiz_preview() {
+		wp_redirect( site_url( '/enp-quiz/quiz-preview/'.self::$saved_quiz_id.'/' ) );
+		exit;
+	}
+
+	protected function redirect_to_quiz_publish() {
+		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.self::$saved_quiz_id.'/' ) );
+		exit;
 	}
 
 	/**
