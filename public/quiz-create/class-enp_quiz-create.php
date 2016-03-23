@@ -238,6 +238,8 @@ class Enp_quiz_Create {
 
 		// get access to wpdb
 		global $wpdb;
+		// set-up an empty array for our quiz submission
+		$quiz = array();
 
 		// extract values
 		// set the date_time to pass
@@ -255,6 +257,16 @@ class Enp_quiz_Create {
 			$quiz['questions'] = $_POST['enp_question'];
 		}
 
+		if(isset($_POST['enp-quiz-submit'])) {
+			// get the value of the button they clicked
+			$button_clicked = $_POST['enp-quiz-submit'];
+			$quiz['user_action'] = $button_clicked;
+		} else {
+			// no submit button clicked? Should never happen
+			self::$messages['errors'][] = 'The form was not submitted right. Please contact our support and let them know how you reached this error';
+			return false;
+		}
+
 		// initiate the save_quiz object
 		$save_quiz = new Enp_quiz_Save_quiz();
 		// save the quiz by passing our $quiz array to the save function
@@ -262,15 +274,6 @@ class Enp_quiz_Create {
 
 		// set it as our messages to return to the user
 		self::$messages = $quiz_save_response['messages'];
-
-		if(isset($_POST['enp-quiz-submit'])) {
-			// get the value of the button they clicked
-			$button_clicked = $_POST['enp-quiz-submit'];
-		} else {
-			// no submit button clicked? Should never happen
-			self::$messages['errors'][] = 'The form was not submitted right. Please contact our support and let them know how you reached this error';
-			return false;
-		}
 
 		// check to see if we have a successful save response from the save class
 		// REMEMBER: A successful save can still have an error message
@@ -285,31 +288,28 @@ class Enp_quiz_Create {
 
 		// get the ID of the quiz that was just created
 		self::$saved_quiz_id = $quiz_save_response['quiz_id'];
+		$save_action = $quiz_save_response['action'];
+		$user_action = $quiz_save_response['user_action'];
 
-		// if they're inserting, we either need to go to the preview page
-		// or back to the create page
-		if($quiz_save_response['action'] === 'insert') {
-			// if they want to go to the preview page AND there are no errors,
-			// let them move on to the preview page
-			if($button_clicked === 'quiz-preview' && empty(self::$messages['errors'])) {
-				$this->redirect_to_quiz_preview();
-			} else {
-				// they don't want to move on yet, but they're inserting,
-				// so we need to send them to their newly created quiz create page
-				$this->redirect_to_quiz_create();
-			}
-		} elseif($quiz_save_response['action'] === 'update') {
-			if(!empty(self::$messages['errors'])){
-				// we have errors! Oh no! Send them back to fix it
-				return false;
-
-			// No errors! Yay!
-			// figure out where they want to go...
-			} elseif($button_clicked === 'quiz-preview') {
-				$this->redirect_to_quiz_preview();
-			} elseif($button_clicked === 'quiz-publish') {
-				$this->redirect_to_quiz_publish();
-			}
+		// if they want to go to the preview page AND there are no errors,
+		// let them move on to the preview page
+		if($user_action['element'] === 'preview' && $user_action['details']['status'] === 'success') {
+			$this->redirect_to_quiz_preview();
+		}
+		// if they want to move on to the quiz-publish page and there are no errors, let them
+		elseif($user_action['element'] === 'publish' && $user_action['details']['status'] === 'success') {
+			$this->redirect_to_quiz_publish();
+		}
+		// catch if we're just creating the new quiz, send them to the new quiz page
+		elseif($save_action === 'insert') {
+			// they don't want to move on yet, but they're inserting,
+			// so we need to send them to their newly created quiz create page
+			$this->redirect_to_quiz_create();
+		}
+		// we're just updating the same page, return false to send them back
+	 	else {
+			// we have errors! Oh no! Send them back to fix it
+			return false;
 		}
 	}
 

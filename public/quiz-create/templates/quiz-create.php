@@ -8,6 +8,32 @@
  *
  * Data available to this view:
  * $quiz = quiz object (if exits), false if new quiz
+ *  // example user actions
+ *    $user_action = array(
+ *        'action' =>'add',
+ *        'element' => 'mc_option',
+ *        'details' => array(
+ *                        'question' => '1',
+ *                    );
+ *    );
+ *
+ *    $user_action = array(
+ *        'action' =>'delete',
+ *        'element' => 'mc_option',
+ *        'details' => array(
+ *                        'question' => '1',
+ *                        'mc_option' => '2'
+ *                    );
+ *    );
+ *
+ *    $user_action = array(
+ *        'action' =>'correct',
+ *        'element' => 'mc_option',
+ *        'details' => array(
+ *                        'question' => '1',
+ *                        'mc_option' => '2'
+ *                    );
+ *    );
  */
 // var_dump($quiz);
  if(is_numeric($quiz->get_quiz_id()) || is_int($quiz->get_quiz_id())) {

@@ -35,8 +35,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // fill the quiz with all the values
         self::$quiz = $this->prepare_submitted_quiz(self::$quiz);
         self::$quiz = $this->prepare_submitted_questions(self::$quiz);
-        // actually save the quiz, and return the response
-        return $this->save_quiz();
+        // actually save the quiz
+        $this->save_quiz();
+        // setup the user_action response
+        $this->set_user_action_response();
+        return self::$response;
     }
 
     /**
@@ -712,6 +715,43 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         }
 
         return $param_value;
+    }
+
+    /**
+    * Build a user_action response array so enp_quiz-create class knows
+    * what to do next
+    */
+    protected function set_user_action_response() {
+        // set-up defaults
+        $action = null;
+        $element = null;
+        $details = array();
+
+        // check for errors and set the status
+        if(!empty(self::$response['messages']['errors'])) {
+            $details['status'] = 'error';
+        } else {
+            $details['status'] = 'success';
+        }
+
+        // if they want to preview, then see if they're allowed to go on
+        if(self::$quiz['user_action'] === 'quiz-preview') {
+            $action = 'next';
+            $element = 'preview';
+        }
+        // if they want to publish, then see if they're allowed to go on
+        elseif(self::$quiz['user_action'] === 'quiz-publish') {
+            $action = 'next';
+            $element = 'publish';
+        } else {
+            // what else do we want to do?
+        }
+
+        self::$response['user_action'] = array(
+                                            'action' => $action,
+                                            'element' => $element,
+                                            'details' => $details,
+                                        );
     }
 
 }
