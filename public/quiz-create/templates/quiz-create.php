@@ -33,7 +33,7 @@
             <label class="enp-label enp-quiz-title__label" for="quiz-title">
                 Quiz Title
             </label>
-            <textarea class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz['quiz_title']" placeholder="My Engaging Quiz Title"/><? echo $quiz->get_quiz_title();?></textarea>
+            <textarea class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz['quiz_title']" maxlength="255" placeholder="My Engaging Quiz Title"/><? echo $quiz->get_quiz_title();?></textarea>
         </fieldset>
 
         <?php
