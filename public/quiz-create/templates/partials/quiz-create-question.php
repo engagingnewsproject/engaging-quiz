@@ -8,7 +8,7 @@
 ?>
 
 <section class="enp-question-content">
-    <input type="hidden" name="enp_question[<?echo $i;?>]['question_id']" value="<? echo $question->get_question_id();?>" />
+    <input type="hidden" name="enp_question[<?echo $i;?>][question_id]" value="<? echo $question->get_question_id();?>" />
 
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title">
@@ -22,15 +22,15 @@
         <svg class="enp-icon enp-icon--add enp-image-upload__icon--add">
             <use xlink:href="#icon-add" />
         </svg> Add Image</label>
-        <input type="file" class="enp-image-upload__input" name="enp_question[<?echo $i;?>]['question_image']">
+        <input type="file" class="enp-image-upload__input" name="enp_question[<?echo $i;?>][question_image]">
 
 
         <h4 class="enp-legend enp-question-type__legend">Question Type</h4>
 
-        <input type="radio" id="enp-question-type__mc" class="enp-radio enp-question-type__input enp-question-type__input--mc" name="enp_question[<?echo $i;?>]['question_type']" value="mc" checked="checked">
+        <input type="radio" id="enp-question-type__mc" class="enp-radio enp-question-type__input enp-question-type__input--mc" name="enp_question[<?echo $i;?>][question_type]" value="mc" checked="checked">
         <label class="enp-label enp-question-type__label enp-question-type__label--mc" for="enp-question-type__mc">Multiple Choice</label>
 
-        <input type="radio" id="enp-question-type__slider" class="enp-radio enp-question-type__input enp-question-type__input--slider" name="enp_question[<?echo $i;?>]['question_type']" value="slider">
+        <input type="radio" id="enp-question-type__slider" class="enp-radio enp-question-type__input enp-question-type__input--slider" name="enp_question[<?echo $i;?>][question_type]" value="slider">
         <label class="enp-label enp-question-type__label enp-question-type__label--slider" for="enp-question-type__slider">Slider</label>
 
 
