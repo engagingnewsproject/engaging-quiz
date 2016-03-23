@@ -204,6 +204,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * @return response array of quiz_id, action, status, and errors (if any)
     */
     private function save_quiz() {
+        // check for the quiz_title real quick
         if(self::$quiz['quiz_title'] === '') {
             // You had ONE job...
             self::$response['messages']['errors'][] = 'Please enter a quiz title.';

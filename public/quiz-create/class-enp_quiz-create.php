@@ -194,6 +194,8 @@ class Enp_quiz_Create {
 	public function load_user_action() {
 		if(!empty(self::$user_action)) {
 			return self::$user_action;
+		} elseif(isset($_GET['enp_user_action'])) {
+			return $_GET['enp_user_action'];
 		} else {
 			return false;
 		}
@@ -289,6 +291,13 @@ class Enp_quiz_Create {
 		// set it as our messages to return to the user
 		self::$messages = $quiz_save_response['messages'];
 
+		// get the ID of the quiz that was just created (if there)
+		self::$saved_quiz_id = $quiz_save_response['quiz_id'];
+		// set-up vars for our next steps
+		$save_action = $quiz_save_response['action'];
+		// set the user_action so we know what the user was wanting to do
+		self::$user_action = $quiz_save_response['user_action'];
+
 		// check to see if we have a successful save response from the save class
 		// REMEMBER: A successful save can still have an error message
 		// such as "Quiz Updated. Hey! You don't have any questions though!"
@@ -300,10 +309,7 @@ class Enp_quiz_Create {
 		 //  SUCCESS! Now what...?  //
 		//*************************//
 
-		// get the ID of the quiz that was just created
-		self::$saved_quiz_id = $quiz_save_response['quiz_id'];
-		$save_action = $quiz_save_response['action'];
-		self::$user_action = $quiz_save_response['user_action'];
+
 
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
@@ -329,7 +335,7 @@ class Enp_quiz_Create {
 
 	protected function redirect_to_quiz_create() {
 		// set a messages array to pass to url on redirect
-		$url_query = http_build_query(array('enp_messages' => self::$messages));
+		$url_query = http_build_query(array('enp_messages' => self::$messages, 'enp_user_action'=> self::$user_action));
 		// they just created a new page (quiz) so we need to redirect them to it and post our messages
 		wp_redirect( site_url( '/enp-quiz/quiz-create/'.self::$saved_quiz_id.'/?'.$url_query ) );
 		exit;
