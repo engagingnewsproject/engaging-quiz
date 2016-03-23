@@ -63,6 +63,11 @@ class Enp_quiz_Question {
         $this->question_type = $this->set_question_type();
         $this->question_explanation = $this->set_question_explanation();
         $this->question_order = $this->set_question_order();
+        if($this->question_type === 'mc') {
+            $this->mc_options = $this->set_mc_options();
+        } else {
+            // TODO: set_slider
+        }
     }
 
     /**
@@ -116,6 +121,31 @@ class Enp_quiz_Question {
     }
 
     /**
+    * Set the mc_options for our Questions Object
+    * @param $quiz_id
+    * @return mc_options array of ids array(3,4,5) from the database
+    */
+    protected function set_mc_options() {
+        $question_id = self::$question['question_id'];
+
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":question_id" => $question_id
+        );
+        $sql = "SELECT question_id from ".$pdo->question_mc_option_table." WHERE
+                question_id = :question_id";
+        $stmt = $pdo->query($sql, $params);
+        $mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $mc_options = array();
+        foreach($mc_option_rows as $row => $mc_option) {
+            $mc_options[] = (int) $mc_option['mc_option_id'];
+        }
+        return $mc_options;
+    }
+
+    /**
     * Get the question_id for our Quiz Object
     * @param $question = question object
     * @return question_id from the object
@@ -163,6 +193,16 @@ class Enp_quiz_Question {
     public function get_question_order() {
         $question_order = $this->question_order;
         return $question_order;
+    }
+
+    /**
+    * Get the mc_options for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_mc_options() {
+        $mc_options = $this->mc_options;
+        return $mc_options;
     }
 
     /**

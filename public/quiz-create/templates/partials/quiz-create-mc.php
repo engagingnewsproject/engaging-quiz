@@ -1,3 +1,12 @@
+<?
+    if(!empty($mc_option_array[$mc_option_i])) {
+        // will return the ID of the mc_option
+        $mc_option_number = $mc_option_array[$mc_option_i];
+    } else {
+        $mc_option_number = 0;
+    }
+    $mc_option = new Enp_quiz_MC_option($mc_option_number);
+?>
 <fieldset class="enp-mc-options">
     <legend class="enp-legend enp-mc-options__legend">Multiple Choice Options</legend>
     <ul class="enp-mc-options__list">

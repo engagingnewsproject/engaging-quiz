@@ -63,7 +63,7 @@
         </fieldset>
 
         <?php
-            $i = 0;
+            $question_i = 0;
             // count the number of questions
             $question_array = $quiz->get_questions();
             $question_count = count($question_array);
@@ -74,8 +74,8 @@
             // even if it's zero, a do loop will do the loop once before checking for condition
             do {
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
-                $i++;
-            } while($i < $question_count);
+                $question_i++;
+            } while($question_i < $question_count);
         ?>
 
         <button type="submit" class="enp-btn--add enp-quiz-form__add-question" name="enp-quiz-submit" value="add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon">
