@@ -39,6 +39,7 @@
         // count the number of mc_options
         $mc_option_array = $question->get_mc_options();
         $mc_option_count = count($mc_option_array);
+
         if($user_action['action'] === 'add' && $user_action['element'] === 'mc_option') {
             // if we're adding a new mc_option, add one to the count so we have an extra (empty) mc_option to loop through
             $mc_option_count++;

@@ -39,6 +39,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // fill the quiz with all the values
         self::$quiz = $this->prepare_submitted_quiz(self::$quiz);
         self::$quiz = $this->prepare_submitted_questions(self::$quiz);
+        self::$quiz = $this->prepare_submitted_mc_options(self::$quiz);
 
         // Check if we're allowed to save. If any glaring errors, return the errors here
         // TODO: Check to make sure we can save. If there are errors, just return to page!

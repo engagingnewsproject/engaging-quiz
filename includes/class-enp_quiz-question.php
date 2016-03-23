@@ -9,7 +9,8 @@ class Enp_quiz_Question {
             $question_title,
             $question_type,
             $question_explanation,
-            $question_order;
+            $question_order,
+            $mc_options = array();
 
     protected static $question;
 
