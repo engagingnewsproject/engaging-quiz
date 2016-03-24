@@ -179,7 +179,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                     );
             $i++;
         }
-        ///var_dump($default_mc_options);
         // We don't want to lose anything that was in the sent quiz
         // so we'll merge them to make sure we don't lose anything
         $mc_options = $default_mc_options;
@@ -284,7 +283,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(self::$quiz['quiz_id'] !== 0) {
             // check to see if we HAVE questions to save
             if(!empty(self::$quiz['questions'])){
-                var_dump(self::$quiz['questions']);
                 // loop through the questions and save each one
                 foreach(self::$quiz['questions'] as $question) {
 
