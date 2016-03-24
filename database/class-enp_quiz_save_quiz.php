@@ -231,7 +231,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             // Congratulations, quiz! You're ready for insert!
             $this->insert_quiz();
             // set the quiz_id on our array self::quiz array now that we have one
-            self::$quiz['quiz_id'] = self::$response_obj['quiz_id'];
+            self::$quiz['quiz_id'] = self::$response_obj->quiz_id;
         } else {
             // check to make sure that the quiz owner matches
             $allow_update = $this->quiz_owned_by_current_user();
