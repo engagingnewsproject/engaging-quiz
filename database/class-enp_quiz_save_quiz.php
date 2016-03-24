@@ -19,11 +19,7 @@
 class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected static $quiz,
                      $quiz_obj,
-                     $response = array(
-                                    'quiz_id' => 0,
-                                    'status' => 'error',
-                                    'action' => '',
-                                );
+                     $response_obj;
 
     public function __construct() {
 
@@ -42,14 +38,17 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // Check if we're allowed to save. If any glaring errors, return the errors here
         // TODO: Check to make sure we can save. If there are errors, just return to page!
+        // Open a new response object
+        self::$response_obj = new Enp_quiz_Save_response();
         // Alrighty!
         // actually save the quiz
         $this->save_quiz();
-        // build any messages we need
-        $this->build_messages();
+        // build any messages for our response
+        self::$response_obj->build_messages();
         // setup the user_action response
-        $this->set_user_action_response();
-        return self::$response;
+        self::$response_obj->set_user_action_response();
+        // return the response to the user
+        return self::$response_obj;
     }
 
     /**
@@ -222,7 +221,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // check for the quiz_title real quick
         if(self::$quiz['quiz_title'] === '') {
             // You had ONE job...
-            self::$response['messages']['errors'][] = 'Please enter a quiz title.';
+            self::$response_obj->add_error('Please enter a quiz title.');
             return false;
         }
 
@@ -230,19 +229,19 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         //  If the quiz_obj doesn't exist the quiz object will set the quiz_id as null
         if(self::$quiz_obj->get_quiz_id() === null) {
             // Congratulations, quiz! You're ready for insert!
-            self::$response = $this->insert_quiz();
+            $this->insert_quiz();
             // set the quiz_id on our array self::quiz array now that we have one
-            self::$quiz['quiz_id'] = self::$response['quiz_id'];
+            self::$quiz['quiz_id'] = self::$response_obj['quiz_id'];
         } else {
             // check to make sure that the quiz owner matches
             $allow_update = $this->quiz_owned_by_current_user();
             // update a quiz entry
             if($allow_update === true) {
                 // the current user matches the quiz owner
-                self::$response = $this->update_quiz();
+                $this->update_quiz();
             } else {
                 // Hmm... the user is trying to update a quiz that isn't theirs
-                self::$response['messages']['errors'][] = 'Quiz Update not Allowed';
+                self::$response_obj->add_error('Quiz Update not Allowed');
                 return false;
             }
         }
@@ -262,7 +261,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         } else {
             // hopefully won't ever happen... this would mean that the quiz_insert failed
             // so we don't have a quiz to assign these questions to
-            self::$response['messages']['errors'][] = 'Questions could not be saved to your quiz.';
+            self::$response_obj->add_error('Questions could not be saved to your quiz.');
             return false;
         }
     }
@@ -345,16 +344,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            self::$response['quiz_id'] = $pdo->lastInsertId();
-            self::$response['status'] = 'success';
-            self::$response['action'] = 'insert';
-            self::$response['messages']['success'][] = 'Quiz created.';
-
+            self::$response_obj->set_quiz_id($pdo->lastInsertId());
+            self::$response_obj->set_status('success');
+            self::$response_obj->set_action('insert');
+            self::$response_obj->add_success('Quiz created.');
         } else {
-            self::$response['messages']['errors'][] = 'Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response_obj->add_error('Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
-
-        return self::$response;
     }
 
     /**
@@ -385,149 +381,17 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            self::$response['quiz_id'] = self::$quiz['quiz_id'];
-            self::$response['status'] = 'success';
-            self::$response['action'] = 'update';
-            self::$response['messages']['success'][] = 'Quiz updated.';
+            self::$response_obj->set_quiz_id(self::$quiz['quiz_id']);
+            self::$response_obj->set_status('success');
+            self::$response_obj->set_action('update');
+            self::$response_obj->add_success('Quiz updated.');
         } else {
-            self::$response['messages']['errors'][] = 'Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            self::$response_obj->add_error('Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
 
-        return self::$response;
     }
 
 
-
-    /**
-    * Runs all checks to build error messages on quiz form
-    * All the functions it runs either return false or
-    * add to the self::$response array
-    * @return false
-    */
-    protected function build_messages() {
-        // check to see if they need to add questions
-        if($this->check_for_questions_message() === 'has_questions') {
-            // we have a question title and explanation in the first question,
-            // so let's check more in depth. This checks for all errors
-            // in all questions
-            $this->check_question_errors();
-        }
-
-        // we don't need to return anything since the functions
-        // themselves are building the response messages
-        return false;
-    }
-
-
-    /**
-    * Checks to see if the first question is empty. If it is, add an error
-    * @return 'has_questions' if question found, false if there are questions
-    *
-    */
-    protected function check_for_questions_message() {
-        if(empty(self::$quiz['question'][0]['question_title']) && empty(self::$quiz['question'][0]['question_explanation'])) {
-            self::$response['messages']['errors'][] = 'You need to add a question to your quiz';
-            return false;
-        }
-        return 'has_questions';
-    }
-
-    /**
-    * Loop through questions and check for errors
-    */
-    protected function check_question_errors() {
-        $i = 1;
-        // this is weird to set it as OK initially, but...
-        $return_message = 'no_errors';
-        // loop through all questions and check for titles, answer explanations, etc
-        foreach(self::$quiz['question'] as $question) {
-            // checks if the title is empty or not
-            $check_title = $this->check_question_title($question['question_title'], $i);
-            if($check_title === 'no_title') {
-                $return_message = 'has_errors';
-            }
-            // checks if the answer explanation is empty or not
-            $check_explanation = $this->check_question_question_explanation($question['question_explanation'], $i);
-            if($check_explanation === 'no_question_explanation') {
-                $return_message = 'has_errors';
-            }
-
-            // check to see if the question is a slider or mc choice
-            if($question['question_type'] === 'mc') {
-                //TODO
-                // add mc_options if mc question type
-                // $this->check_question_mc_options($question['mc_options'], $i);
-            } elseif($question['question_type'] === 'slider') {
-                // TODO: create sliders...
-                self::$response['messages']['errors'][] = 'Question '.$i.' does not have a complete slider because that functionality does not exist yet.';
-            } else {
-                // should never happen...
-                self::$response['messages']['errors'][] = 'Question '.$i.' does not have a question type (multiple choice, slider, etc).';
-            }
-            $i++;
-        }
-
-        return $return_message;
-    }
-
-    /**
-    * Checks questions for titles
-    * @return true if no question, false if there are questions
-    *
-    */
-    protected function check_question_title($question_title, $question_number) {
-        $return_message = 'has_title';
-        if(empty($question_title)) {
-            self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing an actual question.';
-            $return_message = 'no_title';
-        }
-
-        return $return_message;
-    }
-
-    /**
-    * Checks questions for answer explanation
-    * @return string 'has_question_explanation' if found, 'no_question_explanation' if not found
-    *
-    */
-    protected function check_question_question_explanation($question_explanation, $question_number) {
-        $return_message = 'has_question_explanation';
-        if(empty($question_explanation)) {
-            self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing an answer explanation.';
-            $return_message = 'no_question_explanation';
-        }
-
-        return $return_message;
-    }
-
-
-    /**
-    * Checks questions for mc_options (if it should have them)
-    * @return string 'has_mc_options' if found, 'no_mc_options' if not found
-    *
-    */
-    protected function check_question_mc_options($mc_options, $question_number) {
-        $return_message = 'no_mc_options';
-        if(empty($mc_options)) {
-            self::$response['messages']['errors'][] = 'Question '.$question_number.' is missing multiple choice options.';
-            $return_message = 'no_mc_options';
-            return $return_message;
-        }
-
-        if(count($mc_options) === 1) {
-            self::$response['messages']['errors'][] = 'Question '.$question_number.' does not have enough multiple choice options.';
-        } else {
-            foreach($mc_options as $option) {
-                // check to see if one has been chosen
-                if($option['correct']) {
-                    // we have a correct option! yay! Everything is good.
-                    $return_message = 'has_mc_options';
-                }
-            }
-        }
-
-        return $return_message;
-    }
 
     /**
      * Save a question array in the database
@@ -543,9 +407,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // insert the question
         $question_obj = new Enp_quiz_Save_question();
         if($question['question_id'] === 0) {
-            self::$response['question'] = $question_obj->insert_question($question);
+            // It doesn't exist yet, so insert it!
+            $question_obj->insert_question($question);
         } else {
-            self::$response['question'] = $question_obj->update_question($question);
+            // we have a question_id, so update it!
+            $question_obj->update_question($question);
         }
     }
 
@@ -633,38 +499,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $param_value;
     }
 
-
-    /**
-    * Build a user_action response array so enp_quiz-create class knows
-    * what to do next
-    */
-    protected function set_user_action_response() {
-        // set-up defaults
-        $action = null;
-        $element = null;
-        $details = array();
-
-        // if they want to preview, then see if they're allowed to go on
-        if(self::$quiz['user_action'] === 'quiz-preview') {
-            $action = 'next';
-            $element = 'preview';
-        }
-        // if they want to publish, then see if they're allowed to go on
-        elseif(self::$quiz['user_action'] === 'quiz-publish') {
-            $action = 'next';
-            $element = 'publish';
-        } elseif(self::$quiz['user_action'] === 'add-question') {
-            // what else do we want to do?
-            $action = 'add';
-            $element = 'question';
-        }
-
-        self::$response['user_action'] = array(
-                                            'action' => $action,
-                                            'element' => $element,
-                                            'details' => $details,
-                                        );
-    }
 
 }
 ?>

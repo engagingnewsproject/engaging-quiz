@@ -318,15 +318,16 @@ $placeholders: ();
 
     .enp-message__list {
         @include _(ul-no-style);
+        font-size: 1.1rem;
         margin-bottom: 0;
     }
 
-    .enp-quiz-message--errors {
+    .enp-quiz-message--error {
         border-left: 6px solid $red;
         color: $dark_red;
     }
 
-    .enp-quiz-message__title--errors {
+    .enp-quiz-message__title--error {
         color: $dark_red;
     }
 

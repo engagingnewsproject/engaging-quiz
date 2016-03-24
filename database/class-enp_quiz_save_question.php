@@ -20,16 +20,14 @@
 class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     protected $question;
     // building responses
-    // parent::$response['messages']['errors'][]
-    // parent::$response['messages']['success'][], etc
-    public static $response = array();
+    // parent::$response_obj->add_error('Wow. Such errors.');
 
     public function __construct() {
 
     }
 
     /**
-    * Reformat and set values for a submitted mc_option
+    * Reformat and set values for a submitted question
     *
     * @param $question = array() in this format:
     *    $question = array(
@@ -39,7 +37,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     *            'question_explanation' =>  $question['question_explanation'],
     *            'question_order' => $question['question_order'],
     *        );
-    * @return nicely formatted and value validated mc_option array ready for saving
+    * @return nicely formatted and value validated question array
+    *         ready to get passed on to mc_option or slider validation
     */
     protected function prepare_submitted_question($question) {
         $this->question = $question;
@@ -170,14 +169,12 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
         // success!
         if($stmt !== false) {
-            self::$response[$question['question_order']]['question_id'] = $pdo->lastInsertId();
-            self::$response[$question['question_order']]['status'] = 'success';
-            self::$response[$question['question_order']]['action'] = 'insert';
+            parent::$response_obj->set_question_id($pdo->lastInsertId(), $question['question_order']);
+            parent::$response_obj->set_question_status('success', $question['question_order']);
+            parent::$response_obj->set_question_action('insert', $question['question_order']);
         } else {
-            parent::$response['messages']['errors'][] = 'Question number '.$question['question_order'].' could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.';
+            parent::$response_obj->add_error('Question number '.$question['question_order'].' could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
-
-        return self::$response;
     }
 
     /**
@@ -209,14 +206,13 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
         // success!
         if($stmt !== false) {
-            self::$response[$question['question_order']]['question_id'] = $question['question_id'];
-            self::$response[$question['question_order']]['status'] = 'success';
-            self::$response[$question['question_order']]['action'] = 'update';
-        } else {
-            parent::$response['messages']['errors'][] = 'Question number '.$question['question_order'].' could not be updated.';
-        }
 
-        return self::$response;
+            parent::$response_obj->set_question_id($question['question_id'], $question['question_order']);
+            parent::$response_obj->set_question_status('success', $question['question_order']);
+            parent::$response_obj->set_question_action('update', $question['question_order']);
+        } else {
+            parent::$response_obj->add_error('Question number '.$question['question_order'].' could not be updated.');
+        }
     }
 
 
