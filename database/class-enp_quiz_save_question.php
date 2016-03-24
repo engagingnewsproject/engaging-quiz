@@ -205,7 +205,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
             // pass the question on to save_mc_option or save_slider
             // add the question_id to the questions array
-            $this->save_question_type_options($question);
+            $this->save_question_type_options();
 
         } else {
             parent::$response_obj->add_error('Question number '.$question['question_order'].' could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.');

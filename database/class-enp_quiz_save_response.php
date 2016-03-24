@@ -127,10 +127,22 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
         elseif(parent::$quiz['user_action'] === 'quiz-publish') {
             $action = 'next';
             $element = 'publish';
-        } elseif(parent::$quiz['user_action'] === 'add-question') {
+        }
+        // if they want to add a question
+        elseif(parent::$quiz['user_action'] === 'add-question') {
             // what else do we want to do?
             $action = 'add';
             $element = 'question';
+        }
+        // check to see if user wants to add-mc-option
+        elseif(strpos(parent::$quiz['user_action'], 'add-mc-option__question-') !== false) {
+            $action = 'add';
+            $element = 'mc_option';
+            // extract the question number by removing 'add-mc-option__question-' from the string
+            // we can't use question_id because the question_id might not
+            // have been created yet
+            $question_number = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
+            $details = array('question' => (int) $question_number);
         }
 
         $this->user_action = array(
@@ -260,12 +272,21 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
         if(count($mc_options) === 1) {
             $this->message['error'][] = 'Question '.$question_number.' does not have enough multiple choice options.';
         } else {
+            $mc_option_has_correct = false;
             foreach($mc_options as $option) {
-                // check to see if one has been chosen
-                if($option['correct']) {
+                // check for values
+                if($option['mc_option_content'] === '') {
+                   $this->message['error'][] = 'Question '.$question_number.' has an empty Multiple Choice Option field.';
+                }
+                // check to see if ANY one has been chosen
+                if($option['mc_option_correct'] === true) {
+                    $mc_option_has_correct = true;
                     // we have a correct option! yay! Everything is good.
                     $return_message = 'has_mc_options';
                 }
+            }
+            if($mc_option_has_correct !== true ) {
+                $this->message['error'][] = 'Question '.$question_number.' needs a correct Multiple Choce Option answer to be selected.';
             }
         }
 
