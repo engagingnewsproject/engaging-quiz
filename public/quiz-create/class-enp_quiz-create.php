@@ -270,7 +270,7 @@ class Enp_quiz_Create {
 		}
 
 		if(isset($_POST['enp_question'])) {
-			$quiz['questions'] = $_POST['enp_question'];
+			$quiz['question'] = $_POST['enp_question'];
 		}
 
 		if(isset($_POST['enp-quiz-submit'])) {
