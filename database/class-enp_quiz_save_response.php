@@ -36,7 +36,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     */
     public function set_quiz_id($quiz_id) {
         $this->quiz_id = $quiz_id;
-     }
+    }
 
     /**
     * Sets an action on our response array
@@ -45,7 +45,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     */
     public function set_action($action) {
         $this->action = $action;
-     }
+    }
 
     /**
     * Sets a status on our response array
@@ -54,34 +54,41 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     */
     public function set_status($status) {
         $this->status = $status;
-     }
+    }
 
-     /**
-     * Sets a question_id on our response array
-     * @param string = question_id you want to set
-     * @return response object array
-     */
-     public function set_question_id($question_id, $question_number) {
-         $this->question[$question_number]['question_id'] = $question_id;
-      }
+    /**
+    * Loops through all passed responses from the save class and and assigns them
+    * to our response object
+    *
+    * @param $question_response = array() of values like 'action', 'status', and 'mc_option_id'
+    * @param $question = the question array that was being saved
+    */
+    public function set_question_response($question_response, $question) {
+        $question_number = $question['question_order'];
+        // sets the key/value for each item passed in the response
+        foreach($question_response as $key => $value) {
+            // set the question array with our response values
+            $this->question[$question_number][$key] = $value;
+        }
+    }
 
-     /**
-     * Sets an action on our response array
-     * @param string = action you want to set
-     * @return response object array
-     */
-     public function set_question_action($action, $question_number) {
-         $this->question[$question_number]['action'] = $action;
-      }
-
-     /**
-     * Sets a status on our response array
-     * @param string = status you want to set
-     * @return response object array
-     */
-     public function set_question_status($status, $question_number) {
-         $this->question[$question_number]['status'] = $status;
-      }
+    /**
+    * Loops through all passed responses from the save class and and assigns them
+    * to our response object
+    *
+    * @param $mc_option_response = array() of values like 'action', 'status', and 'mc_option_id'
+    * @param $question = the question array that was being saved
+    * @param $mc_option = the mc_option array that was being saved
+    */
+    public function set_mc_option_response($mc_option_response, $question, $mc_option) {
+        $question_number = $question['question_order'];
+        $mc_option_number = $mc_option['mc_option_order'];
+        // sets the key/value for each item passed in the response
+        foreach($mc_option_response as $key => $value) {
+            // set the question/mc_option array with our response values
+            $this->question[$question_number]['mc_option'][$mc_option_number][$key] = $value;
+        }
+    }
 
     /**
     * Sets a new error to our error response array
@@ -90,16 +97,49 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     */
     public function add_error($error) {
         $this->message['error'][] = $error;
-     }
+    }
 
-     /**
-     * Sets a new success to our success response array
-     * @param string = message you want to add
-     * @return response object array
-     */
-     public function add_success($success) {
-         $this->message['success'][] = $success;
-      }
+    /**
+    * Sets a new success to our success response array
+    * @param string = message you want to add
+    * @return response object array
+    */
+    public function add_success($success) {
+        $this->message['success'][] = $success;
+    }
+
+
+    /**
+    * Build a user_action response array so enp_quiz-create class knows
+    * what to do next, like go to preview page, add another question, etc
+    */
+    public function set_user_action_response() {
+        $action = null;
+        $element = null;
+        $details = array();
+
+        // if they want to preview, then see if they're allowed to go on
+        if(parent::$quiz['user_action'] === 'quiz-preview') {
+            $action = 'next';
+            $element = 'preview';
+        }
+        // if they want to publish, then see if they're allowed to go on
+        elseif(parent::$quiz['user_action'] === 'quiz-publish') {
+            $action = 'next';
+            $element = 'publish';
+        } elseif(parent::$quiz['user_action'] === 'add-question') {
+            // what else do we want to do?
+            $action = 'add';
+            $element = 'question';
+        }
+
+        $this->user_action = array(
+                                    'action' => $action,
+                                    'element' => $element,
+                                    'details' => $details,
+                                );
+    }
+
 
     /**
     * Runs all checks to build error messages on quiz form
@@ -158,7 +198,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
             if($question['question_type'] === 'mc') {
                 //TODO
                 // add mc_options if mc question type
-                // $this->check_question_mc_options($question['mc_options'], $i);
+                $this->check_question_mc_options($question['mc_option'], $i);
             } elseif($question['question_type'] === 'slider') {
                 // TODO: create sliders...
                 $this->message['error'][] = 'Question '.$i.' does not have a complete slider because that functionality does not exist yet.';
@@ -230,38 +270,6 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
         }
 
         return $return_message;
-    }
-
-
-    /**
-    * Build a user_action response array so enp_quiz-create class knows
-    * what to do next
-    */
-    public function set_user_action_response() {
-        $action = null;
-        $element = null;
-        $details = array();
-
-        // if they want to preview, then see if they're allowed to go on
-        if(parent::$quiz['user_action'] === 'quiz-preview') {
-            $action = 'next';
-            $element = 'preview';
-        }
-        // if they want to publish, then see if they're allowed to go on
-        elseif(parent::$quiz['user_action'] === 'quiz-publish') {
-            $action = 'next';
-            $element = 'publish';
-        } elseif(parent::$quiz['user_action'] === 'add-question') {
-            // what else do we want to do?
-            $action = 'add';
-            $element = 'question';
-        }
-
-        $this->user_action = array(
-                                            'action' => $action,
-                                            'element' => $element,
-                                            'details' => $details,
-                                        );
     }
 
 }

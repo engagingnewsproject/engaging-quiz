@@ -134,13 +134,15 @@ class Enp_quiz_Question {
         $params = array(
             ":question_id" => $question_id
         );
-        $sql = "SELECT question_id from ".$pdo->question_mc_option_table." WHERE
+        $sql = "SELECT mc_option_id from ".$pdo->question_mc_option_table." WHERE
                 question_id = :question_id";
         $stmt = $pdo->query($sql, $params);
         $mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $mc_options = array();
+        
         foreach($mc_option_rows as $row => $mc_option) {
+
             $mc_options[] = (int) $mc_option['mc_option_id'];
         }
         return $mc_options;

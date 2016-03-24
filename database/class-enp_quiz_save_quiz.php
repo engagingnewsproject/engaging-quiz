@@ -251,11 +251,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(self::$quiz['quiz_id'] !== 0) {
             // check to see if we HAVE questions to save
             if(!empty(self::$quiz['question'])){
-                // loop through the questions and save each one
-                foreach(self::$quiz['question'] as $question) {
-                    // save it! Yay!
-                    $this->save_question($question);
-                }
+                $this->save_questions();
             }
 
         } else {
@@ -391,57 +387,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
     }
 
-
-
-    /**
-     * Save a question array in the database
-     * Often used in a foreach loop to loop over all questions
-     * If ID is passed, it will update that ID.
-     * If no ID or ID = 0, it will insert
-     *
-     * @param    $question = array(); of question data
-     * @return   ID of saved question or false if error
-     * @since    0.0.1
-     */
-    protected function save_question($question) {
-        // insert the question
-        $question_obj = new Enp_quiz_Save_question();
-        if($question['question_id'] === 0) {
-            // It doesn't exist yet, so insert it!
-            $question_obj->insert_question($question);
-        } else {
-            // we have a question_id, so update it!
-            $question_obj->update_question($question);
-        }
-    }
-
-    /**
-     * Save a mc_option array in the database
-     * Often used in a foreach loop to loop over all mc_options
-     * If ID is passed, it will update that ID.
-     * If no ID or ID = 0, it will insert
-     *
-     * @param    $mc_option = array(); of mc_option data
-     * @return   ID of saved mc_option or false if error
-     * @since    0.0.1
-     */
-    protected function save_mc_option($mc_option) {
-
-    }
-
-    /**
-     * Save a slider array in the database
-     * If ID is passed, it will update that ID.
-     * If no ID or ID = 0, it will insert
-     *
-     * @param    $slider = array(); of slider data
-     * @return   ID of saved slider or false if error
-     * @since    0.0.1
-     */
-    protected function save_slider($slider) {
-
-    }
-
     /**
      * Populate self::$quiz array with values
      * from self::$quiz_obj if they're not present in self::$quiz
@@ -465,6 +410,24 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                         ':quiz_updated_at'  => self::$quiz['quiz_updated_at']
                     );
         return $params;
+    }
+
+
+    /**
+    * Loop through a $quiz['question'] array to save to the db
+    *
+    * @param    $question = array(); of all $quiz['question'] data
+    * @since    0.0.1
+    */
+    protected function save_questions() {
+        // loop through the questions and save each one
+        foreach(self::$quiz['question'] as $question) {
+            // save it! Yay!
+            // get access to the question object
+            $question_obj = new Enp_quiz_Save_question();
+            // save the question
+            $question_obj->save_question($question);
+        }
     }
 
     /**
