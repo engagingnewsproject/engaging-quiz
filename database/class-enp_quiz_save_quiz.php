@@ -30,18 +30,22 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         self::$quiz = $this->sanitize_array($quiz);
         // flatten it out to make it easier to work with
         self::$quiz = $this->flatten_quiz_array(self::$quiz);
-        // create our object
-        self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
-        // fill the quiz with all the values
-        self::$quiz = $this->prepare_submitted_quiz(self::$quiz);
-        self::$quiz = $this->prepare_submitted_questions(self::$quiz);
 
-        // Check if we're allowed to save. If any glaring errors, return the errors here
-        // TODO: Check to make sure we can save. If there are errors, just return to page!
         // Open a new response object
         self::$response_obj = new Enp_quiz_Save_response();
         // setup the user_action response
         self::$response_obj->set_user_action_response();
+
+        // create our object
+        self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
+        // fill the quiz with all the values
+        $this->prepare_submitted_quiz();
+        // process questions
+        $this->prepare_submitted_questions();
+
+        // Check if we're allowed to save. If any glaring errors, return the errors here
+        // TODO: Check to make sure we can save. If there are errors, just return to page!
+
         // Alrighty!
         // actually save the quiz
         $this->save_quiz();
@@ -64,7 +68,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *        );
     * @return nicely formatted and value validated quiz array ready for saving
     */
-    protected function prepare_submitted_quiz($quiz) {
+    protected function prepare_submitted_quiz() {
 
         $quiz_id = $this->set_quiz_value('quiz_id', 0);
         $quiz_title = $this->set_quiz_value('quiz_title', '');
@@ -95,9 +99,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         );
         // We don't want to lose anything that was in the sent quiz (like questions, etc)
         // so we'll merge them to make sure we don't lose anything
-        $quiz = array_merge($quiz, $default_quiz);
+        self::$quiz = array_merge(self::$quiz, $default_quiz);
 
-        return $quiz;
     }
     /**
     * Reformat and set values for all submitted questions
@@ -117,29 +120,25 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *                    );
     * @return nicely formatted and value validated questions array ready for saving
     */
-    protected function prepare_submitted_questions($quiz) {
+    protected function prepare_submitted_questions() {
+
+        $allow_question_save = $this->preprocess_questions();
+        if($allow_question_save === 'no_questions') {
+            // nothing to save/insert here...
+            return false;
+        }
         // start our counter for our question_order
         $i = 0;
         // open a new default_questions array
         $prepared_questions = array();
         // loop through all submitted questions
-        foreach($quiz['question'] as $question) {
+        foreach(self::$quiz['question'] as $question) {
             // add in our new question_order value
             $question['question_order'] = $i;
             // create the object
             $question_obj = new Enp_quiz_Save_question();
             // prepare the values
             $question = $question_obj->prepare_submitted_question($question);
-
-            // check what the question type is and set the values accordingly
-            if($question['question_type'] === 'mc') {
-                // we have a mc question, so prepare the values
-                // and set it as the mc_option array
-                $question['mc_option'] = $question_obj->prepare_submitted_mc_options($question['mc_option']);
-            } elseif($question['question_type'] === 'slider') {
-                // TODO: Process sliders
-            }
-
             // set the nicely formatted returned $question
             $prepared_questions[] = $question;
 
@@ -149,10 +148,25 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // We don't want to lose anything that was in the sent quiz
         // so we'll merge them to make sure we don't lose anything
-        $quiz['question'] = $prepared_questions;
+        self::$quiz['question'] = $prepared_questions;
+    }
 
-        // return the rebuilt quiz array
-        return $quiz;
+    protected function preprocess_questions() {
+        // If user action is ADD QUESTION
+        // create a dummy question to insert in the DB
+        if(self::$response_obj->user_action['action'] === 'add' && self::$response_obj->user_action['element'] === 'question') {
+            // create a blank question in the db
+            if(!array_key_exists('question', self::$quiz)) {
+                // this is the first question for the quiz, we need to create an empty array for it.
+                // the values will get automatically generated later by our prepare_question functions
+                self::$quiz['question'] = array();
+            }
+            // add a new empty question array to the end of the array
+            // so our foreach loop will run one extra time
+            self::$quiz['question'][] = array();
+        } elseif(!array_key_exists('question', self::$quiz)) {
+            return 'no_questions';
+        }
     }
 
     /**

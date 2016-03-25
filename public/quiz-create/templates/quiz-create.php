@@ -36,7 +36,8 @@
  *    );
  */
 // var_dump($quiz);
- var_dump($user_action);
+// var_dump($user_action);
+
  if(is_numeric($quiz->get_quiz_id()) || is_int($quiz->get_quiz_id())) {
      $quiz_action_url = site_url('enp-quiz/quiz-create/').$quiz->get_quiz_id().'/';
  } else {
@@ -67,15 +68,11 @@
             // count the number of questions
             $question_array = $quiz->get_questions();
             $question_count = count($question_array);
-            if($user_action['action'] === 'add' && $user_action['element'] === 'question') {
-                // if we're adding a new question, add one to the count so we have an extra (empty) question to loop through
-                $question_count++;
-            }
             // even if it's zero, a do loop will do the loop once before checking for condition
-            do {
+             while($question_i < $question_count) {
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
                 $question_i++;
-            } while($question_i < $question_count);
+            }
         ?>
 
         <button type="submit" class="enp-btn--add enp-quiz-form__add-question" name="enp-quiz-submit" value="add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon">

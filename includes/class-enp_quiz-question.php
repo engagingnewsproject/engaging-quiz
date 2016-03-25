@@ -155,10 +155,6 @@ class Enp_quiz_Question {
     */
     public function get_question_id() {
         $question_id = $this->question_id;
-        // if it's null, set it to 0 so we know that it doesn't exist
-        /*if($question_id === null) {
-            $question_id = 0;
-        }*/
         return $question_id;
     }
 

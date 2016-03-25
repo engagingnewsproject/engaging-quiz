@@ -148,7 +148,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
         elseif(strpos(parent::$quiz['user_action'], 'mc-option--correct__question-') !== false) {
             $digits = preg_match('/^(\d+).*$/', parent::$quiz['user_action'], $matches);
             $question_number = $matches[0];
-            $mc_option_number = $matches[1];
+            $mc_option_id = $matches[1];
             $action = 'add';
             $element = 'mc_option';
             // extract the question number by removing 'add-mc-option__question-' from the string
