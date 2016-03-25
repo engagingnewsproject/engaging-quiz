@@ -110,6 +110,10 @@ class Enp_quiz_MC_option {
     */
     public function get_mc_option_id() {
         $mc_option_id = $this->mc_option_id;
+        // if it's null, set it to 0 so we know that it doesn't exist
+        if($mc_option_id === null) {
+            $mc_option_id = 0;
+        }
         return $mc_option_id;
     }
 

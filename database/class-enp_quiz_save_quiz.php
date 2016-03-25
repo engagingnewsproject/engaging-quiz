@@ -40,13 +40,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // TODO: Check to make sure we can save. If there are errors, just return to page!
         // Open a new response object
         self::$response_obj = new Enp_quiz_Save_response();
+        // setup the user_action response
+        self::$response_obj->set_user_action_response();
         // Alrighty!
         // actually save the quiz
         $this->save_quiz();
         // build any messages for our response
         self::$response_obj->build_messages();
-        // setup the user_action response
-        self::$response_obj->set_user_action_response();
         // return the response to the user
         return self::$response_obj;
     }

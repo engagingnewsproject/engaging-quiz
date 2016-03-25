@@ -140,7 +140,7 @@ class Enp_quiz_Question {
         $mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $mc_options = array();
-        
+
         foreach($mc_option_rows as $row => $mc_option) {
 
             $mc_options[] = (int) $mc_option['mc_option_id'];
@@ -155,6 +155,10 @@ class Enp_quiz_Question {
     */
     public function get_question_id() {
         $question_id = $this->question_id;
+        // if it's null, set it to 0 so we know that it doesn't exist
+        /*if($question_id === null) {
+            $question_id = 0;
+        }*/
         return $question_id;
     }
 

@@ -144,6 +144,19 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
             $question_number = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
             $details = array('question' => (int) $question_number);
         }
+        // check to see if user wants to add-mc-option
+        elseif(strpos(parent::$quiz['user_action'], 'mc-option--correct__question-') !== false) {
+            $digits = preg_match('/^(\d+).*$/', parent::$quiz['user_action'], $matches);
+            $question_number = $matches[0];
+            $mc_option_number = $matches[1];
+            $action = 'add';
+            $element = 'mc_option';
+            // extract the question number by removing 'add-mc-option__question-' from the string
+            // we can't use question_id because the question_id might not
+            // have been created yet
+            $question_number = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
+            $details = array('question' => (int) $question_number);
+        }
 
         $this->user_action = array(
                                     'action' => $action,
