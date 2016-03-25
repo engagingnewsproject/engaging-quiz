@@ -141,21 +141,25 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
             // extract the question number by removing 'add-mc-option__question-' from the string
             // we can't use question_id because the question_id might not
             // have been created yet
-            $question_number = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
-            $details = array('question' => (int) $question_number);
+            $question_id = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
+            $details = array('question_id' => (int) $question_id);
         }
         // check to see if user wants to add-mc-option
         elseif(strpos(parent::$quiz['user_action'], 'mc-option--correct__question-') !== false) {
-            $digits = preg_match('/^(\d+).*$/', parent::$quiz['user_action'], $matches);
-            $question_number = $matches[0];
-            $mc_option_id = $matches[1];
-            $action = 'add';
+            // get our matches
+            preg_match_all('/\d+/', parent::$quiz['user_action'], $matches);
+            // will return array of arrays splitting all number groups
+            // first match is our question_id
+            $question_id = $matches[0][0];
+            // second match is our option_id
+            $mc_option_id = $matches[0][1];
+            $action = 'set_correct';
             $element = 'mc_option';
-            // extract the question number by removing 'add-mc-option__question-' from the string
-            // we can't use question_id because the question_id might not
-            // have been created yet
-            $question_number = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
-            $details = array('question' => (int) $question_number);
+
+            $details = array(
+                            'question_id' => (int) $question_id,
+                            'mc_option_id' => (int) $mc_option_id,
+                        );
         }
 
         $this->user_action = array(

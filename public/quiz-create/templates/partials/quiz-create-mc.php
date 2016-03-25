@@ -20,7 +20,7 @@
         }
         ?>
         <li class="enp-mc-option enp-mc-option--add">
-            <button class="enp-btn--add enp-mc-option__add" name="enp-quiz-submit" value="add-mc-option__question-<?echo $question_i;?>"><svg class="enp-icon enp-icon--add enp-mc-option__add__icon"><use xlink:href="#icon-add" /></svg> Add Another Option</button>
+            <button class="enp-btn--add enp-mc-option__add" name="enp-quiz-submit" value="add-mc-option__question-<?echo $question->get_question_id();?>"><svg class="enp-icon enp-icon--add enp-mc-option__add__icon"><use xlink:href="#icon-add" /></svg> Add Another Option</button>
         </li>
     </ul>
 </fieldset>

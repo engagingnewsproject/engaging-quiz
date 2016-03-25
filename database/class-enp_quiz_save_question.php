@@ -89,6 +89,22 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                         array(),
                                     );
         }
+        // append array if adding an option
+        $action = parent::$response_obj->user_action['action'];
+        $element = parent::$response_obj->user_action['element'];
+
+        if($action === 'add' && $element === 'mc_option') {
+            // find out which question we need to append an option to
+            $question_id = parent::$response_obj->user_action['details']['question_id'];
+            // if the question we want to add a mc_option to is THIS question,
+            // append an extra mc_option array
+            if($question_id === (int)self::$question['question_id']) {
+                // add a new empty mc_option array to the end of the array
+                // so our foreach loop will run one extra time when saving this question
+                self::$question['mc_option'][] = array();
+            }
+
+        }
         return self::$question;
     }
 

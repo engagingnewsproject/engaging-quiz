@@ -17,23 +17,6 @@
  *                      ),
  *                  );
  *
- *    $user_action = array(
- *        'action' =>'delete',
- *        'element' => 'mc_option',
- *        'details' => array(
- *                        'question' => '1',
- *                        'mc_option' => '2'
- *                    );
- *    );
- *
- *    $user_action = array(
- *        'action' =>'correct',
- *        'element' => 'mc_option',
- *        'details' => array(
- *                        'question' => '1',
- *                        'mc_option' => '2'
- *                    );
- *    );
  */
 // var_dump($quiz);
 // var_dump($user_action);
