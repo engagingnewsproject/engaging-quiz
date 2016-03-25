@@ -56,11 +56,14 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                 'question_explanation' => $question_explanation,
                                 'question_order' => $question_order,
                             );
-        // we need to preprocess_mc_options and preprocess_slider to make sure each question has at least a slider array and mc_option array
-        $prepared_question = $this->preprocess_mc_options($prepared_question);
-        $prepared_question = $this->preprocess_slider($prepared_question);
-        // merge the prepared question array so we don't lose our mc_option or slider values
+
         self::$question = array_merge(self::$question, $prepared_question);
+
+        // we need to preprocess_mc_options and preprocess_slider to make sure each question has at least a slider array and mc_option array
+        $this->preprocess_mc_options();
+        $this->preprocess_slider();
+        // merge the prepared question array so we don't lose our mc_option or slider values
+
 
         // check what the question type is and set the values accordingly
         if(self::$question['question_type'] === 'mc') {
@@ -78,22 +81,26 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     * Check for mc_option array and append it if it's missing
     * because every question needs to have a mc_option and slider row with it
     */
-    protected function preprocess_mc_options($question) {
-        if(!array_key_exists('mc_option', $question)) {
-            $question['mc_option'] = array();
+    protected function preprocess_mc_options() {
+        // if it doesn't exist, create an empty array of arrays so the
+        // mc_option save prepare function gets run
+        if(!array_key_exists('mc_option', self::$question)) {
+            self::$question['mc_option'] = array(
+                                        array(),
+                                    );
         }
-        return $question;
+        return self::$question;
     }
 
     /**
     * Check for mc_option array and append it if it's missing
     * because every question needs to have a mc_option and slider row with it
     */
-    protected function preprocess_slider($question) {
-        if(!array_key_exists('slider', $question)) {
-            $question['slider'] = array();
+    protected function preprocess_slider() {
+        if(!array_key_exists('slider', self::$question)) {
+            self::$question['slider'] = array();
         }
-        return $question;
+        return self::$question;
     }
 
     /**
