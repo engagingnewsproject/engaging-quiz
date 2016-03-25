@@ -296,7 +296,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
                    $this->message['error'][] = 'Question '.$question_number.' has an empty Multiple Choice Option field.';
                 }
                 // check to see if ANY one has been chosen
-                if($option['mc_option_correct'] === true) {
+                if((int)$option['mc_option_correct'] === 1) {
                     $mc_option_has_correct = true;
                     // we have a correct option! yay! Everything is good.
                     $return_message = 'has_mc_options';
