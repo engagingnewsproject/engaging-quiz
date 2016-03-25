@@ -44,16 +44,18 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         // set the defaults/get the submitted values
         $mc_option_id = $this->set_mc_option_value('mc_option_id', 0);
         $mc_option_content = $this->set_mc_option_value('mc_option_content', '');
-        $mc_option_correct = $this->set_mc_option_value('mc_option_correct', 0);
         $mc_option_order = $mc_option['mc_option_order'];
 
-
+        // set our mc_option array
         self::$mc_option = array(
                                 'mc_option_id' => $mc_option_id,
                                 'mc_option_content' => $mc_option_content,
-                                'mc_option_correct' => $mc_option_correct,
                                 'mc_option_order' => $mc_option_order,
                             );
+        // add in if it's correct or not.
+        // we need this after setting the mc_option because set_mc_option_correct needs
+        // the mc_option_id
+        self::$mc_option['mc_option_correct'] = $this->set_mc_option_correct();
 
         return self::$mc_option;
     }
@@ -90,6 +92,49 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         }
 
         return $param_value;
+    }
+    /**
+    * we need to check if an option is trying to be set as correct or not,
+    * and unset any other options that were set as correct (until we allow
+    * multiple mc correct)
+    * @param self::$mc_option
+    */
+    protected function set_mc_option_correct() {
+        //get the current values (from submission or object)
+        $correct = $this->set_mc_option_value('mc_option_correct', '0');
+        // check what the user action is
+        $action = parent::$response_obj->user_action['action'];
+        $element = parent::$response_obj->user_action['element'];
+        // see if they want to set an mc_option as correct
+        if($action === 'set_correct' && $element === 'mc_option') {
+            // get the user_action question_id
+            $question_id = parent::$response_obj->user_action['details']['question_id'];
+            // if it matches this question, then we'll either be setting it as 1 or 0
+            if($question_id === (int)parent::$question['question_id']) {
+                // get the mc_option_id they were trying to set
+                $mc_option_id = parent::$response_obj->user_action['details']['mc_option_id'];
+                if($mc_option_id === (int)self::$mc_option['mc_option_id']) {
+                    // we've got a match!
+                    // see if it's already set as the correct one. If it is, make it incorrect.
+                    if((int)$correct === 1) {
+                        $correct = 0;
+                    } else {
+                        // Alright, it's correct now!
+                        $correct = 1;
+                    }
+
+                } else {
+                    // it doesn't match THIS mc_option, so set it to 0 (incorrect)
+                    // even if it was correct before. This is bc we can only have one
+                    // correct mc_option per question. If we move to multiple mc correct,
+                    // more code would go here
+                    $correct = 0;
+                }
+            }
+        } else {
+            // no changes
+        }
+        return $correct;
     }
 
     /**
