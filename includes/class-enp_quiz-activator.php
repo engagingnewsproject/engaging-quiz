@@ -108,7 +108,7 @@ class Enp_quiz_Activator {
 					quiz_score_average FLOAT(3) NOT NULL DEFAULT '0',
 					quiz_time_spent BIGINT(40) NOT NULL DEFAULT '0',
 					quiz_time_spent_average BIGINT(20) NOT NULL DEFAULT '0',
-					quiz_is_archived BOOLEAN DEFAULT 0,
+					quiz_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (quiz_id)
 				) $charset_collate;";
 
@@ -130,7 +130,7 @@ class Enp_quiz_Activator {
 					question_score_average BIGINT(20) NOT NULL,
 					question_time_spent BIGINT(40) NOT NULL,
 					question_time_spent_average BIGINT(20) NOT NULL,
-					question_is_archived BOOLEAN DEFAULT 0,
+					question_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (question_id),
 					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)
 				) $charset_collate;";
@@ -143,7 +143,7 @@ class Enp_quiz_Activator {
 					mc_option_content VARCHAR(255) NOT NULL,
 					mc_option_correct BOOLEAN NOT NULL,
 					mc_option_order BIGINT(3) NOT NULL,
-					mc_option_is_archived BOOLEAN DEFAULT 0,
+					mc_option_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (mc_option_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
@@ -160,7 +160,7 @@ class Enp_quiz_Activator {
 					slider_increment BIGINT(20) NOT NULL,
 					slider_prefix VARCHAR(70) NOT NULL,
 					slider_suffix VARCHAR(70) NOT NULL,
-					slider_is_archived BOOLEAN DEFAULT 0,
+					slider_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (slider_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
@@ -172,7 +172,7 @@ class Enp_quiz_Activator {
 					question_id BIGINT(20) NOT NULL,
 					response_correct BOOLEAN NOT NULL,
 					response_created_at DATETIME NOT NULL,
-					response_is_archived BOOLEAN DEFAULT 0,
+					response_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (response_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";

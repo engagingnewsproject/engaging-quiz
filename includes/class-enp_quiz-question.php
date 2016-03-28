@@ -47,7 +47,8 @@ class Enp_quiz_Question {
             ":question_id" => $question_id
         );
         $sql = "SELECT * from ".$pdo->question_table." WHERE
-                question_id = :question_id";
+                question_id = :question_id
+                AND question_is_deleted = 0";
         $stmt = $pdo->query($sql, $params);
         $question_row = $stmt->fetch();
         // return the found question row
