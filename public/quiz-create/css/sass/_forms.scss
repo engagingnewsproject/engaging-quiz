@@ -121,6 +121,7 @@
 .enp-textarea::placeholder {
     font-family: $fontBody;
     font-weight: 300;
+    color: lighten($font, 40);
 }
 
 @include placeholder(textarea) {
