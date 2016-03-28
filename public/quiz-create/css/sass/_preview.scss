@@ -81,20 +81,8 @@
 
     @include radio-inline(enp-title-display);
 
-    @include radio-inline(enp-quiz-bg-color);
-
-    .enp-radio:checked + .enp-quiz-bg-color__label--white {
-        background: #fff;
-        box-shadow: 0 0 2px rgba(0,0,0,.5);
-        color: $font;
-        text-shadow: none;
-    }
-
-    @include radio-inline(enp-quiz-text-color);
-
-    .enp-radio:checked + .enp-quiz-text-color__label--black {
-        background: #222;
-        color: #fff;
+    .enp-quiz-styles {
+        margin-top: 1.2rem;
     }
 
     .enp-preview-form__submit {
