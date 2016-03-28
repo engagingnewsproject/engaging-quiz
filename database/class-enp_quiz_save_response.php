@@ -196,7 +196,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * add to the response object
     * @return false
     */
-    public function build_messages() {
+    public function build_error_messages() {
         // check to see if they need to add questions
         if($this->check_for_questions_message() === 'has_questions') {
             // we have a question title and explanation in the first question,

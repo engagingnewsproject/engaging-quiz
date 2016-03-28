@@ -56,8 +56,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // Alrighty!
         // actually save the quiz
         $this->save_quiz();
-        // build any messages for our response
-        self::$response_obj->build_messages();
+        // if we are trying to move to preview, check
+        // for error messages (like, not enough mc_options, no correct option set, no questions, etc...)
+        if(self::$user_action_action === 'next' && self::$user_action_element === 'preview') {
+            // add quiz error messages to the response, if any
+            self::$response_obj->build_error_messages();
+        }
+
         // return the response to the user
         return self::$response_obj;
     }
