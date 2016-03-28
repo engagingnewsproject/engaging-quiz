@@ -56,6 +56,10 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         // we need this after setting the mc_option because set_mc_option_correct needs
         // the mc_option_id
         self::$mc_option['mc_option_correct'] = $this->set_mc_option_correct();
+        // see if we need to delete it or not
+        // we need this after setting the mc_option because set_mc_option_correct needs
+        // the mc_option_id
+        self::$mc_option['mc_option_is_deleted'] = $this->set_mc_option_is_deleted();
 
         return self::$mc_option;
     }
@@ -138,6 +142,31 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
     }
 
     /**
+    * we need to check if an option is trying to be set as correct or not,
+    * and unset any other options that were set as correct (until we allow
+    * multiple mc correct)
+    * @param self::$mc_option
+    */
+    protected function set_mc_option_is_deleted() {
+        //get the current values (from submission or object)
+        $is_deleted = $this->set_mc_option_value('mc_option_is_deleted', '0');
+        // check what the user action is
+        $action = parent::$response_obj->user_action['action'];
+        $element = parent::$response_obj->user_action['element'];
+        // see if they want to set an mc_option as correct
+        if($action === 'delete' && $element === 'mc_option') {
+            // if they want to delete, see if we match the mc_option_id
+            $mc_option_id_to_delete = parent::$response_obj->user_action['details']['mc_option_id'];
+            if($mc_option_id_to_delete === (int) self::$mc_option['mc_option_id']) {
+                // we've got a match! this is the one they want to delete
+                $is_deleted = 1;
+            }
+        }
+        // return if this one should be deleted or not
+        return $is_deleted;
+    }
+
+    /**
      * Save a mc_option array in the database
      * Often used in a foreach loop to loop over all mc_options
      * If ID is passed, it will update that ID.
@@ -202,7 +231,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
             // pass the response array to our response object
             parent::$response_obj->set_mc_option_response($mc_option_response, parent::$question, self::$mc_option);
         } else {
-            parent::$response_obj->add_error('Question #'.$question['question_order'].' could save add Multiple Choice Option #'.self::$mc_option['mc_option_order'].'.');
+            parent::$response_obj->add_error('Question #'.$question['question_order'].' could not save add Multiple Choice Option #'.self::$mc_option['mc_option_order'].'.');
         }
     }
 
@@ -220,12 +249,14 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
                         ':mc_option_content'=> self::$mc_option['mc_option_content'],
                         ':mc_option_correct'=> self::$mc_option['mc_option_correct'],
                         ':mc_option_order'  => self::$mc_option['mc_option_order'],
+                        ':mc_option_is_deleted'  => self::$mc_option['mc_option_is_deleted'],
                     );
         // write our SQL statement
         $sql = "UPDATE ".$pdo->question_mc_option_table."
                    SET  mc_option_content = :mc_option_content,
                         mc_option_correct = :mc_option_correct,
-                        mc_option_order = :mc_option_order
+                        mc_option_order = :mc_option_order,
+                        mc_option_is_deleted = :mc_option_is_deleted
 
                  WHERE  mc_option_id = :mc_option_id";
         // update the mc_option in the database
