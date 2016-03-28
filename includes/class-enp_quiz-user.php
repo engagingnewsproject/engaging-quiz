@@ -24,8 +24,8 @@ class Enp_quiz_User {
     * @param $user = row from the user_table
     */
     protected function set_user_object_values() {
-        $this->quizzes = set_quizzes();
-        $this->ab_tests = set_ab_tests();
+        $this->quizzes = $this->set_quizzes();
+        $this->ab_tests = $this->set_ab_tests();
     }
 
     /**

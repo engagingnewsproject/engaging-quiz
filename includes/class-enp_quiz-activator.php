@@ -215,10 +215,12 @@ class Enp_quiz_Activator {
 					ab_test_title VARCHAR(255) NOT NULL,
 					quiz_id_a BIGINT(20) NOT NULL,
 					quiz_id_b BIGINT(20) NOT NULL,
+					ab_test_owner BIGINT(20) NOT NULL,
 					ab_test_created_by BIGINT(20) NOT NULL,
 					ab_test_created_at DATETIME NOT NULL,
 					ab_test_updated_by BIGINT(20) NOT NULL,
 					ab_test_updated_at DATETIME NOT NULL,
+					ab_test_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (ab_test_id),
 					FOREIGN KEY  (quiz_id_a) REFERENCES $quiz_table_name (quiz_id),
 					FOREIGN KEY  (quiz_id_b) REFERENCES $quiz_table_name (quiz_id)
@@ -325,9 +327,11 @@ $enp_quiz_table_quiz_option = "'.$this->quiz_option_table_name.'";
 $enp_quiz_table_question = "'.$this->question_table_name.'";
 $enp_quiz_table_question_mc_option = "'.$this->mc_option_table_name.'";
 $enp_quiz_table_question_slider = "'.$this->slider_table_name.'";
+$enp_quiz_table_ab_test = "'.$this->ab_test_table_name.'";
 $enp_quiz_table_response = "'.$this->response_table_name.'";
 $enp_quiz_table_response_mc = "'.$this->response_mc_table_name.'";
 $enp_quiz_table_response_slider = "'.$this->response_slider_table_name.'";
+$enp_quiz_table_ab_test_response = "'.$this->ab_test_response_table_name.'";
 ;?>';
 
 		// write to the file

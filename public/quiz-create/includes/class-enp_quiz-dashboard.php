@@ -32,7 +32,14 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
     }
 
     public function load_template() {
+        ob_start();
+        //Start the class
+        $user = new Enp_quiz_User(get_current_user_id());
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/dashboard.php' );
+        $content = ob_get_contents();
+        if (ob_get_length()) ob_end_clean();
+
+        return $content;
     }
 
     public function enqueue_styles() {
