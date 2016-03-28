@@ -136,7 +136,8 @@ class Enp_quiz_Question {
             ":question_id" => $question_id
         );
         $sql = "SELECT mc_option_id from ".$pdo->question_mc_option_table." WHERE
-                question_id = :question_id";
+                question_id = :question_id
+                AND mc_option_is_deleted = 0";
         $stmt = $pdo->query($sql, $params);
         $mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
