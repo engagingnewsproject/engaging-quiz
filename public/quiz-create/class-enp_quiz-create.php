@@ -53,6 +53,7 @@ class Enp_quiz_Create {
 	 */
 	public function __construct( $plugin_name, $version ) {
 
+		// set-up class
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		include_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
@@ -62,7 +63,10 @@ class Enp_quiz_Create {
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 		add_action('init', array($this, 'set_enp_quiz_nonce'), 1);
 		add_action('init', array($this, 'add_enp_quiz_rewrite_tags'));
+
+		// redirect to the page they should go to
 		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
+
 		// we're including this as a fallback for the other pages.
         // process save, if necessary
         // if the enp-quiz-submit is posted, then they probably want to try to
@@ -123,6 +127,9 @@ class Enp_quiz_Create {
 	* @since    0.0.1
 	*/
 	public function enp_quiz_template_rewrite_catch() {
+		// make sure we have a user
+		$this->validate_user();
+		// validated
 		global $wp_query;
 		// see if enp_quiz_template is one of the query_vars posted
 		if ( array_key_exists( 'enp_quiz_template', $wp_query->query_vars ) ) {
@@ -435,8 +442,7 @@ class Enp_quiz_Create {
 	 */
 	public function validate_user() {
 		if(is_user_logged_in() === false) {
-			wp_redirect( home_url( '/login/' ) );
-			exit;
+			auth_redirect();
 		} else {
 			return get_current_user_id();
 		}
