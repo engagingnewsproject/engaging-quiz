@@ -94,9 +94,6 @@ class Enp_quiz_Activator {
 					quiz_title VARCHAR(255) NOT NULL,
 					quiz_status VARCHAR(11) NOT NULL,
 					quiz_finish_message VARCHAR(510) NOT NULL,
-					quiz_color_bg VARCHAR(7) NOT NULL,
-					quiz_color_text VARCHAR(7) NOT NULL,
-					quiz_color_border VARCHAR(7) NOT NULL,
 					quiz_owner BIGINT(20) NOT NULL,
 					quiz_created_by BIGINT(20) NOT NULL,
 					quiz_created_at DATETIME NOT NULL,
@@ -112,12 +109,25 @@ class Enp_quiz_Activator {
 					PRIMARY KEY  (quiz_id)
 				) $charset_collate;";
 
+		$this->quiz_option_table_name = $wpdb->prefix . 'enp_quiz_option';
+		$quiz_option_table_name = $this->quiz_option_table_name;
+		$quiz_option_sql = "CREATE TABLE $quiz_option_table_name (
+					quiz_option_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					quiz_id BIGINT(20) NOT NULL,
+					quiz_option_name VARCHAR(191) NOT NULL,
+					quiz_option_value LONGTEXT NOT NULL,
+					PRIMARY KEY  (quiz_option_id),
+					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)
+				) $charset_collate;";
+
 		$this->question_table_name = $wpdb->prefix . 'enp_question';
 		$question_table_name = $this->question_table_name;
 		$question_sql = "CREATE TABLE $question_table_name (
 					question_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					quiz_id BIGINT(20) NOT NULL,
 					question_title VARCHAR(255) NOT NULL,
+					question_image TEXT NOT NULL,
+					question_image_alt VARCHAR(255) NOT NULL,
 					question_order BIGINT(3) NOT NULL,
 					question_type VARCHAR(20) NOT NULL,
 					question_explanation VARCHAR(510) NOT NULL,
@@ -233,6 +243,10 @@ class Enp_quiz_Activator {
 		 				'sql'=>$quiz_sql
 					),
 					array(
+						'name'=>$this->quiz_option_table_name,
+		 				'sql'=>$quiz_option_sql
+					),
+					array(
 						'name'=>$this->question_table_name,
 		 				'sql'=>$question_sql
 					),
@@ -307,6 +321,7 @@ $enp_db_user = "'.DB_USER.'";
 $enp_db_password = "'.DB_PASSWORD.'";
 $enp_db_host = "'.DB_HOST.'";
 $enp_quiz_table_quiz = "'.$this->quiz_table_name.'";
+$enp_quiz_table_quiz_option = "'.$this->quiz_option_table_name.'";
 $enp_quiz_table_question = "'.$this->question_table_name.'";
 $enp_quiz_table_question_mc_option = "'.$this->mc_option_table_name.'";
 $enp_quiz_table_question_slider = "'.$this->slider_table_name.'";
