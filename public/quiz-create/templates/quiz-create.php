@@ -37,6 +37,7 @@
     <?php do_action('enp_quiz_display_messages'); ?>
 
     <form class="enp-form enp-quiz-form" method="post" action="<?php echo htmlentities($quiz_action_url); ?>">
+        <?php $enp_quiz_nonce->outputKey();?>
         <input type="hidden" name="enp_quiz[quiz_id]" value="<? echo $quiz->get_quiz_id(); ?>" />
 
         <fieldset class="enp-fieldset enp-quiz-title">

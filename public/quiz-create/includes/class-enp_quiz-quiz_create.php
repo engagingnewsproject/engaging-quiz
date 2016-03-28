@@ -21,7 +21,10 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Quiz_create extends Enp_quiz_Create {
+
     public function __construct() {
+
+        //add_action('init', array($this, 'register_my_session', 1));
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
         // load take quiz styles
@@ -31,14 +34,15 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     }
 
     public function load_content($content) {
-
         ob_start();
+        //Start the class
         $quiz = $this->load_quiz();
+        $enp_quiz_nonce = parent::$nonce;
         $user_action = $this->load_user_action();
         $enp_current_page = 'create';
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
         $content = ob_get_contents();
-        ob_end_clean();
+        if (ob_get_length()) ob_end_clean();
 
         return $content;
     }

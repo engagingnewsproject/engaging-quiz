@@ -40,6 +40,7 @@ class Enp_quiz_Create {
 	 */
 	protected $version;
 	public static $message,
+				  $nonce,
 				  $saved_quiz_id,
 				  $user_action;
 
@@ -59,7 +60,7 @@ class Enp_quiz_Create {
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-
+		add_action('init', array($this, 'set_enp_quiz_nonce'), 1);
 		add_action('init', array($this, 'add_enp_quiz_rewrite_tags'));
 		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
 		// we're including this as a fallback for the other pages.
@@ -71,6 +72,13 @@ class Enp_quiz_Create {
         }
 		// custom action hook for displaying messages
         add_action( 'enp_quiz_display_messages', array($this, 'display_messages' ));
+	}
+
+	public function set_enp_quiz_nonce() {
+		//Start the session
+	   session_start();
+	   //Start the class
+	   self::$nonce = new Enp_quiz_Nonce();
 	}
 
 	/**
@@ -251,6 +259,18 @@ class Enp_quiz_Create {
 	public function save_quiz() {
 		// make sure they're logged in. returns current_user_id
 		$user_id = $this->validate_user();
+
+
+		//Is it a POST request?
+ 	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
+ 		   //Validate the form key
+ 		   if(!isset($_POST['enp_quiz_nonce']) || !self::$nonce->validate()) {
+ 			   // Form key is invalid,
+			   // return them to the page (they're probably refreshing the page)
+			   self::$message['error'][] = 'Form was not resaved';
+			   return false;
+ 		   }
+ 	   }
 
 		// get access to wpdb
 		global $wpdb;
