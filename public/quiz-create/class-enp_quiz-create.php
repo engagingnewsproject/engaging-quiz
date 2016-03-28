@@ -329,8 +329,6 @@ class Enp_quiz_Create {
 		 //  SUCCESS! Now what...?  //
 		//*************************//
 
-
-
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
 		if(self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {

@@ -18,14 +18,14 @@
         <section class="enp-container enp-quiz-settings-container">
             <h1 class="enp-quiz-settings__title">Quiz Settings</h1>
             <form class="enp-form enp-quiz-settings__form" method="post" action="<?php echo htmlentities(site_url('enp-quiz/quiz-preview/').$quiz->get_quiz_id().'/'); ?>">
-                <input type="hidden" name="enp_quiz['quiz_id']" value="<? echo $quiz->get_quiz_id();?>" />
+                <input type="hidden" name="enp_quiz[quiz_id]" value="<? echo $quiz->get_quiz_id();?>" />
                 <fieldset class="enp-fieldset enp-title-display">
                     <legend class="enp-legend enp-title-display__legend">Title Display</legend>
-                    <input id="enp-quiz-title-show" class="enp-radio enp-title-display__input enp-title-display__input--title-display" type="radio" name="enp_quiz['title-display']" value="title-show" checked="checked"/>
+                    <input id="enp-quiz-title-show" class="enp-radio enp-title-display__input enp-title-display__input--title-display" type="radio" name="enp_quiz[title-display]" value="title-show" checked="checked"/>
                     <label class="enp-label enp-title-display__label enp-title-display__label--title-display" for="enp-quiz-title-show">
                         Show Title
                     </label>
-                    <input class="enp-radio enp-title-display__input enp-title-display__input--hide-title" id="enp-quiz-title-hide" type="radio" name="enp_quiz['title-display']" value="title-hide"/>
+                    <input class="enp-radio enp-title-display__input enp-title-display__input--hide-title" id="enp-quiz-title-hide" type="radio" name="enp_quiz[title-display]" value="title-hide"/>
                     <label class="enp-label enp-title-display__label enp-title-display__label--hide-title" for="enp-quiz-title-hide">
                         Hide Title
                     </label>
@@ -33,7 +33,7 @@
 
                 <fieldset class="enp-fieldset enp-quiz-bg-color">
                     <legend class="enp-legend enp-quiz-bg-color__legend">Background Color</legend>
-                    <input id="white" class="enp-radio enp-quiz-bg-color__input enp-quiz-bg-color__input--white" type="radio" name="enp_quiz['enp-quiz-bg-color']" value="#ffffff" checked="checked"/>
+                    <input id="white" class="enp-radio enp-quiz-bg-color__input enp-quiz-bg-color__input--white" type="radio" name="enp_quiz[enp-quiz-bg-color]" value="#ffffff" checked="checked"/>
                     <label class="enp-label enp-quiz-bg-color__label enp-quiz-bg-color__label--white" for="white">
                         White
                     </label>
@@ -41,7 +41,7 @@
 
                 <fieldset class="enp-fieldset enp-quiz-text-color">
                     <legend class="enp-legend enp-quiz-text-color__legend">Text Color</legend>
-                    <input id="black" class="enp-radio enp-quiz-text-color__input enp-quiz-text-color__input--black" type="radio" name="enp_quiz['enp-quiz-text-color']" value="title" checked="checked"/>
+                    <input id="black" class="enp-radio enp-quiz-text-color__input enp-quiz-text-color__input--black" type="radio" name="enp_quiz[enp-quiz-text-color]" value="title" checked="checked"/>
                     <label class="enp-label enp-quiz-text-color__label enp-quiz-text-color__label--black" for="black">
                         Black
                     </label>
