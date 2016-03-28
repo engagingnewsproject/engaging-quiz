@@ -32,6 +32,7 @@
         @include _(accordion);
         padding-top: 0;
         margin-bottom: 1.6rem;
+        position: relative;
     }
 
     .enp-question-inner {
@@ -213,6 +214,23 @@
 
     .enp-answer-explanation__label {
         @include _(label--bold);
+    }
+
+    .enp-question__button--delete {
+        @include _(btn--reset);
+        position: absolute;
+        top: 9px;
+        right: 9px;
+        fill: #bbb;
+        cursor: pointer;
+
+        @include breakpoint(medium) {
+            right: -30px;
+        }
+
+        &:hover {
+            fill: $red;
+        }
     }
 
     .enp-quiz-form__add-question {

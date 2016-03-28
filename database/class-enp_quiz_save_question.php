@@ -59,6 +59,9 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
         self::$question = array_merge(self::$question, $prepared_question);
 
+        // see if we're supposed to delete this question
+        self::$question['question_is_deleted'] = $this->set_question_is_deleted();
+
         // we need to preprocess_mc_options and preprocess_slider to make sure each question has at least a slider array and mc_option array
         $this->preprocess_mc_options();
         $this->preprocess_slider();
@@ -90,12 +93,9 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                     );
         }
         // append array if adding an option
-        $action = parent::$response_obj->user_action['action'];
-        $element = parent::$response_obj->user_action['element'];
-
-        if($action === 'add' && $element === 'mc_option') {
+        if(parent::$user_action_action === 'add' && parent::$user_action_element === 'mc_option') {
             // find out which question we need to append an option to
-            $question_id = parent::$response_obj->user_action['details']['question_id'];
+            $question_id = parent::$user_action_details['question_id'];
             // if the question we want to add a mc_option to is THIS question,
             // append an extra mc_option array
             if($question_id === (int)self::$question['question_id']) {
@@ -106,6 +106,29 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
         }
         return self::$question;
+    }
+
+    /**
+    * we need to check if an option is trying to be set as correct or not,
+    * and unset any other options that were set as correct (until we allow
+    * multiple mc correct)
+    * @param self::$mc_option
+    */
+    protected function set_question_is_deleted() {
+        //get the current values (from submission or object)
+        $is_deleted = $this->set_question_value('question_is_deleted', '0');
+        // check what the user action is
+        // see if they want to set an question as correct
+        if(parent::$user_action_action === 'delete' && parent::$user_action_element === 'question') {
+            // if they want to delete, see if we match the question_id
+            $question_id_to_delete = parent::$user_action_details['question_id'];
+            if($question_id_to_delete === (int) self::$question['question_id']) {
+                // we've got a match! this is the one they want to delete
+                $is_deleted = 1;
+            }
+        }
+        // return if this one should be deleted or not
+        return $is_deleted;
     }
 
     /**
@@ -258,6 +281,13 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             // pass the response array to our response object
             parent::$response_obj->set_question_response($question_response, self::$question);
 
+            // SUCCESS MESSAGES
+            // see if we we're adding a mc_option in here...
+            if(self::$user_action_action === 'add' && self::$user_action_element === 'question') {
+                // we added a mc_option successfully, let them know!
+                parent::$response_obj->add_success('Question added.');
+            }
+
             // pass the question on to save_mc_option or save_slider
             // add the question_id to the questions array
             $this->save_question_type_options();
@@ -281,14 +311,16 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                         ':question_title'   => self::$question['question_title'],
                         ':question_type'    => self::$question['question_type'],
                         ':question_explanation' => self::$question['question_explanation'],
-                        ':question_order'   => self::$question['question_order']
+                        ':question_order'   => self::$question['question_order'],
+                        ':question_is_deleted'   => self::$question['question_is_deleted']
                     );
         // write our SQL statement
         $sql = "UPDATE ".$pdo->question_table."
                    SET  question_title = :question_title,
                         question_type = :question_type,
                         question_explanation = :question_explanation,
-                        question_order = :question_order
+                        question_order = :question_order,
+                        question_is_deleted = :question_is_deleted
 
                  WHERE  question_id = :question_id";
         // update the question in the database
@@ -304,6 +336,11 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                 );
             // pass the response array to our response object
             parent::$response_obj->set_question_response($question_response, self::$question);
+            // see if we were deleting a question in here...
+            if(self::$question['question_is_deleted'] === 1) {
+                // we deleted a question successfully. Let's let them know!
+                parent::$response_obj->add_success('Question deleted.');
+            }
 
             // pass the question on to save_mc_option or save_slider
             $this->save_question_type_options();

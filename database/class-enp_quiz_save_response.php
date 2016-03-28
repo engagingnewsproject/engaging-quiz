@@ -161,6 +161,16 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
                             'mc_option_id' => (int) $mc_option_id,
                         );
         }
+        // DELETE question
+        elseif(strpos(parent::$quiz['user_action'], 'question--delete-') !== false) {
+            $action = 'delete';
+            $element = 'question';
+            // extract the question number by removing 'add-mc-option__question-' from the string
+            // we can't use question_id because the question_id might not
+            // have been created yet
+            $question_id = str_replace('question--delete-', '', parent::$quiz['user_action']);
+            $details = array('question_id' => (int) $question_id);
+        }
         // DELETE mc_option
         elseif(strpos(parent::$quiz['user_action'], 'mc-option--delete-') !== false) {
             $action = 'delete';
@@ -320,4 +330,30 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
         return $return_message;
     }
 
+    /**
+    * Get the user_action['action']
+    * @param response_obj
+    * @return string set in the user_action['action']
+    */
+    public function get_user_action_action() {
+        return $this->user_action['action'];
+    }
+
+    /**
+    * Get the user_action['element']
+    * @param response_obj
+    * @return string set in the user_action['element']
+    */
+    public function get_user_action_element() {
+        return $this->user_action['element'];
+    }
+
+    /**
+    * Get the user_action['details']  array
+    * @param response_obj
+    * @return array set in the user_action['details']
+    */
+    public function get_user_action_details() {
+        return $this->user_action['details'];
+    }
 }

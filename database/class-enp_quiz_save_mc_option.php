@@ -107,17 +107,13 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         //get the current values (from submission or object)
         $correct = $this->set_mc_option_value('mc_option_correct', '0');
         // check what the user action is
-        $action = parent::$response_obj->user_action['action'];
-        $element = parent::$response_obj->user_action['element'];
         // see if they want to set an mc_option as correct
-        if($action === 'set_correct' && $element === 'mc_option') {
+        if(self::$user_action_action === 'set_correct' && self::$user_action_element === 'mc_option') {
             // get the user_action question_id
-            $question_id = parent::$response_obj->user_action['details']['question_id'];
             // if it matches this question, then we'll either be setting it as 1 or 0
-            if($question_id === (int)parent::$question['question_id']) {
+            if(parent::$user_action_details['question_id'] === (int)parent::$question['question_id']) {
                 // get the mc_option_id they were trying to set
-                $mc_option_id = parent::$response_obj->user_action['details']['mc_option_id'];
-                if($mc_option_id === (int)self::$mc_option['mc_option_id']) {
+                if(parent::$user_action_details['mc_option_id'] === (int)self::$mc_option['mc_option_id']) {
                     // we've got a match!
                     // see if it's already set as the correct one. If it is, make it incorrect.
                     if((int)$correct === 1) {
@@ -151,13 +147,10 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         //get the current values (from submission or object)
         $is_deleted = $this->set_mc_option_value('mc_option_is_deleted', '0');
         // check what the user action is
-        $action = parent::$response_obj->user_action['action'];
-        $element = parent::$response_obj->user_action['element'];
         // see if they want to set an mc_option as correct
-        if($action === 'delete' && $element === 'mc_option') {
+        if(self::$user_action_action === 'delete' && self::$user_action_element === 'mc_option') {
             // if they want to delete, see if we match the mc_option_id
-            $mc_option_id_to_delete = parent::$response_obj->user_action['details']['mc_option_id'];
-            if($mc_option_id_to_delete === (int) self::$mc_option['mc_option_id']) {
+            if(parent::$user_action_details['mc_option_id'] === (int) self::$mc_option['mc_option_id']) {
                 // we've got a match! this is the one they want to delete
                 $is_deleted = 1;
             }
@@ -230,8 +223,14 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
                                 );
             // pass the response array to our response object
             parent::$response_obj->set_mc_option_response($mc_option_response, parent::$question, self::$mc_option);
+
+            // see if we we're adding a mc_option in here...
+            if(self::$user_action_action === 'add' && self::$user_action_element === 'mc_option') {
+                // we added a mc_option successfully, let them know!
+                parent::$response_obj->add_success('Multiple Choice option added to Question #'.(parent::$question['question_order']+1).'.');
+            }
         } else {
-            parent::$response_obj->add_error('Question #'.$question['question_order'].' could not save add Multiple Choice Option #'.self::$mc_option['mc_option_order'].'.');
+            parent::$response_obj->add_error('Question #'.(parent::$question['question_order']+1).' could not add a Multiple Choice Option.');
         }
     }
 
@@ -273,9 +272,21 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
                                 );
             // pass the response array to our response object
             parent::$response_obj->set_mc_option_response($mc_option_response, parent::$question, self::$mc_option);
+
+            // SUCCESS MESSAGES
+            // see if we we're deleting a mc_option in here...
+            if(self::$mc_option['mc_option_is_deleted'] === 1) {
+                // we deleted a question successfully. Let's let them know!
+                parent::$response_obj->add_success('Multiple Choice Option #'.(self::$mc_option['mc_option_order']+1).' deleted from Question #'.(parent::$question['question_order']+1).'.');
+            }
+            // See if we're setting one as CORRECT
+            if(self::$mc_option['mc_option_correct'] === 1) {
+                // we set a question as correct!
+                parent::$response_obj->add_success('Multiple Choice Option #'.(self::$mc_option['mc_option_order']+1).' set as Correct on Question #'.(parent::$question['question_order']+1).'.');
+            }
         } else {
             // add an error that we couldn't update the mc_option
-            parent::$response_obj->add_error('Question #'.parent::$question['question_order'].' could not update Multiple Choice Option #'.self::$mc_option['mc_option_order'].'. Please try again and contact support if you continue to see this error message.');
+            parent::$response_obj->add_error('Question #'.(parent::$question['question_order']+1).' could not update Multiple Choice Option #'.(self::$mc_option['mc_option_order']+1).'. Please try again and contact support if you continue to see this error message.');
         }
     }
 

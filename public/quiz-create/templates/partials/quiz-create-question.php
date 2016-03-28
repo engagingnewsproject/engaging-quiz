@@ -48,4 +48,7 @@
             <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $question_i;?>][question_explanation]" maxlength="255" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_value('question_explanation', $question_i);?></textarea>
         </fieldset>
     </div>
+    <button class="enp-question__button enp-question__button--delete" name="enp-quiz-submit" value="question--delete-<?echo $question->get_question_id();?>">
+        <svg class="enp-icon enp-icon--delete enp-question__icon enp-question__icon--delete"><use xlink:href="#icon-delete" /></svg>
+    </button>
 </section>

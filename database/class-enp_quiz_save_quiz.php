@@ -19,7 +19,10 @@
 class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected static $quiz,
                      $quiz_obj,
-                     $response_obj;
+                     $response_obj,
+                     $user_action_action,
+                     $user_action_element,
+                     $user_action_details;
 
     public function __construct() {
 
@@ -35,6 +38,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         self::$response_obj = new Enp_quiz_Save_response();
         // setup the user_action response
         self::$response_obj->set_user_action_response();
+        // these are referenced a lot, so lets set a quick link up for them
+        self::$user_action_action = self::$response_obj->get_user_action_action();
+        self::$user_action_element = self::$response_obj->get_user_action_element();
+        self::$user_action_details = self::$response_obj->get_user_action_details();
 
         // create our object
         self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);

@@ -65,6 +65,7 @@ class Enp_quiz_Question {
         $this->question_type = $this->set_question_type();
         $this->question_explanation = $this->set_question_explanation();
         $this->question_order = $this->set_question_order();
+        $this->question_is_deleted = $this->set_question_is_deleted();
         if($this->question_type === 'mc') {
             $this->mc_options = $this->set_mc_options();
         } else {
@@ -113,13 +114,23 @@ class Enp_quiz_Question {
     }
 
     /**
-    * Set the question_type for our Quiz Object
+    * Set the question_order for our Quiz Object
     * @param $question = question row from question database table
-    * @return question_type field from the database
+    * @return question_order field from the database
     */
     protected function set_question_order() {
         $question_order = self::$question['question_order'];
         return $question_order;
+    }
+
+    /**
+    * Set the question_is_deleted for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_is_deleted field from the database
+    */
+    protected function set_question_is_deleted() {
+        $question_is_deleted = self::$question['question_is_deleted'];
+        return $question_is_deleted;
     }
 
     /**
@@ -198,6 +209,16 @@ class Enp_quiz_Question {
     public function get_question_order() {
         $question_order = $this->question_order;
         return $question_order;
+    }
+
+    /**
+    * Get the question_is_deleted for our Quiz Object
+    * @param $question = question object
+    * @return question_is_deleted from the object
+    */
+    public function get_question_is_deleted() {
+        $question_is_deleted = $this->question_is_deleted;
+        return $question_is_deleted;
     }
 
     /**
