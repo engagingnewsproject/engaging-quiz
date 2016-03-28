@@ -9,9 +9,9 @@ class Enp_quiz_Quiz {
             $quiz_title,
             $quiz_status,
             $quiz_finish_message,
-            $quiz_color_bg,
-            $quiz_color_text,
-            $quiz_color_border,
+            //$quiz_color_bg,
+            //$quiz_color_text,
+            //$quiz_color_border,
             $quiz_owner,
             $quiz_created_by,
             $quiz_created_at,
@@ -75,9 +75,9 @@ class Enp_quiz_Quiz {
         $this->quiz_created_at = $this->set_quiz_created_at();
         $this->quiz_updated_by = $this->set_quiz_updated_by();
         $this->quiz_updated_at = $this->set_quiz_updated_at();
-        $this->quiz_color_bg = $this->set_quiz_color_bg();
-        $this->quiz_color_text = $this->set_quiz_color_text();
-        $this->quiz_color_border = $this->set_quiz_color_border();
+        //$this->quiz_color_bg = $this->set_quiz_color_bg();
+        //$this->quiz_color_text = $this->set_quiz_color_text();
+        //$this->quiz_color_border = $this->set_quiz_color_border();
         $this->questions = $this->set_questions();
     }
 
@@ -179,34 +179,38 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_bg field from the database
     */
+    /*
     protected function set_quiz_color_bg() {
         // TODO: Validate HEX
         $quiz_color_bg = self::$quiz['quiz_color_bg'];
         return $quiz_color_bg;
     }
+    */
 
     /**
     * Set the quiz_color_text for our Quiz Object
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_text field from the database
     */
+    /*
     protected function set_quiz_color_text() {
         // TODO: Validate HEX
         $quiz_color_text = self::$quiz['quiz_color_text'];
         return $quiz_color_text;
     }
-
+    */
     /**
     * Set the quiz_color_border for our Quiz Object
     * @param $quiz = quiz row from quiz database table
     * @return quiz_color_border field from the database
     */
+    /*
     protected function set_quiz_color_border() {
         // TODO: Validate HEX
         $quiz_color_border = self::$quiz['quiz_color_border'];
         return $quiz_color_border;
     }
-
+    */
     /**
     * Set the questions for our Quiz Object
     * @param $quiz_id
@@ -328,31 +332,34 @@ class Enp_quiz_Quiz {
     * @param $quiz = quiz object
     * @return #hex code
     */
+    /*
     public function get_quiz_color_bg() {
         $quiz_color_bg = $this->quiz_color_bg;
         return $quiz_color_bg;
     }
-
+    */
     /**
     * Get the quiz_color_text for our Quiz Object
     * @param $quiz = quiz object
     * @return #hex code
     */
+    /*
     public function get_quiz_color_text() {
         $quiz_color_text = $this->quiz_color_text;
         return $quiz_color_text;
     }
-
+    */
     /**
     * Get the quiz_color_border for our Quiz Object
     * @param $quiz = quiz object
     * @return #hex code
     */
+    /*
     public function get_quiz_color_border() {
         $quiz_color_border = $this->quiz_color_border;
         return $quiz_color_border;
     }
-
+    */
     /**
     * Get the questions for our Quiz Object
     * @param $quiz = quiz object

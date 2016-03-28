@@ -86,9 +86,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $quiz_title = $this->set_quiz_value('quiz_title', '');
         $quiz_status = $this->set_quiz_value('quiz_status', 'draft');
         $quiz_finish_message = $this->set_quiz_value('quiz_finish_message', 'Thanks for taking our quiz!');
-        $quiz_color_bg    = $this->set_quiz_value('quiz_color_bg', '#ffffff');
-        $quiz_color_text  = $this->set_quiz_value('quiz_color_text', '#333333');
-        $quiz_color_border = $this->set_quiz_value('quiz_color_border', "0");
         $quiz_updated_by = $this->set_quiz_value('quiz_updated_by', 0);
         $quiz_updated_at = $this->set_quiz_value('quiz_updated_at', date("Y-m-d H:i:s"));
         $quiz_owner = $this->set_quiz_value('quiz_owner', $quiz_updated_by);
@@ -100,9 +97,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             'quiz_title' => $quiz_title,
             'quiz_status' => $quiz_status,
             'quiz_finish_message' => $quiz_finish_message,
-            'quiz_color_bg'    => $quiz_color_bg,
-            'quiz_color_text'  => $quiz_color_text,
-            'quiz_color_border'=> $quiz_color_border,
             'quiz_owner'      => $quiz_owner,
             'quiz_created_by' => $quiz_created_by,
             'quiz_created_at' => $quiz_created_at,
@@ -325,9 +319,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $params = array(':quiz_title'       => self::$quiz['quiz_title'],
                         ':quiz_status'      => self::$quiz['quiz_status'],
                         ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
-                        ':quiz_color_bg'    => self::$quiz['quiz_color_bg'],
-                        ':quiz_color_text'  => self::$quiz['quiz_color_text'],
-                        ':quiz_color_border'=> self::$quiz['quiz_color_border'],
                         ':quiz_owner'       => self::$quiz['quiz_owner'],
                         ':quiz_created_by'  => self::$quiz['quiz_created_by'],
                         ':quiz_created_at'  => self::$quiz['quiz_created_at'],
@@ -339,9 +330,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                             quiz_title,
                                             quiz_status,
                                             quiz_finish_message,
-                                            quiz_color_bg,
-                                            quiz_color_text,
-                                            quiz_color_border,
                                             quiz_owner,
                                             quiz_created_by,
                                             quiz_created_at,
@@ -352,9 +340,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                             :quiz_title,
                                             :quiz_status,
                                             :quiz_finish_message,
-                                            :quiz_color_bg,
-                                            :quiz_color_text,
-                                            :quiz_color_border,
                                             :quiz_owner,
                                             :quiz_created_by,
                                             :quiz_created_at,
@@ -389,9 +374,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                      SET quiz_title = :quiz_title,
                          quiz_status = :quiz_status,
                          quiz_finish_message = :quiz_finish_message,
-                         quiz_color_bg = :quiz_color_bg,
-                         quiz_color_text = :quiz_color_text,
-                         quiz_color_border = :quiz_color_border,
                          quiz_updated_by = :quiz_updated_by,
                          quiz_updated_at = :quiz_updated_at
 
@@ -428,9 +410,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                         ':quiz_title'       => self::$quiz['quiz_title'],
                         ':quiz_status'      => self::$quiz['quiz_status'],
                         ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
-                        ':quiz_color_bg'    => self::$quiz['quiz_color_bg'],
-                        ':quiz_color_text'  => self::$quiz['quiz_color_text'],
-                        ':quiz_color_border'=> self::$quiz['quiz_color_border'],
                         ':quiz_owner'       => self::$quiz['quiz_owner'],
                         ':quiz_updated_by'  => self::$quiz['quiz_updated_by'],
                         ':quiz_updated_at'  => self::$quiz['quiz_updated_at']

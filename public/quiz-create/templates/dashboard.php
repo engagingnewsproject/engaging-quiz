@@ -8,6 +8,10 @@
  * @since             0.0.1
  * @package           Enp_quiz
  */
+ /*
+ $user = new Enp_quiz_User();
+ object containing user quizzes and ab_tests
+ */
 ?>
 
 <section class="enp-container enp-dash-container">
@@ -36,7 +40,15 @@
                 New Quiz
             </a>
         </li>
-        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-quiz-item.php');?>
+        <?php
+        $quizzes = $user->get_quizzes();
+        if(!empty($quizzes)) {
+            foreach($quizzes as $quiz) {
+                $quiz = new Enp_quiz_Quiz($quiz);
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-quiz-item.php');
+            }
+        }
+        ?>
     </ul>
 </section>
 
@@ -63,6 +75,13 @@
               <use xlink:href="#icon-add" />
             </svg>New A/B Test</a>
         </li>
-        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-ab-item.php');?>
+        <?php
+        $ab_tests = $user->get_ab_tests();
+        if(!empty($ab_tests)) {
+            foreach($ab_tests as $ab_test) {
+                //$ab_test = new Enp_quiz_AB_test($ab_test);
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-ab-item.php');
+            }
+        } ?>
     </ul>
 </section>

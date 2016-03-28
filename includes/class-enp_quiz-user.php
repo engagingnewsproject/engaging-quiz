@@ -29,9 +29,9 @@ class Enp_quiz_User {
     }
 
     /**
-    * Set the questions for our Quiz Object
-    * @param $quiz_id
-    * @return questions array of ids array(3,4,5) from the database
+    * Set the quizzes for our User Object
+    * @param $user_id
+    * @return quizzes array of ids array(3,4,5) from the database
     */
     protected function set_quizzes() {
         $pdo = new enp_quiz_Db();
@@ -53,9 +53,9 @@ class Enp_quiz_User {
     }
 
     /**
-    * Set the questions for our Quiz Object
-    * @param $quiz_id
-    * @return questions array of ids array(3,4,5) from the database
+    * Set the ab_tests for our User Object
+    * @param $user_id
+    * @return ab_test array of ids array(3,4,5) from the database
     */
     protected function set_ab_tests() {
 
@@ -77,5 +77,23 @@ class Enp_quiz_User {
         return $ab_tests;
     }
 
+    /**
+    * Get the quizzes for our User Object
+    * @param $user = user object
+    * @return array of quizzes id's as integers
+    */
+    public function get_quizzes() {
+        $quizzes = $this->quizzes;
+        return $quizzes;
+    }
 
+    /**
+    * Get the ab_tests for our User Object
+    * @param $user = user object
+    * @return array of ab_test_id's as integers
+    */
+    public function get_ab_tests() {
+        $ab_tests = $this->ab_tests;
+        return $ab_tests;
+    }
 }
