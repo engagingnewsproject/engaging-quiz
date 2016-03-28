@@ -277,12 +277,12 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
             // see if we we're deleting a mc_option in here...
             if(self::$mc_option['mc_option_is_deleted'] === 1) {
                 // we deleted a question successfully. Let's let them know!
-                parent::$response_obj->add_success('Multiple Choice Option #'.(self::$mc_option['mc_option_order']+1).' deleted from Question #'.(parent::$question['question_order']+1).'.');
+                parent::$response_obj->add_success('Multiple Choice Option deleted from Question #'.(parent::$question['question_order']+1).'.');
             }
             // See if we're setting one as CORRECT
             if(self::$mc_option['mc_option_correct'] === 1) {
                 // we set a question as correct!
-                parent::$response_obj->add_success('Multiple Choice Option #'.(self::$mc_option['mc_option_order']+1).' set as Correct on Question #'.(parent::$question['question_order']+1).'.');
+                parent::$response_obj->add_success('Multiple Choice Option set as Correct on Question #'.(parent::$question['question_order']+1).'.');
             }
         } else {
             // add an error that we couldn't update the mc_option
