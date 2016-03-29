@@ -171,6 +171,17 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
             $question_id = str_replace('question--delete-', '', parent::$quiz['user_action']);
             $details = array('question_id' => (int) $question_id);
         }
+        // DELETE question_image
+        elseif(strpos(parent::$quiz['user_action'], 'question-image--delete-') !== false) {
+
+            $action = 'delete';
+            $element = 'question_image';
+            // extract the question number by removing 'add-mc-option__question-' from the string
+            // we can't use question_id because the question_id might not
+            // have been created yet
+            $question_id = str_replace('question-image--delete-', '', parent::$quiz['user_action']);
+            $details = array('question_id' => (int) $question_id);
+        }
         // DELETE mc_option
         elseif(strpos(parent::$quiz['user_action'], 'mc-option--delete-') !== false) {
             $action = 'delete';

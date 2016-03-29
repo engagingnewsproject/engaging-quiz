@@ -16,15 +16,27 @@
         </label>
         <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $question_i;?>][question_title]" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_value('question_title', $question_i);?></textarea>
 
-        <label for="enp-image-upload" class="enp-btn--add enp-image-upload"><svg class="enp-icon enp-icon--photo enp-image-upload__icon--photo">
-            <use xlink:href="#icon-photo" />
-        </svg>
-        <svg class="enp-icon enp-icon--add enp-image-upload__icon--add">
-            <use xlink:href="#icon-add" />
-        </svg> Add Image</label>
-        <input id="enp-image-upload" type="file" class="enp-image-upload__input" name="enp_question[<?echo $question_i;?>][question_image]">
-        <label class="enp-label" for="enp-image-alt">Image Alt Text (a short description of the image)</label>
-        <input type="text" id="enp-image-alt" maxlength="255" class="enp-image-alt__input" name="enp_question[<?echo $question_i;?>][question_image_alt]" value="<? echo $question->get_question_image_alt();?>">
+
+        <input type="hidden" id="enp-image-<?echo $question_i;?>" class="enp-image__input" name="enp_question[<?echo $question_i;?>][question_image]" value="<? echo $question->get_question_image();?>">
+
+        <?
+            if(!empty($question->get_question_image())) {
+                echo '<img src="'.$question->get_question_image().'" alt="'. $question->get_question_image_alt().'"/>';
+                echo '<button class="enp-button" name="enp-quiz-submit" value="question-image--delete-'.$question->get_question_id().'"><svg class="enp-icon enp-icon--delete enp-question__icon enp-question__icon--delete"><use xlink:href="#icon-delete" /></svg></button>';
+            } else {?>
+                <label for="enp-image-upload-<?echo $question->get_question_id();?>" class="enp-btn--add enp-image-upload"><svg class="enp-icon enp-icon--photo enp-image-upload__icon--photo">
+                    <use xlink:href="#icon-photo" />
+                </svg>
+                <svg class="enp-icon enp-icon--add enp-image-upload__icon--add">
+                    <use xlink:href="#icon-add" />
+                </svg> Add Image</label>
+                <input id="enp-image-upload-<?echo $question->get_question_id();?>" type="file" accept="image/*" class="enp-image-upload__input" name="question_image_upload_<?echo $question->get_question_id();?>">
+            <?
+            }
+        ?>
+
+        <label class="enp-label" for="enp-image-alt-<?echo $question_i;?>">Image Description</label>
+        <input type="text" id="enp-image-alt-<?echo $question_i;?>" maxlength="255" class="enp-image-alt__input" name="enp_question[<?echo $question_i;?>][question_image_alt]" value="<? echo $question->get_question_image_alt();?>">
 
 
         <h4 class="enp-legend enp-question-type__legend">Question Type</h4>

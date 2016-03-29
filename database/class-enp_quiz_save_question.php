@@ -45,7 +45,6 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         // set the defaults/get the submitted values
         $question_id = $this->set_question_value('question_id', 0);
         $question_title = $this->set_question_value('question_title', '');
-        $question_image = $this->set_question_value('question_image', '');
         $question_image_alt = $this->set_question_value('question_image_alt', '');
         $question_type = $this->set_question_value('question_type', 'mc');
         $question_explanation = $this->set_question_value('question_explanation', '');
@@ -54,7 +53,6 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $prepared_question = array(
                                 'question_id' => $question_id,
                                 'question_title' => $question_title,
-                                'question_image' => $question_image,
                                 'question_image_alt' => $question_image_alt,
                                 'question_type' => $question_type,
                                 'question_explanation' => $question_explanation,
@@ -62,7 +60,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                             );
 
         self::$question = array_merge(self::$question, $prepared_question);
-
+        // set the image
+        self::$question['question_image'] = $this->set_question_image();
         // see if we're supposed to delete this question
         self::$question['question_is_deleted'] = $this->set_question_is_deleted();
 
@@ -82,6 +81,59 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         }
 
         return self::$question;
+    }
+
+    /**
+    *
+    */
+    protected function set_question_image() {
+        // set our default
+        $question_image = $this->set_question_value('question_image', '');
+        // see if the user is trying to delete the image
+        if(parent::$user_action_action === 'delete' && parent::$user_action_element === 'question_image') {
+            // see if it matches this question
+            if(parent::$user_action_details['question_id'] === (int)self::$question['question_id']) {
+                // they want to delete this image. I wonder what was so bad about it?
+                $question_image = '';
+                parent::$response_obj->add_success('Image deleted for Question #'.(self::$question['question_order']+1).'.');
+            }
+        }
+
+        // process images if necessary
+        // See if there's an image trying to be uploaded for this question
+        if(!empty($_FILES)) {
+            $question_image_file = 'question_image_upload_'.self::$question['question_id'];
+            // some question has a file submitted, let's see if it's this one
+            // check for size being set and that the size is greater than 0
+            if( isset($_FILES[$question_image_file]["size"]) && $_FILES[$question_image_file]["size"] > 0 ) {
+                // we have a new image to upload!
+                // upload it
+                $new_question_image = $this->upload_question_image($question_image_file);
+                // see if it worked
+                if($new_question_image !== false) {
+                    // if it worked, set it as the question_image
+                    $question_image = $new_question_image;
+                }
+            }
+        }
+
+        return $question_image;
+    }
+
+    protected function upload_question_image($question_image_file) {
+        $new_question_image = false;
+        $question_image_file = wp_upload_bits( $_FILES[$question_image_file]['name'], null, @file_get_contents( $_FILES[$question_image_file]['tmp_name'] ) );
+        // check to make sure there are no errors
+        if($question_image_file['error'] === false) {
+            // success! set the image
+            // set the URL to the image as our question_image
+            $new_question_image = $question_image_file['url'];
+            parent::$response_obj->add_success('Image uploaded for Question #'.(self::$question['question_order']+1).'.');
+        } else {
+            parent::$response_obj->add_error('Image upload failed for Question #'.(self::$question['question_order']+1).'.');
+        }
+
+        return $new_question_image;
     }
 
     /**
@@ -197,8 +249,10 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         if(array_key_exists($key, self::$question) && self::$question[$key] !== "") {
             $param_value = self::$question[$key];
         } else {
+            // if we set it from the object, then we can't delete values...
+            // hmm...
             // check to see if there's even a question_id to try to get
-            if(array_key_exists('question_id', self::$question) &&  self::$question['question_id'] !== 0) {
+            /*if(array_key_exists('question_id', self::$question) &&  self::$question['question_id'] !== 0) {
                 // if it's not in our submited quiz, try to get it from the object
                 // dynamically create the quiz getter function
                 $question_obj = new Enp_quiz_Question(self::$question['question_id']);
@@ -209,7 +263,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                 if($obj_value !== null) {
                     $param_value = $obj_value;
                 }
-            }
+            }*/
         }
 
         return $param_value;
@@ -229,6 +283,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     protected function save_question($question) {
         // set the question array
         self::$question = $question;
+
         // check to see if the id exists
         if(self::$question['question_id'] === 0) {
             // It doesn't exist yet, so insert it!
