@@ -385,6 +385,7 @@ define("ENP_AB_TEST_URL", "'.$site_url.'/ab-test/");
 define("ENP_AB_RESULTS_URL", "'.$site_url.'/ab-results/");
 define("ENP_QUIZ_URL", "'.$site_url.'/quiz-embed/");
 define("ENP_QUIZ_IMAGE_DIR", "'.$image_dir["basedir"].'/enp-quiz/");
+define("ENP_QUIZ_IMAGE_URL", "'.$image_dir["baseurl"].'/enp-quiz/");
 ?>';
 
 		// write to the file

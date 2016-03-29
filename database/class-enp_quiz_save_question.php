@@ -70,7 +70,6 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $this->preprocess_slider();
         // merge the prepared question array so we don't lose our mc_option or slider values
 
-
         // check what the question type is and set the values accordingly
         if(self::$question['question_type'] === 'mc') {
             // we have a mc question, so prepare the values
@@ -84,7 +83,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     }
 
     /**
-    *
+    * Sets our question image, uploads an image, or deletes it
     */
     protected function set_question_image() {
         // set our default
@@ -102,6 +101,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         // process images if necessary
         // See if there's an image trying to be uploaded for this question
         if(!empty($_FILES)) {
+            // This is the name="" field for that question image in the form
             $question_image_file = 'question_image_upload_'.self::$question['question_id'];
             // some question has a file submitted, let's see if it's this one
             // check for size being set and that the size is greater than 0
@@ -120,25 +120,36 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         return $question_image;
     }
 
+    /*
+    * Uploads an image to
+    * @param $question_image_file (string) name of "name" field in HTML form for that question
+    * @return (string) filename of image uploaded to save to DB
+    */
     protected function upload_question_image($question_image_file) {
-        $new_question_image = false;
-        $question_image_upload = wp_upload_bits( $_FILES[$question_image_file]['name'], null, @file_get_contents( $_FILES[$question_image_file]['tmp_name'] ) );
+        $new_image_name = false;
+        $image_upload = wp_upload_bits( $_FILES[$question_image_file]['name'], null, @file_get_contents( $_FILES[$question_image_file]['tmp_name'] ) );
         // check to make sure there are no errors
-        if($question_image_upload['error'] === false) {
+        if($image_upload['error'] === false) {
             // success! set the image
             // set the URL to the image as our question_image
-            $new_question_image = $question_image_upload['url'];
             // create / delete our directory for these images
             $this->prepare_quiz_image_dir();
             $path = $this->prepare_question_image_dir();
 
             // now upload all the resized images we'll need
-            $this->upload_resized_image($question_image_upload, $path, null);
-            $this->upload_resized_image($question_image_upload, $path, 1000);
-            $this->upload_resized_image($question_image_upload, $path, 740);
-            $this->upload_resized_image($question_image_upload, $path, 580);
-            $this->upload_resized_image($question_image_upload, $path, 320);
-            $this->upload_resized_image($question_image_upload, $path, 200);
+            $new_image_name = $this->resize_image($image_upload, $path, null);
+            // we have the full path, but we just need the filename
+            $new_image_name = str_replace(ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/', '', $new_image_name);
+            // resize all the other images
+            $this->resize_image($image_upload, $path, 1000);
+            $this->resize_image($image_upload, $path, 740);
+            $this->resize_image($image_upload, $path, 580);
+            $this->resize_image($image_upload, $path, 320);
+            $this->resize_image($image_upload, $path, 200);
+
+            // delete the image we initially uploaded from the wp-content dir
+            $this->delete_file($image_upload['file']);
+
             // add a success message
             parent::$response_obj->add_success('Image uploaded for Question #'.(self::$question['question_order']+1).'.');
         } else {
@@ -146,52 +157,18 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             parent::$response_obj->add_error('Image upload failed for Question #'.(self::$question['question_order']+1).'.');
         }
 
-        return $new_question_image;
-    }
-
-    protected function prepare_quiz_image_dir() {
-        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/';
-        $path = $this->build_dir($path);
-        return $path;
-    }
-
-    protected function prepare_question_image_dir() {
-        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/';
-        $path = $this->build_dir($path);
-        $this->delete_files($path);
-
-        // check if directory exists
-        // check to see if our image question upload directory exists
-        return $path;
-    }
-
-    private function build_dir($path) {
-        if (!file_exists($path)) {
-            // if it doesn't exist, create it
-            mkdir($path, 0777, true);
-        }
-        return $path;
-    }
-
-    private function delete_files($path) {
-        if(strpos($path,  ENP_QUIZ_IMAGE_DIR) === false) {
-            // uh oh... someone is misusing this
-            return false;
-        }
-        if (file_exists($path)) {
-            // delete all the images in it
-            $files = glob($path.'*'); // get all file names
-            foreach($files as $file){ // iterate files
-              if(is_file($file))
-                unlink($file); // delete file
-            }
-        }
+        return $new_image_name;
     }
 
     /**
-    *
+    * Resizes images using wp_get_image_editor
+    * and appends the width to the filename
+    * @param $question_image_upload (string) path to image
+    * @param $path (string) path to upload image to
+    * @param $width (int) maxwidth of image to resize it to
+    * @return path to saved resized image
     */
-    protected function upload_resized_image($question_image_upload, $path, $width) {
+    protected function resize_image($question_image_upload, $path, $width) {
 		// Resize the image to fit the single goal's page dimensions
 		$image = wp_get_image_editor( $question_image_upload['file']);
         if ( ! is_wp_error( $image ) ) {
@@ -549,6 +526,66 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
      */
     protected function save_slider($slider) {
 
+    }
+
+    /*
+    * Creates a new directory for the quiz images, if necessary
+    */
+    protected function prepare_quiz_image_dir() {
+        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/';
+        $path = $this->build_dir($path);
+        return $path;
+    }
+
+    /*
+    * Creates a new directory for the question images, if necessary
+    * and DELETES all files in the directory if there are any
+    */
+    protected function prepare_question_image_dir() {
+        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/';
+        $path = $this->build_dir($path);
+        $this->delete_files($path);
+
+        // check if directory exists
+        // check to see if our image question upload directory exists
+        return $path;
+    }
+
+    /**
+    * Creates a new directory if it doesn't exist
+    */
+    private function build_dir($path) {
+        if (!file_exists($path)) {
+            // if it doesn't exist, create it
+            mkdir($path, 0777, true);
+        }
+        return $path;
+    }
+
+    /**
+    * Deletes files in a directory, restricted to ENP_QUIZ_IMG_DIR
+    */
+    private function delete_files($path) {
+        if(strpos($path,  ENP_QUIZ_IMAGE_DIR) === false) {
+            // uh oh... someone is misusing this
+            return false;
+        }
+        if (file_exists($path)) {
+            // delete all the images in it
+            $files = glob($path.'*'); // get all file names
+            foreach($files as $file){ // iterate files
+              $this->delete_file($file);
+            }
+        }
+    }
+
+    /**
+    * Deletes a file by path
+    */
+    private function delete_file($file) {
+        if(is_file($file)) {
+          unlink($file); // delete file
+        }
     }
 
 }
