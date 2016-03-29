@@ -22,7 +22,9 @@
         <svg class="enp-icon enp-icon--add enp-image-upload__icon--add">
             <use xlink:href="#icon-add" />
         </svg> Add Image</label>
-        <input type="file" class="enp-image-upload__input" name="enp_question[<?echo $question_i;?>][question_image]">
+        <input id="enp-image-upload" type="file" class="enp-image-upload__input" name="enp_question[<?echo $question_i;?>][question_image]">
+        <label class="enp-label" for="enp-image-alt">Image Alt Text (a short description of the image)</label>
+        <input type="text" id="enp-image-alt" maxlength="255" class="enp-image-alt__input" name="enp_question[<?echo $question_i;?>][question_image_alt]" value="<? echo $question->get_question_image_alt();?>">
 
 
         <h4 class="enp-legend enp-question-type__legend">Question Type</h4>

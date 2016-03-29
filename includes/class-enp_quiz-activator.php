@@ -52,6 +52,15 @@ class Enp_quiz_Activator {
 			//create the config file
 			$this->create_config_file();
 		}
+		
+		// include the config file now that we have it
+		$this->include_config_file();
+
+		// check to see if our image upload directory exists
+		if (!file_exists(ENP_QUIZ_IMAGE_DIR)) {
+			// if it doesn't exist, create it
+		    mkdir(ENP_QUIZ_IMAGE_DIR, 0777, true);
+		}
 
 
 		// Set-up rewrite rules based on our config files
@@ -62,14 +71,17 @@ class Enp_quiz_Activator {
 
 	}
 
-	protected function add_rewrite_rules() {
+	protected function include_config_file() {
 		$config_file_exists = $this->check_config_file();
 		//check to make sure the config file exists
 		if($config_file_exists === true) {
 			include($this->enp_config_path);
 		} else {
-   			die('Could not find the enp-quiz-config.php file in the wp-content folder. Try deactivating and re-activating the plugin. This should create the config file.');
-   		}
+			die('Could not find the enp-quiz-config.php file in the wp-content folder. Try deactivating and re-activating the plugin. This should create the config file.');
+		}
+	}
+
+	protected function add_rewrite_rules() {
 		// path to quiz
 		// we have to remove the base path because add_rewrite_rule will start // at the base directory. Take ABSPATH and subtract it from our Config Template Path
 		$enp_quiz_take_template_path = str_replace(ABSPATH,"",ENP_QUIZ_TAKE_TEMPLATES_PATH);
@@ -354,8 +366,11 @@ $enp_quiz_table_ab_test_response = "'.$this->ab_test_response_table_name.'";
 	protected function create_config_file() {
 		// creates and opens the file for writing
 		$config_file = fopen($this->enp_config_path, "w");
+		// get site url and append our string
+		$site_url = site_url('enp-quiz');
+		// default image directory for question image uploads
+		$image_dir = wp_upload_dir();
 
-$site_url = site_url('enp-quiz');
 $config_contents =
 '<?php
 include("'.$this->enp_database_config_path.'");
@@ -369,6 +384,7 @@ define("ENP_QUIZ_RESULTS_URL", "'.$site_url.'/quiz-results/");
 define("ENP_AB_TEST_URL", "'.$site_url.'/ab-test/");
 define("ENP_AB_RESULTS_URL", "'.$site_url.'/ab-results/");
 define("ENP_QUIZ_URL", "'.$site_url.'/quiz-embed/");
+define("ENP_QUIZ_IMAGE_DIR", "'.$image_dir["basedir"].'/enp-quiz/");
 ?>';
 
 		// write to the file

@@ -62,6 +62,8 @@ class Enp_quiz_Question {
     protected function set_question_object_values() {
         $this->question_id = $this->set_question_id();
         $this->question_title = $this->set_question_title();
+        $this->question_image = $this->set_question_image();
+        $this->question_image_alt = $this->set_question_image_alt();
         $this->question_type = $this->set_question_type();
         $this->question_explanation = $this->set_question_explanation();
         $this->question_order = $this->set_question_order();
@@ -91,6 +93,26 @@ class Enp_quiz_Question {
     protected function set_question_title() {
         $question_title = stripslashes(self::$question['question_title']);
         return $question_title;
+    }
+
+    /**
+    * Set the question_image path for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_image path from the database
+    */
+    protected function set_question_image() {
+        $question_image = self::$question['question_image'];
+        return $question_image;
+    }
+
+    /**
+    * Set the question_image_alt for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_image_alt field from the database
+    */
+    protected function set_question_image_alt() {
+        $question_image_alt = stripslashes(self::$question['question_image_alt']);
+        return $question_image_alt;
     }
 
     /**
@@ -179,6 +201,26 @@ class Enp_quiz_Question {
     public function get_question_title() {
         $question_title = $this->question_title;
         return $question_title;
+    }
+
+    /**
+    * Get the question_image for our Quiz Object
+    * @param $question = question object
+    * @return question_image from the object
+    */
+    public function get_question_image() {
+        $question_image = $this->question_image;
+        return $question_image;
+    }
+
+    /**
+    * Get the question_image_alt for our Quiz Object
+    * @param $question = question object
+    * @return question_image_alt from the object
+    */
+    public function get_question_image_alt() {
+        $question_image_alt = $this->question_image_alt;
+        return $question_image_alt;
     }
 
     /**

@@ -45,6 +45,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         // set the defaults/get the submitted values
         $question_id = $this->set_question_value('question_id', 0);
         $question_title = $this->set_question_value('question_title', '');
+        $question_image = $this->set_question_value('question_image', '');
+        $question_image_alt = $this->set_question_value('question_image_alt', '');
         $question_type = $this->set_question_value('question_type', 'mc');
         $question_explanation = $this->set_question_value('question_explanation', '');
         $question_order = $question['question_order'];
@@ -52,6 +54,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $prepared_question = array(
                                 'question_id' => $question_id,
                                 'question_title' => $question_title,
+                                'question_image' => $question_image,
+                                'question_image_alt' => $question_image_alt,
                                 'question_type' => $question_type,
                                 'question_explanation' => $question_explanation,
                                 'question_order' => $question_order,
@@ -247,6 +251,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         // Get our Parameters ready
         $params = array(':quiz_id'          => parent::$quiz['quiz_id'],
                         ':question_title'   => self::$question['question_title'],
+                        ':question_image'   => self::$question['question_image'],
+                        ':question_image_alt'   => self::$question['question_image_alt'],
                         ':question_type'    => self::$question['question_type'],
                         ':question_explanation' => self::$question['question_explanation'],
                         ':question_order'   => self::$question['question_order'],
@@ -255,6 +261,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $sql = "INSERT INTO ".$pdo->question_table." (
                                             quiz_id,
                                             question_title,
+                                            question_image,
+                                            question_image_alt,
                                             question_type,
                                             question_explanation,
                                             question_order
@@ -262,6 +270,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                         VALUES(
                                             :quiz_id,
                                             :question_title,
+                                            :question_image,
+                                            :question_image_alt,
                                             :question_type,
                                             :question_explanation,
                                             :question_order
@@ -309,6 +319,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         // Get our Parameters ready
         $params = array(':question_id'      => self::$question['question_id'],
                         ':question_title'   => self::$question['question_title'],
+                        ':question_image'   => self::$question['question_image'],
+                        ':question_image_alt'   => self::$question['question_image_alt'],
                         ':question_type'    => self::$question['question_type'],
                         ':question_explanation' => self::$question['question_explanation'],
                         ':question_order'   => self::$question['question_order'],
@@ -317,6 +329,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         // write our SQL statement
         $sql = "UPDATE ".$pdo->question_table."
                    SET  question_title = :question_title,
+                        question_image = :question_image,
+                        question_image_alt = :question_image_alt,
                         question_type = :question_type,
                         question_explanation = :question_explanation,
                         question_order = :question_order,
