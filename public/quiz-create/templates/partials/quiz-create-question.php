@@ -21,7 +21,11 @@
 
         <?
             if(!empty($question->get_question_image())) {
-                echo '<img src="'.$question->get_question_image().'" alt="'. $question->get_question_image_alt().'"/>';
+                echo '<img
+                        src="'.$question->get_question_image().'"
+                        srcset="'.$question->get_question_image_srcset().'"
+                        alt="'. $question->get_question_image_alt().'"
+                      />';
                 echo '<button class="enp-button" name="enp-quiz-submit" value="question-image--delete-'.$question->get_question_id().'"><svg class="enp-icon enp-icon--delete enp-question__icon enp-question__icon--delete"><use xlink:href="#icon-delete" /></svg></button>';
             } else {?>
                 <label for="enp-image-upload-<?echo $question->get_question_id();?>" class="enp-btn--add enp-image-upload"><svg class="enp-icon enp-icon--photo enp-image-upload__icon--photo">

@@ -7,6 +7,8 @@
 class Enp_quiz_Question {
     public  $question_id,
             $question_title,
+            $question_image,
+            $question_image_alt,
             $question_type,
             $question_explanation,
             $question_order,
@@ -101,7 +103,10 @@ class Enp_quiz_Question {
     * @return question_image path from the database
     */
     protected function set_question_image() {
-        $question_image = self::$question['question_image'];
+        // we want to set the url, but the question_image just sets the filename
+        // we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+
+        $question_image = ENP_QUIZ_IMAGE_URL.self::$question['quiz_id'].'/'.self::$question['question_id'].'/'.self::$question['question_image'];
         return $question_image;
     }
 
@@ -213,6 +218,40 @@ class Enp_quiz_Question {
         return $question_image;
     }
 
+    /**
+    * Get the question_image for our Quiz Object
+    * @param $question = question object
+    * @return question_image from the object
+    */
+    public function get_question_image_srcset() {
+        if(empty($this->question_image)) {
+            return '';
+        }
+        // -original is our stored filename so we can explode by that
+        // and generate our new filenames
+        $filename = explode('-original', $this->question_image);
+        $name = $filename[0];
+        $ext = $filename[1];
+        $sizes = array(1000,740,580,320,200);
+        $srcset = '';
+        foreach($sizes as $size) {
+            $srcset .= $name.'-w'.$size.$ext.' w'.($size+10).',';
+        }
+        // remove the trailing comma
+        $srcset = rtrim($srcset, ",");
+        return $srcset;
+    }
+
+    public function get_question_image_thumbnail() {
+        if(empty($this->question_image)) {
+            return '';
+        }
+        $filename = explode('-original', $this->question_image);
+        $name = $filename[0];
+        $ext = $filename[1];
+        $thumbnail = $name.'-w200'.$ext;
+        return $thumbnail;
+    }
     /**
     * Get the question_image_alt for our Quiz Object
     * @param $question = question object
