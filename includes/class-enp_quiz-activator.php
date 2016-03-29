@@ -52,7 +52,7 @@ class Enp_quiz_Activator {
 			//create the config file
 			$this->create_config_file();
 		}
-		
+
 		// include the config file now that we have it
 		$this->include_config_file();
 

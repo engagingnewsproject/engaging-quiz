@@ -122,18 +122,96 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
     protected function upload_question_image($question_image_file) {
         $new_question_image = false;
-        $question_image_file = wp_upload_bits( $_FILES[$question_image_file]['name'], null, @file_get_contents( $_FILES[$question_image_file]['tmp_name'] ) );
+        $question_image_upload = wp_upload_bits( $_FILES[$question_image_file]['name'], null, @file_get_contents( $_FILES[$question_image_file]['tmp_name'] ) );
         // check to make sure there are no errors
-        if($question_image_file['error'] === false) {
+        if($question_image_upload['error'] === false) {
             // success! set the image
             // set the URL to the image as our question_image
-            $new_question_image = $question_image_file['url'];
+            $new_question_image = $question_image_upload['url'];
+            // create / delete our directory for these images
+            $this->prepare_quiz_image_dir();
+            $path = $this->prepare_question_image_dir();
+
+            // now upload all the resized images we'll need
+            $this->upload_resized_image($question_image_upload, $path, null);
+            $this->upload_resized_image($question_image_upload, $path, 1000);
+            $this->upload_resized_image($question_image_upload, $path, 740);
+            $this->upload_resized_image($question_image_upload, $path, 580);
+            $this->upload_resized_image($question_image_upload, $path, 320);
+            $this->upload_resized_image($question_image_upload, $path, 200);
+            // add a success message
             parent::$response_obj->add_success('Image uploaded for Question #'.(self::$question['question_order']+1).'.');
         } else {
+            // add an error message
             parent::$response_obj->add_error('Image upload failed for Question #'.(self::$question['question_order']+1).'.');
         }
 
         return $new_question_image;
+    }
+
+    protected function prepare_quiz_image_dir() {
+        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/';
+        $path = $this->build_dir($path);
+        return $path;
+    }
+
+    protected function prepare_question_image_dir() {
+        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/';
+        $path = $this->build_dir($path);
+        $this->delete_files($path);
+
+        // check if directory exists
+        // check to see if our image question upload directory exists
+        return $path;
+    }
+
+    private function build_dir($path) {
+        if (!file_exists($path)) {
+            // if it doesn't exist, create it
+            mkdir($path, 0777, true);
+        }
+        return $path;
+    }
+
+    private function delete_files($path) {
+        if(strpos($path,  ENP_QUIZ_IMAGE_DIR) === false) {
+            // uh oh... someone is misusing this
+            return false;
+        }
+        if (file_exists($path)) {
+            // delete all the images in it
+            $files = glob($path.'*'); // get all file names
+            foreach($files as $file){ // iterate files
+              if(is_file($file))
+                unlink($file); // delete file
+            }
+        }
+    }
+
+    /**
+    *
+    */
+    protected function upload_resized_image($question_image_upload, $path, $width) {
+		// Resize the image to fit the single goal's page dimensions
+		$image = wp_get_image_editor( $question_image_upload['file']);
+        if ( ! is_wp_error( $image ) ) {
+            if($width !== null && is_int($width)) {
+                // make our height max out at 4x6 aspect ratio so we don't have a HUUUUGEly tall image
+                $height = $width * 1.666667;
+                $extension = 'x'.$width;
+                // Get the actual filename (rather than the directory + filename)
+                $image->resize( $width, $height, false );
+
+            } else {
+                $extension = '-original';
+            }
+
+            $filename = $image->generate_filename( $extension, $path, NULL );
+            $saved_image = $image->save($filename);
+            return $saved_image['path'];
+        }
+
+        return false;
     }
 
     /**
