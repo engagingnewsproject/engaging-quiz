@@ -18,6 +18,7 @@
         <section class="enp-container enp-quiz-settings-container">
             <h1 class="enp-quiz-settings__title">Quiz Settings</h1>
             <form class="enp-form enp-quiz-settings__form" method="post" action="<?php echo htmlentities(site_url('enp-quiz/quiz-preview/').$quiz->get_quiz_id().'/'); ?>">
+                <?php $enp_quiz_nonce->outputKey();?>
                 <input type="hidden" name="enp_quiz[quiz_id]" value="<? echo $quiz->get_quiz_id();?>" />
                 <fieldset class="enp-fieldset enp-title-display">
                     <legend class="enp-legend enp-title-display__legend">Title Display</legend>
