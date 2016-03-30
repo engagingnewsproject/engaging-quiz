@@ -216,7 +216,7 @@ body #enp-quiz {
 
     &:hover {
         background: transparent;
-        border-color: 2px solid $link_hover;
+        border: 2px solid $link_hover;
         color: $link_hover;
     }
 }

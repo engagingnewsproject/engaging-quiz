@@ -309,9 +309,12 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             }
         }
 
-        // save all of our questions
+        // save all of our questions and other stuff
         // check to make sure a quiz_id is there
         if(self::$quiz['quiz_id'] !== 0) {
+            // if a quiz_id is set, lets try saving the quiz options
+            $this->save_quiz_options();
+
             // check to see if we HAVE questions to save
             if(!empty(self::$quiz['question'])){
                 $this->save_questions();
@@ -399,9 +402,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response_obj->set_action('insert');
             self::$response_obj->add_success('Quiz created.');
 
-            // Now save the quiz options to the quiz_options table
-            $this->save_quiz_options();
-
         } else {
             self::$response_obj->add_error('Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
@@ -437,8 +437,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response_obj->set_action('update');
             self::$response_obj->add_success('Quiz updated.');
 
-            // Now save the quiz options to the quiz_options table
-            $this->save_quiz_options();
         } else {
             self::$response_obj->add_error('Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }

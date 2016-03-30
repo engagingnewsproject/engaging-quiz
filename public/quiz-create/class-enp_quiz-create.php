@@ -274,7 +274,7 @@ class Enp_quiz_Create {
  		   if(!isset($_POST['enp_quiz_nonce']) || !self::$nonce->validate()) {
  			   // Form key is invalid,
 			   // return them to the page (they're probably refreshing the page)
-			   self::$message['error'][] = 'Form was not resaved';
+			   self::$message['error'][] = 'Quiz was not resaved';
 
 			   return false;
  		   }

@@ -73,9 +73,16 @@
         }
     }
 
-    .enp-quiz-preview-container {
-        @include breakpoint(medium) {
+    .enp-preview-page-container {
 
+        .enp-quiz-message {
+            @include breakpoint(medium) {
+                margin-left: 33%;
+            }
+
+            @include breakpoint(large) {
+                margin-left: 26%;
+            }
         }
     }
 
@@ -94,5 +101,9 @@
     .enp-quiz-preview__title {
         @include _(small-uppercase);
         font-weight: 600;
+    }
+
+    .enp-preview-form__submit {
+        @include _(btn--ghost);
     }
 }
