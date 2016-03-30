@@ -174,18 +174,32 @@ class Enp_quiz_MC_option {
     * @param $i = which mc_option you're trying to get a value from
     * @return $value
     */
-    public function get_value($string, $question_i, $mc_option_i) {
+    /* I don't think we need this anymore. MC_options always have an ID now
+    public function get_value($key, $question_id, $mc_option_id) {
         $value = '';
         if(isset($_POST['enp_question'])) {
             $posted_value = $_POST['enp_question'];
-            if(!empty($posted_value[$question_i]['mc_option'][$mc_option_i][$string])) {
-                $value = stripslashes($posted_value[$question_i]['mc_option'][$mc_option_i][$string]);
+            // find our question_id
+            foreach($posted_value as $question) {
+                // see if we matched our question_id
+                if($question['question_id'] === $question_id) {
+                    // check all the mc_options
+                    foreach($question['mc_option'] as $mc_option) {
+                        // match the $mc_option_id
+                        if( $mc_option['mc_option_id'] === $mc_option_id ) {
+                            // we've got the value!
+                            $value = stripslashes($mc_option[$key]);
+                        }
+                    }
+
+                }
+
             }
 
         }
         // if the value didn't get set, try with our object
         if($value === '') {
-            $get_obj_value = 'get_'.$string;
+            $get_obj_value = 'get_'.$key;
             $obj_value = $this->$get_obj_value();
             if($obj_value !== null) {
                 $value = $obj_value;
@@ -193,6 +207,6 @@ class Enp_quiz_MC_option {
         }
         // send them back whatever the value should be
         return $value;
-    }
+    }*/
 }
 ?>

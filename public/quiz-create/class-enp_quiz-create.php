@@ -267,14 +267,15 @@ class Enp_quiz_Create {
 		// make sure they're logged in. returns current_user_id
 		$user_id = $this->validate_user();
 
-
-		//Is it a POST request?
+	   //Is it a POST request?
  	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
  		   //Validate the form key
  		   if(!isset($_POST['enp_quiz_nonce']) || !self::$nonce->validate()) {
  			   // Form key is invalid,
 			   // return them to the page (they're probably refreshing the page)
 			   self::$message['error'][] = 'Form was not resaved';
+
 			   return false;
  		   }
  	   }

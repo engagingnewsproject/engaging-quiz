@@ -356,6 +356,7 @@ class Enp_quiz_Question {
     * @param $quetion_id = which question you're trying to get a value from
     * @return $value
     */
+    /* I don't think we need this anymore. Questions always have an ID now
     public function get_value($key, $question_id) {
         $value = '';
         if(isset($_POST['enp_question'])) {
@@ -381,5 +382,6 @@ class Enp_quiz_Question {
         // send them back whatever the value should be
         return $value;
     }
+    */
 }
 ?>
