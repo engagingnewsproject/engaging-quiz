@@ -350,23 +350,29 @@ class Enp_quiz_Question {
     /**
     * Get the value we should be saving on a question
     * get posted if present, if not, get object. This is so we give them their
-    * current entry if we don't *actually* save yet.
+    * current entry if we didn't *actually* save yet
+    * (like if there was an error on save they won't lose all their work).
     * @param $string = what you want to get ('question_title', 'question_explanation', whatever)
-    * @param $i = which question you're trying to get a value from
+    * @param $quetion_id = which question you're trying to get a value from
     * @return $value
     */
-    public function get_value($string, $i) {
+    public function get_value($key, $question_id) {
         $value = '';
         if(isset($_POST['enp_question'])) {
             $posted_value = $_POST['enp_question'];
-            if(!empty($posted_value[$i][$string])) {
-                $value = stripslashes($posted_value[$i][$string]);
+            // find our question_id
+            foreach($posted_value as $question) {
+                // see if we matched our question_id
+                if($question['question_id'] === $question_id) {
+                    $value = stripslashes($question[$key]);
+                }
             }
+
 
         }
         // if the value didn't get set, try with our object
         if($value === '') {
-            $get_obj_value = 'get_'.$string;
+            $get_obj_value = 'get_'.$key;
             $obj_value = $this->$get_obj_value();
             if($obj_value !== null) {
                 $value = $obj_value;

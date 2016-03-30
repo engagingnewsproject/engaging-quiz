@@ -5,16 +5,17 @@
         $question_number = 0;
     }
     $question = new Enp_quiz_Question($question_number);
+    $question_id = $question->get_question_id();
 ?>
 
 <section class="enp-question-content">
-    <input type="hidden" name="enp_question[<?echo $question_i;?>][question_id]" value="<? echo $question->get_question_id();?>" />
+    <input type="hidden" name="enp_question[<?echo $question_i;?>][question_id]" value="<? echo $question_id;?>" />
 
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title">
             Question
         </label>
-        <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $question_i;?>][question_title]" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_value('question_title', $question_i);?></textarea>
+        <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $question_i;?>][question_title]" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_value('question_title', $question_id);?></textarea>
 
         <input type="hidden" id="enp-question-image-<?echo $question_i;?>" class="enp-question-image__input" name="enp_question[<?echo $question_i;?>][question_image]" value="<? echo $question->get_question_image();?>">
 
@@ -28,16 +29,16 @@
                         alt="<? echo $question->get_question_image_alt();?>"
                     />
 
-                    <button class="enp-button enp-button__question-image-delete" name="enp-quiz-submit" value="question-image--delete-<? echo $question->get_question_id();?>"><svg class="enp-icon enp-icon--delete enp-question__icon--question-image-delete"><use xlink:href="#icon-delete" /></svg></button>
+                    <button class="enp-button enp-button__question-image-delete" name="enp-quiz-submit" value="question-image--delete-<? echo $question_id;?>"><svg class="enp-icon enp-icon--delete enp-question__icon--question-image-delete"><use xlink:href="#icon-delete" /></svg></button>
                 </div>
             <?} else {?>
-                <label for="enp-question-image-upload-<?echo $question->get_question_id();?>" class="enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo">
+                <label for="enp-question-image-upload-<?echo $question_id;?>" class="enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo">
                     <use xlink:href="#icon-photo" />
                 </svg>
                 <svg class="enp-icon enp-icon--add enp-question-image-upload__icon--add">
                     <use xlink:href="#icon-add" />
                 </svg> Add Image</label>
-                <input id="enp-question-image-upload-<?echo $question->get_question_id();?>" type="file" accept="image/*" class="enp-question-image-upload__input" name="question_image_upload_<?echo $question->get_question_id();?>">
+                <input id="enp-question-image-upload-<?echo $question_id;?>" type="file" accept="image/*" class="enp-question-image-upload__input" name="question_image_upload_<?echo $question_id;?>">
             <?
             }
         ?>
@@ -66,10 +67,10 @@
     <div class="enp-question-inner enp-answer-explanation">
         <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label">Answer Explanation</label>
-            <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $question_i;?>][question_explanation]" maxlength="255" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_value('question_explanation', $question_i);?></textarea>
+            <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $question_i;?>][question_explanation]" maxlength="255" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_value('question_explanation', $question_id);?></textarea>
         </fieldset>
     </div>
-    <button class="enp-question__button enp-question__button--delete" name="enp-quiz-submit" value="question--delete-<?echo $question->get_question_id();?>">
+    <button class="enp-question__button enp-question__button--delete" name="enp-quiz-submit" value="question--delete-<?echo $question_id;?>">
         <svg class="enp-icon enp-icon--delete enp-question__icon--question-delete"><use xlink:href="#icon-delete" /></svg>
     </button>
 </section>
