@@ -9,15 +9,16 @@ class Enp_quiz_Quiz {
             $quiz_title,
             $quiz_status,
             $quiz_finish_message,
-            //$quiz_color_bg,
-            //$quiz_color_text,
-            //$quiz_color_border,
             $quiz_owner,
             $quiz_created_by,
             $quiz_created_at,
             $quiz_updated_by,
             $quiz_updated_at,
-            $questions;
+            $questions,
+            $quiz_title_display,
+            $quiz_width,
+            $quiz_bg_color,
+            $quiz_text_color;
 
     protected static $quiz;
 
@@ -75,10 +76,52 @@ class Enp_quiz_Quiz {
         $this->quiz_created_at = $this->set_quiz_created_at();
         $this->quiz_updated_by = $this->set_quiz_updated_by();
         $this->quiz_updated_at = $this->set_quiz_updated_at();
-        //$this->quiz_color_bg = $this->set_quiz_color_bg();
-        //$this->quiz_color_text = $this->set_quiz_color_text();
         //$this->quiz_color_border = $this->set_quiz_color_border();
         $this->questions = $this->set_questions();
+
+        // set options
+        $this->set_quiz_options();
+    }
+
+    /**
+    * Queries the quiz options table and sets more quiz object values
+    * @param $quiz_id
+    */
+    protected function set_quiz_options() {
+        $option_rows = $this->select_quiz_options();
+        foreach($option_rows as $row => $option) {
+            // if it equals one of our allowed options, then set it!
+            // if adding options, then add them to the allowed list here
+            // or maybe create an allowed option key array?
+            if($option['quiz_option_name'] === 'quiz_title_display' || 'quiz_width' || 'quiz_bg_color' || 'quiz_text_color' ) {
+                // $this->quiz_title_display = value from that row
+                // $this->quiz_width = value from that row
+                // etc. This is just a quick setter.
+
+                $this->$option['quiz_option_name'] = $option['quiz_option_value'];
+            }
+        }
+    }
+
+    /**
+    *   For using PDO to select one quiz row
+    *
+    *   @param  $quiz_id = quiz_id that you want to select
+    *   @return row from database table if found, false if not found
+    **/
+    protected function select_quiz_options() {
+        $quiz_id = $this->quiz_id;
+
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":quiz_id" => $quiz_id
+        );
+        $sql = "SELECT * from ".$pdo->quiz_option_table." WHERE
+                quiz_id = :quiz_id";
+        $stmt = $pdo->query($sql, $params);
+        $option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $option_rows;
     }
 
     /**
@@ -175,28 +218,28 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Set the quiz_color_bg for our Quiz Object
+    * Set the quiz_bg_color for our Quiz Object
     * @param $quiz = quiz row from quiz database table
-    * @return quiz_color_bg field from the database
+    * @return quiz_bg_color field from the database
     */
     /*
-    protected function set_quiz_color_bg() {
+    protected function set_quiz_bg_color() {
         // TODO: Validate HEX
-        $quiz_color_bg = self::$quiz['quiz_color_bg'];
-        return $quiz_color_bg;
+        $quiz_bg_color = self::$quiz['quiz_bg_color'];
+        return $quiz_bg_color;
     }
     */
 
     /**
-    * Set the quiz_color_text for our Quiz Object
+    * Set the quiz_text_color for our Quiz Object
     * @param $quiz = quiz row from quiz database table
-    * @return quiz_color_text field from the database
+    * @return quiz_text_color field from the database
     */
     /*
-    protected function set_quiz_color_text() {
+    protected function set_quiz_text_color() {
         // TODO: Validate HEX
-        $quiz_color_text = self::$quiz['quiz_color_text'];
-        return $quiz_color_text;
+        $quiz_text_color = self::$quiz['quiz_text_color'];
+        return $quiz_text_color;
     }
     */
     /**
@@ -328,27 +371,45 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Get the quiz_color_bg for our Quiz Object
+    * Get the quiz_title_display for our Quiz Object
     * @param $quiz = quiz object
-    * @return #hex code
+    * @return (string) 'show' or 'hide'
     */
-    /*
-    public function get_quiz_color_bg() {
-        $quiz_color_bg = $this->quiz_color_bg;
-        return $quiz_color_bg;
+    public function get_quiz_title_display() {
+        $quiz_title_display = $this->quiz_title_display;
+        return $quiz_title_display;
     }
-    */
+
     /**
-    * Get the quiz_color_text for our Quiz Object
+    * Get the quiz_width for our Quiz Object
+    * @param $quiz = quiz object
+    * @return (string) %, px, em, or rem value (100%, 800px, 20rem, etc)
+    */
+    public function get_quiz_width() {
+        $quiz_width = $this->quiz_width;
+        return $quiz_width;
+    }
+
+    /**
+    * Get the quiz_bg_color for our Quiz Object
     * @param $quiz = quiz object
     * @return #hex code
     */
-    /*
-    public function get_quiz_color_text() {
-        $quiz_color_text = $this->quiz_color_text;
-        return $quiz_color_text;
+    public function get_quiz_bg_color() {
+        $quiz_bg_color = $this->quiz_bg_color;
+        return $quiz_bg_color;
     }
+
+    /**
+    * Get the quiz_text_color for our Quiz Object
+    * @param $quiz = quiz object
+    * @return #hex code
     */
+    public function get_quiz_text_color() {
+        $quiz_text_color = $this->quiz_text_color;
+        return $quiz_text_color;
+    }
+
     /**
     * Get the quiz_color_border for our Quiz Object
     * @param $quiz = quiz object

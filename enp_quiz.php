@@ -69,6 +69,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-nonce.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_db.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz.php';
+require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz_option.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_question.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_mc_option.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_response.php';

@@ -23,6 +23,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
            $action,
            $message = array(),
            $question = array(),
+           $quiz_option = array(),
            $user_action = array();
 
     public function __construct() {
@@ -54,6 +55,18 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     */
     public function set_status($status) {
         $this->status = $status;
+    }
+
+    /**
+    * Gets reponse from save quiz option class and and assigns them
+    * to our response object
+    *
+    * @param $quiz_option_response = array() of values like 'action', 'status', and 'quiz_option_id'
+    * @param $quiz = the quiz array that was being saved
+    */
+    public function set_quiz_option_response($quiz_option_response, $quiz_option) {
+        // sets our quiz_option response to our quiz_option response
+        $this->quiz_option[$quiz_option] = $quiz_option_response;
     }
 
     /**

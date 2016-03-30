@@ -21,11 +21,11 @@
                 <input type="hidden" name="enp_quiz[quiz_id]" value="<? echo $quiz->get_quiz_id();?>" />
                 <fieldset class="enp-fieldset enp-title-display">
                     <legend class="enp-legend enp-title-display__legend">Title Display</legend>
-                    <input id="enp-quiz-title-show" class="enp-radio enp-title-display__input enp-title-display__input--title-display" type="radio" name="enp_quiz[quiz_title_display]" value="title-show" checked="checked"/>
+                    <input id="enp-quiz-title-show" class="enp-radio enp-title-display__input enp-title-display__input--title-display" type="radio" name="enp_quiz[quiz_title_display]" value="show" checked="checked"/>
                     <label class="enp-label enp-title-display__label enp-title-display__label--title-display" for="enp-quiz-title-show">
                         Show Title
                     </label>
-                    <input class="enp-radio enp-title-display__input enp-title-display__input--hide-title" id="enp-quiz-title-hide" type="radio" name="enp_quiz[quiz_title_display]" value="title-hide"/>
+                    <input class="enp-radio enp-title-display__input enp-title-display__input--hide-title" id="enp-quiz-title-hide" type="radio" name="enp_quiz[quiz_title_display]" value="hide"/>
                     <label class="enp-label enp-title-display__label enp-title-display__label--hide-title" for="enp-quiz-title-hide">
                         Hide Title
                     </label>
@@ -37,17 +37,17 @@
                     <label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--width" for="enp-quiz-width">
                         Width
                     </label>
-                    <input id="enp-quiz-width" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--width" type="text" name="enp_quiz[quiz_width]" value="100%"/>
+                    <input id="enp-quiz-width" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--width" type="text" name="enp_quiz[quiz_width]" value="<? echo $quiz->get_quiz_width();?>"/>
 
                     <label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--bg-color" for="enp-quiz-bg-color">
                         Background Color
                     </label>
-                    <input id="enp-quiz-bg-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--bg-color" type="text" name="enp_quiz[quiz_bg-color]" value="#ffffff"/>
+                    <input id="enp-quiz-bg-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--bg-color" type="text" name="enp_quiz[quiz_bg_color]" value="#ffffff"/>
 
                     <label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--text-color" for="enp-quiz-text-color">
                         Text Color
                     </label>
-                    <input id="enp-quiz-text-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--text-color" type="text" name="enp_quiz[quiz_text-color]" value="#333333"/>
+                    <input id="enp-quiz-text-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--text-color" type="text" name="enp_quiz[quiz_text_color]" value="#333333"/>
 
                 </fieldset>
 

@@ -91,6 +91,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $quiz_owner = $this->set_quiz_value('quiz_owner', $quiz_updated_by);
         $quiz_created_by = $this->set_quiz_value('quiz_created_by', $quiz_updated_by);
         $quiz_created_at = $this->set_quiz_value('quiz_created_at', $quiz_updated_at);
+        // Options
+        $quiz_title_display = $this->set_quiz_value('quiz_title_display', 'show');
+        $quiz_width = $this->set_quiz_value('quiz_width', '100%');
+        $quiz_bg_color = $this->set_quiz_value('quiz_bg_color', '#ffffff');
+        $quiz_text_color = $this->set_quiz_value('quiz_text_color', '#444444');
 
         $default_quiz = array(
             'quiz_id' => $quiz_id,
@@ -102,11 +107,14 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             'quiz_created_at' => $quiz_created_at,
             'quiz_updated_by' => $quiz_updated_by,
             'quiz_updated_at' => $quiz_updated_at,
+            'quiz_title_display' => $quiz_title_display,
+            'quiz_width'    => $quiz_width,
+            'quiz_bg_color' => $quiz_bg_color,
+            'quiz_text_color' => $quiz_text_color,
         );
         // We don't want to lose anything that was in the sent quiz (like questions, etc)
         // so we'll merge them to make sure we don't lose anything
         self::$quiz = array_merge(self::$quiz, $default_quiz);
-
     }
     /**
     * Reformat and set values for all submitted questions
@@ -390,6 +398,10 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response_obj->set_status('success');
             self::$response_obj->set_action('insert');
             self::$response_obj->add_success('Quiz created.');
+
+            // Now save the quiz options to the quiz_options table
+            $this->save_quiz_options();
+
         } else {
             self::$response_obj->add_error('Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
@@ -424,11 +436,26 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response_obj->set_status('success');
             self::$response_obj->set_action('update');
             self::$response_obj->add_success('Quiz updated.');
+
+            // Now save the quiz options to the quiz_options table
+            $this->save_quiz_options();
         } else {
             self::$response_obj->add_error('Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
 
     }
+
+    protected function save_quiz_options() {
+        $quiz_options = array('quiz_title_display', 'quiz_width', 'quiz_bg_color', 'quiz_text_color');
+        foreach($quiz_options as $quiz_option) {
+            if(array_key_exists($quiz_option, self::$quiz)) {
+                $save_quiz_option = new Enp_quiz_Save_quiz_option();
+                $save_quiz_option->save_quiz_option($quiz_option);
+            }
+        }
+
+    }
+
 
     /**
      * Populate self::$quiz array with values

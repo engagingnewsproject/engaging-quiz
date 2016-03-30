@@ -17,6 +17,7 @@ class enp_quiz_Db extends PDO {
 			include($_SERVER["DOCUMENT_ROOT"].'/enp-quiz-database-config.php');
 			// Table names for dynamic reference
 			$this->quiz_table = $enp_quiz_table_quiz;
+			$this->quiz_option_table = $enp_quiz_table_quiz_option;
 			$this->question_table = $enp_quiz_table_question;
 			$this->question_mc_option_table = $enp_quiz_table_question_mc_option;
 			$this->question_slider_table = $enp_quiz_table_question_slider;
