@@ -5,7 +5,8 @@
 * @return question object
 */
 class Enp_quiz_Question {
-    public  $question_id,
+    public  $quiz_id,
+            $question_id,
             $question_title,
             $question_image,
             $question_image_alt,
@@ -63,6 +64,7 @@ class Enp_quiz_Question {
     */
     protected function set_question_object_values() {
         $this->question_id = $this->set_question_id();
+        $this->quiz_id = $this->set_quiz_id();
         $this->question_title = $this->set_question_title();
         $this->question_image = $this->set_question_image();
         $this->question_image_alt = $this->set_question_image_alt();
@@ -88,6 +90,16 @@ class Enp_quiz_Question {
     }
 
     /**
+    * Set the quiz_id for our Question Object
+    * @param $question = question row from question database table
+    * @return quiz_id field from the database
+    */
+    protected function set_quiz_id() {
+        $quiz_id = self::$question['quiz_id'];
+        return $quiz_id;
+    }
+
+    /**
     * Set the question_title for our Quiz Object
     * @param $question = question row from question database table
     * @return question_title field from the database
@@ -103,10 +115,8 @@ class Enp_quiz_Question {
     * @return question_image path from the database
     */
     protected function set_question_image() {
-        // we want to set the url, but the question_image just sets the filename
-        // we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+        $question_image = self::$question['question_image'];
 
-        $question_image = ENP_QUIZ_IMAGE_URL.self::$question['quiz_id'].'/'.self::$question['question_id'].'/'.self::$question['question_image'];
         return $question_image;
     }
 
@@ -199,6 +209,16 @@ class Enp_quiz_Question {
     }
 
     /**
+    * Get the quiz_id for our Quiz Object
+    * @param $question = question object
+    * @return quiz_id from the object
+    */
+    public function get_quiz_id() {
+        $quiz_id = $this->quiz_id;
+        return $quiz_id;
+    }
+
+    /**
     * Get the question_title for our Quiz Object
     * @param $question = question object
     * @return question_title from the object
@@ -215,6 +235,21 @@ class Enp_quiz_Question {
     */
     public function get_question_image() {
         $question_image = $this->question_image;
+        return $question_image;
+    }
+
+    /**
+    * Get the question_image for our Quiz Object
+    * We want to set the url, but the question_image just sets the filename
+    * we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+    * @param $question = question object
+    * @return question_image from the object
+    */
+    public function get_question_image_src() {
+        $question_image = $this->question_image;
+        if(!empty($question_image)) {
+            $question_image = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$question_image;
+        }
         return $question_image;
     }
 
