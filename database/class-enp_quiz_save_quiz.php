@@ -93,9 +93,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $quiz_created_at = $this->set_quiz_value('quiz_created_at', $quiz_updated_at);
         // Options
         $quiz_title_display = $this->set_quiz_value('quiz_title_display', 'show');
-        $quiz_width = $this->set_quiz_value('quiz_width', '100%');
-        $quiz_bg_color = $this->set_quiz_value('quiz_bg_color', '#ffffff');
-        $quiz_text_color = $this->set_quiz_value('quiz_text_color', '#444444');
+        $quiz_width = $this->set_quiz_css_measurement_value('quiz_width', '100%');
+        $quiz_bg_color = $this->set_quiz_hex_value('quiz_bg_color', '#ffffff');
+        $quiz_text_color = $this->set_quiz_hex_value('quiz_text_color', '#444444');
 
         $default_quiz = array(
             'quiz_id' => $quiz_id,
@@ -527,6 +527,86 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $param_value;
     }
 
+    /**
+    * Check to see if a value was passed in self::$quiz array
+    * If it was, set it as the value (after validating). If it wasn't, set the value
+    * from self::$quiz_obj or default
+    *
+    * @param $key = key that should be set in the quiz array.
+    * @param $default = int or string of default value if nothing is found
+    * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
+    */
+    public function set_quiz_hex_value($key, $default) {
+        // set it with what they submitted
+        $hex = $this->set_quiz_value($key, $default);
+        // validate the hex
+        $valid_hex = $this->validate_hex($hex);
+        // check it
+        if($valid_hex === false) {
+            // if it's not a valid hex, set it as our default
+            $hex = $default;
+            self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
+        }
 
+        return $hex;
+    }
+
+    /**
+    * Validation function for hex keys
+    * @param $string potential hex
+    * @return true if hex, false if not
+    */
+    public function validate_hex($string) {
+        $valid_hex = false;
+        // validate hex string
+        $matches = null;
+        preg_match('/#([a-fA-F0-9]{3}){1,2}\\b/', $string, $matches);
+
+        if(!empty($matches)) {
+            $valid_hex = true;
+        }
+        return $valid_hex;
+    }
+
+    /**
+    * Check to see if a value was passed in self::$quiz array
+    * If it was, set it as the value (after validating). If it wasn't, set the value
+    * from self::$quiz_obj or default
+    *
+    * @param $key = key that should be set in the quiz array.
+    * @param $default = int or string of default value if nothing is found
+    * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
+    */
+    public function set_quiz_css_measurement_value($key, $default) {
+        // set it with what they submitted
+        $css_measurement = $this->set_quiz_value($key, $default);
+        // validate the hex
+        $valid_css_measurement = $this->validate_css_measurement($css_measurement);
+        // check it
+        if($valid_css_measurement === false) {
+            // if it's not a valid hex, set it as our default
+            $css_measurement = $default;
+            self::$response_obj->add_error('CSS Measurement value for '.$key.' is not valid. Measurements can be any valid CSS Measurment such as 100%, 600px, 30rem, 80vw');
+        }
+
+        return $css_measurement;
+    }
+
+    /**
+    * Validation function for CSS measurements
+    * @param $string potential CSS measurement
+    * @return true if valid, false if not
+    */
+    public function validate_css_measurement($string) {
+        $valid_CSS = false;
+        // validate hex string
+        $matches = null;
+        preg_match("#^(auto|0)$|^[+-]?[0-9]+.?([0-9]+)?(px|rem|em|ex|%|in|cm|mm|pt|pc|vw|vh)$#", $string, $matches);
+
+        if(!empty($matches)) {
+            $valid_CSS = true;
+        }
+        return $valid_CSS;
+    }
 }
 ?>
