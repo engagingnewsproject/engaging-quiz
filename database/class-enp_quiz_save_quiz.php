@@ -139,8 +139,22 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $prepared_questions = array();
         // loop through all submitted questions
         foreach(self::$quiz['question'] as $question) {
-            // add in our new question_order value
-            $question['question_order'] = $i;
+            // see if we're supposed to delete this question
+            $question['question_is_deleted'] = $this->preprocess_deleted_question($question);
+
+            // Check if we're deleting this question
+            if($question['question_is_deleted'] === 0) {
+                // we're clear!
+                // add in our new question_order value
+                $question['question_order'] = $i;
+                $i++;
+            } else {
+                // if we're deleting the question, we need to set the question_order
+                // differently and NOT increase the question_order counter
+                // add in our new question_order value
+                $question['question_order'] = -1;
+            }
+
             // create the object
             $question_obj = new Enp_quiz_Save_question();
             // prepare the values
@@ -148,8 +162,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             // set the nicely formatted returned $question
             $prepared_questions[] = $question;
 
-            // increase the counter and do it again!
-            $i++;
+
         }
 
         // We don't want to lose anything that was in the sent quiz
@@ -160,7 +173,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected function preprocess_questions() {
         // If user action is ADD QUESTION
         // create a dummy question to insert in the DB
-        if(self::$response_obj->user_action['action'] === 'add' && self::$response_obj->user_action['element'] === 'question') {
+        if(self::$user_action_action === 'add' && self::$user_action_element === 'question') {
             // create a blank question in the db
             if(!array_key_exists('question', self::$quiz)) {
                 // this is the first question for the quiz, we need to create an empty array for it.
@@ -173,6 +186,28 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         } elseif(!array_key_exists('question', self::$quiz)) {
             return 'no_questions';
         }
+    }
+
+    /**
+    * we need to check if a question is trying to be deleted, so we know
+    * to NOT increase the order counter and to flag the is_deleted value
+    * @param $question (array) question submitted from form
+    * @return $is_deleted (int) 1 = delete, 0 = not deleted
+    */
+    protected function preprocess_deleted_question($question) {
+        $is_deleted = 0;
+        // see if we're supposed to delete a question
+        if(self::$user_action_action === 'delete' && self::$user_action_element === 'question') {
+            // flag it as being deleted
+            // if they want to delete, see if we match the question_id
+            $question_id_to_delete = self::$user_action_details['question_id'];
+            if($question_id_to_delete === (int) $question['question_id']) {
+                // we've got a match! this is the one they want to delete
+                $is_deleted = 1;
+            }
+        }
+
+        return $is_deleted;
     }
 
     /**

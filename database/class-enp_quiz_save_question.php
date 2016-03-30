@@ -49,6 +49,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $question_type = $this->set_question_value('question_type', 'mc');
         $question_explanation = $this->set_question_value('question_explanation', '');
         $question_order = $question['question_order'];
+        $question_is_deleted = $question['question_is_deleted'];
         // build our new array
         $prepared_question = array(
                                 'question_id' => $question_id,
@@ -57,13 +58,12 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                 'question_type' => $question_type,
                                 'question_explanation' => $question_explanation,
                                 'question_order' => $question_order,
+                                'question_is_deleted' => $question_is_deleted,
                             );
 
         self::$question = array_merge(self::$question, $prepared_question);
         // set the image
         self::$question['question_image'] = $this->set_question_image();
-        // see if we're supposed to delete this question
-        self::$question['question_is_deleted'] = $this->set_question_is_deleted();
 
         // we need to preprocess_mc_options and preprocess_slider to make sure each question has at least a slider array and mc_option array
         $this->preprocess_mc_options();
@@ -217,29 +217,6 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
         }
         return self::$question;
-    }
-
-    /**
-    * we need to check if an option is trying to be set as correct or not,
-    * and unset any other options that were set as correct (until we allow
-    * multiple mc correct)
-    * @param self::$mc_option
-    */
-    protected function set_question_is_deleted() {
-        //get the current values (from submission or object)
-        $is_deleted = $this->set_question_value('question_is_deleted', '0');
-        // check what the user action is
-        // see if they want to set an question as correct
-        if(parent::$user_action_action === 'delete' && parent::$user_action_element === 'question') {
-            // if they want to delete, see if we match the question_id
-            $question_id_to_delete = parent::$user_action_details['question_id'];
-            if($question_id_to_delete === (int) self::$question['question_id']) {
-                // we've got a match! this is the one they want to delete
-                $is_deleted = 1;
-            }
-        }
-        // return if this one should be deleted or not
-        return $is_deleted;
     }
 
     /**
