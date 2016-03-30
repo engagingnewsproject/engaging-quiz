@@ -42,15 +42,16 @@
                     <label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--bg-color" for="enp-quiz-bg-color">
                         Background Color
                     </label>
-                    <input id="enp-quiz-bg-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--bg-color" type="text" name="enp_quiz[quiz_bg_color]" value="#ffffff"/>
+                    <input id="enp-quiz-bg-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--bg-color" type="text" name="enp_quiz[quiz_bg_color]" value="<? echo $quiz->get_quiz_bg_color();?>"/>
 
                     <label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--text-color" for="enp-quiz-text-color">
                         Text Color
                     </label>
-                    <input id="enp-quiz-text-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--text-color" type="text" name="enp_quiz[quiz_text_color]" value="#333333"/>
+                    <input id="enp-quiz-text-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--text-color" type="text" name="enp_quiz[quiz_text_color]" value="<? echo $quiz->get_quiz_text_color();?>"/>
 
                 </fieldset>
 
+                <button type="submit" class="enp-btn--submit enp-btn--next-step enp-preview-form__submit" name="enp-quiz-submit" value="quiz-save">Save </button>
 
                 <button type="submit" class="enp-btn--submit enp-btn--next-step enp-preview-form__submit" name="enp-quiz-submit" value="quiz-publish">Publish <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-preview-form__submit__icon">
                   <use xlink:href="#icon-chevron-right" />
