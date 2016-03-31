@@ -215,42 +215,23 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
 
 
     /**
-    * Runs all checks to build error messages on quiz form
-    * All the functions it runs either return false or
-    * add to the response object
+    * Runs all checks to validate and build error messages on quiz form
+    * All the functions it runs add to the response object if there are errors
+    *
+    * @usage $response = new Enp_quiz_Save_response();
+    *        $validate = $response->validate_quiz_and_questions($quiz);
+    *        var_dump($validate); // returns 'invalid' or 'valid'
+    *        var_dump($response->get_error_messages()); // all error messages
+    *
+    * @param $quiz (quiz array or Enp_quiz_Quiz() object)
     * @return (kinda) builds all error messages, accessible from $this->message['error']
     * @return (string) valid or invalid
     */
     public function validate_quiz_and_questions($quiz) {
         // if we got passed a quiz object, let's turn it into an array
         if(is_object($quiz)) {
-            $quiz_obj = $quiz;
-            $quiz_array = (array) $quiz_obj;
-            $new_questions_array = array();
-            foreach($quiz_obj->get_questions() as $question_id) {
-                // generate the object
-                $question_obj = new Enp_quiz_Question($question_id);
-                // arrayify the question
-                $question_array = (array) $question_obj;
-                // check if mc or slider and add that object as an array
-                if($question_obj->get_question_type() === 'mc') {
-                    foreach($question_obj->mc_options as $mc_option_id) {
-                        $mc_option_object = new Enp_quiz_MC_option($mc_option_id);
-                        $mc_option_array = (array) $mc_option_object;
-                        $question_array['mc_option'][] = $mc_option_array;
-                    }
-                } elseif($question['question_type'] === 'slider') {
-
-                }
-
-                // add it to our questions array
-                $quiz_array['question'][] = $question_array;
-
-            }
-            $quiz = $quiz_array;
+            $quiz = $this->quiz_object_to_array($quiz);
         }
-
-
 
         // validate the quiz
         $this->validate_quiz($quiz);
@@ -271,6 +252,33 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
             return 'invalid';
         }
     }
+
+    public function quiz_object_to_array($quiz_obj) {
+        $quiz_array = (array) $quiz_obj;
+        $new_questions_array = array();
+        foreach($quiz_obj->get_questions() as $question_id) {
+            // generate the object
+            $question_obj = new Enp_quiz_Question($question_id);
+            // arrayify the question
+            $question_array = (array) $question_obj;
+            // check if mc or slider and add that object as an array
+            if($question_obj->get_question_type() === 'mc') {
+                foreach($question_obj->mc_options as $mc_option_id) {
+                    $mc_option_object = new Enp_quiz_MC_option($mc_option_id);
+                    $mc_option_array = (array) $mc_option_object;
+                    $question_array['mc_option'][] = $mc_option_array;
+                }
+            } elseif($question['question_type'] === 'slider') {
+
+            }
+
+            // add it to our questions array
+            $quiz_array['question'][] = $question_array;
+
+        }
+        return $quiz_array;
+    }
+
 
     /**
     * Checks to see if the first question is empty. If it is, add an error
@@ -418,6 +426,24 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     */
     public function get_user_action_details() {
         return $this->user_action['details'];
+    }
+
+    /**
+    * Get the error messages array
+    * @param response_obj
+    * @return array set in the $messages['error']
+    */
+    public function get_error_messages() {
+        return $this->message['error'];
+    }
+
+    /**
+    * Get the success messages array
+    * @param response_obj
+    * @return array set in the $messages['success']
+    */
+    public function get_success_messages() {
+        return $this->message['success'];
     }
 
     /**
