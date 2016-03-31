@@ -519,6 +519,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $param_value;
     }
 
+    /**
+    * Dynamically set our value from the quiz object
+    * @param $key = the value you want to get 'quiz_title', 'quiz_id', etc.
+    * @return $obj_value (mixed) value if found, null if not found
+    */
     protected function get_quiz_object_value($key) {
         $obj_value = null;
         // check to see if there's even an object
@@ -530,6 +535,33 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             $obj_value = self::$quiz_obj->$get_obj_value();
         }
         return $obj_value;
+    }
+
+    /**
+    * Get and validate quiz value from object or set as default
+    * useful if user submission doesn't validate.
+    *
+    * @param $key = the value you want to get/set 'quiz_bg_color', 'quiz_width', etc.
+    * @param $default = the value you want to fall back to
+    * @param $validation = string of validation function 'css_measurement', 'hex', etc
+    * @return $value (mixed) quiz object value if found and valid, $default value if not found in object/invalid object value
+    */
+    protected function validate_quiz_value_from_object($key, $default, $validation) {
+        // try to get the value from the object
+        $obj_value = $this->get_quiz_object_value($key);
+        // build our validation function string
+        $validate_function = 'validate_'.$validation;
+        // validate our object value
+        $valid_obj_value = $this->$validate_function($obj_value);
+        // if it's not valid, set it to the default
+        if($valid_obj_value === false) {
+            // ok, we've exhausted all or options. set it to the default
+            $value = $default;
+        } else {
+            // the object is valid, that's good!
+            $value = $obj_value;
+        }
+        return $value;
     }
     /**
     * Check to see if a value was passed in self::$quiz array
@@ -547,23 +579,12 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_hex = $this->validate_hex($hex);
         // check it
         if($valid_hex === false) {
-            // if it's not a valid hex, try to get the old value from the object
-            $obj_hex = $this->get_quiz_object_value($key);
-
             // generate a good error message
             self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
 
-            // validate our object hex, cause why not
-            $valid_obj_hex = $this->validate_hex($obj_hex);
-
-            // if it's not valid, set it to the default
-            if($valid_obj_hex === false) {
-                // ok, we've exhausted all or options. set it to the default
-                $hex = $default;
-            } else {
-                // the object is valid, that's good!
-                $hex = $obj_hex;
-            }
+            // if it's not a valid hex, try to get the old value from the object
+            // and fallback to default if necessary
+            $hex = $this->validate_quiz_value_from_object($key, $default, 'hex');
         }
 
         return $hex;
@@ -602,9 +623,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_css_measurement = $this->validate_css_measurement($css_measurement);
         // check it
         if($valid_css_measurement === false) {
-            // if it's not a valid hex, set it as our default
-            $css_measurement = $default;
+            // give a good error message
             self::$response_obj->add_error('CSS Measurement value for '.$key.' is not valid. Measurements can be any valid CSS Measurment such as 100%, 600px, 30rem, 80vw');
+            // if it's not a valid css_measurement, try to get the old value from the object
+            // and fallback to default if necessary
+            $css_measurement = $this->validate_quiz_value_from_object($key, $default, 'css_measurement');
         }
 
         return $css_measurement;
