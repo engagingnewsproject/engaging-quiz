@@ -58,4 +58,38 @@ class Enp_quiz_Save {
         }
         return $int;
     }
+
+    /**
+    * Validation function for hex keys
+    * @param $string potential hex
+    * @return true if hex, false if not
+    */
+    public function validate_hex($string) {
+        $valid_hex = false;
+        // validate hex string
+        $matches = null;
+        preg_match('/#([a-fA-F0-9]{3}){1,2}\\b/', $string, $matches);
+
+        if(!empty($matches)) {
+            $valid_hex = true;
+        }
+        return $valid_hex;
+    }
+
+    /**
+    * Validation function for CSS measurements
+    * @param $string potential CSS measurement
+    * @return true if valid, false if not
+    */
+    public function validate_css_measurement($string) {
+        $valid_CSS = false;
+        // validate hex string
+        $matches = null;
+        preg_match("#^(auto|0)$|^[+-]?[0-9]+.?([0-9]+)?(px|rem|em|ex|%|in|cm|mm|pt|pc|vw|vh)$#", $string, $matches);
+
+        if(!empty($matches)) {
+            $valid_CSS = true;
+        }
+        return $valid_CSS;
+    }
 }

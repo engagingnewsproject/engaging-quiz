@@ -37,7 +37,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // Open a new response object
         self::$response_obj = new Enp_quiz_Save_response();
         // setup the user_action response
-        self::$response_obj->set_user_action_response();
+        self::$response_obj->set_user_action_response(self::$quiz);
         // these are referenced a lot, so lets set a quick link up for them
         self::$user_action_action = self::$response_obj->get_user_action_action();
         self::$user_action_element = self::$response_obj->get_user_action_element();
@@ -60,7 +60,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // for error messages (like, not enough mc_options, no correct option set, no questions, etc...)
         if(self::$user_action_action === 'next' && self::$user_action_element === 'preview') {
             // add quiz error messages to the response, if any
-            self::$response_obj->build_error_messages();
+            self::$response_obj->validate_quiz_and_questions(self::$quiz);
         }
 
         // return the response to the user
@@ -579,8 +579,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_hex = $this->validate_hex($hex);
         // check it
         if($valid_hex === false) {
-            // generate a good error message
-            self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
 
             // if it's not a valid hex, try to get the old value from the object
             // and fallback to default if necessary
@@ -588,23 +586,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         }
 
         return $hex;
-    }
-
-    /**
-    * Validation function for hex keys
-    * @param $string potential hex
-    * @return true if hex, false if not
-    */
-    public function validate_hex($string) {
-        $valid_hex = false;
-        // validate hex string
-        $matches = null;
-        preg_match('/#([a-fA-F0-9]{3}){1,2}\\b/', $string, $matches);
-
-        if(!empty($matches)) {
-            $valid_hex = true;
-        }
-        return $valid_hex;
     }
 
     /**
@@ -623,8 +604,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_css_measurement = $this->validate_css_measurement($css_measurement);
         // check it
         if($valid_css_measurement === false) {
-            // give a good error message
-            self::$response_obj->add_error('CSS Measurement value for '.$key.' is not valid. Measurements can be any valid CSS Measurment such as 100%, 600px, 30rem, 80vw');
+
             // if it's not a valid css_measurement, try to get the old value from the object
             // and fallback to default if necessary
             $css_measurement = $this->validate_quiz_value_from_object($key, $default, 'css_measurement');
@@ -633,21 +613,5 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $css_measurement;
     }
 
-    /**
-    * Validation function for CSS measurements
-    * @param $string potential CSS measurement
-    * @return true if valid, false if not
-    */
-    public function validate_css_measurement($string) {
-        $valid_CSS = false;
-        // validate hex string
-        $matches = null;
-        preg_match("#^(auto|0)$|^[+-]?[0-9]+.?([0-9]+)?(px|rem|em|ex|%|in|cm|mm|pt|pc|vw|vh)$#", $string, $matches);
-
-        if(!empty($matches)) {
-            $valid_CSS = true;
-        }
-        return $valid_CSS;
-    }
 }
 ?>

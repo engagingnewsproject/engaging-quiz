@@ -20,7 +20,7 @@
  */
 // var_dump($quiz);
 // var_dump($user_action);
-
+//
  if(is_numeric($quiz->get_quiz_id()) || is_int($quiz->get_quiz_id())) {
      $quiz_action_url = site_url('enp-quiz/quiz-create/').$quiz->get_quiz_id().'/';
  } else {

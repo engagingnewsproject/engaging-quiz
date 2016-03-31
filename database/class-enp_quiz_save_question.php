@@ -469,7 +469,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             //$this->save_slider_option(self::$question['slider']);
         } else {
             // hmm... what question type ARE you trying to save?
-            parent::$response->add_error('Question type '.$question_type.' is not valid.');
+            
         }
     }
 

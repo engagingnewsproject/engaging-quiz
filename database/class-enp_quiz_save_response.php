@@ -17,11 +17,11 @@
  * @subpackage Enp_quiz/database
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
+class Enp_quiz_Save_response extends Enp_quiz_Save {
     public $quiz_id,
            $status,
            $action,
-           $message = array(),
+           $message = array('error'=>array(),'success'=>array()),
            $question = array(),
            $quiz_option = array(),
            $user_action = array();
@@ -126,41 +126,41 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * Build a user_action response array so enp_quiz-create class knows
     * what to do next, like go to preview page, add another question, etc
     */
-    public function set_user_action_response() {
+    public function set_user_action_response($quiz) {
         $action = null;
         $element = null;
         $details = array();
 
         // if they want to preview, then see if they're allowed to go on
-        if(parent::$quiz['user_action'] === 'quiz-preview') {
+        if($quiz['user_action'] === 'quiz-preview') {
             $action = 'next';
             $element = 'preview';
         }
         // if they want to publish, then see if they're allowed to go on
-        elseif(parent::$quiz['user_action'] === 'quiz-publish') {
+        elseif($quiz['user_action'] === 'quiz-publish') {
             $action = 'next';
             $element = 'publish';
         }
         // if they want to add a question
-        elseif(parent::$quiz['user_action'] === 'add-question') {
+        elseif($quiz['user_action'] === 'add-question') {
             // what else do we want to do?
             $action = 'add';
             $element = 'question';
         }
         // check to see if user wants to add-mc-option
-        elseif(strpos(parent::$quiz['user_action'], 'add-mc-option__question-') !== false) {
+        elseif(strpos($quiz['user_action'], 'add-mc-option__question-') !== false) {
             $action = 'add';
             $element = 'mc_option';
             // extract the question number by removing 'add-mc-option__question-' from the string
             // we can't use question_id because the question_id might not
             // have been created yet
-            $question_id = str_replace('add-mc-option__question-', '', parent::$quiz['user_action']);
+            $question_id = str_replace('add-mc-option__question-', '', $quiz['user_action']);
             $details = array('question_id' => (int) $question_id);
         }
         // check to see if user wants to add-mc-option
-        elseif(strpos(parent::$quiz['user_action'], 'mc-option--correct__question-') !== false) {
+        elseif(strpos($quiz['user_action'], 'mc-option--correct__question-') !== false) {
             // get our matches
-            preg_match_all('/\d+/', parent::$quiz['user_action'], $matches);
+            preg_match_all('/\d+/', $quiz['user_action'], $matches);
             // will return array of arrays splitting all number groups
             // first match is our question_id
             $question_id = $matches[0][0];
@@ -175,34 +175,34 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
                         );
         }
         // DELETE question
-        elseif(strpos(parent::$quiz['user_action'], 'question--delete-') !== false) {
+        elseif(strpos($quiz['user_action'], 'question--delete-') !== false) {
             $action = 'delete';
             $element = 'question';
             // extract the question number by removing 'add-mc-option__question-' from the string
             // we can't use question_id because the question_id might not
             // have been created yet
-            $question_id = str_replace('question--delete-', '', parent::$quiz['user_action']);
+            $question_id = str_replace('question--delete-', '', $quiz['user_action']);
             $details = array('question_id' => (int) $question_id);
         }
         // DELETE question_image
-        elseif(strpos(parent::$quiz['user_action'], 'question-image--delete-') !== false) {
+        elseif(strpos($quiz['user_action'], 'question-image--delete-') !== false) {
 
             $action = 'delete';
             $element = 'question_image';
             // extract the question number by removing 'add-mc-option__question-' from the string
             // we can't use question_id because the question_id might not
             // have been created yet
-            $question_id = str_replace('question-image--delete-', '', parent::$quiz['user_action']);
+            $question_id = str_replace('question-image--delete-', '', $quiz['user_action']);
             $details = array('question_id' => (int) $question_id);
         }
         // DELETE mc_option
-        elseif(strpos(parent::$quiz['user_action'], 'mc-option--delete-') !== false) {
+        elseif(strpos($quiz['user_action'], 'mc-option--delete-') !== false) {
             $action = 'delete';
             $element = 'mc_option';
             // extract the question number by removing 'add-mc-option__question-' from the string
             // we can't use question_id because the question_id might not
             // have been created yet
-            $mc_option_id = str_replace('mc-option--delete-', '', parent::$quiz['user_action']);
+            $mc_option_id = str_replace('mc-option--delete-', '', $quiz['user_action']);
             $details = array('mc_option_id' => (int) $mc_option_id);
         }
 
@@ -218,20 +218,58 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * Runs all checks to build error messages on quiz form
     * All the functions it runs either return false or
     * add to the response object
-    * @return false
+    * @return (kinda) builds all error messages, accessible from $this->message['error']
+    * @return (string) valid or invalid
     */
-    public function build_error_messages() {
+    public function validate_quiz_and_questions($quiz) {
+        // if we got passed a quiz object, let's turn it into an array
+        if(is_object($quiz)) {
+            $quiz_obj = $quiz;
+            $quiz_array = (array) $quiz_obj;
+            $new_questions_array = array();
+            foreach($quiz_obj->get_questions() as $question_id) {
+                // generate the object
+                $question_obj = new Enp_quiz_Question($question_id);
+                // arrayify the question
+                $question_array = (array) $question_obj;
+                // check if mc or slider and add that object as an array
+                if($question_obj->get_question_type() === 'mc') {
+                    foreach($question_obj->mc_options as $mc_option_id) {
+                        $mc_option_object = new Enp_quiz_MC_option($mc_option_id);
+                        $mc_option_array = (array) $mc_option_object;
+                        $question_array['mc_option'][] = $mc_option_array;
+                    }
+                } elseif($question['question_type'] === 'slider') {
+
+                }
+
+                // add it to our questions array
+                $quiz_array['question'][] = $question_array;
+
+            }
+            $quiz = $quiz_array;
+        }
+
+
+
+        // validate the quiz
+        $this->validate_quiz($quiz);
         // check to see if they need to add questions
-        if($this->check_for_questions_message() === 'has_questions') {
+        if($this->validate_has_question($quiz) === 'has_question') {
             // we have a question title and explanation in the first question,
             // so let's check more in depth. This checks for all errors
             // in all questions
-            $this->check_question_errors();
+            $this->validate_questions($quiz);
         }
 
-        // we don't need to return anything since the functions
-        // themselves are building the response messages
-        return false;
+        // return a valid or invalid string.
+        // the function builds all error messages too, so those will be
+        // available to whatever is calling validate_quiz_and_questions($quiz)
+        if(empty($this->message['error'])) {
+            return 'valid';
+        } else {
+            return 'invalid';
+        }
     }
 
     /**
@@ -239,31 +277,31 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * @return 'has_questions' if question found, false if there are questions
     *
     */
-    public function check_for_questions_message() {
-        if(empty(parent::$quiz['question'][0]['question_title']) && empty(parent::$quiz['question'][0]['question_explanation'])) {
-            $this->message['error'][] = 'You need to add a question to your quiz';
+    public function validate_has_question($quiz) {
+        if(empty($quiz['question'][0]['question_title']) && empty($quiz['question'][0]['question_explanation'])) {
+            $this->add_error('You need to add a question to your quiz');
             return false;
         }
-        return 'has_questions';
+        return 'has_question';
     }
 
     /**
     * Loop through questions and check for errors
     */
-    public function check_question_errors() {
+    public function validate_questions($quiz) {
         $i = 1;
         // this is weird to set it as OK initially, but...
         $return_message = 'no_errors';
         // loop through all questions and check for titles, answer explanations, etc
-        foreach(parent::$quiz['question'] as $question) {
+        foreach($quiz['question'] as $question) {
             // checks if the title is empty or not
-            $check_title = $this->check_question_title($question['question_title'], $i);
-            if($check_title === 'no_title') {
+            $validate_title = $this->validate_question_title($question);
+            if($validate_title === 'no_title') {
                 $return_message = 'has_errors';
             }
             // checks if the answer explanation is empty or not
-            $check_explanation = $this->check_question_question_explanation($question['question_explanation'], $i);
-            if($check_explanation === 'no_question_explanation') {
+            $validate_explanation = $this->validate_question_explanation($question);
+            if($validate_explanation === 'no_question_explanation') {
                 $return_message = 'has_errors';
             }
 
@@ -271,13 +309,13 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
             if($question['question_type'] === 'mc') {
                 //TODO
                 // add mc_options if mc question type
-                $this->check_question_mc_options($question['mc_option'], $i);
+                $this->validate_question_mc_options($question);
             } elseif($question['question_type'] === 'slider') {
                 // TODO: create sliders...
-                $this->message['error'][] = 'Question '.$i.' does not have a complete slider because that functionality does not exist yet.';
+                $this->add_error('Question '.($question['question_order']+1).' does not have a complete slider because that functionality does not exist yet.');
             } else {
                 // should never happen...
-                $this->message['error'][] = 'Question '.$i.' does not have a question type (multiple choice, slider, etc).';
+                $this->add_error('Question '.($question['question_order']+1).' does not have a question type (multiple choice, slider, etc).');
             }
             $i++;
         }
@@ -291,10 +329,10 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * @return true if no question, false if there are questions
     *
     */
-    public function check_question_title($question_title, $question_number) {
+    public function validate_question_title($question) {
         $return_message = 'has_title';
-        if(empty($question_title)) {
-            $this->message['error'][] = 'Question '.$question_number.' is missing an actual question.';
+        if(empty($question['question_title'])) {
+            $this->add_error('Question '.($question['question_order']+1).' is missing an actual question.');
             $return_message = 'no_title';
         }
 
@@ -306,10 +344,10 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * @return string 'has_question_explanation' if found, 'no_question_explanation' if not found
     *
     */
-    public function check_question_question_explanation($question_explanation, $question_number) {
+    public function validate_question_explanation($question) {
         $return_message = 'has_question_explanation';
-        if(empty($question_explanation)) {
-            $this->message['error'][] = 'Question '.$question_number.' is missing an answer explanation.';
+        if(empty($question['question_explanation'])) {
+            $this->add_error('Question '.($question['question_order']+1).' is missing an answer explanation.');
             $return_message = 'no_question_explanation';
         }
 
@@ -322,22 +360,23 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     * @return string 'has_mc_options' if found, 'no_mc_options' if not found
     *
     */
-    public function check_question_mc_options($mc_options, $question_number) {
+    public function validate_question_mc_options($question) {
+        $mc_options = $question['mc_option'];
         $return_message = 'no_mc_options';
         if(empty($mc_options)) {
-            $this->message['error'][] = 'Question '.$question_number.' is missing multiple choice options.';
+            $this->add_error('Question '.($question['question_order']+1).' is missing multiple choice options.');
             $return_message = 'no_mc_options';
             return $return_message;
         }
 
         if(count($mc_options) === 1) {
-            $this->message['error'][] = 'Question '.$question_number.' does not have enough multiple choice options.';
+            $this->add_error('Question '.($question['question_order']+1).' does not have enough multiple choice options.');
         } else {
             $mc_option_has_correct = false;
             foreach($mc_options as $option) {
                 // check for values
                 if($option['mc_option_content'] === '') {
-                   $this->message['error'][] = 'Question '.$question_number.' has an empty Multiple Choice Option field.';
+                   $this->add_error('Question '.($question['question_order']+1).' has an empty Multiple Choice Option field.');
                 }
                 // check to see if ANY one has been chosen
                 if((int)$option['mc_option_correct'] === 1) {
@@ -347,7 +386,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
                 }
             }
             if($mc_option_has_correct !== true ) {
-                $this->message['error'][] = 'Question '.$question_number.' needs a correct Multiple Choce Option answer to be selected.';
+                $this->add_error('Question '.($question['question_order']+1).' needs a correct Multiple Choce Option answer to be selected.');
             }
         }
 
@@ -379,5 +418,138 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz {
     */
     public function get_user_action_details() {
         return $this->user_action['details'];
+    }
+
+    /**
+    * Validate a quiz
+    * @param $quiz (array) a 100% complete quiz array
+    * @return (mixed) true if valid, false if not
+    */
+    public function validate_quiz($quiz) {
+        // check key_exists and not empty
+        $quiz_keys = array('quiz_title',
+                          'quiz_title_display',
+                          'quiz_text_color',
+                          'quiz_bg_color',
+                          'quiz_width'
+                        );
+        $valid = $this->validate_is_set($quiz, $quiz_keys);
+        // we have values! let's keep on going with our check
+        if($valid !== false) {
+            // validate quiz title
+            $this->validate_quiz_title($quiz['quiz_title']);
+            // validate quiz title display
+            $this->validate_quiz_title_display($quiz['quiz_title_display']);
+            // validate hex values
+            $hex_keys = array(
+                                'quiz_text_color',
+                                'quiz_bg_color'
+                               );
+            $this->validate_hex_values($quiz, $hex_keys);
+            // validate css_measurement values
+            $css_measurement_keys = array('quiz_width');
+            $this->validate_css_measurement_values($quiz, $css_measurement_keys);
+        }
+    }
+
+    public function validate_quiz_title($value) {
+        $valid = false;
+        if(empty($value)) {
+            $this->add_error("Quiz Title can't be empty. Please enter a Title for your Quiz.");
+        } else {
+            $valid = true;
+        }
+        return $valid;
+    }
+
+    public function validate_quiz_title_display($value) {
+        $valid = false;
+        if($value !== 'show' && $value !== 'hide') {
+            $this->add_error('Quiz Title Display must equal "show" or "hide".');
+        } else {
+            $valid = true;
+        }
+        return $valid;
+    }
+
+    public function validate_is_set($array = array(), $keys = array()) {
+        // set as true and prove it's not valid
+        $valid = true;
+        if(empty($array) || empty($keys)) {
+            return false;
+        }
+        // check for all values
+        foreach($keys as $key) {
+            // validate the the key exists in the array
+            $validate = $this->validate_exists($array, $key);
+
+            // if it doesn't exist, set valid to false
+            if($validate === false) {
+                $valid = false;
+            } else {
+                // it exists, so see if it's empty
+                $validate = $this->validate_not_empty($array, $key);
+                // if it's empty, set $valid to false
+                if($validate === false) {
+                    $valid = false;
+                }
+            }
+        }
+
+        return $valid;
+    }
+
+    public function validate_exists($array, $key) {
+        $exists = false;
+        if(array_key_exists($key, $array)) {
+            $exists = true;
+        } else {
+            // if key doesn't exist, add error
+            // if empty, add error
+            $this->add_error($key.' does not exist.');
+        }
+        return $exists;
+    }
+
+    public function validate_not_empty($array, $key) {
+        $not_empty = false;
+        if(!empty($array[$key])) {
+            $not_empty = true;
+        } else {
+            // if empty, add error
+            $this->add_error($key.' is empty.');
+        }
+        return $not_empty;
+    }
+
+    public function validate_hex_values($array, $keys) {
+        $valid = true;
+        if(!empty($keys)) {
+            foreach($keys as $key) {
+                $validate = $this->validate_hex($array[$key]);
+                if($validate === false) {
+                    // generate a good error message
+                    $this->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
+                    $valid = false;
+                }
+            }
+        }
+        return $valid;
+    }
+
+    public function validate_css_measurement_values($array, $keys) {
+        $valid = true;
+        if(!empty($keys)) {
+            foreach($keys as $key) {
+                $validate = $this->validate_css_measurement($array[$key]);
+                if($validate === false) {
+                    // generate a good error message
+                    // give a good error message
+                    $this->add_error('CSS Measurement value for '.$key.' is not valid. Measurements can be any valid CSS Measurement such as 100%, 600px, 30rem, 80vw');
+                    $valid = false;
+                }
+            }
+        }
+        return $valid;
     }
 }

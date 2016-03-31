@@ -339,11 +339,11 @@ class Enp_quiz_Create {
 
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
-		if(self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
+		if(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
 			$this->redirect_to_quiz_preview();
 		}
 		// if they want to move on to the quiz-publish page and there are no errors, let them
-		elseif(self::$user_action['element'] === 'publish' && empty(self::$message['error'])) {
+		elseif(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'publish' && empty(self::$message['error'])) {
 			$this->redirect_to_quiz_publish();
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page
