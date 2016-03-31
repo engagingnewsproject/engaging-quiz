@@ -21,7 +21,14 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
+    public $quiz; // object
+
     public function __construct() {
+        // set the quiz object
+        $this->quiz = $this->load_quiz();
+        // check if it's valid
+        // if it's not, they'll get redirected to the quiz create page
+        $this->validate_quiz_redirect($this->quiz);
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
@@ -33,7 +40,7 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
 
     public function load_content($content) {
         ob_start();
-        $quiz = $this->load_quiz();
+        $quiz = $this->quiz;
         $enp_quiz_nonce = parent::$nonce;
         $enp_current_page = 'preview';
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-preview.php' );

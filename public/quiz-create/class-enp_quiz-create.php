@@ -129,6 +129,7 @@ class Enp_quiz_Create {
 	public function enp_quiz_template_rewrite_catch() {
 		// make sure we have a user
 		$this->validate_user();
+
 		// validated
 		global $wp_query;
 		// see if enp_quiz_template is one of the query_vars posted
@@ -194,7 +195,9 @@ class Enp_quiz_Create {
 			$this->load_dashboard();
 		}
 	}
-
+	/*
+	* Loads quiz object based on url query
+	*/
 	public function load_quiz() {
         // prepare the quiz object
         $quiz_id = $this->enp_quiz_id_rewrite_catch();
@@ -202,6 +205,20 @@ class Enp_quiz_Create {
         $quiz = new Enp_quiz_Quiz($quiz_id);
         return $quiz;
     }
+	/*
+	* Checks to see if a quiz is valid or not,
+	* then redirects to quiz create page if invalid
+	*/
+	public function validate_quiz_redirect($quiz) {
+		$response = new Enp_quiz_Save_response();
+        $validate = $response->validate_quiz_and_questions($quiz);
+        if($validate === 'invalid') {
+			self::$message = array();
+			self::$message['error'] = $response->get_error_messages();
+            // uh oh, invalid quiz. Send them back to the create page to fix it.
+            $this->redirect_to_quiz_create($quiz->get_quiz_id());
+        }
+	}
 
 	/*
 	* for child classes to set the variable on the user_action
@@ -320,7 +337,7 @@ class Enp_quiz_Create {
 		self::$message = $response->message;
 
 		// get the ID of the quiz that was just created (if there)
-		self::$saved_quiz_id = $response->quiz_id;
+		$quiz_id = $response->quiz_id;
 		// set-up vars for our next steps
 		$save_action = $response->action;
 		// set the user_action so we know what the user was wanting to do
@@ -340,17 +357,17 @@ class Enp_quiz_Create {
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
 		if(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
-			$this->redirect_to_quiz_preview();
+			$this->redirect_to_quiz_preview($quiz_id);
 		}
 		// if they want to move on to the quiz-publish page and there are no errors, let them
 		elseif(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'publish' && empty(self::$message['error'])) {
-			$this->redirect_to_quiz_publish();
+			$this->redirect_to_quiz_publish($quiz_id);
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page
 		elseif($save_action === 'insert') {
 			// they don't want to move on yet, but they're inserting,
 			// so we need to send them to their newly created quiz create page
-			$this->redirect_to_quiz_create();
+			$this->redirect_to_quiz_create($quiz_id);
 		}
 		// we're just updating the same page, return false to send them back
 	 	else {
@@ -359,21 +376,21 @@ class Enp_quiz_Create {
 		}
 	}
 
-	protected function redirect_to_quiz_create() {
+	protected function redirect_to_quiz_create($quiz_id) {
 		// set a messages array to pass to url on redirect
 		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
 		// they just created a new page (quiz) so we need to redirect them to it and post our messages
-		wp_redirect( site_url( '/enp-quiz/quiz-create/'.self::$saved_quiz_id.'/?'.$url_query ) );
+		wp_redirect( site_url( '/enp-quiz/quiz-create/'.$quiz_id.'/?'.$url_query ) );
 		exit;
 	}
 
-	protected function redirect_to_quiz_preview() {
-		wp_redirect( site_url( '/enp-quiz/quiz-preview/'.self::$saved_quiz_id.'/' ) );
+	protected function redirect_to_quiz_preview($quiz_id) {
+		wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$quiz_id.'/' ) );
 		exit;
 	}
 
-	protected function redirect_to_quiz_publish() {
-		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.self::$saved_quiz_id.'/' ) );
+	protected function redirect_to_quiz_publish($quiz_id) {
+		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$quiz_id.'/' ) );
 		exit;
 	}
 
