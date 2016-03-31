@@ -510,23 +510,27 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         if(array_key_exists($key, self::$quiz) && self::$quiz[$key] !== "") {
             $param_value = self::$quiz[$key];
         } else {
-            // check to see if there's even an object
-            if(self::$quiz_obj->get_quiz_id() !== null) {
-                // if it's not in our submited quiz, try to get it from the object
-                // dynamically create the quiz getter function
-                $get_obj_value = 'get_'.$key;
-                // get the quiz object value
-                $obj_value = self::$quiz_obj->$get_obj_value();
-
-                if($obj_value !== null) {
-                    $param_value = $obj_value;
-                }
+            $obj_value = $this->get_quiz_object_value($key);
+            if($obj_value !== null) {
+                $param_value = $obj_value;
             }
         }
 
         return $param_value;
     }
 
+    protected function get_quiz_object_value($key) {
+        $obj_value = null;
+        // check to see if there's even an object
+        if(self::$quiz_obj->get_quiz_id() !== null) {
+            // if it's not in our submited quiz, try to get it from the object
+            // dynamically create the quiz getter function
+            $get_obj_value = 'get_'.$key;
+            // get the quiz object value
+            $obj_value = self::$quiz_obj->$get_obj_value();
+        }
+        return $obj_value;
+    }
     /**
     * Check to see if a value was passed in self::$quiz array
     * If it was, set it as the value (after validating). If it wasn't, set the value
@@ -543,9 +547,23 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_hex = $this->validate_hex($hex);
         // check it
         if($valid_hex === false) {
-            // if it's not a valid hex, set it as our default
-            $hex = $default;
+            // if it's not a valid hex, try to get the old value from the object
+            $obj_hex = $this->get_quiz_object_value($key);
+
+            // generate a good error message
             self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
+
+            // validate our object hex, cause why not
+            $valid_obj_hex = $this->validate_hex($obj_hex);
+
+            // if it's not valid, set it to the default
+            if($valid_obj_hex === false) {
+                // ok, we've exhausted all or options. set it to the default
+                $hex = $default;
+            } else {
+                // the object is valid, that's good!
+                $hex = $obj_hex;
+            }
         }
 
         return $hex;
