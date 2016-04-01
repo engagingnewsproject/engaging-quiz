@@ -4,7 +4,7 @@
         <h3 class="enp-quiz__title"><? echo $quiz->get_quiz_title();?></h3>
         <div class="enp-quiz__progress">
             <div class="enp-quiz__progress__bar">
-                <div class="enp-quiz__progress__bar__question-count">1/2<span class="enp-"</div>
+                <div class="enp-quiz__progress__bar__question-count">1/<?php echo count($quiz->get_questions());?><span class="enp-"</div>
             </div>
         </div>
     </header>
@@ -16,6 +16,12 @@
                 <input type="hidden" name="enp-question-id" value="<? echo $question_id;?>"/>
                 <fieldset class="enp-question__fieldset">
                     <legend class="enp-question__legend enp-question__question"><? echo $question->get_question_title();?></legend>
+                    <img
+                        class="enp-question-image enp-question-image"
+                        src="<? echo $question->get_question_image_src();?>"
+                        srcset="<? echo $question->get_question_image_srcset();?>"
+                        alt="<? echo $question->get_question_image_alt();?>"
+                    />
                     <? if($question->get_question_type() === 'mc') {?>
                         <p class="enp-question__helper">Select one option.</p>
                         <?foreach($question->get_mc_options() as $mc_option_id) {
