@@ -43,6 +43,13 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
         $quiz = $this->quiz;
         $enp_quiz_nonce = parent::$nonce;
         $enp_current_page = 'preview';
+        // set the button name
+        if($quiz->get_quiz_status() === 'published') {
+            $enp_next_button_name = 'Embed';
+        } else {
+            $enp_next_button_name = 'Publish';
+        }
+
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-preview.php' );
         $content = ob_get_contents();
         ob_end_clean();

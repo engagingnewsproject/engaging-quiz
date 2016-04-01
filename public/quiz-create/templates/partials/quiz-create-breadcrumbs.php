@@ -9,30 +9,37 @@ $enp_preview_class = ($enp_current_page === 'preview' ? ' enp-quiz-breadcrumbs__
 $enp_publish_url = ENP_QUIZ_PUBLISH_URL.$quiz->get_quiz_id().'/';
 $enp_publish_class = ($enp_current_page === 'publish' ? ' enp-quiz-breadcrumbs__link--active' : ' enp-quiz-breadcrumbs__link--disabled');
 
+if($quiz->get_quiz_status() === 'published') {
+    $enp_preview_name = 'Settings';
+    $enp_publish_name = 'Embed';
+} else {
+    $enp_preview_name = 'Preview';
+    $enp_publish_name = 'Publish';
+}
 ?>
 
 
 <nav class="enp-quiz-breadcrumbs">
     <ul class="enp-quiz-breadcrumbs__list">
         <li class="enp-quiz-breadcrumbs__item">
-            <a
-                href="<?php echo $enp_create_url;?>"
-                class="enp-quiz-breadcrumbs__link<?php echo $enp_create_class;?>">
-                    Create</a>
+            <a href="<?php echo $enp_create_url;?>"
+               class="enp-quiz-breadcrumbs__link<?php echo $enp_create_class;?>">
+               Create
+            </a>
         </li>
         <li class="enp-quiz-breadcrumbs__item"><svg class="enp-icon">
          <use xlink:href="#icon-chevron-right" />
         </svg></li>
         <li class="enp-quiz-breadcrumbs__item">
             <!--href="<? echo $enp_preview_url;?>-->
-            <span class="enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--preview<?php echo $enp_preview_class;?>">Preview</span>
+            <a class="enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--preview<?php echo $enp_preview_class;?>" href="<? echo $enp_preview_url;?>"><?echo $enp_preview_name;?></a>
         </li>
         <li class="enp-quiz-breadcrumbs__item"><svg class="enp-icon">
          <use xlink:href="#icon-chevron-right" />
         </svg></li>
         <li class="enp-quiz-breadcrumbs__item">
             <!--href="<? echo $enp_publish_url;?>"-->
-            <span class="enp-quiz-breadcrumbs__link<?php echo $enp_publish_class;?>">Publish</span>
+            <a class="enp-quiz-breadcrumbs__link<?php echo $enp_publish_class;?>" href="<? echo $enp_publish_url;?>"><?echo $enp_publish_name;?></a>
         </li>
     </ul>
 </nav>
