@@ -1,7 +1,7 @@
 
 <section class="enp-quiz__container">
     <header class="enp-quiz__header">
-        <h3 class="enp-quiz__title"><?php echo (isset($_GET["quiz-title"]) ? $_GET['quiz-title'] : 'The Quiz Title You Entered');?></h3>
+        <h3 class="enp-quiz__title"><? echo $quiz->get_quiz_title();?></h3>
         <div class="enp-quiz__progress">
             <div class="enp-quiz__progress__bar">
                 <div class="enp-quiz__progress__bar__question-count">1/2<span class="enp-"</div>
@@ -11,30 +11,28 @@
 
     <section class="enp-question__container enp-question__container--unanswered">
         <form class="enp-question__form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
-            <fieldset class="enp-question__fieldset">
-                <legend class="enp-question__legend enp-question__question">Is this the first question of your quiz?</legend>
-                <p class="enp-question__helper">Select one option.</p>
+            <? foreach($quiz->get_questions() as $question_id) {
+                $question = new Enp_quiz_Question($question_id);?>
+                <input type="hidden" name="enp-question-id" value="<? echo $question_id;?>"/>
+                <fieldset class="enp-question__fieldset">
+                    <legend class="enp-question__legend enp-question__question"><? echo $question->get_question_title();?></legend>
+                    <? if($question->get_question_type() === 'mc') {?>
+                        <p class="enp-question__helper">Select one option.</p>
+                        <?foreach($question->get_mc_options() as $mc_option_id) {
+                            $mc_option = new Enp_quiz_MC_option($mc_option_id);?>
+                            <input id="enp-option__<?echo $mc_option_id;?>" class="enp-option__input enp-option__input--radio enp-option__input--<? echo ($mc_option->get_mc_option_correct() == 1 ? 'correct' : 'incorrect');?>" type="radio" name="enp-options" />
+                            <label for="enp-option__<?echo $mc_option_id;?>" class="enp-option__label">
+                                <? echo $mc_option->get_mc_option_content();?>
+                            </label>
+                        <?
+                        }
+                    }?>
 
-                <input id="enp-option__1" class="enp-option__input enp-option__input--radio enp-option__input--incorrect" type="radio" name="enp-options" />
-                <label for="enp-option__1" class="enp-option__label">
-                    Yes. That's it, for sure.
-                </label>
-
-                <input id="enp-option__2" class="enp-option__input enp-option__input--radio enp-option__input--correct" type="radio" name="enp-options" />
-                <label for="enp-option__2" class="enp-option__label">
-                    Definitely not. Someone should probably work on that.
-                </label>
-                <input id="enp-option__3" class="enp-option__input enp-option__input--radio enp-option__input--incorrect" type="radio" name="enp-options" id="enp-option__3"/>
-                <label for="enp-option__3" class="enp-option__label">
-                    Maybe? I can't remember.
-                </label>
-
-                <button class="enp-btn enp-options__submit enp-question__submit">Submit Answer <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
-                  <use xlink:href="#icon-chevron-right" />
-                </svg></button>
-            </fieldset>
-
-
+                    <button class="enp-btn enp-options__submit enp-question__submit">Submit Answer <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
+                      <use xlink:href="#icon-chevron-right" />
+                    </svg></button>
+                </fieldset>
+            <?}?>
         </form>
 
         <section class="enp-explanation">
@@ -56,7 +54,7 @@
 
 
 
-
+    <!--
     <section class="enp-results">
         <div class="enp-results__score">
             <?php
@@ -93,7 +91,7 @@
                 </svg>
             </a></li>
         </ul>
-    </section>
+    </section>-->
 </section>
 
 <script src="js/quiz.js"></script>
