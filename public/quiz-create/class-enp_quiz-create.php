@@ -213,10 +213,23 @@ class Enp_quiz_Create {
 		$response = new Enp_quiz_Save_response();
         $validate = $response->validate_quiz_and_questions($quiz);
         if($validate === 'invalid') {
-			self::$message = array();
-			self::$message['error'] = $response->get_error_messages();
+			// combine the arrays
+			self::$message['error'] = array_merge(self::$message['error'], $response->get_error_messages());
             // uh oh, invalid quiz. Send them back to the create page to fix it.
             $this->redirect_to_quiz_create($quiz->get_quiz_id());
+        }
+	}
+
+	/*
+	* If a quiz is published, we won't let them access the create page
+	* and redirect them to preview page
+	*/
+	public function quiz_published_redirect($quiz) {
+		if($quiz->get_quiz_status() === 'published') {
+			// add error message
+			self::$message['error'][] = "You can't edit a published quiz. Please create a new quiz if you need to make changes.";
+            // uh oh, invalid quiz. Send them back to the create page to fix it.
+            $this->redirect_to_quiz_preview($quiz->get_quiz_id());
         }
 	}
 
@@ -385,11 +398,16 @@ class Enp_quiz_Create {
 	}
 
 	protected function redirect_to_quiz_preview($quiz_id) {
-		wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$quiz_id.'/' ) );
+		// set a messages array to pass to url on redirect
+		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
+
+		wp_redirect( site_url( '/enp-quiz/quiz-preview/'.$quiz_id.'/?'.$url_query ) );
 		exit;
 	}
 
 	protected function redirect_to_quiz_publish($quiz_id) {
+		// set a messages array to pass to url on redirect
+		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
 		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$quiz_id.'/' ) );
 		exit;
 	}
@@ -443,7 +461,7 @@ class Enp_quiz_Create {
 						<h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
 						<ul class="enp-message__list enp-message__list--'.$message_type.'">';
 				foreach($messages as $message) {
-					$message_html .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.$message.'</li>';
+					$message_html .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.stripslashes($message).'</li>';
 				}
 			$message_html .='</ul>
 					</section>';

@@ -58,9 +58,18 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $this->save_quiz();
         // if we are trying to move to preview, check
         // for error messages (like, not enough mc_options, no correct option set, no questions, etc...)
-        if(self::$user_action_action === 'next' && self::$user_action_element === 'preview') {
-            // add quiz error messages to the response, if any
-            self::$response_obj->validate_quiz_and_questions(self::$quiz);
+        if(self::$user_action_action === 'next') {
+            // builds error messages if trying to preview quiz
+            $quiz_obj_validate = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
+            $validate = self::$response_obj->validate_quiz_and_questions($quiz_obj_validate);
+
+            // see if they're trying to publish the quiz
+            if(self::$user_action_element === 'publish') {
+                if($validate === 'valid') {
+                    // OK, it's good! Publish it!
+                    $this->publish_quiz();
+                }
+            }
         }
 
         // return the response to the user
@@ -454,6 +463,41 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
     }
 
+    /**
+    * Connects to DB and updates the quiz.
+    * @return builds and returns a response message
+    */
+    protected function publish_quiz() {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+
+        $params = array(':quiz_id'          => self::$quiz_obj->get_quiz_id(),
+                        ':quiz_status'      => 'published',
+                        ':quiz_owner'       => self::$quiz['quiz_owner'],
+                        ':quiz_updated_by'  => self::$quiz['quiz_updated_by'],
+                        ':quiz_updated_at'  => self::$quiz['quiz_updated_at']
+                    );
+
+        $sql = "UPDATE ".$pdo->quiz_table."
+                     SET quiz_status = :quiz_status,
+                         quiz_updated_by = :quiz_updated_by,
+                         quiz_updated_at = :quiz_updated_at
+                   WHERE quiz_id = :quiz_id
+                     AND quiz_owner = :quiz_owner";
+
+        $stmt = $pdo->query($sql, $params);
+
+        // success!
+        if($stmt !== false) {
+            self::$response_obj->set_quiz_id(self::$quiz['quiz_id']);
+            self::$response_obj->set_status('success');
+            self::$response_obj->set_action('update');
+            self::$response_obj->add_success('Quiz published.');
+        } else {
+            self::$response_obj->add_error('Quiz could not be published. Try again and if it continues to not work, send us an email with details of how you got to this error.');
+        }
+
+    }
 
     /**
      * Populate self::$quiz array with values
@@ -579,7 +623,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_hex = $this->validate_hex($hex);
         // check it
         if($valid_hex === false) {
-
+            // generate a good error message
+            self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
             // if it's not a valid hex, try to get the old value from the object
             // and fallback to default if necessary
             $hex = $this->validate_quiz_value_from_object($key, $default, 'hex');
@@ -604,7 +649,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $valid_css_measurement = $this->validate_css_measurement($css_measurement);
         // check it
         if($valid_css_measurement === false) {
-
+            // add a good error message
+            self::$response_obj->add_error('CSS Measurement value for '.$key.' is not valid. Measurements can be any valid CSS Measurement such as 100%, 600px, 30rem, 80vw');
             // if it's not a valid css_measurement, try to get the old value from the object
             // and fallback to default if necessary
             $css_measurement = $this->validate_quiz_value_from_object($key, $default, 'css_measurement');

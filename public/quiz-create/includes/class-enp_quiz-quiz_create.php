@@ -21,9 +21,16 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Quiz_create extends Enp_quiz_Create {
-
+    public $quiz;
     public function __construct() {
+        // load the quiz
+        $this->quiz = $this->load_quiz();
 
+        // if the quiz is published, go to the preview page instead
+        // because you can't edit published quizzes and display error message
+        // TODO: Offer to duplicate the quiz in error message?
+        $this->quiz_published_redirect($this->quiz);
+        
         //add_action('init', array($this, 'register_my_session', 1));
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
@@ -36,7 +43,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     public function load_content($content) {
         ob_start();
         //Start the class
-        $quiz = $this->load_quiz();
+        $quiz = $this->quiz;
         $enp_quiz_nonce = parent::$nonce;
         $user_action = $this->load_user_action();
         $enp_current_page = 'create';
