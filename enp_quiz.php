@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 // Define a Plugin Root File constant
 define( 'ENP_QUIZ_ROOT', plugin_dir_path( __FILE__ ) );
-
+define( 'ENP_QUIZ_ROOT_URL', plugins_url('enp-quiz') );
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-enp_quiz-activator.php

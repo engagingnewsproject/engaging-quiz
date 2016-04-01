@@ -64,9 +64,7 @@
 
         <section class="enp-container enp-quiz-preview-container">
             <h2 class="enp-quiz-preview__title">Quiz Preview</h2>
-
-            <?php include_once(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/quiz.php');?>
-
+            <iframe src="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
         </section>
     </div>
 </div>

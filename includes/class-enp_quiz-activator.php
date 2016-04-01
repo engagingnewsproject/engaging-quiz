@@ -90,7 +90,7 @@ class Enp_quiz_Activator {
 		add_rewrite_rule('enp-quiz/([^/]*)/([^/]*)?','index.php?enp_quiz_template=$matches[1]&enp_quiz_id=$matches[2]','top');
 
 		// Quiz Take
-		add_rewrite_rule(ENP_QUIZ_URL, $enp_quiz_take_template_path.'quiz.php','top');
+		add_rewrite_rule('quiz-embed/([0-9]+)?$', $enp_quiz_take_template_path.'quiz.php?quiz_id=$1','top');
 
 
 	}
@@ -367,7 +367,8 @@ $enp_quiz_table_ab_test_response = "'.$this->ab_test_response_table_name.'";
 		// creates and opens the file for writing
 		$config_file = fopen($this->enp_config_path, "w");
 		// get site url and append our string
-		$site_url = site_url('enp-quiz');
+		$enp_take_url = site_url();
+		$enp_create_url = site_url('enp-quiz');
 		// default image directory for question image uploads
 		$image_dir = wp_upload_dir();
 
@@ -376,16 +377,19 @@ $config_contents =
 include("'.$this->enp_database_config_path.'");
 define("ENP_QUIZ_CREATE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-create/templates/");
 define("ENP_QUIZ_TAKE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/templates/");
-define("ENP_QUIZ_DASHBOARD_URL", "'.$site_url.'/dashboard/");
-define("ENP_QUIZ_CREATE_URL", "'.$site_url.'/quiz-create/");
-define("ENP_QUIZ_PREVIEW_URL", "'.$site_url.'/quiz-preview/");
-define("ENP_QUIZ_PUBLISH_URL", "'.$site_url.'/quiz-publish/");
-define("ENP_QUIZ_RESULTS_URL", "'.$site_url.'/quiz-results/");
-define("ENP_AB_TEST_URL", "'.$site_url.'/ab-test/");
-define("ENP_AB_RESULTS_URL", "'.$site_url.'/ab-results/");
-define("ENP_QUIZ_URL", "'.$site_url.'/quiz-embed/");
+define("ENP_QUIZ_TAKE_RESOURCES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/");
+define("ENP_QUIZ_DASHBOARD_URL", "'.$enp_create_url.'/dashboard/");
+define("ENP_QUIZ_CREATE_URL", "'.$enp_create_url.'/quiz-create/");
+define("ENP_QUIZ_PREVIEW_URL", "'.$enp_create_url.'/quiz-preview/");
+define("ENP_QUIZ_PUBLISH_URL", "'.$enp_create_url.'/quiz-publish/");
+define("ENP_QUIZ_RESULTS_URL", "'.$enp_create_url.'/quiz-results/");
+define("ENP_AB_TEST_URL", "'.$enp_create_url.'/ab-test/");
+define("ENP_AB_RESULTS_URL", "'.$enp_create_url.'/ab-results/");
+define("ENP_QUIZ_URL", "'.$enp_take_url.'/quiz-embed/");
 define("ENP_QUIZ_IMAGE_DIR", "'.$image_dir["basedir"].'/enp-quiz/");
 define("ENP_QUIZ_IMAGE_URL", "'.$image_dir["baseurl"].'/enp-quiz/");
+define("ENP_QUIZ_PLUGIN_DIR", "'.ENP_QUIZ_ROOT.'");
+define("ENP_QUIZ_PLUGIN_URL", "'.ENP_QUIZ_ROOT_URL.'/");
 ?>';
 
 		// write to the file

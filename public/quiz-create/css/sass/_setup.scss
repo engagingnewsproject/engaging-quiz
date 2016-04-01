@@ -19,7 +19,7 @@ body #enp-quiz {
     textarea {
         margin-bottom: 1rem;
     }
-    
+
     button, input[type="button"], input[type="reset"], input[type="submit"] {
         background: transparent;
         border: none;
@@ -29,5 +29,9 @@ body #enp-quiz {
             background: transparent;
             border: none;
         }
+    }
+
+    iframe {
+        border: none;
     }
 }

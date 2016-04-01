@@ -38,6 +38,14 @@
         }
     }
 
+    .enp-quiz-preview-container {
+
+        @include breakpoint(medium) {
+            width: 84%;
+        }
+
+    }
+
     .enp-quiz-settings__title {
         position: relative;
         @include _(small-uppercase);
@@ -81,7 +89,7 @@
             }
 
             @include breakpoint(large) {
-                margin-left: 26%;
+                margin-left: 29%;
             }
         }
     }
