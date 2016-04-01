@@ -1,5 +1,17 @@
 
 <section class="enp-quiz__container">
+    <style tyle="text/css">
+        #enp-quiz .enp-quiz__container {
+            background-color: <? echo $quiz->get_quiz_bg_color();?>;
+            color: <? echo $quiz->get_quiz_bg_color();?>;
+        }
+        #enp-quiz .enp-quiz__title,
+        #enp-quiz .enp-question__question,
+        #enp-quiz .enp-option__label,
+        #enp-quiz .enp-question__helper {
+            color: <? echo $quiz->get_quiz_text_color();?>;
+        }
+    </style>
     <header class="enp-quiz__header">
         <h3 class="enp-quiz__title"><? echo $quiz->get_quiz_title();?></h3>
         <div class="enp-quiz__progress">
@@ -10,7 +22,7 @@
     </header>
 
     <section class="enp-question__container enp-question__container--unanswered">
-        <form class="enp-question__form" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+        <form class="enp-question__form" method="post" action="<?php echo htmlentities(site_url('enp-quiz/quiz-take/').$quiz->get_quiz_id().'/'); ?>"">
             <? foreach($quiz->get_questions() as $question_id) {
                 $question = new Enp_quiz_Question($question_id);?>
                 <input type="hidden" name="enp-question-id" value="<? echo $question_id;?>"/>
@@ -38,66 +50,19 @@
                       <use xlink:href="#icon-chevron-right" />
                     </svg></button>
                 </fieldset>
-            <?}?>
+
+            <?
+            // just for now while we're getting set up
+            // remove this to go through more questions
+            break;
+            }?>
         </form>
 
-        <section class="enp-explanation">
-            <header class="enp-explanation__header">
-                <h3 class="enp-explanation__title">
-                    <span class="enp-explanation__title__text"></span>
-                    <span class="enp-explanation__percentage"></span>
-                 </h3>
-            </header>
-            <p class="enp-explanation__explanation">This is not what you entered. This is just a prototype to test the design. We'll make it actually work later.</p>
-
-            <button class="enp-btn enp-next-step"><span class="enp-next-step__text">Next Question</span> <svg class="enp-icon enp-icon--chevron-right enp-next-step__icon">
-              <use xlink:href="#icon-chevron-right" />
-            </svg></button>
-        </section>
+        <? include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');?>
 
     </section>
 
-
-
-
-    <!--
-    <section class="enp-results">
-        <div class="enp-results__score">
-            <?php
-                // calculate the score
-                $score = 50; // or something...
-                $r = 90;
-                $c = M_PI*($r*2);
-
-                $pct = ((100-$score)/100)*$c;
-            ?>
-            <h2 class="enp-results__score__title center">50<span class="enp-results__score__title__percentage">%</span> <span class="enp-screen-reader-text">Correct</span></h2>
-            <svg class="enp-results__score__circle" width="200" height="200" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
-              <circle class="enp-results__score__circle__bg" r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
-              <circle id="enp-results__score__circle__path" r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="<?php echo $pct;?>"></circle>
-            </svg>
-        </div>
-        <p class="enp-results__encouragement">Not bad!</p>
-        <p class="enp-results__description">You did better than <strong>90%</strong> of people. That quiz was kind of a hard, eh?</p>
-        <h3 class="enp-results__share-title">Share Your Results</h3>
-        <ul class="enp-results__share">
-            <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--facebook" href="#facebook">
-                <svg class="enp-icon enp-icon--facebook enp-results__share__item__icon enp-results__share__item__icon--facebook">
-                  <use xlink:href="#icon-facebook" />
-                </svg>
-            </a></li>
-            <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--twitter" href="#twitter">
-                <svg class="enp-icon enp-icon--twitter enp-results__share__item__icon enp-results__share__item__icon--twitter">
-                  <use xlink:href="#icon-twitter" />
-                </svg>
-            </a></li>
-            <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--email" href="#email">
-                <svg class="enp-icon enp-icon--mail enp-results__share__item__icon enp-results__share__item__icon--email">
-                  <use xlink:href="#icon-mail" />
-                </svg>
-            </a></li>
-        </ul>
-    </section>-->
+    <? // include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-results.php');?>
 </section>
 
 <script src="js/quiz.js"></script>

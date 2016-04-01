@@ -120,8 +120,8 @@
 
     .enp-question__container--unanswered {
         .enp-option__label {
+
             &:hover {
-                color: $font;
                 cursor: pointer;
 
                 &:before {
