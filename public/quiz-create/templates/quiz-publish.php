@@ -13,10 +13,10 @@
 
 <div class="enp-container enp-publish-page-container">
     <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');?>
-
+    <?php do_action('enp_quiz_display_messages'); ?>
     <div class="enp-flex enp-publish-page-flex-container">
         <section class="enp-container enp-publish-container">
-            <h1 class="enp-page-title enp-publish-page__title">Published!</h1>
+            <h1 class="enp-page-title enp-publish-page__title">Embed</h1>
             <p>Copy and paste the embed code onto your website where you'd like it to appear.</p>
             <textarea class="enp-embed-code enp-publish-page__embed-code" rows="3"><iframe frameBorder="0" height="500px" width="100%" src="http://engagingnewsproject.org/enp_prod/iframe-quiz/?guid=definitely_not_a_real_link"></iframe></textarea>
         </section>

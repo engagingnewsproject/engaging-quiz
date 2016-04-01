@@ -22,13 +22,13 @@
  */
 class Enp_quiz_Quiz_publish extends Enp_quiz_Create {
     public $quiz; // object
-    
+
     public function __construct() {
         // set the quiz object
         $this->quiz = $this->load_quiz();
         // check if it's valid
         // if it's not, they'll get redirected to the quiz create page
-        $this->validate_quiz_redirect($this->quiz);
+        $this->validate_quiz_redirect($this->quiz, 'publish');
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));

@@ -1,18 +1,31 @@
 #enp-quiz {
-    .enp-publish-page-container:before {
-        @include breakpoint(medium) {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: -100%;
-            width: 128%;
-            content: '';
-            background: #fff;
-            border-right: 1px solid #ddd;
+    .enp-publish-page-container {
+
+        &:before {
+            @include breakpoint(medium) {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: -100%;
+                width: 128%;
+                content: '';
+                background: #fff;
+                border-right: 1px solid #ddd;
+            }
+
+            @include breakpoint(large) {
+                width: 124%;
+            }
         }
 
-        @include breakpoint(large) {
-            width: 124%;
+        .enp-quiz-message {
+            @include breakpoint(medium) {
+                margin-left: 33%;
+            }
+
+            @include breakpoint(large) {
+                margin-left: 26%;
+            }
         }
     }
 

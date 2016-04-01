@@ -128,6 +128,7 @@ class Enp_quiz_Create {
 	*/
 	public function enp_quiz_template_rewrite_catch() {
 		// make sure we have a user
+		// and if they're accessing a quiz, that they own it
 		$this->validate_user();
 
 		// validated
@@ -203,21 +204,50 @@ class Enp_quiz_Create {
         $quiz_id = $this->enp_quiz_id_rewrite_catch();
 		// set-up variables
         $quiz = new Enp_quiz_Quiz($quiz_id);
+		// check to see if the user owns this quiz
         return $quiz;
     }
 	/*
 	* Checks to see if a quiz is valid or not,
 	* then redirects to quiz create page if invalid
+	*
+	* @param $quiz = quiz object
+	* @param $publish = 'publish' Publish quiz on URL if valid
+	* if they clicked the publish link instead of the button, go ahead and publish it
+	* and redirect to the publish page (if JS is on, we'll just divert the link to click
+	* the publish button)
+	* It won't SAVE their previous settings, but they will still be able to edit them.
 	*/
-	public function validate_quiz_redirect($quiz) {
+	public function validate_quiz_redirect($quiz, $publish = false) {
 		$response = new Enp_quiz_Save_response();
         $validate = $response->validate_quiz_and_questions($quiz);
         if($validate === 'invalid') {
 			// combine the arrays
-			self::$message['error'] = array_merge(self::$message['error'], $response->get_error_messages());
+			if(is_array(self::$message['error'])) {
+				self::$message['error'] = array_merge(self::$message['error'], $response->get_error_messages());
+			} else {
+				self::$message['error'] = $response->get_error_messages();
+			}
+
             // uh oh, invalid quiz. Send them back to the create page to fix it.
             $this->redirect_to_quiz_create($quiz->get_quiz_id());
-        }
+        } elseif($validate === 'valid' && $publish === 'publish') {
+			/* publish the quiz and send them to the publish page
+				$save = new Enp_quiz_Save_quiz();
+				$save->publish_quiz($quiz);
+				// redirect them so we can add the messages to the output
+				$this->redirect_to_quiz_publish($quiz->get_quiz_id());
+			*/
+			// let's just send them to the preview page if they're trying to
+			// access the publish URL on a NON-published quiz
+			if($quiz->get_quiz_status() !== 'published') {
+				// add error message
+				// add error message
+				self::$message['error'][] = "Please use the Publish Button to publish a quiz instead of the Breadcrumb Publish link.";
+				// redirect to preview page
+				$this->redirect_to_quiz_preview($quiz->get_quiz_id());
+			}
+		}
 	}
 
 	/*
@@ -294,7 +324,8 @@ class Enp_quiz_Create {
 
 
 	public function save_quiz() {
-		// make sure they're logged in. returns current_user_id
+		// make sure they're logged in and own this quiz
+		// returns current_user_id if valid
 		$user_id = $this->validate_user();
 
 	   //Is it a POST request?
@@ -408,7 +439,7 @@ class Enp_quiz_Create {
 	protected function redirect_to_quiz_publish($quiz_id) {
 		// set a messages array to pass to url on redirect
 		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
-		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$quiz_id.'/' ) );
+		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$quiz_id.'/?'.$url_query ) );
 		exit;
 	}
 
@@ -473,6 +504,8 @@ class Enp_quiz_Create {
 
 	/**
 	 * Validate that the user is allowed to be doing this
+	 * Checks if they're logged in
+	 * Checks if they own the quiz they're trying to access
 	 * @return   get_current_user_id(); OR Redirect to login page
 	 * @since    0.0.1
 	 */
@@ -480,7 +513,28 @@ class Enp_quiz_Create {
 		if(is_user_logged_in() === false) {
 			auth_redirect();
 		} else {
-			return get_current_user_id();
+			$current_user_id = get_current_user_id();
+			// they're logged in, but do they own this quiz?
+			// get the quiz, if any
+			$quiz = $this->load_quiz();
+			if(is_object($quiz)) {
+				$quiz_id = $quiz->get_quiz_id();
+				$quiz_owner = $quiz->get_quiz_owner();
+				// looks like we have a real quiz
+				if($quiz_id !== null && $quiz_owner !== null) {
+					// see if the owner matches the current user
+					if((int) $quiz_owner !== $current_user_id) {
+						// Hey! Get outta here!
+						self::$message['error'][] = "You don't have permission to edit that quiz.";
+						$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
+						wp_redirect( site_url( '/enp-quiz/dashboard/user/?'.$url_query ) );
+						exit;
+					} else {
+						// valid!
+					}
+				}
+			}
+			return $current_user_id;
 		}
 	}
 

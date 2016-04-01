@@ -67,7 +67,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             if(self::$user_action_element === 'publish') {
                 if($validate === 'valid') {
                     // OK, it's good! Publish it!
-                    $this->publish_quiz();
+                    $this->pdo_publish_quiz();
                 }
             }
         }
@@ -467,7 +467,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * Connects to DB and updates the quiz.
     * @return builds and returns a response message
     */
-    protected function publish_quiz() {
+    protected function pdo_publish_quiz() {
         // connect to PDO
         $pdo = new enp_quiz_Db();
 
@@ -493,12 +493,23 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response_obj->set_status('success');
             self::$response_obj->set_action('update');
             self::$response_obj->add_success('Quiz published!');
-            self::$response_obj->add_success("You can still change the Quiz styles from the settings/preview page.");
-            self::$response_obj->add_success("If you need to edit a question, you'll need to create a new quiz.");
         } else {
             self::$response_obj->add_error('Quiz could not be published. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
 
+    }
+
+    /**
+    * Can be called from anywhere to publish a quiz
+    *
+    */
+    public function publish_quiz($quiz) {
+        if(is_object($quiz)) {
+            $quiz = (array) $quiz;
+        }
+        // set our action
+        $quiz['user_action'] = 'quiz-publish';
+        $this->save($quiz);
     }
 
     /**

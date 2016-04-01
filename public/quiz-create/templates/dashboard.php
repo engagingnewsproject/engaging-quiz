@@ -13,7 +13,7 @@
  object containing user quizzes and ab_tests
  */
 ?>
-
+<?php do_action('enp_quiz_display_messages'); ?>
 <section class="enp-container enp-dash-container">
     <header class="enp-dash__section-header">
         <h2 class="enp-dash__section-title">Quizzes</h2>
