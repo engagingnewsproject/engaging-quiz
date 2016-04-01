@@ -229,8 +229,16 @@ class Enp_quiz_Create {
 				self::$message['error'] = $response->get_error_messages();
 			}
 
-            // uh oh, invalid quiz. Send them back to the create page to fix it.
-            $this->redirect_to_quiz_create($quiz->get_quiz_id());
+			// check to make sure there's actually a quiz...
+			if($quiz->get_quiz_id() === null) {
+				// nope... redirect to quiz create
+				$this->redirect_to_quiz_create('new');
+			} else {
+				// There's a quiz, it's just an invalid quiz.
+				// Send them back to the create page to fix it.
+	            $this->redirect_to_quiz_create($quiz->get_quiz_id());
+			}
+
         } elseif($validate === 'valid' && $publish === 'publish') {
 			/* publish the quiz and send them to the publish page
 				$save = new Enp_quiz_Save_quiz();

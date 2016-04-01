@@ -233,6 +233,13 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
             $quiz = $this->quiz_object_to_array($quiz);
         }
 
+        // check to make sure there's a quiz ID
+        if($quiz['quiz_id'] === null) {
+            // there's no quiz... invalid
+            $this->add_error('Quiz does not exist.');
+            return 'invalid';
+        }
+
         // validate the quiz
         $this->validate_quiz($quiz);
         // check to see if they need to add questions
@@ -256,24 +263,33 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     public function quiz_object_to_array($quiz_obj) {
         $quiz_array = (array) $quiz_obj;
         $new_questions_array = array();
-        foreach($quiz_obj->get_questions() as $question_id) {
-            // generate the object
-            $question_obj = new Enp_quiz_Question($question_id);
-            // arrayify the question
-            $question_array = (array) $question_obj;
-            // check if mc or slider and add that object as an array
-            if($question_obj->get_question_type() === 'mc') {
-                foreach($question_obj->mc_options as $mc_option_id) {
-                    $mc_option_object = new Enp_quiz_MC_option($mc_option_id);
-                    $mc_option_array = (array) $mc_option_object;
-                    $question_array['mc_option'][] = $mc_option_array;
+        if(!empty($quiz_array)) {
+            $question_ids = $quiz_obj->get_questions();
+            if(!empty($question_ids)){
+                foreach($question_ids as $question_id) {
+                    // generate the object
+                    $question_obj = new Enp_quiz_Question($question_id);
+                    // arrayify the question
+                    $question_array = (array) $question_obj;
+                    // check if mc or slider and add that object as an array
+                    if($question_obj->get_question_type() === 'mc') {
+                        $mc_option_ids = $question_obj->get_mc_options();
+                        if(!empty($mc_option_ids)) {
+                            foreach($question_obj->get_mc_options() as $mc_option_id) {
+                                $mc_option_object = new Enp_quiz_MC_option($mc_option_id);
+                                $mc_option_array = (array) $mc_option_object;
+                                $question_array['mc_option'][] = $mc_option_array;
+                            }
+                        }
+                    } elseif($question['question_type'] === 'slider') {
+
+                    }
+
+                    // add it to our questions array
+                    $quiz_array['question'][] = $question_array;
+
                 }
-            } elseif($question['question_type'] === 'slider') {
-
             }
-
-            // add it to our questions array
-            $quiz_array['question'][] = $question_array;
 
         }
         return $quiz_array;
