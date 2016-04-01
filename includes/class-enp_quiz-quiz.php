@@ -269,7 +269,8 @@ class Enp_quiz_Quiz {
         );
         $sql = "SELECT question_id from ".$pdo->question_table." WHERE
                 quiz_id = :quiz_id
-                AND question_is_deleted = 0";
+                AND question_is_deleted = 0
+                ORDER BY question_order ASC";
         $stmt = $pdo->query($sql, $params);
         $question_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
