@@ -49,7 +49,7 @@
     }
 
     .enp-dash-item--draft {
-        box-shadow: inset 4px 0 0 lighten($green, 30%);
+        box-shadow: inset 4px 0 0 lighten($green, 25%);
     }
 
     .enp-dash-list--list-view {
@@ -79,7 +79,7 @@
         @include _(flex-last);
         @include _(hint);
         text-transform: uppercase;
-        color: #999;
+        color: #888;
     }
 
     .enp-dash-item__nav {
