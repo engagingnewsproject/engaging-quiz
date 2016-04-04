@@ -18,13 +18,13 @@
         <section class="enp-container enp-publish-container">
             <h1 class="enp-page-title enp-publish-page__title">Embed</h1>
             <p>Copy and paste the embed code onto your website where you'd like it to appear.</p>
-            <textarea class="enp-embed-code enp-publish-page__embed-code" rows="3"><iframe frameBorder="0" height="500px" width="100%" src="http://engagingnewsproject.org/enp_prod/iframe-quiz/?guid=definitely_not_a_real_link"></iframe></textarea>
+            <textarea class="enp-embed-code enp-publish-page__embed-code" rows="3"><iframe src="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe></textarea>
         </section>
 
         <section class="enp-container enp-aside-container enp-publish-page__aside-container">
             <aside class="enp-aside enp-share-quiz__container">
                 <h3 class="enp-aside-title enp-share-quiz__title">Share Your Quiz</h3>
-                <a class="enp-share-quiz__url" href="#">http://engagingnewsproject.org/quiz_id_url/not-real-yet</a></p>
+                <a class="enp-share-quiz__url" href="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>"><? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?></a></p>
                 <ul class="enp-share-quiz">
                     <li class="enp-share-quiz__item"><a class="enp-share-quiz__link enp-share-quiz__item--facebook" href="#facebook">
                         <svg class="enp-icon enp-icon--facebook enp-share-quiz__item__icon enp-share-quiz__item__icon--facebook">
