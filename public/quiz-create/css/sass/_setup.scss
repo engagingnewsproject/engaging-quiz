@@ -21,12 +21,10 @@ body #enp-quiz {
     }
 
     button, input[type="button"], input[type="reset"], input[type="submit"] {
-        background: transparent;
         border: none;
         &:active,
         &:focus,
         &:hover {
-            background: transparent;
             border: none;
         }
     }

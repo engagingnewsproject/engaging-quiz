@@ -200,6 +200,7 @@ $placeholders: ();
 
 @include placeholder('accordion__header') {
     @include _('accordion');
+    background: #fff;
     color: $font;
     font-family: $fontTitle;
     font-size: .9rem;

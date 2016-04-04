@@ -128,6 +128,10 @@
     @include _(input);
     line-height: 1.5;
     width: 100%;
+
+    &:focus {
+        @include _(focus--glow);
+    }
 }
 
 .enp-textarea {
