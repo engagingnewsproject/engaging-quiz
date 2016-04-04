@@ -18,20 +18,13 @@
     <header class="enp-dash__section-header">
         <h2 class="enp-dash__section-title">Quizzes</h2>
         <div class="enp-quiz-list__view">
-            <svg class="enp-view-toggle enp-view-toggle__grid enp-icon">
-              <use xlink:href="#icon-grid" />
-            </svg>
-            <svg class="enp-view-toggle enp-view-toggle__list enp-icon">
-              <use xlink:href="#icon-list" />
-            </svg>
-
             <select class="enp-sort-by">
                 <option>Date Created</option>
                 <option>Most Results</option>
             </select>
         </div>
     </header>
-    <ul class="enp-quiz-list">
+    <ul class="enp-dash-list enp-dash-list--quiz">
         <li class="enp-dash-item enp-dash-item--add-new">
             <a class="enp-dash-link--add-new enp-dash-link--add-new-quiz" href="<?php echo ENP_QUIZ_CREATE_URL;?>new/">
                 <svg class="enp-dash-link__icon enp-icon">
@@ -56,12 +49,6 @@
     <header class="enp-dash__section-header">
         <h2 class="enp-dash__section-title">A/B Test</h2>
         <div class="enp-quiz-list__view">
-            <svg class="enp-view-toggle enp-view-toggle__grid enp-icon">
-              <use xlink:href="#icon-grid" />
-            </svg>
-            <svg class="enp-view-toggle enp-view-toggle__list enp-icon">
-              <use xlink:href="#icon-list" />
-            </svg>
 
             <select class="enp-sort-by">
                 <option>Date Created</option>
@@ -69,7 +56,7 @@
             </select>
         </div>
     </header>
-    <ul class="enp-ab-list">
+    <ul class="enp-dash-list enp-dash-list--ab">
         <li class="enp-dash-item enp-dash-item--add-new">
             <a class="enp-dash-link--add-new enp-dash-link--add-new-ab-test" href="<?php echo ENP_AB_TEST_URL;?>new/"><svg class="enp-dash-link__icon enp-icon">
               <use xlink:href="#icon-add" />

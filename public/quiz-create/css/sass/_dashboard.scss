@@ -8,6 +8,7 @@
 
     .enp-dash__section-header {
         @include _(flex-spread);
+        margin-bottom: 0.325rem;
     }
 
     .enp-dash__section-title {
@@ -16,17 +17,38 @@
         margin-bottom: 0;
     }
 
-    .enp-quiz-list {
-        @include _(flex-grid);
+    .enp-view-toggle {
+        cursor: pointer;
+        opacity: .5;
+        display: none; // hide the buttons for small screens
+
+        @include breakpoint(medium) {
+            display: flex;
+        }
     }
 
-    .enp-ab-list {
+    .enp-view-toggle__active {
+        opacity: 1;
+    }
+
+    .enp-sort-by {
+        margin-left: 5px;
+    }
+
+    .enp-dash-list {
         @include _(flex-grid);
     }
 
     .enp-dash-item {
         @include _(flex-grid__item);
         @include _(flex-spread-vertical);
+    }
+
+    .enp-dash-list--list-view {
+        .enp-dash-item {
+            margin: 0;
+            flex-basis: 100%;
+        }
     }
 
     .enp-dash-item__title {
