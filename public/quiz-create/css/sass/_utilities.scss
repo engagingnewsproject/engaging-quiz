@@ -210,7 +210,7 @@ $placeholders: ();
     border: none;
     min-height: 3.065rem;
     padding: 1rem;
-    margin: 0;
+    margin: 1.6rem 0 0;
     position: relative;
     z-index: 9;
     cursor: pointer;
@@ -219,6 +219,7 @@ $placeholders: ();
 
 @include placeholder('accordion__content') {
     @include _('accordion');
+    display: block;
     position: relative;
     height: auto;
     overflow: visible;
@@ -228,12 +229,11 @@ $placeholders: ();
 @include placeholder('accordion__content--closed') {
     margin-top: 0;
     padding-top: 0rem;
-    animation: slideOutTop .25s ease-out forwards, visibilityHidden 0s forwards;
-    animation-delay: 0s, .05s;
+    animation: slideOutTop .25s ease-out forwards;
+    display: none;
 }
 
 @include placeholder('accordion__content--open') {
-    visibility: visible;
     padding-top: 1.6rem;
     margin-bottom: 2rem;
     animation: slideInTop .45s ease-out forwards;
@@ -294,6 +294,10 @@ $placeholders: ();
 
     .enp-accordion-header {
         @include _(accordion__header);
+
+        &:first-of-type {
+            margin-top: 0;
+        }
     }
 
     .enp-accordion-content {
@@ -344,4 +348,11 @@ $placeholders: ();
     .enp-quiz-message__title--success {
         color: $dark_green;
     }
+}
+
+@include placeholder('focus--glow') {
+    outline-color: #4D90FE;
+    outline-offset: -2px;
+    outline-style: auto;
+    outline-width: 5px;
 }

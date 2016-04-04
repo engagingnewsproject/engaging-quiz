@@ -198,7 +198,7 @@
 
 @include placeholder('radio-block__label--focus') {
     z-index: 8;
-    @include _('focus');
+    @include _('focus--glow');
 }
 
 @include placeholder('radio-inline__legend') {
@@ -237,11 +237,4 @@
     background: url(../svg/chevron-down.svg) 100% 50% no-repeat;
     background-color: #fff;
     box-shadow: inset -26px 0 0 rgba(0,0,0,.1);
-}
-
-@include placeholder('focus') {
-    outline-color: #4D90FE;
-    outline-offset: -2px;
-    outline-style: auto;
-    outline-width: 5px;
 }

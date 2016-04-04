@@ -36,15 +36,6 @@
     }
 }
 
-@keyframes visibilityHidden {
-    0% {
-        visibility: visible;
-    }
-    100% {
-        visibility: hidden;
-    }
-}
-
 @keyframes removeAnswers {
     0% {
         opacity: 1;
