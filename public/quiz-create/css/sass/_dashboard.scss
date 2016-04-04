@@ -44,6 +44,14 @@
         @include _(flex-spread-vertical);
     }
 
+    .enp-dash-item--published {
+        box-shadow: inset 4px 0 0 $green;
+    }
+
+    .enp-dash-item--draft {
+        box-shadow: inset 4px 0 0 lighten($green, 30%);
+    }
+
     .enp-dash-list--list-view {
         .enp-dash-item {
             margin: 0;
