@@ -200,12 +200,17 @@ $placeholders: ();
 
 @include placeholder('accordion__header') {
     @include _('accordion');
+    color: $font;
+    font-family: $fontTitle;
+    font-size: .9rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    text-align: left;
     border: none;
     min-height: 3.065rem;
     padding: 1rem;
     margin: 0;
-    font-size: .9rem;
-    font-weight: 400;
     position: relative;
     z-index: 9;
     cursor: pointer;
