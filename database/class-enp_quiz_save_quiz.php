@@ -66,8 +66,14 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             // see if they're trying to publish the quiz
             if(self::$user_action_element === 'publish') {
                 if($validate === 'valid') {
-                    // OK, it's good! Publish it!
-                    $this->pdo_publish_quiz();
+                    // is the quiz already published?
+                    if(self::$quiz_obj->get_quiz_status() !== 'published') {
+                        // OK, it's good! Publish it!
+                        $this->pdo_publish_quiz();
+                    } else {
+                        // don't worry about it, probably just clicked on the "embed" on the quiz preview/settings page
+                    }
+
                 }
             }
         }
