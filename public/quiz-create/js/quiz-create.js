@@ -6,10 +6,11 @@ jQuery( document ).ready( function( $ ) {
             question_content;
 
         // get the value for the title
-        question_title = $('.enp-question-title__textarea').val();
+        question_title = $('.enp-question-title__textarea', this).val();
+        console.log(question_title);
         // if it's empty, set it as an empty string
-        if(question_title === undefined) {
-            question_title = '';
+        if(question_title === undefined || question_title === '') {
+            question_title = 'Untitled';
         }
         // set-up question_content var
         question_content = $(this);
