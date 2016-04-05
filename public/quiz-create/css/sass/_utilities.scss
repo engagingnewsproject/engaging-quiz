@@ -349,6 +349,17 @@ $placeholders: ();
     .enp-quiz-message__title--success {
         color: $dark_green;
     }
+
+    .enp-quiz-message--ajax {
+        margin-bottom: .6rem;
+        animation: slideInBottom .3s;
+    }
+
+    .enp-quiz-message-ajax-container {
+        z-index: 9999;
+        position: fixed;
+        bottom: 10px;
+    }
 }
 
 @include placeholder('focus--glow') {

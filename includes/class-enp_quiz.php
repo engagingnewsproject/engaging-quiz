@@ -68,6 +68,7 @@ class Enp_quiz {
 
 		// Run the quiz create class
 		// We HAVE to build this because it's not accesible to the AJAX calls otherwise
+		// We could pass it to if (defined('DOING_AJAX') && DOING_AJAX) { though
 		$this->load_quiz_create();
 		// Run the quiz take class
 		$this->load_quiz_take();

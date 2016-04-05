@@ -450,8 +450,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             self::$response_obj->set_quiz_id(self::$quiz['quiz_id']);
             self::$response_obj->set_status('success');
             self::$response_obj->set_action('update');
-            self::$response_obj->add_success('Quiz updated.');
-
+            self::$response_obj->add_success('Quiz saved.');
         } else {
             self::$response_obj->add_error('Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }

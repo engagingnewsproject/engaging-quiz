@@ -340,13 +340,15 @@ class Enp_quiz_Create {
 		$user_id = $this->validate_user();
 
 		$params = array();
-
+		// check if we're doing ajax or a normal post request
 		if (defined('DOING_AJAX') && DOING_AJAX) {
+			// doing ajax, so set the vars based on
+			// our passed params
 			$response = $_POST['quiz'];
 			parse_str($_POST['quiz'], $params);
 			$posted_quiz = $params['enp_quiz'];
 			$posted_question = $params['enp_question'];
-			$posted_submit = $_POST['quizSubmit'];
+			$posted_user_action = $_POST['quizSubmit'];
 			$posted_nonce = $params['enp_quiz_nonce'];
 
 	   } else {
@@ -358,14 +360,14 @@ class Enp_quiz_Create {
 			}
 
 			if(isset($_POST['enp-quiz-submit'])) {
-				$posted_submit = $_POST['enp-quiz-submit'];
+				$posted_user_action = $_POST['enp-quiz-submit'];
 			}
 
 			if(isset($_POST['enp_quiz_nonce'])) {
 				$posted_nonce = $_POST['enp_quiz_nonce'];
 			}
 	   }
-	   //wp_send_json($posted_nonce);
+
 	   //Is it a POST request?
  	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -403,10 +405,9 @@ class Enp_quiz_Create {
 			$quiz['question'] = $posted_question;
 		}
 
-		if(isset($posted_submit)) {
+		if(isset($posted_user_action)) {
 			// get the value of the button they clicked
-			$button_clicked = $posted_submit;
-			$quiz['user_action'] = $button_clicked;
+			$quiz['user_action'] = $posted_user_action;
 		} else {
 			// no submit button clicked? Should never happen
 			self::$message['error'][] = 'The form was not submitted right. Please contact our support and let them know how you reached this error';
@@ -455,11 +456,15 @@ class Enp_quiz_Create {
 		}
 		// we're just updating the same page, return false to send them back
 	 	else {
+			if (defined('DOING_AJAX') && DOING_AJAX) {
+				$json_response = $response;
+				$json_response = json_encode($json_response);
+				wp_send_json($json_response);
+				exit();
+			}
 			// we have errors! Oh no! Send them back to fix it
 			return false;
 		}
-
-		wp_send_json($response);
 
 	    // Always end with an exit on ajax
 	    exit();

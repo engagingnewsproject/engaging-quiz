@@ -433,7 +433,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             $question_response = array(
                                         'question_id' => self::$question['question_id'],
                                         'status'       => 'success',
-                                        'action'       => 'insert'
+                                        'action'       => 'update'
                                 );
             // pass the response array to our response object
             parent::$response_obj->set_question_response($question_response, self::$question);
@@ -469,7 +469,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             //$this->save_slider_option(self::$question['slider']);
         } else {
             // hmm... what question type ARE you trying to save?
-            
+
         }
     }
 

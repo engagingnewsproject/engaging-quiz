@@ -66,15 +66,40 @@ jQuery( document ).ready( function( $ ) {
     		 }
     	} )
     		.done( function( response, textStatus, jqXHR ) {
-    			console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
+    			// console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
+                //console.log( 'AJAX done', jqXHR.responseJSON );
     		} )
     		.fail( function( jqXHR, textStatus, errorThrown ) {
     			console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     		} )
-    		.then( function( jqXHR, textStatus, errorThrown ) {
-    			console.log( 'AJAX after finished', jqXHR, textStatus, errorThrown );
+    		.then( function( errorThrown, textStatus, jqXHR ) {
+    			console.log( 'AJAX after finished' );
+                console.log(jqXHR.responseJSON);
+                var response = $.parseJSON(jqXHR.responseJSON);
+                var message = response.message;
+
+                for(var i = 0; i < message.success.length; i++) {
+                    responseTime = event.timeStamp;
+                    appendMessage(message.success[i], textStatus, responseTime);
+                    //removeMessageTimeout = window.setTimeout(removeMessage(responseTime), 5000);
+                }
+
     		} );
     });
+
+
+    // set-up our ajax response container
+    $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></section>');
+    // append ajax response messages
+    function appendMessage(message, status, responseTime) {
+        $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+responseTime+'"><ul class="enp-message__list enp-message__list--'+status+'">'+message+'</ul></div>');
+
+        $('.enp-message-'+responseTime).delay(3500).fadeOut(function(){
+            $('.enp-message-'+responseTime).fadeOut();
+        });
+    }
+
+
 
 
     // Image uploader
