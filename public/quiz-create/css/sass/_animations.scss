@@ -1,21 +1,3 @@
-@keyframes messageEnterRemove {
-    0% {
-        opacity: 0;
-        transform: translate3d(0, 100px, 0);
-    }
-    10% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-    90% {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-    100% {
-        opacity: 0;
-        transform: translate3d(-200px, 0, 0);;
-    }
-}
 @keyframes slideInBottom {
     0% {
         opacity: 0;
@@ -51,6 +33,21 @@
         height: 0;
         opacity: 0;
         transform: translate3d(0, -20px, 0);
+    }
+}
+
+@keyframes removeElement {
+    0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        height: 0;
+        z-index: -1;
+        transform: translate3d(-200px, 0, 0);
     }
 }
 

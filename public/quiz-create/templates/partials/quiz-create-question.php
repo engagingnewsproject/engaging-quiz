@@ -8,8 +8,8 @@
     $question_id = $question->get_question_id();
 ?>
 
-<section class="enp-question-content">
-    <input type="hidden" name="enp_question[<?echo $question_i;?>][question_id]" value="<? echo $question_id;?>" />
+<section id="enp-question--<? echo $question_id;?>" data-questionID="<? echo $question_id;?>" class="enp-question-content">
+    <input class="enp-question-id" type="hidden" name="enp_question[<?echo $question_i;?>][question_id]" value="<? echo $question_id;?>" />
 
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title">

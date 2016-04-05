@@ -279,4 +279,11 @@
         }
 
     }
+
+
+    // UX interactions
+    .enp-mc-option--remove,
+    .enp-question--remove {
+        animation: removeElement .3s ease-in-out forwards;
+    }
 }
