@@ -30,7 +30,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // because you can't edit published quizzes and display error message
         // TODO: Offer to duplicate the quiz in error message?
         $this->quiz_published_redirect($this->quiz);
-        
+
         //add_action('init', array($this, 'register_my_session', 1));
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
@@ -68,8 +68,16 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-accordion' );
 
-        wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . '../js/quiz-create.min.js', array( 'jquery', $this->plugin_name.'-accordion' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-quiz-create' );
+        wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . '../js/quiz-create.js', array( 'jquery', $this->plugin_name.'-accordion' ), $this->version, true );
+
+        wp_localize_script( $this->plugin_name.'-quiz-create','quizCreate', array(
+    		'ajax_url' => admin_url( 'admin-ajax.php' )
+    	));
+
+        wp_enqueue_script( $this->plugin_name.'-quiz-create' );
+
+        // wp media uploader
+        wp_enqueue_media();
 
 	}
 

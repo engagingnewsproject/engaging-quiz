@@ -67,6 +67,8 @@ class Enp_quiz_Create {
 		// redirect to the page they should go to
 		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
 
+		// add our ajax save to be available
+		add_action( 'wp_ajax_save_quiz', array($this, 'save_quiz'), 1 );
 		// we're including this as a fallback for the other pages.
         // process save, if necessary
         // if the enp-quiz-submit is posted, then they probably want to try to
@@ -332,15 +334,43 @@ class Enp_quiz_Create {
 
 
 	public function save_quiz() {
+
 		// make sure they're logged in and own this quiz
 		// returns current_user_id if valid
 		$user_id = $this->validate_user();
 
+		$params = array();
+
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			$response = $_POST['quiz'];
+			parse_str($_POST['quiz'], $params);
+			$posted_quiz = $params['enp_quiz'];
+			$posted_question = $params['enp_question'];
+			$posted_submit = $_POST['quizSubmit'];
+			$posted_nonce = $params['enp_quiz_nonce'];
+
+	   } else {
+		   if(isset($_POST['enp_quiz'])) {
+			   $posted_quiz = $_POST['enp_quiz'];
+		   }
+		   if(isset($_POST['enp_question'])) {
+		   		$posted_question = $_POST['enp_question'];
+			}
+
+			if(isset($_POST['enp-quiz-submit'])) {
+				$posted_submit = $_POST['enp-quiz-submit'];
+			}
+
+			if(isset($_POST['enp_quiz_nonce'])) {
+				$posted_nonce = $_POST['enp_quiz_nonce'];
+			}
+	   }
+	   //wp_send_json($posted_nonce);
 	   //Is it a POST request?
  	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
  		   //Validate the form key
- 		   if(!isset($_POST['enp_quiz_nonce']) || !self::$nonce->validate()) {
+ 		   if(!isset($posted_nonce) || !self::$nonce->validate($posted_nonce)) {
  			   // Form key is invalid,
 			   // return them to the page (they're probably refreshing the page)
 			   self::$message['error'][] = 'Quiz was not resaved';
@@ -348,6 +378,9 @@ class Enp_quiz_Create {
 			   return false;
  		   }
  	   }
+	   // initiate the save_quiz object
+
+
 
 		// get access to wpdb
 		global $wpdb;
@@ -358,21 +391,21 @@ class Enp_quiz_Create {
 		// set the date_time to pass
 		$date_time = date("Y-m-d H:i:s");
 		// build our array to save
-		if(isset($_POST['enp_quiz'])) {
+		if(isset($posted_quiz)) {
 			$quiz = array(
-						'quiz' => $_POST['enp_quiz'],
+						'quiz' => $posted_quiz,
 						'quiz_updated_by' => $user_id,
 						'quiz_updated_at' => $date_time,
 					);
 		}
 
-		if(isset($_POST['enp_question'])) {
-			$quiz['question'] = $_POST['enp_question'];
+		if(isset($posted_question)) {
+			$quiz['question'] = $posted_question;
 		}
 
-		if(isset($_POST['enp-quiz-submit'])) {
+		if(isset($posted_submit)) {
 			// get the value of the button they clicked
-			$button_clicked = $_POST['enp-quiz-submit'];
+			$button_clicked = $posted_submit;
 			$quiz['user_action'] = $button_clicked;
 		} else {
 			// no submit button clicked? Should never happen
@@ -384,7 +417,6 @@ class Enp_quiz_Create {
 		$save_quiz = new Enp_quiz_Save_quiz();
 		// save the quiz by passing our $quiz array to the save function
 		$response = $save_quiz->save($quiz);
-
 		// set it as our messages to return to the user
 		self::$message = $response->message;
 
@@ -426,6 +458,11 @@ class Enp_quiz_Create {
 			// we have errors! Oh no! Send them back to fix it
 			return false;
 		}
+
+		wp_send_json($response);
+
+	    // Always end with an exit on ajax
+	    exit();
 	}
 
 	protected function redirect_to_quiz_create($quiz_id) {

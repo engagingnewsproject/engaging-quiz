@@ -31,4 +31,84 @@ jQuery( document ).ready( function( $ ) {
 
     });
 
+    // ajax submission
+    $(document).on('click', '.enp-quiz-submit', function(e) {
+        e.preventDefault();
+        /*$.ajax({
+                type: 'POST',
+                url: quizCreate.ajax_url,
+                data: {
+                    'action': 'save_quiz',
+                    'quiz' : $('.enp-quiz-form').serialize(),
+                },
+                dataType: 'json',
+                success:function(json) {
+                    // don't do anything!
+                    console.log('success');
+                    console.log(json);
+                },
+                error:function(json) {
+                    console.log('error');
+                    console.log(json);
+                }
+            });*/
+
+            $.ajax( {
+            type: 'POST',
+    		 url  : quizCreate.ajax_url,
+    		 data : {
+    			action      : 'save_quiz',
+                quiz : $('.enp-quiz-form').serialize(),
+                quizSubmit : $(this).val(),
+    		 },
+    		 beforeSend : function( d ) {
+    		 	console.log( 'Before send', d );
+    		 }
+    	} )
+    		.done( function( response, textStatus, jqXHR ) {
+    			console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
+    		} )
+    		.fail( function( jqXHR, textStatus, errorThrown ) {
+    			console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+    		} )
+    		.then( function( jqXHR, textStatus, errorThrown ) {
+    			console.log( 'AJAX after finished', jqXHR, textStatus, errorThrown );
+    		} );
+    });
+
+
+    // Image uploader
+    // Uploading files
+    /*var file_frame;
+
+      $('.enp-question-image-upload').live('click', function( event ){
+
+        event.preventDefault();
+
+        // If the media frame already exists, reopen it.
+        if ( file_frame ) {
+          file_frame.open();
+          return;
+        }
+
+        // Create the media frame.
+        file_frame = wp.media.frames.file_frame = wp.media({
+          title: 'Upload Image',
+          button: {
+            text: 'Add Image to Question',
+          },
+          multiple: false  // Set to true to allow multiple files to be selected
+        });
+
+        // When an image is selected, run a callback.
+        file_frame.on( 'select', function() {
+          // We set multiple to false so only get one image from the uploader
+          attachment = file_frame.state().get('selection').first().toJSON();
+          console.log(attachment);
+          // Do something with attachment.id and/or attachment.url here
+        });
+
+        // Finally, open the modal
+        file_frame.open();
+    });*/
 });

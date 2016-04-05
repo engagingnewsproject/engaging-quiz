@@ -48,10 +48,15 @@ class Enp_quiz_Nonce {
 
 
     //Function that validated the form key POST data
-    public function validate()
+    public function validate($nonce = false)
     {
+        if($nonce === false) {
+            // no nonce, return false
+            return false;
+        }
+
         //We use the old nonce and not the new generated version
-        if($_POST['enp_quiz_nonce'] == $this->old_nonce)
+        if($nonce == $this->old_nonce)
         {
             //The key is valid, return true.
             return true;

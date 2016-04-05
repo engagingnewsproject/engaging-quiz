@@ -64,14 +64,13 @@ class Enp_quiz {
 		if(is_admin()) {
 			// Run the admin class
 			$this->load_admin();
-		} else {
-			// Run the quiz create class
-			$this->load_quiz_create();
-			// Run the quiz take class
-			$this->load_quiz_take();
 		}
 
-
+		// Run the quiz create class
+		// We HAVE to build this because it's not accesible to the AJAX calls otherwise
+		$this->load_quiz_create();
+		// Run the quiz take class
+		$this->load_quiz_take();
 
 	}
 
