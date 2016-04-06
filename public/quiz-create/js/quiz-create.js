@@ -100,6 +100,9 @@ jQuery( document ).ready( function( $ ) {
                     // get the new inserted mc_option_id
                     new_mcOptionID = getNewMCOptionID(response.user_action.details.question_id, response.question);
                     addMCOption(new_mcOptionID, response.user_action.details.question_id);
+                } else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
+                    // set the correct one
+                    setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
                 }
                 // show ajax messages
                 displayMessages(response.message);
@@ -138,21 +141,34 @@ jQuery( document ).ready( function( $ ) {
     }
 
     function removeQuestion(questionID) {
-        // remove the button
+        var accordionButton,
+            question;
+        // move the keyboard focus to the element BEFORE? the accordion
+        // find the button
         accordionButton = $('#enp-question--'+questionID).prev('.enp-accordion-header');
+        // remove the accordion button
         accordionButton.addClass('enp-question--remove').delay(300).slideUp(function() {
             accordionButton.remove();
         });
-        $('#enp-question--'+questionID).addClass('enp-question--remove').slideUp(function() {
-            $('#enp-question--'+questionID).remove();
+        // find the question
+        question = $('#enp-question--'+questionID);
+        // move the keyboard focus to the element AFTER? the accordion
+        question.next().focus();
+        // remove the question
+        question.addClass('enp-question--remove').slideUp(function() {
+            question.remove();
         });
-        // reindex the Question array
+
     }
 
     function removeMCOption(mcOptionID) {
-        // remove the button
-        $('#enp-mc-option--'+mcOptionID).addClass('enp-mc-option--remove').slideUp(function() {
-            $('#enp-mc-option--'+mcOptionID).remove();
+        var mcOption;
+        mcOption = $('#enp-mc-option--'+mcOptionID);
+        // add keyboard focus to the next button element (either correct button or add option button)
+        mcOption.next('.enp-mc-option').find('button:first').focus();
+        // remove the mcOption
+        mcOption.addClass('enp-mc-option--remove').slideUp(function() {
+            mcOption.remove();
         });
         // reindex the mcOption array
     }
@@ -161,6 +177,22 @@ jQuery( document ).ready( function( $ ) {
     function addQuestion(questionID) {
         //
 
+    }
+
+    // set MC Option as correct and unset all other mc options for that question
+    // this also UNSETs correct MCOption if it is already correct
+    function setCorrectMCOption(mcOptionID, questionID) {
+        // check if it already has the enp-mc-option--correct class
+        if($('#enp-mc-option--'+mcOptionID).hasClass('enp-mc-option--correct')) {
+            // It's not NOT correct
+            $('#enp-mc-option--'+mcOptionID).removeClass('enp-mc-option--correct');
+            // nothing is right (correct)!
+            return false;
+        }
+        // remove the correct class from the old one
+        $('#enp-question--'+questionID+' .enp-mc-option').removeClass('enp-mc-option--correct');
+        // add the correct class to the newly clicked one
+        $('#enp-mc-option--'+mcOptionID).addClass('enp-mc-option--correct');
     }
 
     // clone mc_option, clear value, remove "correct answer" if set, add MC option ID
@@ -192,20 +224,18 @@ jQuery( document ).ready( function( $ ) {
         $(new_mcOption).attr('id', 'enp-mc-option--'+new_mcOptionID);
         // change the index of the form array
         $('input', new_mcOption).each(function () {
-            console.log('searching...');
             var inputName = $(this).prop('name');
             var pattern = /\[mc_option\]\[(.*?)\]/;
             var index = inputName.match(pattern)[1];
             var new_index = parseInt(index)+1;
             new_inputName = inputName.replace(pattern, '[mc_option]['+new_index+']');
             $(this).attr('name', new_inputName);
-            console.log(new_inputName);
         });
 
-        // increase the counter in the array
-        console.log(new_mcOption.html());
-        // Finally! insert it
+        // Insert it
         $(addMCOptionButton).before(new_mcOption);
+        // give it focus!
+        $('#enp-mc-option--'+new_mcOptionID+' .enp-input').focus();
     }
 
     // find the newly inserted mc_option_id

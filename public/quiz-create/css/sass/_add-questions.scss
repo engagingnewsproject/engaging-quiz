@@ -189,6 +189,8 @@
             border: 1px solid $green;
         }
 
+        .enp-mc-option__button--correct:focus .enp-mc-option__icon--correct,
+        .enp-mc-option__button--correct:hover .enp-mc-option__icon--correct,
         .enp-mc-option__icon--correct {
             fill: #fff;
             border-color: $green;
