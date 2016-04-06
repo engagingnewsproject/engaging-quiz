@@ -78,6 +78,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     */
     public function set_question_response($question_response, $question) {
         $question_number = $question['question_order'];
+        
         // sets the key/value for each item passed in the response
         foreach($question_response as $key => $value) {
             // set the question array with our response values

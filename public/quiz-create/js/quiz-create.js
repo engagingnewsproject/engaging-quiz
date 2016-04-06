@@ -1,4 +1,5 @@
 jQuery( document ).ready( function( $ ) {
+
     // ready the questions as accordions
     $('.enp-question-content').each(function() {
         var accordion,
@@ -99,7 +100,6 @@ jQuery( document ).ready( function( $ ) {
                 // check to see if the action was completed
                 questionID = response.user_action.details.question_id;
                 questionResponse = checkQuestionSaveStatus(questionID, response.question);
-                console.log(questionResponse);
                 if(questionResponse !== undefined && questionResponse.action === 'update' && questionResponse.status === 'success') {
                     removeQuestion(questionID);
                 } else {
@@ -109,7 +109,8 @@ jQuery( document ).ready( function( $ ) {
             } else if(userActionAction == 'delete' && userActionElement == 'mc_option') {
                 // check to see if the action was completed
                 var mcOptionID = response.user_action.details.mc_option_id;
-                removeMCOption(response.user_action.details.mc_option_id);
+                mcOptionResponse = checkMCOptionSaveStatus(questionID, response.question);
+                removeMCOption(mcOptionID);
             } else if(userActionAction == 'add' && userActionElement == 'mc_option') {
                 // get the new inserted mc_option_id
                 questionID = response.user_action.details.question_id;
@@ -188,9 +189,9 @@ jQuery( document ).ready( function( $ ) {
     // Show success messages
     function displayMessages(message) {
         // loop through success messages
-        for(var success_i = 0; success_i < message.success.length; success_i++) {
-            appendMessage(message.success[success_i], 'success');
-        }
+        // for(var success_i = 0; success_i < message.success.length; success_i++) {
+            appendMessage(message.success[0], 'success');
+        // }
 
         // Show error messages
         for(var error_i = 0; error_i < message.error.length; error_i++) {
@@ -200,11 +201,11 @@ jQuery( document ).ready( function( $ ) {
 
     // append ajax response messages
     function appendMessage(message, status) {
-        responseTime = event.timeStamp;
-        $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+responseTime+'"><ul class="enp-message__list enp-message__list--'+status+'">'+message+'</ul></div>');
+        var messageID = Math.floor((Math.random() * 1000) + 1);
+        $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+messageID+'"><p class="enp-message__list enp-message__list--'+status+'">'+message+'</p></div>');
 
-        $('.enp-message-'+responseTime).delay(3500).fadeOut(function(){
-            $('.enp-message-'+responseTime).fadeOut();
+        $('.enp-message-'+messageID).delay(3500).fadeOut(function(){
+            $('.enp-message-'+messageID).fadeOut();
         });
     }
 
@@ -234,6 +235,8 @@ jQuery( document ).ready( function( $ ) {
         accordionButton.removeClass('enp-question--remove');
         // find the question
         $('#enp-question--'+questionID).removeClass('enp-question--remove');
+
+        appendMessage('Question could not be deleted. Please reload the page and try again.', 'error');
     }
 
     function removeQuestion(questionID) {
@@ -241,6 +244,9 @@ jQuery( document ).ready( function( $ ) {
         $('#enp-question--'+questionID).prev('.enp-accordion-header').remove();
         // remove question
         $('#enp-question--'+questionID).remove();
+
+        // append question deleted message
+        appendMessage('Question deleted.', 'success');
 
     }
 
@@ -325,16 +331,18 @@ jQuery( document ).ready( function( $ ) {
 
     // find the newly inserted mc_option_id
     function getNewMCOptionID(questionID, question) {
-        for(var i = 0; i < question.length; i++) {
+        for (var prop in question) {
+            console.log(question[prop]);
             // loop through the questions and get the one we want
             // then get the id of the newly inserted mc_option
-            if(question[i].question_id == questionID) {
+            if(parseInt(question[prop].question_id) === parseInt(questionID)) {
+                console.log('found question.');
                 // now loop the mc options
-                for(var mc_option_i = 0; mc_option_i < question[i].mc_option.length; mc_option_i++) {
-                    if(question[i].mc_option[mc_option_i].action === 'insert') {
-                        // here's our ID!
-                        var new_mcOptionID = question[i].mc_option[mc_option_i].mc_option_id;
-                        return new_mcOptionID;
+                for(var mc_option_prop in question[prop].mc_option) {
+                    console.log(question[prop].mc_option[mc_option_prop]);
+                    if(question[prop].mc_option[mc_option_prop].action === 'insert') {
+                        // here's our new mc option ID!
+                        return question[prop].mc_option[mc_option_prop].mc_option_id;
                     }
 
                 }
@@ -343,17 +351,16 @@ jQuery( document ).ready( function( $ ) {
     }
 
     function checkQuestionSaveStatus(questionID, question) {
-        console.log('check question');
-        console.log(question[2].question_id);
-        for(var i = 0; i < question.length; i++) {
-            console.log(i);
-            // loop through the questions and get the one we want
-            if(question[i].question_id == questionID) {
-                console.log('found!');
-                // return this question object
-                return question[i];
+        // loop through questions
+        for (var prop in question) {
+            // check if this question equals question_id that was trying to be deleted
+            if(parseInt(question[prop].question_id) === parseInt(questionID)) {
+                // found it! return the question JSON
+                console.log(question[prop]);
+                return question[prop];
             }
         }
+
     }
 
     // Image uploader
