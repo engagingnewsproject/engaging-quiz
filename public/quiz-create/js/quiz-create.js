@@ -100,7 +100,7 @@ jQuery( document ).ready( function( $ ) {
                 // check to see if the action was completed
                 questionID = response.user_action.details.question_id;
                 questionResponse = checkQuestionSaveStatus(questionID, response.question);
-                if(questionResponse !== undefined && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
                     removeQuestion(questionID);
                 } else {
                     temp_unsetRemoveQuestion(questionID);
@@ -109,8 +109,13 @@ jQuery( document ).ready( function( $ ) {
             } else if(userActionAction == 'delete' && userActionElement == 'mc_option') {
                 // check to see if the action was completed
                 var mcOptionID = response.user_action.details.mc_option_id;
-                mcOptionResponse = checkMCOptionSaveStatus(questionID, response.question);
-                removeMCOption(mcOptionID);
+                mcOptionResponse = checkMCOptionSaveStatus(mcOptionID, response.question);
+                if(mcOptionResponse !== false && mcOptionResponse.action === 'update' && mcOptionResponse.status === 'success') {
+                    removeMCOption(mcOptionID);
+                } else {
+                    temp_unsetRemoveMCOption(mcOptionID);
+                }
+
             } else if(userActionAction == 'add' && userActionElement == 'mc_option') {
                 // get the new inserted mc_option_id
                 questionID = response.user_action.details.question_id;
@@ -264,6 +269,18 @@ jQuery( document ).ready( function( $ ) {
         $('#enp-mc-option--'+mcOptionID).remove();
     }
 
+    function temp_unsetRemoveMCOption(mcOptionID) {
+        var mcOption;
+        mcOption = $('#enp-mc-option--'+mcOptionID);
+        // add keyboard focus to the next button element (either correct button or add option button)
+        mcOption.removeClass('enp-mc-option--remove');
+        // move focus back to mc option button delete
+        $('.enp-mc-option__button--delete', mcOption).focus();
+        // give them an error message
+        appendMessage('Multiple Choice Option could not be deleted. Please reload the page and try again.', 'error');
+    }
+
+
     // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
     function addQuestion(questionID) {
         //
@@ -348,6 +365,7 @@ jQuery( document ).ready( function( $ ) {
                 }
             }
         }
+        return false;
     }
 
     function checkQuestionSaveStatus(questionID, question) {
@@ -361,6 +379,22 @@ jQuery( document ).ready( function( $ ) {
             }
         }
 
+        return false;
+    }
+
+    function checkMCOptionSaveStatus(mcOptionID, question) {
+        // loop through questions
+        for (var prop in question) {
+            // check if this question equals question_id that was trying to be deleted
+            for (var mc_option_prop in question[prop].mc_option) {
+                if(parseInt(question[prop].mc_option[mc_option_prop].mc_option_id) === parseInt(mcOptionID)) {
+                    // found it! return the mc_option
+                    return question[prop].mc_option[mc_option_prop];
+                }
+            }
+        }
+
+        return false;
     }
 
     // Image uploader
