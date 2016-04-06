@@ -347,7 +347,11 @@ class Enp_quiz_Create {
 			$response = $_POST['quiz'];
 			parse_str($_POST['quiz'], $params);
 			$posted_quiz = $params['enp_quiz'];
-			$posted_question = $params['enp_question'];
+			$posted_question = array();
+			if(isset($params['enp_question'])) {
+				$posted_question = $params['enp_question'];
+			}
+
 			$posted_user_action = $_POST['quizSubmit'];
 			$posted_nonce = $params['enp_quiz_nonce'];
 
@@ -401,11 +405,11 @@ class Enp_quiz_Create {
 					);
 		}
 
-		if(isset($posted_question)) {
+		if(isset($posted_question) && !empty($posted_question)) {
 			$quiz['question'] = $posted_question;
 		}
 
-		if(isset($posted_user_action)) {
+		if(isset($posted_user_action) && !empty($posted_user_action)) {
 			// get the value of the button they clicked
 			$quiz['user_action'] = $posted_user_action;
 		} else {
@@ -439,9 +443,15 @@ class Enp_quiz_Create {
 		 //  SUCCESS! Now what...?  //
 		//*************************//
 
+		if (defined('DOING_AJAX') && DOING_AJAX) {
+			$json_response = $response;
+			$json_response = json_encode($json_response);
+			wp_send_json($json_response);
+			exit();
+		}
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
-		if(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
+		elseif(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
 			$this->redirect_to_quiz_preview($quiz_id);
 		}
 		// if they want to move on to the quiz-publish page and there are no errors, let them
@@ -449,19 +459,13 @@ class Enp_quiz_Create {
 			$this->redirect_to_quiz_publish($quiz_id);
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page
-		elseif($save_action === 'insert') {
+		elseif($save_action === 'insert' || $posted_quiz['new_quiz'] === '1') {
 			// they don't want to move on yet, but they're inserting,
 			// so we need to send them to their newly created quiz create page
 			$this->redirect_to_quiz_create($quiz_id);
 		}
 		// we're just updating the same page, return false to send them back
 	 	else {
-			if (defined('DOING_AJAX') && DOING_AJAX) {
-				$json_response = $response;
-				$json_response = json_encode($json_response);
-				wp_send_json($json_response);
-				exit();
-			}
 			// we have errors! Oh no! Send them back to fix it
 			return false;
 		}

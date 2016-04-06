@@ -39,7 +39,9 @@
 
     <form class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo htmlentities($quiz_action_url); ?>">
         <?php $enp_quiz_nonce->outputKey();?>
-        <input type="hidden" name="enp_quiz[quiz_id]" value="<? echo $quiz->get_quiz_id(); ?>" />
+        <input id="enp-quiz-id" type="hidden" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id(); ?>" />
+
+        <input id="enp-quiz-new" type="hidden" name="enp_quiz[new_quiz]" value="<?php echo (empty($quiz->get_quiz_id()) ? '1' : '0'); ?>" />
 
         <fieldset class="enp-fieldset enp-quiz-title">
             <label class="enp-label enp-quiz-title__label" for="quiz-title">

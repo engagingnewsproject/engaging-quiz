@@ -23,7 +23,6 @@ jQuery( document ).ready( function( $ ) {
 
     // set titles as the values are being typed
     $(document).on('keyup', '.enp-question-title__textarea', function() {
-        console.log('keyup');
         // get the value of the textarea we're typing in
         question_title = $(this).val();
         // find the accordion header it goes with and add in the title
@@ -33,86 +32,155 @@ jQuery( document ).ready( function( $ ) {
 
     // ajax submission
     $(document).on('click', '.enp-quiz-submit', function(e) {
-        e.preventDefault();
-        // add a click wait
-        if($(this).hasClass('enp-quiz-submit--wait')) {
-            console.log('waiting...');
-            // TODO: animation to show stuff is happening and they should wait a sec
-        } else {
-            // TODO: animation to show stuff is happening and they should wait a sec
-            $('.enp-quiz-message-ajax-container').append('<p class="enp-quiz-message--saving">Saving...</p>');
-            // add click wait class
-            $('.enp-quiz-submit').addClass('enp-quiz-submit--wait');
+        if(!$(this).hasClass('enp-btn--next-step')) {
+            e.preventDefault();
+
+            // add an "Are you sure about that?"
+            if($(this).hasClass('enp-question__button--delete')) {
+                // TODO This should be an "undo", not a confirm
+                var confirmDelete = confirm('Are you sure you want to delete this question?');
+                if(confirmDelete === false) {
+                    return false;
+                }  else {
+                    // they want to delete it, so let them
+                    // TODO This should be an "undo", not a confirm
+                }
+            }
+
+            // add a click wait, if necessary or r
+            if($(this).hasClass('enp-quiz-submit--wait')) {
+                console.log('waiting...');
+                return false;
+                // TODO: animation to show stuff is happening and they should wait a sec
+            } else {
+                setWait();
+            }
+
+            // ajax send
+            var userAction = $(this).val();
+            // this sets up the immediate actions so it's faster to respond
+            setTemp(userAction);
+            // save the quiz
+            saveQuiz(userAction);
         }
-
-
-        /*$.ajax({
-                type: 'POST',
-                url: quizCreate.ajax_url,
-                data: {
-                    'action': 'save_quiz',
-                    'quiz' : $('.enp-quiz-form').serialize(),
-                },
-                dataType: 'json',
-                success:function(json) {
-                    // don't do anything!
-                    console.log('success');
-                    console.log(json);
-                },
-                error:function(json) {
-                    console.log('error');
-                    console.log(json);
-                }
-            });*/
-
-            $.ajax( {
-            type: 'POST',
-    		 url  : quizCreate.ajax_url,
-    		 data : {
-    			action      : 'save_quiz',
-                quiz : $('.enp-quiz-form').serialize(),
-                quizSubmit : $(this).val(),
-    		 },
-    		 beforeSend : function( d ) {
-    		 	console.log( 'Before send', d );
-    		 }
-    	} )
-    		.done( function( response, textStatus, jqXHR ) {
-    			// console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
-                //console.log( 'AJAX done', jqXHR.responseJSON );
-    		} )
-    		.fail( function( jqXHR, textStatus, errorThrown ) {
-    			console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
-    		} )
-    		.then( function( errorThrown, textStatus, jqXHR ) {
-    			console.log( 'AJAX after finished' );
-                console.log(jqXHR.responseJSON);
-                var response = $.parseJSON(jqXHR.responseJSON);
-
-                var userActionAction = response.user_action.action;
-                var userActionElement = response.user_action.element;
-                // remove Question
-                if(userActionAction == 'delete' && userActionElement == 'question') {
-                    removeQuestion(response.user_action.details.question_id);
-                } else if(userActionAction == 'delete' && userActionElement == 'mc_option') {
-                    removeMCOption(response.user_action.details.mc_option_id);
-                } else if(userActionAction == 'add' && userActionElement == 'mc_option') {
-                    // get the new inserted mc_option_id
-                    new_mcOptionID = getNewMCOptionID(response.user_action.details.question_id, response.question);
-                    addMCOption(new_mcOptionID, response.user_action.details.question_id);
-                } else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
-                    // set the correct one
-                    setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
-                }
-                // show ajax messages
-                displayMessages(response.message);
-    		} )
-            .always(function() {
-                $('.enp-quiz-submit').removeClass('enp-quiz-submit--wait');
-                $('.enp-quiz-message--saving').remove();
-            });
     });
 
+    function saveQuiz(userAction) {
+        var response,
+            userActionAction,
+            userActionElement;
+        $.ajax( {
+            type: 'POST',
+             url  : quizCreate.ajax_url,
+             data : {
+                action      : 'save_quiz',
+                quiz : $('.enp-quiz-form').serialize(),
+                quizSubmit : userAction,
+             },
+             beforeSend : function( d ) {
+                console.log( 'Before send', d );
+             }
+        } )
+        // success
+        .done( function( response, textStatus, jqXHR ) {
+            // console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
+            //console.log( 'AJAX done', jqXHR.responseJSON );
+            console.log(jqXHR.responseJSON);
+            response = $.parseJSON(jqXHR.responseJSON);
+            userActionAction = response.user_action.action;
+            userActionElement = response.user_action.element;
+            // see if we've created a new quiz
+            if(response.status === 'success' && response.action === 'insert') {
+                // set-up quiz
+                setNewQuiz(response);
+            }
+            // remove Question
+            else if(userActionAction == 'delete' && userActionElement == 'question') {
+                // check to see if the action was completed
+                questionID = response.user_action.details.question_id;
+                questionResponse = checkQuestionSaveStatus(questionID, response.question);
+                console.log(questionResponse);
+                if(questionResponse !== undefined && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                    removeQuestion(questionID);
+                } else {
+                    temp_unsetRemoveQuestion(questionID);
+                }
+
+            } else if(userActionAction == 'delete' && userActionElement == 'mc_option') {
+                // check to see if the action was completed
+                var mcOptionID = response.user_action.details.mc_option_id;
+                removeMCOption(response.user_action.details.mc_option_id);
+            } else if(userActionAction == 'add' && userActionElement == 'mc_option') {
+                // get the new inserted mc_option_id
+                questionID = response.user_action.details.question_id;
+                var new_mcOptionID = getNewMCOptionID(questionID, response.question);
+                addMCOption(new_mcOptionID, questionID);
+            } else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
+                // set the correct one
+                setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
+            }
+            // show ajax messages
+            displayMessages(response.message);
+        } )
+        .fail( function( jqXHR, textStatus, errorThrown ) {
+            console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+        } )
+        .then( function( errorThrown, textStatus, jqXHR ) {
+            console.log( 'AJAX after finished' );
+
+        } )
+        .always(function() {
+            // remove wait class elements
+            unsetWait();
+        });
+    }
+
+    function setNewQuiz(response) {
+        $('#enp-quiz-id').val(response.quiz_id);
+
+        // change the URL to our new one
+        var html = $('body').innerHTML;
+        var pageTitle = $('.enp-quiz-title__textarea').val();
+        pageTitle = 'Quiz: '+pageTitle;
+        var urlPath = quizCreate.quiz_create_url + response.quiz_id;
+        window.history.pushState({"html":html,"pageTitle":pageTitle},"", urlPath);
+    }
+
+    function setTemp(userAction) {
+        var pattern;
+        // deleting a question
+        console.log(userAction);
+        if(userAction.indexOf('question--delete') > -1) {
+            // match the number for the ID
+            pattern = /question--delete-/g;
+            var questionID = userAction.replace(pattern, '');
+            temp_removeQuestion(questionID);
+        }
+        // deleting a mc option
+        else if(userAction.indexOf('mc-option--delete') > -1) {
+            // match the number for the ID
+            pattern = /mc-option--delete-/g;
+            var mcOptionID = userAction.replace(pattern, '');
+            temp_removeMCOption(mcOptionID);
+        } else {
+
+        }
+
+    }
+
+    // add wait classes to prevent duplicate submissions
+    // and add message/animation to show stuff is happening
+    function setWait() {
+        // TODO: animation to show stuff is happening and they should wait a sec
+        $('.enp-quiz-message-ajax-container').append('<p class="enp-quiz-message--saving">Saving...</p>');
+        // add click wait class
+        $('.enp-quiz-submit').addClass('enp-quiz-submit--wait');
+    }
+    // removes wait classes that prevent duplicate sumissions
+    function unsetWait() {
+        $('.enp-quiz-submit').removeClass('enp-quiz-submit--wait');
+        $('.enp-quiz-message--saving').remove();
+    }
 
     // set-up our ajax response container
     $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></section>');
@@ -140,37 +208,54 @@ jQuery( document ).ready( function( $ ) {
         });
     }
 
-    function removeQuestion(questionID) {
+    function temp_removeQuestion(questionID) {
         var accordionButton,
             question;
         // move the keyboard focus to the element BEFORE? the accordion
         // find the button
         accordionButton = $('#enp-question--'+questionID).prev('.enp-accordion-header');
         // remove the accordion button
-        accordionButton.addClass('enp-question--remove').delay(300).slideUp(function() {
-            accordionButton.remove();
-        });
+        accordionButton.addClass('enp-question--remove');
         // find the question
         question = $('#enp-question--'+questionID);
         // move the keyboard focus to the element AFTER? the accordion
         question.next().focus();
         // remove the question
-        question.addClass('enp-question--remove').slideUp(function() {
-            question.remove();
-        });
+        question.addClass('enp-question--remove');
+    }
+
+    function temp_unsetRemoveQuestion(questionID) {
+        var accordionButton,
+            question;
+        // move the keyboard focus to the element BEFORE? the accordion
+        // find the button
+        accordionButton = $('#enp-question--'+questionID).prev('.enp-accordion-header');
+        // remove the accordion button
+        accordionButton.removeClass('enp-question--remove');
+        // find the question
+        $('#enp-question--'+questionID).removeClass('enp-question--remove');
+    }
+
+    function removeQuestion(questionID) {
+        // remove accordion
+        $('#enp-question--'+questionID).prev('.enp-accordion-header').remove();
+        // remove question
+        $('#enp-question--'+questionID).remove();
 
     }
 
-    function removeMCOption(mcOptionID) {
+    function temp_removeMCOption(mcOptionID) {
         var mcOption;
         mcOption = $('#enp-mc-option--'+mcOptionID);
         // add keyboard focus to the next button element (either correct button or add option button)
         mcOption.next('.enp-mc-option').find('button:first').focus();
         // remove the mcOption
-        mcOption.addClass('enp-mc-option--remove').slideUp(function() {
-            mcOption.remove();
-        });
-        // reindex the mcOption array
+        mcOption.addClass('enp-mc-option--remove');
+    }
+
+    function removeMCOption(mcOptionID) {
+        // actually remove it
+        $('#enp-mc-option--'+mcOptionID).remove();
     }
 
     // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
@@ -254,10 +339,22 @@ jQuery( document ).ready( function( $ ) {
 
                 }
             }
-
         }
     }
 
+    function checkQuestionSaveStatus(questionID, question) {
+        console.log('check question');
+        console.log(question[2].question_id);
+        for(var i = 0; i < question.length; i++) {
+            console.log(i);
+            // loop through the questions and get the one we want
+            if(question[i].question_id == questionID) {
+                console.log('found!');
+                // return this question object
+                return question[i];
+            }
+        }
+    }
 
     // Image uploader
     // Uploading files

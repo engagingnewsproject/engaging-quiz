@@ -83,10 +83,10 @@ class Enp_quiz_Save_quiz_option extends Enp_quiz_Save_quiz {
 
         // success!
         if($stmt !== false) {
-            $quiz_option['quiz_option_id'] = $pdo->lastInsertId();
+            $quiz_option_id = $pdo->lastInsertId();
             // set-up our response array
             $quiz_option_response = array(
-                                        'quiz_option_id' => $quiz_option['quiz_option_id'],
+                                        'quiz_option_id' => $quiz_option_id,
                                         'status'       => 'success',
                                         'action'       => 'insert'
                                 );

@@ -71,7 +71,8 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . '../js/quiz-create.js', array( 'jquery', $this->plugin_name.'-accordion' ), $this->version, true );
 
         wp_localize_script( $this->plugin_name.'-quiz-create','quizCreate', array(
-    		'ajax_url' => admin_url( 'admin-ajax.php' )
+    		'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'quiz_create_url' => ENP_QUIZ_CREATE_URL,
     	));
 
         wp_enqueue_script( $this->plugin_name.'-quiz-create' );

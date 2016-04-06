@@ -11,6 +11,10 @@
 <section id="enp-question--<? echo $question_id;?>" data-questionID="<? echo $question_id;?>" class="enp-question-content">
     <input class="enp-question-id" type="hidden" name="enp_question[<?echo $question_i;?>][question_id]" value="<? echo $question_id;?>" />
 
+    <button class="enp-question__button enp-quiz-submit enp-question__button--delete" name="enp-quiz-submit" value="question--delete-<?echo $question_id;?>">
+        <svg class="enp-icon enp-icon--delete enp-question__icon--question-delete"><use xlink:href="#icon-delete" /></svg>
+    </button>
+
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title">
             Question
@@ -70,7 +74,4 @@
             <textarea class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?echo $question_i;?>][question_explanation]" maxlength="255" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><? echo $question->get_question_explanation();?></textarea>
         </fieldset>
     </div>
-    <button class="enp-question__button enp-quiz-submit enp-question__button--delete" name="enp-quiz-submit" value="question--delete-<?echo $question_id;?>">
-        <svg class="enp-icon enp-icon--delete enp-question__icon--question-delete"><use xlink:href="#icon-delete" /></svg>
-    </button>
 </section>
