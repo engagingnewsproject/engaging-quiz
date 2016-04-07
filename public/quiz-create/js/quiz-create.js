@@ -482,7 +482,7 @@ jQuery( document ).ready( function( $ ) {
         // insert it
         new_mcOption.insertBefore($('#enp-question--'+questionID+' .enp-mc-option--add'));
         // focus it
-        $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplate').focus();
+        $('#enp-question--'+questionID+' .enp-mc-option--inputs:last .enp-mc-option__input').focus();
     }
 
     function unset_tempAddMCOption(questionID) {
