@@ -395,6 +395,14 @@ jQuery( document ).ready( function( $ ) {
         changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'id', questionID);
         changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'name', questionID);
         changeQuestionTemplateVal($('.enp-button__question-image-upload', question), questionID);
+        // question type for/id
+        // slider
+        changeQuestionTemplateAttr($('.enp-question-type__input--slider', question), 'id', questionID);
+        changeQuestionTemplateAttr($('.enp-question-type__label--slider', question), 'for', questionID);
+        // mc option
+        changeQuestionTemplateAttr($('.enp-question-type__input--mc', question), 'id', questionID);
+        changeQuestionTemplateAttr($('.enp-question-type__label--mc', question), 'for', questionID);
+
         changeQuestionTemplateVal($('.enp-mc-option__button--correct', question), questionID);
         changeQuestionTemplateVal($('.enp-mc-option__add', question), questionID);
 

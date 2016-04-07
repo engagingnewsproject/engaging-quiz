@@ -105,6 +105,11 @@
 
     @include radio-inline(enp-question-type);
 
+    .enp-question-type__label {
+        position: relative;
+        z-index: 9;
+    }
+
     .enp-slider-options,
     .enp-mc-options {
         margin-top: 0rem;
@@ -112,8 +117,8 @@
         animation-delay: 0s, .05s;
     }
 
-    #enp-question-type__slider:checked ~ .enp-slider-options,
-    #enp-question-type__mc:checked ~ .enp-mc-options {
+    .enp-question-type__input--slider:checked ~ .enp-slider-options,
+    .enp-question-type__input--mc:checked ~ .enp-mc-options {
         visibility: visible;
         animation: fadeIn .45s ease-out forwards;
     }

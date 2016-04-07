@@ -57,11 +57,11 @@
 
         <h4 class="enp-legend enp-question-type__legend">Question Type</h4>
 
-        <input type="radio" id="enp-question-type__mc" class="enp-radio enp-question-type__input enp-question-type__input--mc" name="enp_question[<?echo $question_array_i;?>][question_type]" value="mc" <?php checked( $question->get_question_type(), 'mc' ); ?>>
-        <label class="enp-label enp-question-type__label enp-question-type__label--mc" for="enp-question-type__mc">Multiple Choice</label>
+        <input type="radio" id="enp-question-type__mc--<?php echo $question_id;?>" class="enp-radio enp-question-type__input enp-question-type__input--mc" name="enp_question[<?echo $question_array_i;?>][question_type]" value="mc" <?php checked( $question->get_question_type(), 'mc' ); ?>>
+        <label class="enp-label enp-question-type__label enp-question-type__label--mc" for="enp-question-type__mc--<?php echo $question_id;?>">Multiple Choice</label>
 
-        <input type="radio" id="enp-question-type__slider" class="enp-radio enp-question-type__input enp-question-type__input--slider" name="enp_question[<?echo $question_array_i;?>][question_type]" value="slider" <?php checked( $question->get_question_type(), 'slider' ); ?>>
-        <label class="enp-label enp-question-type__label enp-question-type__label--slider" for="enp-question-type__slider">Slider</label>
+        <input type="radio" id="enp-question-type__slider--<?php echo $question_id;?>" class="enp-radio enp-question-type__input enp-question-type__input--slider" name="enp_question[<?echo $question_array_i;?>][question_type]" value="slider" <?php checked( $question->get_question_type(), 'slider' ); ?>>
+        <label class="enp-label enp-question-type__label enp-question-type__label--slider" for="enp-question-type__slider--<?php echo $question_id;?>">Slider</label>
 
 
         <?php
