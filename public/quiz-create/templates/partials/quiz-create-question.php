@@ -1,7 +1,7 @@
 <?php
     // get our question object
     $question = new Enp_quiz_Question($question_id);
-    if($question_id === 'questionTemplate') {
+    if($question_id === 'questionTemplateID') {
         $question_array_i = 'questionCounterTemplate';
     } else {
         $question_array_i = $question_i;
@@ -47,8 +47,8 @@
             }
         ?>
 
-        <label class="enp-label" for="enp-question-image-alt-<?echo $question_array_i;?>">Image Description</label>
-        <input id="enp-question-image-alt-<?echo $question_array_i;?>" class="enp-input enp-question-image-alt__input" type="text" maxlength="255"  name="enp_question[<?echo $question_array_i;?>][question_image_alt]" value="<? echo $question->get_question_image_alt();?>">
+        <label class="enp-label" for="enp-question-image-alt">Image Description</label>
+        <input id="enp-question-image-alt" class="enp-input enp-question-image-alt__input" type="text" maxlength="255"  name="enp_question[<?echo $question_array_i;?>][question_image_alt]" value="<? echo $question->get_question_image_alt();?>">
 
 
         <h4 class="enp-legend enp-question-type__legend">Question Type</h4>

@@ -95,6 +95,19 @@ jQuery( document ).ready( function( $ ) {
                 // set-up quiz
                 setNewQuiz(response);
             }
+            // check user action
+            if(userActionAction == 'add' && userActionElement == 'question') {
+                var newQuestionResponse = getNewQuestion(response.question);
+
+                if(newQuestionResponse !== false && newQuestionResponse.question_id !== undefined && parseInt(newQuestionResponse.question_id) > 0) {
+                    // we have a new question!
+                    new_questionID = newQuestionResponse.question_id;
+                    new_mcOption = getNewMCOption(new_questionID, response.question);
+                    addQuestion(new_questionID, new_mcOption.mc_option_id);
+                } else {
+                    unset_tempAddQuestion();
+                }
+            }
             // remove Question
             else if(userActionAction == 'delete' && userActionElement == 'question') {
                 // check to see if the action was completed
@@ -119,8 +132,17 @@ jQuery( document ).ready( function( $ ) {
             } else if(userActionAction == 'add' && userActionElement == 'mc_option') {
                 // get the new inserted mc_option_id
                 questionID = response.user_action.details.question_id;
-                var new_mcOptionID = getNewMCOptionID(questionID, response.question);
-                addMCOption(new_mcOptionID, questionID);
+                var newMCOptionResponse = getNewMCOption(questionID, response.question);
+                if(newMCOptionResponse !== false && newMCOptionResponse.mc_option_id !== undefined && parseInt(newMCOptionResponse.mc_option_id) > 0) {
+                    // looks good! add the mc option
+                    addMCOption(newMCOptionResponse.mc_option_id, questionID);
+                } else {
+                    // uh oh, something didn't go right. Remove it.
+                    unset_tempAddMCOption(questionID);
+                }
+
+
+
             } else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
                 // set the correct one
                 setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
@@ -156,10 +178,19 @@ jQuery( document ).ready( function( $ ) {
         var pattern;
         // deleting a question
         console.log(userAction);
-        if(userAction.indexOf('question--delete') > -1) {
+        if(userAction.indexOf('add-question') > -1) {
+            // match the number for the ID
+            temp_addQuestion();
+        }
+        else if(userAction.indexOf('add-mc-option__question') > -1) {
+            pattern = /add-mc-option__question-/g;
+            questionID = userAction.replace(pattern, '');
+            temp_addMCOption(questionID);
+        }
+        else if(userAction.indexOf('question--delete') > -1) {
             // match the number for the ID
             pattern = /question--delete-/g;
-            var questionID = userAction.replace(pattern, '');
+            questionID = userAction.replace(pattern, '');
             temp_removeQuestion(questionID);
         }
         // deleting a mc option
@@ -281,10 +312,121 @@ jQuery( document ).ready( function( $ ) {
     }
 
 
-    // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
-    function addQuestion(questionID) {
-        //
+    function temp_addQuestion() {
+        var templateQuestion,
+            templateAccordionHeader,
+            newQuestion,
+            newAccordionHeader;
 
+        templateAccordionHeader = $('#enp-question--questionTemplateID__accordion-header');
+        templateQuestion = $('#enp-question--questionTemplateID');
+        newAccordionHeader = templateAccordionHeader.clone();
+        newQuestion = templateQuestion.clone();
+
+        // just temporarily so the CSS won't hide it
+        newAccordionHeader.attr('id', 'enp-question--newQuestionTemplateID__accordion-header');
+        newQuestion.attr('id', 'enp-question--newQuestionTemplateID');
+
+        newQuestion.insertBefore(templateAccordionHeader);
+        newAccordionHeader.insertBefore(newQuestion);
+    }
+
+    // undo our temp action
+    function unset_tempAddQuestion() {
+        // we didn't get a valid response from the server, so remove the question
+        $('#enp-question--newQuestionTemplateID__accordion-header').remove();
+        $('#enp-question--newQuestionTemplateID').remove();
+        // give them an error message
+        appendMessage('Question could not be added. Please reload the page and try again.', 'error');
+    }
+
+    function getNewQuestion(question) {
+        for (var prop in question) {
+            if(question[prop].action === 'insert') {
+                // this is our new question, because it was inserted and not updated
+                return question[prop];
+            }
+        }
+        return false;
+    }
+
+    // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
+    function addQuestion(questionID, mcOptionID) {
+        var question,
+            accordionHeader;
+        // new accordion header
+        accordionHeader = $('#enp-question--newQuestionTemplateID__accordion-header');
+        // new question
+        question = $('#enp-question--newQuestionTemplateID');
+
+        // change the accordion header ID
+        changeQuestionTemplateAttr(accordionHeader, 'id', questionID, /newQuestionTemplateID/);
+        // change the question classes/ids
+        changeQuestionTemplateAttr(question, 'id', questionID, /newQuestionTemplateID/);
+        // change the question id value in the hidden input
+        changeQuestionTemplateVal($('.enp-question-id', question), questionID);
+        // change the delete button value
+        changeQuestionTemplateVal($('.enp-question__button--delete', question), questionID);
+        // change the image upload label for
+        changeQuestionTemplateAttr($('.enp-question-image-upload', question), 'for', questionID);
+        // change the image upload input id
+        changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'id', questionID);
+        changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'name', questionID);
+        changeQuestionTemplateVal($('.enp-mc-option__button--correct', question), questionID);
+        changeQuestionTemplateVal($('.enp-mc-option__add', question), questionID);
+
+        // change the default MCOptionIDs
+        addMCOption(mcOptionID, questionID);
+
+        // change the question array iterator
+        // setup question index and regex
+        question_index = getQuestionIndex(questionID);
+        question_index_pattern = /enp_question\[questionCounterTemplate\]/;
+        // reindex/change the input names
+        $('input, textarea', question).each(function () {
+            var inputName = $(this).prop('name');
+            // change the index of the form array for the question
+            new_inputName = inputName.replace(question_index_pattern, 'enp_question['+question_index+']');
+            $(this).attr('name', new_inputName);
+        });
+        // add the mc option
+
+    }
+
+    function changeQuestionTemplateAttr(obj, attr, questionID, pattern) {
+        // set default pattern if not passed in the function
+        pattern = typeof pattern !== 'undefined' ? pattern : /questionTemplateID/;
+        // create the new attribute value
+        newAttrVal = obj.attr(attr).replace(pattern, questionID);
+        // set the new attribute value
+        obj.attr(attr, newAttrVal);
+    }
+
+    function changeQuestionTemplateVal(obj, questionID, pattern) {
+        // set default pattern if not passed in the function
+        pattern = typeof pattern !== 'undefined' ? pattern : /questionTemplateID/;
+        // create the new value
+        newObjVal = obj.val().replace(pattern, questionID);
+        // set the new value
+        obj.val(newObjVal);
+    }
+
+    function changeMCOptionTemplateAttr(obj, attr, mcOptionID, pattern) {
+        // set default pattern if not passed in the function
+        pattern = typeof pattern !== 'undefined' ? pattern : /mcOptionTemplateID/;
+        // create the new attribute value
+        newObjVal = obj.attr(attr).replace(pattern, mcOptionID);
+        // set the new attribute value
+        obj.attr(attr, newObjVal);
+    }
+
+    function changeMCOptionTemplateVal(obj, mcOptionID, pattern) {
+        // set default pattern if not passed in the function
+        pattern = typeof pattern !== 'undefined' ? pattern : /mcOptionTemplateID/;
+        // create the new value
+        newObjVal = obj.val().replace(pattern, mcOptionID);
+        // set the new value
+        obj.val(newObjVal);
     }
 
     // set MC Option as correct and unset all other mc options for that question
@@ -303,25 +445,26 @@ jQuery( document ).ready( function( $ ) {
         $('#enp-mc-option--'+mcOptionID).addClass('enp-mc-option--correct');
     }
 
-    // clone mc_option, clear value, remove "correct answer" if set, add MC option ID
+    function temp_addMCOption(questionID) {
+        // clone the template
+        var new_mcOption = $('#enp-question--questionTemplateID .enp-mc-option:first').clone();
+        // insert it
+        new_mcOption.insertBefore($('#enp-question--'+questionID+' .enp-mc-option--add'));
+        // focus it
+        $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplate').focus();
+    }
+
+    function unset_tempAddMCOption(questionID) {
+        $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID').remove();
+        appendMessage('Multiple Choice Option could not be added. Please reload the page and try again.', 'error');
+    }
+
+    // add MC option ID, question ID, question index, and mc option index
     function addMCOption(new_mcOptionID, questionID) {
 
         var new_mcOption,
-            old_mcOptionId,
             addMCOptionButton;
-
-        // get the clicked button
-        addMCOptionButton = $('#enp-question--'+questionID+' .enp-mc-option--add');
-        // get closest MC Option and clone it
-        new_mcOption = $(addMCOptionButton).prev('.enp-mc-option').clone();
-
-        old_mcOptionId = $('.enp-mc-option-id', new_mcOption).val();
-        // remove correct class (if it has it)
-        if(new_mcOption.hasClass('enp-mc-option--correct')) {
-            new_mcOption.removeClass('enp-mc-option--correct');
-        }
-        // clear the value
-        $('.enp-mc-option__input', new_mcOption).val('');
+        new_mcOption = $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID');
         // change the id
         $('.enp-mc-option-id', new_mcOption).val(new_mcOptionID);
         // change the delete button value
@@ -330,36 +473,54 @@ jQuery( document ).ready( function( $ ) {
         $('.enp-mc-option__button--correct', new_mcOption).val('mc-option--correct__question-'+questionID+'__mc-option-'+new_mcOptionID);
         // change the ID
         $(new_mcOption).attr('id', 'enp-mc-option--'+new_mcOptionID);
-        // change the index of the form array
+
+        // setup question index and regex
+        question_index = getQuestionIndex(questionID);
+        question_index_pattern = /enp_question\[(.*?)\]/;
+        // setup mcoption index and regex
+        mc_option_pattern = /\[mc_option\]\[(.*?)\]/;
+        new_mc_option_index = $('#enp-question--'+questionID+' .enp-mc-option__input').length - 1;
+        // reindex/change the input names
         $('input', new_mcOption).each(function () {
             var inputName = $(this).prop('name');
-            var pattern = /\[mc_option\]\[(.*?)\]/;
-            var index = inputName.match(pattern)[1];
-            var new_index = parseInt(index)+1;
-            new_inputName = inputName.replace(pattern, '[mc_option]['+new_index+']');
+            // change the index of the form array for the question
+            new_inputName = inputName.replace(question_index_pattern, 'enp_question['+question_index+']');
+            $(this).attr('name', new_inputName);
+
+            // get it again, because it's been updated
+            inputName = $(this).prop('name');
+            // change the index of the form array for the mc_option
+            new_inputName = inputName.replace(mc_option_pattern, '[mc_option]['+new_mc_option_index+']');
+            console.log(new_inputName);
             $(this).attr('name', new_inputName);
         });
+    }
 
-        // Insert it
-        $(addMCOptionButton).before(new_mcOption);
-        // give it focus!
-        $('#enp-mc-option--'+new_mcOptionID+' .enp-input').focus();
+    function getQuestionIndex(questionID) {
+        $('.enp-question-content').each(function(i) {
+            if(parseInt($('.enp-question-id', this).val()) === parseInt(questionID)) {
+                // we found it!
+                questionIndex = i;
+                // breaks out of the each loop
+                return false;
+            }
+        });
+        // return the found index
+        return questionIndex;
     }
 
     // find the newly inserted mc_option_id
-    function getNewMCOptionID(questionID, question) {
+    function getNewMCOption(questionID, question) {
         for (var prop in question) {
-            console.log(question[prop]);
             // loop through the questions and get the one we want
             // then get the id of the newly inserted mc_option
             if(parseInt(question[prop].question_id) === parseInt(questionID)) {
-                console.log('found question.');
                 // now loop the mc options
                 for(var mc_option_prop in question[prop].mc_option) {
                     console.log(question[prop].mc_option[mc_option_prop]);
                     if(question[prop].mc_option[mc_option_prop].action === 'insert') {
                         // here's our new mc option ID!
-                        return question[prop].mc_option[mc_option_prop].mc_option_id;
+                        return question[prop].mc_option[mc_option_prop];
                     }
 
                 }

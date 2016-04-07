@@ -56,7 +56,7 @@
             $question_ids = $quiz->get_questions();
             // a little hack-ey, but we're only using this as a JS template
             // so it will run the loop once (or again) so we have access to it
-            $question_ids[] = 'questionTemplate';
+            $question_ids[] = 'questionTemplateID';
             foreach($question_ids as $question_id) {
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
                 $question_i++;
