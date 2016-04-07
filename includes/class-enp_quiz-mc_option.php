@@ -8,7 +8,8 @@ class Enp_quiz_MC_option {
     public  $mc_option_id,
             $mc_option_content,
             $mc_option_correct,
-            $mc_option_order;
+            $mc_option_order,
+            $mc_option_is_deleted;
 
     protected static $mc_option;
 

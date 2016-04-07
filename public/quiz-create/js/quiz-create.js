@@ -15,7 +15,7 @@ jQuery( document ).ready( function( $ ) {
         // set-up question_content var
         question_content = $(this);
         // create the title and content accordion object so our headings can get created
-        accordion = {title: question_title, content: question_content};
+        accordion = {title: question_title, content: question_content, baseID: $(this).attr('id')};
         //returns an accordion object with the header object and content object
         accordion = enp_accordion__create_headers(accordion);
         // set-up all the accordion classes and start classes (so they're closed by default)

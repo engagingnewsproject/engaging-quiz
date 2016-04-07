@@ -3,11 +3,14 @@
     $mc_option_i = 0;
     // count the number of mc_options
     $mc_option_ids = $question->get_mc_options();
+    // a little hack-ey, but we're only using this as a JS template
+    // so it will run the loop once (or again) so we have access to it
+    $mc_option_ids[] = 'MCOptionTemplate';
 ?>
 <fieldset class="enp-mc-options">
     <legend class="enp-legend enp-mc-options__legend">Multiple Choice Options</legend>
     <ul class="enp-mc-options__list">
-        <?
+        <?php
         // even if it's zero, a do loop will do the loop once before checking for condition
         foreach($mc_option_ids as $mc_option_id) {
             // will return the ID of the mc_option

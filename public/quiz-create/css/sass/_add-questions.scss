@@ -288,4 +288,10 @@
     .enp-question--remove {
         animation: removeElement .5s ease-in-out forwards;
     }
+
+    // JS Template
+    #enp-question--questionTemplate__accordion-header,
+    #enp-question--questionTemplate {
+        display: none!important;
+    }
 }

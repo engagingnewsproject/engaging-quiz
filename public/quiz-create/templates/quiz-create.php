@@ -53,10 +53,11 @@
         <?php
             $question_i = 0;
             // count the number of questions
-            $question_array = $quiz->get_questions();
-            $question_count = count($question_array);
-            // even if it's zero, a do loop will do the loop once before checking for condition
-             while($question_i < $question_count) {
+            $question_ids = $quiz->get_questions();
+            // a little hack-ey, but we're only using this as a JS template
+            // so it will run the loop once (or again) so we have access to it
+            $question_ids[] = 'questionTemplate';
+            foreach($question_ids as $question_id) {
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
                 $question_i++;
             }
