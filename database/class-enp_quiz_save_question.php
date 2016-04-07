@@ -116,6 +116,39 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                 }
             }
         }
+        // no pure files to upload, but what about if they uploaded via AJAX?
+        // we'd be submitting via an image
+        elseif(parent::$user_action_action === 'upload' && parent::$user_action_element === 'question_image') {
+            // we're trying to upload an image, probably via AJAX because otherwise the FILE would have been posted
+            // see if the input is empty or not and that we're trying to upload THIS question
+            if(!empty(self::$question['question_image'])) {
+                // TODO: This is unreliable and repetitive. Hacked together to meet deadline
+                // there's a value. Let's see if it's what we expect
+                if (filter_var(self::$question['question_image'], FILTER_VALIDATE_URL) !== false) {
+                    // it validated as a legit URL, so let's process it
+                    $this->prepare_quiz_image_dir();
+                    $path = $this->prepare_question_image_dir();
+                    $image_upload = array('file'=>self::$question['question_image']);
+                    // now upload all the resized images we'll need
+                    $new_image_name = $this->resize_image($image_upload, $path, null);
+                    // we have the full path, but we just need the filename
+                    $new_image_name = str_replace(ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/', '', $new_image_name);
+                    // resize all the other images
+                    $this->resize_image($image_upload, $path, 1000);
+                    $this->resize_image($image_upload, $path, 740);
+                    $this->resize_image($image_upload, $path, 580);
+                    $this->resize_image($image_upload, $path, 320);
+                    $this->resize_image($image_upload, $path, 200);
+
+                    if($new_image_name !== false) {
+                        // if it worked, set it as the question_image
+                        $question_image = $new_image_name;
+                    }
+                }
+            }
+
+
+        }
 
         return $question_image;
     }
@@ -175,7 +208,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             if($width !== null && is_int($width)) {
                 // make our height max out at 4x6 aspect ratio so we don't have a HUUUUGEly tall image
                 $height = $width * 1.666667;
-                $extension = 'x'.$width;
+                $extension = $width.'w';
                 // Get the actual filename (rather than the directory + filename)
                 $image->resize( $width, $height, false );
 

@@ -1,5 +1,4 @@
 jQuery( document ).ready( function( $ ) {
-
     // ready the questions as accordions
     $('.enp-question-content').each(function() {
         var accordion,
@@ -22,6 +21,8 @@ jQuery( document ).ready( function( $ ) {
         enp_accordion__setup(accordion);
     });
 
+    // hide descriptions
+    $('.enp-question-image-alt__input, .enp-question-image-alt__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
     // set titles as the values are being typed
     $(document).on('keyup', '.enp-question-title__textarea', function() {
         // get the value of the textarea we're typing in
@@ -129,7 +130,9 @@ jQuery( document ).ready( function( $ ) {
                     temp_unsetRemoveMCOption(mcOptionID);
                 }
 
-            } else if(userActionAction == 'add' && userActionElement == 'mc_option') {
+            }
+            // add mc_option
+            else if(userActionAction == 'add' && userActionElement == 'mc_option') {
                 // get the new inserted mc_option_id
                 questionID = response.user_action.details.question_id;
                 var newMCOptionResponse = getNewMCOption(questionID, response.question);
@@ -140,12 +143,22 @@ jQuery( document ).ready( function( $ ) {
                     // uh oh, something didn't go right. Remove it.
                     unset_tempAddMCOption(questionID);
                 }
-
-
-
-            } else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
+            }
+            // set correct mc_option
+            else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
                 // set the correct one
                 setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
+            }
+            // remove image
+            else if(userActionAction == 'delete' && userActionElement == 'question_image') {
+                // check to see if the action was completed
+                questionID = response.user_action.details.question_id;
+                questionResponse = checkQuestionSaveStatus(questionID, response.question);
+                if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                    removeQuestionImage(questionID);
+                } else {
+                    temp_unsetRemoveQuestionImage(questionID);
+                }
             }
             // show ajax messages
             displayMessages(response.message);
@@ -197,10 +210,16 @@ jQuery( document ).ready( function( $ ) {
         else if(userAction.indexOf('mc-option--delete') > -1) {
             // match the number for the ID
             pattern = /mc-option--delete-/g;
-            var mcOptionID = userAction.replace(pattern, '');
+            mcOptionID = userAction.replace(pattern, '');
             temp_removeMCOption(mcOptionID);
-        } else {
-
+        }
+        // delete an image
+        else if(userAction.indexOf('question-image--delete') > -1) {
+            // match the number for the ID
+            pattern = /question-image--delete-/g;
+            questionID = userAction.replace(pattern, '');
+            console.log(questionID);
+            temp_removeQuestionImage(questionID);
         }
 
     }
@@ -327,6 +346,9 @@ jQuery( document ).ready( function( $ ) {
         newAccordionHeader.attr('id', 'enp-question--newQuestionTemplateID__accordion-header');
         newQuestion.attr('id', 'enp-question--newQuestionTemplateID');
 
+        // remove the image part (they can't already have an image for it...)
+        $('.enp-question-image__container', newQuestion).remove();
+
         newQuestion.insertBefore(templateAccordionHeader);
         newAccordionHeader.insertBefore(newQuestion);
     }
@@ -372,6 +394,7 @@ jQuery( document ).ready( function( $ ) {
         // change the image upload input id
         changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'id', questionID);
         changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'name', questionID);
+        changeQuestionTemplateVal($('.enp-button__question-image-upload', question), questionID);
         changeQuestionTemplateVal($('.enp-mc-option__button--correct', question), questionID);
         changeQuestionTemplateVal($('.enp-mc-option__add', question), questionID);
 
@@ -558,14 +581,48 @@ jQuery( document ).ready( function( $ ) {
         return false;
     }
 
+    function temp_removeQuestionImage(questionID) {
+        $('#enp-question--'+questionID+' .enp-question-image__container').addClass('enp-question__image--remove');
+    }
+
+    function temp_unsetRemoveQuestionImage(questionID) {
+        $('#enp-question--'+questionID+' .enp-question-image__container').removeClass('enp-question__image--remove');
+    }
+
+    function removeQuestionImage(questionID) {
+        $('#enp-question--'+questionID+' .enp-question-image__container').remove();
+        // clear the input
+        $('#enp-question--'+questionID+' .enp-question-image__input').val('');
+        // bring the labels back
+        if($('#enp-question--'+questionID+' .enp-question-image-upload').length > 0) {
+            // this part of the template is there already, so just fade it in
+            $('#enp-question--'+questionID+' .enp-question-image-upload').fadeIn();
+        } else {
+            console.log('could not find');
+            // it doesn't exist, so we'll have to grab it from the template and change the values
+            imageLabel = $('#enp-question--questionTemplateID .enp-question-image-upload').clone();
+            changeQuestionTemplateAttr(imageLabel, 'for', questionID);
+            imageUpload = $('#enp-question--questionTemplateID .enp-button__question-image-upload').clone();
+            changeQuestionTemplateVal(imageUpload, questionID);
+            // insert the cloned elements
+            imageLabel.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
+            imageUpload.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
+
+        }
+        // It's the first message in the array, so it'll output "Image Deleted for Question #..."
+        // appendMessage('Image deleted.', 'success');
+    }
+
     // Image uploader
     // Uploading files
-    /*var file_frame;
+    var file_frame;
 
       $('.enp-question-image-upload').live('click', function( event ){
 
         event.preventDefault();
-
+        imageLabel = $(this);
+        imageInput = imageLabel.siblings('.enp-question-image__input');
+        imageSubmit = imageLabel.siblings('.enp-button__question-image-upload');
         // If the media frame already exists, reopen it.
         if ( file_frame ) {
           file_frame.open();
@@ -586,10 +643,35 @@ jQuery( document ).ready( function( $ ) {
           // We set multiple to false so only get one image from the uploader
           attachment = file_frame.state().get('selection').first().toJSON();
           console.log(attachment);
-          // Do something with attachment.id and/or attachment.url here
+          // add the file path to the hidden input
+          imageInput.val(attachment.url);
+          // add the alt text
+          imageLabel.siblings('.enp-question-image-alt__input').val(attachment.alt);
+          // trigger a click on the save button
+          imageSubmit.trigger('click');
+          // Put our uploaded image in place of the image label
+          // change the value of the input path
+          parseURL = imageInput.val().split('/').pop();
+          // not sure why we need two dashes here...
+          parseURL = parseURL.replace(/\.([^.]+)$/, '--original.$1');
+          console.log(parseURL);
+          imageInput.val(parseURL);
+
+          // clone the image container
+          newImageContainer = $('#enp-question--questionTemplateID .enp-question-image__container').clone();
+          // get the question id
+          questionID = imageLabel.attr('for').replace('enp-question-image-upload-', '');
+          // insert the image
+          newImageContainer.prepend('<img class="enp-question-image enp-question-image" src="'+attachment.url+'" alt="'+attachment.description+'"/>');
+          // change the delete button value
+          changeQuestionTemplateVal($('.enp-button__question-image-delete', newImageContainer), questionID);
+
+          imageLabel.before(newImageContainer);
+          // hide the label
+          imageLabel.hide();
         });
 
         // Finally, open the modal
         file_frame.open();
-    });*/
+    });
 });

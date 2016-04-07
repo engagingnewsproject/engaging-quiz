@@ -249,9 +249,9 @@ class Enp_quiz_Question {
     public function get_question_image_src() {
         $question_image = $this->question_image;
         if(!empty($question_image)) {
-            $question_image = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$question_image;
+            $question_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$question_image;
         }
-        return $question_image;
+        return $question_image_src;
     }
 
     /**
@@ -271,7 +271,7 @@ class Enp_quiz_Question {
         $sizes = array(1000,740,580,320,200);
         $srcset = '';
         foreach($sizes as $size) {
-            $srcset .= $name.'-w'.$size.$ext.' w'.($size+10).',';
+            $srcset .= ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$name.$size.'w'.$ext.' '.($size+10).'w,';
         }
         // remove the trailing comma
         $srcset = rtrim($srcset, ",");

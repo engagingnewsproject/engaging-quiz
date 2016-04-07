@@ -285,7 +285,8 @@
 
     // UX interactions
     .enp-mc-option--remove,
-    .enp-question--remove {
+    .enp-question--remove,
+    .enp-question__image--remove {
         animation: removeElement .5s ease-in-out forwards;
     }
 

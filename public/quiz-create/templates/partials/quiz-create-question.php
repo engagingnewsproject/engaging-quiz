@@ -24,18 +24,21 @@
         <input type="hidden" id="enp-question-image-<?echo $question_array_i;?>" class="enp-question-image__input" name="enp_question[<?echo $question_array_i;?>][question_image]" value="<? echo $question->get_question_image();?>">
 
         <?
-            if(!empty($question->get_question_image())) {?>
+            if(!empty($question->get_question_image()) || $question_id === 'questionTemplateID') {?>
                 <div class="enp-question-image__container">
-                    <img
-                        class="enp-question-image enp-question-image"
-                        src="<? echo $question->get_question_image_src();?>"
-                        srcset="<? echo $question->get_question_image_srcset();?>"
-                        alt="<? echo $question->get_question_image_alt();?>"
-                    />
-
+                    <? if ($question_id !== 'questionTemplateID') {?>
+                        <img
+                            class="enp-question-image enp-question-image"
+                            src="<? echo $question->get_question_image_src();?>"
+                            srcset="<? echo $question->get_question_image_srcset();?>"
+                            alt="<? echo $question->get_question_image_alt();?>"
+                        />
+                    <? } ?>
                     <button class="enp-button enp-quiz-submit enp-button__question-image-delete" name="enp-quiz-submit" value="question-image--delete-<? echo $question_id;?>"><svg class="enp-icon enp-icon--delete enp-question__icon--question-image-delete"><use xlink:href="#icon-delete" /></svg></button>
                 </div>
-            <?} else {?>
+            <?}
+            if(empty($question->get_question_image()) || $question_id === 'questionTemplateID')
+             {?>
                 <label for="enp-question-image-upload-<?echo $question_id;?>" class="enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo">
                     <use xlink:href="#icon-photo" />
                 </svg>
@@ -43,11 +46,12 @@
                     <use xlink:href="#icon-add" />
                 </svg> Add Image</label>
                 <input id="enp-question-image-upload-<?echo $question_id;?>" type="file" accept="image/*" class="enp-question-image-upload__input" name="question_image_upload_<?echo $question_id;?>">
+                <button class="enp-button enp-quiz-submit enp-button__question-image-upload" name="enp-quiz-submit" value="question-image--upload-<? echo $question_id;?>">Upload Image</button>
             <?
             }
         ?>
 
-        <label class="enp-label" for="enp-question-image-alt">Image Description</label>
+        <label class="enp-label enp-question-image-alt__label" for="enp-question-image-alt">Image Description</label>
         <input id="enp-question-image-alt" class="enp-input enp-question-image-alt__input" type="text" maxlength="255"  name="enp_question[<?echo $question_array_i;?>][question_image_alt]" value="<? echo $question->get_question_image_alt();?>">
 
 

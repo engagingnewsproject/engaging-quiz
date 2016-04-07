@@ -78,7 +78,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     */
     public function set_question_response($question_response, $question) {
         $question_number = $question['question_order'];
-        
+
         // sets the key/value for each item passed in the response
         foreach($question_response as $key => $value) {
             // set the question array with our response values
@@ -183,6 +183,17 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
             // we can't use question_id because the question_id might not
             // have been created yet
             $question_id = str_replace('question--delete-', '', $quiz['user_action']);
+            $details = array('question_id' => (int) $question_id);
+        }
+        // UPLOAD question_image
+        elseif(strpos($quiz['user_action'], 'question-image--upload-') !== false) {
+
+            $action = 'upload';
+            $element = 'question_image';
+            // extract the question number by removing 'add-mc-option__question-' from the string
+            // we can't use question_id because the question_id might not
+            // have been created yet
+            $question_id = str_replace('question-image--upload-', '', $quiz['user_action']);
             $details = array('question_id' => (int) $question_id);
         }
         // DELETE question_image
