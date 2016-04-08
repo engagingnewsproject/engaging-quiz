@@ -340,39 +340,26 @@ class Enp_quiz_Create {
 		$user_id = $this->validate_user();
 
 		$params = array();
-		// check if we're doing ajax or a normal post request
-		/*if (defined('DOING_AJAX') && DOING_AJAX) {
-			wp_send_json($_POST);
-			exit();
-			// doing ajax, so set the vars based on
-			// our passed params
-			$response = $_POST['quiz'];
-			parse_str($_POST['quiz'], $params);
-			$posted_quiz = $params['enp_quiz'];
-			$posted_question = array();
-			if(isset($params['enp_question'])) {
-				$posted_question = $params['enp_question'];
-			}
 
-			$posted_user_action = $_POST['quizSubmit'];
-			$posted_nonce = $params['enp_quiz_nonce'];
-
-	   } else {*/
-		   if(isset($_POST['enp_quiz'])) {
-			   $posted_quiz = $_POST['enp_quiz'];
+	   if(isset($_POST['enp_quiz'])) {
+		   $posted_quiz = $_POST['enp_quiz'];
+		   if(isset($posted_quiz['new_quiz'])) {
+			   $new_quiz_flag = $posted_quiz['new_quiz'];
+		   } else {
+			    $new_quiz_flag = '0';
 		   }
-		   if(isset($_POST['enp_question'])) {
-		   		$posted_question = $_POST['enp_question'];
-			}
+	   }
+	   if(isset($_POST['enp_question'])) {
+	   		$posted_question = $_POST['enp_question'];
+		}
 
-			if(isset($_POST['enp-quiz-submit'])) {
-				$posted_user_action = $_POST['enp-quiz-submit'];
-			}
+		if(isset($_POST['enp-quiz-submit'])) {
+			$posted_user_action = $_POST['enp-quiz-submit'];
+		}
 
-			if(isset($_POST['enp_quiz_nonce'])) {
-				$posted_nonce = $_POST['enp_quiz_nonce'];
-			}
-	  // }
+		if(isset($_POST['enp_quiz_nonce'])) {
+			$posted_nonce = $_POST['enp_quiz_nonce'];
+		}
 
 	   //Is it a POST request?
  	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -467,7 +454,7 @@ class Enp_quiz_Create {
 			$this->redirect_to_quiz_publish($quiz_id);
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page
-		elseif($save_action === 'insert' || $posted_quiz['new_quiz'] === '1') {
+		elseif($save_action === 'insert' || $new_quiz_flag === '1') {
 			// they don't want to move on yet, but they're inserting,
 			// so we need to send them to their newly created quiz create page
 			$this->redirect_to_quiz_create($quiz_id);

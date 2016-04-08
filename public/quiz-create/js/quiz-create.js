@@ -22,7 +22,7 @@ jQuery( document ).ready( function( $ ) {
     });
 
     // hide descriptions
-    //$('.enp-question-image-alt__input, .enp-question-image-alt__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
+    $('.enp-button__question-image-upload, .enp-question-image-upload__input').hide();
     // set titles as the values are being typed
     $(document).on('keyup', '.enp-question-title__textarea', function() {
         // get the value of the textarea we're typing in
@@ -72,15 +72,13 @@ jQuery( document ).ready( function( $ ) {
             userActionAction,
             userActionElement;
 
-
-        //var quizForm = new FormData($('.enp-quiz-form'));
+        // get form
         var quizForm = document.getElementById("enp-quiz-create-form");
+        // create formData object
         var fd = new FormData(quizForm);
-        //var file = $(document).find('input[type="file"]');
-        //var caption = $(this).find('input[name=img_caption]');
-        //var individual_file = file[0].files[0];
-
+        // set our submit button value
         fd.append('enp-quiz-submit', userAction);
+        // append our action for wordpress AJAX call
         fd.append('action', 'save_quiz');
 
         $.ajax( {
@@ -159,13 +157,24 @@ jQuery( document ).ready( function( $ ) {
                 // set the correct one
                 setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
             }
+            // add question image
+            else if(userActionAction == 'upload' && userActionElement == 'question_image') {
+                // check to see if the action was completed
+                questionID = response.user_action.details.question_id;
+                questionResponse = checkQuestionSaveStatus(questionID, response.question);
+                if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                    addQuestionImage(questionResponse);
+                } else {
+                    temp_unsetAddQuestionImage(questionID);
+                }
+            }
             // remove image
             else if(userActionAction == 'delete' && userActionElement == 'question_image') {
                 // check to see if the action was completed
                 questionID = response.user_action.details.question_id;
                 questionResponse = checkQuestionSaveStatus(questionID, response.question);
                 if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
-                    removeQuestionImage(questionID);
+                    removeQuestionImage(questionResponse);
                 } else {
                     temp_unsetRemoveQuestionImage(questionID);
                 }
@@ -224,6 +233,14 @@ jQuery( document ).ready( function( $ ) {
             temp_removeMCOption(mcOptionID);
         }
         // delete an image
+        else if(userAction.indexOf('question-image--upload') > -1) {
+            // match the number for the ID
+            pattern = /question-image--upload-/g;
+            questionID = userAction.replace(pattern, '');
+            console.log(questionID);
+            temp_addQuestionImage(questionID);
+        }
+        // delete an image
         else if(userAction.indexOf('question-image--delete') > -1) {
             // match the number for the ID
             pattern = /question-image--delete-/g;
@@ -254,9 +271,9 @@ jQuery( document ).ready( function( $ ) {
     // Show success messages
     function displayMessages(message) {
         // loop through success messages
-        // for(var success_i = 0; success_i < message.success.length; success_i++) {
-            appendMessage(message.success[0], 'success');
-        // }
+        for(var success_i = 0; success_i < message.success.length; success_i++) {
+            appendMessage(message.success[success_i], 'success');
+        }
 
         // Show error messages
         for(var error_i = 0; error_i < message.error.length; error_i++) {
@@ -399,6 +416,8 @@ jQuery( document ).ready( function( $ ) {
         changeQuestionTemplateVal($('.enp-question-id', question), questionID);
         // change the delete button value
         changeQuestionTemplateVal($('.enp-question__button--delete', question), questionID);
+        // change the image input id
+        changeQuestionTemplateAttr($('.enp-question-image__input', question), 'id', questionID);
         // change the image upload label for
         changeQuestionTemplateAttr($('.enp-question-image-upload', question), 'for', questionID);
         // change the image upload input id
@@ -599,97 +618,113 @@ jQuery( document ).ready( function( $ ) {
         return false;
     }
 
+    function temp_addQuestionImage(question_id) {
+        $('#enp-question--'+questionID+' .enp-question-image-upload').hide();
+        $('#enp-question--'+questionID+' .enp-question-image-upload').after('<div class="spinner enp-image-upload-wait"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+    }
+
+    function unset_tempAddQuestionImage(question_id) {
+        $('#enp-question--'+questionID+' .enp-question-image-upload').show();
+        $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
+
+        appendMessage('Image could not be uploaded. Please reload the page and try again.', 'error');
+    }
+
+    function addQuestionImage(question) {
+        questionID = question.question_id;
+        $('#enp-question--'+questionID+' .enp-question-image-upload').remove();
+        $('#enp-question--'+questionID+' .enp-question-image-upload__input').remove();
+        $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
+        
+        // It's the first message in the array, so it'll output "Image Uploaded for Question #..."
+        // add the value for this question in the input field
+        $('#enp-question--'+questionID+' .enp-question-image__input').val(question.question_image);
+
+        // clone the image container
+        newImageContainer = $('#enp-question--questionTemplateID .enp-question-image__container').clone();
+
+        imageFile = question.question_image;
+        console.log(imageFile);
+        // get the 580 wide one
+        imageFile = imageFile.replace(/-original/g, '580w');
+
+        // build the imageURL
+        imageURL = quizCreate.quiz_image_url + $('#enp-quiz-id').val() + '/' + questionID + '/' + imageFile;
+
+        // insert the image
+        newImageContainer.prepend('<img class="enp-question-image enp-question-image" src="'+imageURL+'" alt="'+question.question_image_alt+'"/>');
+        // change the delete button value
+        changeQuestionTemplateVal($('.enp-button__question-image-delete', newImageContainer), questionID);
+        // add it in to the question
+        $('#enp-question--'+questionID+' .enp-question-image__input').after(newImageContainer);
+        // append the image container
+        // appendMessage('Quiz Saved.', 'success');
+
+    }
+
     function temp_removeQuestionImage(questionID) {
         $('#enp-question--'+questionID+' .enp-question-image__container').addClass('enp-question__image--remove');
+        // set a temporary data attribute so we can get the value back if it doesn't save
+        imageInput = $('#enp-question-image-'+questionID);
+        imageFilename = imageInput.val();
+        imageInput.data('image_filename', imageFilename);
+        // unset the val in the image input
+        imageInput.val('');
+
+        console.log('old value is '+imageInput.data('image_filename'));
+
     }
 
     function temp_unsetRemoveQuestionImage(questionID) {
         $('#enp-question--'+questionID+' .enp-question-image__container').removeClass('enp-question__image--remove');
+
+        // set the val in the image input back
+        oldImageFilename = $('#enp-question-image-'+questionID).data('image_filename');
+        $('#enp-question-image-'+questionID).val(oldImageFilename);
+        // send an error message
+        appendMessage('Image could not be deleted. Please reload the page and try again.', 'error');
     }
 
-    function removeQuestionImage(questionID) {
+    function removeQuestionImage(question) {
+        questionID = question.question_id;
+
         $('#enp-question--'+questionID+' .enp-question-image__container').remove();
         // clear the input
         $('#enp-question--'+questionID+' .enp-question-image__input').val('');
-        // bring the labels back
-        if($('#enp-question--'+questionID+' .enp-question-image-upload').length > 0) {
-            // this part of the template is there already, so just fade it in
-            $('#enp-question--'+questionID+' .enp-question-image-upload').fadeIn();
-        } else {
-            console.log('could not find');
-            // it doesn't exist, so we'll have to grab it from the template and change the values
-            imageLabel = $('#enp-question--questionTemplateID .enp-question-image-upload').clone();
-            changeQuestionTemplateAttr(imageLabel, 'for', questionID);
-            imageUpload = $('#enp-question--questionTemplateID .enp-button__question-image-upload').clone();
-            changeQuestionTemplateVal(imageUpload, questionID);
-            // insert the cloned elements
-            imageLabel.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
-            imageUpload.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
 
-        }
+        // bring the labels back
+        // it doesn't exist, so we'll have to grab it from the template and change the values
+        imageLabel = $('#enp-question--questionTemplateID .enp-question-image-upload').clone();
+        changeQuestionTemplateAttr(imageLabel, 'for', questionID);
+        imageUpload = $('#enp-question--questionTemplateID .enp-button__question-image-upload').clone();
+        changeQuestionTemplateVal(imageUpload, questionID);
+        imageFileSelect = $('#enp-question--questionTemplateID .enp-question-image-upload__input').clone();
+        changeQuestionTemplateAttr(imageFileSelect, 'name' ,questionID);
+        changeQuestionTemplateAttr(imageFileSelect, 'id' ,questionID);
+        // insert the cloned elements
+        imageUpload.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
+        imageFileSelect.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
+        imageLabel.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
+
+        imageFile = question.question_image;
+        console.log('image deleted '+imageFile);
+
         // It's the first message in the array, so it'll output "Image Deleted for Question #..."
-        // appendMessage('Image deleted.', 'success');
+        //appendMessage('Quiz Saved.', 'success');
     }
 
-    // Image uploader
-    // Uploading files
-    var file_frame;
 
-      $('.enp-question-image-upload').live('click', function( event ){
-
-        event.preventDefault();
+    $('document').on('click', '.enp-question-image-upload', function() {
         imageLabel = $(this);
         imageInput = imageLabel.siblings('.enp-question-image__input');
         imageSubmit = imageLabel.siblings('.enp-button__question-image-upload');
-        // If the media frame already exists, reopen it.
-        if ( file_frame ) {
-          file_frame.open();
-          return;
-        }
+        oldImageSubmit = imageSubmit.val();
+        imageInput.trigger('click'); // bring up file selector
+    });
 
-        // Create the media frame.
-        file_frame = wp.media.frames.file_frame = wp.media({
-          title: 'Upload Image',
-          button: {
-            text: 'Add Image to Question',
-          },
-          multiple: false  // Set to true to allow multiple files to be selected
-        });
-
-        // When an image is selected, run a callback.
-        file_frame.on( 'select', function() {
-          // We set multiple to false so only get one image from the uploader
-          attachment = file_frame.state().get('selection').first().toJSON();
-          console.log(attachment);
-          // add the file path to the hidden input
-          imageInput.val(attachment.url);
-          // add the alt text
-          imageLabel.siblings('.enp-question-image-alt__input').val(attachment.alt);
-          // trigger a click on the save button
-          imageSubmit.trigger('click');
-          // Put our uploaded image in place of the image label
-          // change the value of the input path
-          parseURL = imageInput.val().split('/').pop();
-          // not sure why we need two dashes here...
-          parseURL = parseURL.replace(/\.([^.]+)$/, '--original.$1');
-          console.log(parseURL);
-          imageInput.val(parseURL);
-
-          // clone the image container
-          newImageContainer = $('#enp-question--questionTemplateID .enp-question-image__container').clone();
-          // get the question id
-          questionID = imageLabel.attr('for').replace('enp-question-image-upload-', '');
-          // insert the image
-          newImageContainer.prepend('<img class="enp-question-image enp-question-image" src="'+attachment.url+'" alt="'+attachment.description+'"/>');
-          // change the delete button value
-          changeQuestionTemplateVal($('.enp-button__question-image-delete', newImageContainer), questionID);
-
-          imageLabel.before(newImageContainer);
-          // hide the label
-          imageLabel.hide();
-        });
-
-        // Finally, open the modal
-        file_frame.open();
+    $(document).on('change', '.enp-question-image-upload__input',  function() {
+        console.log('the image to be uploaded is'+$(this).val());
+        imageSubmit = $(this).siblings('.enp-button__question-image-upload');
+        imageSubmit.trigger('click');
     });
 });

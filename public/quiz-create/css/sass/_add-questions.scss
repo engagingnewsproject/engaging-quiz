@@ -295,6 +295,14 @@
         animation: removeElement .5s ease-in-out forwards;
     }
 
+    .enp-image-upload-wait {
+        @include _(btn--dashed--light--alt-bg);
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
     // JS Template
     #enp-question--questionTemplateID__accordion-header,
     #enp-question--questionTemplateID {

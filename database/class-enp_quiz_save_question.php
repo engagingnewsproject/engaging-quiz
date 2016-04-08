@@ -116,39 +116,6 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                 }
             }
         }
-        // no pure files to upload, but what about if they uploaded via AJAX?
-        // we'd be submitting via an image
-        elseif(parent::$user_action_action === 'upload' && parent::$user_action_element === 'question_image') {
-            // we're trying to upload an image, probably via AJAX because otherwise the FILE would have been posted
-            // see if the input is empty or not and that we're trying to upload THIS question
-            if(!empty(self::$question['question_image'])) {
-                // TODO: This is unreliable and repetitive. Hacked together to meet deadline
-                // there's a value. Let's see if it's what we expect
-                if (filter_var(self::$question['question_image'], FILTER_VALIDATE_URL) !== false) {
-                    // it validated as a legit URL, so let's process it
-                    $this->prepare_quiz_image_dir();
-                    $path = $this->prepare_question_image_dir();
-                    $image_upload = array('file'=>self::$question['question_image']);
-                    // now upload all the resized images we'll need
-                    $new_image_name = $this->resize_image($image_upload, $path, null);
-                    // we have the full path, but we just need the filename
-                    $new_image_name = str_replace(ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/', '', $new_image_name);
-                    // resize all the other images
-                    $this->resize_image($image_upload, $path, 1000);
-                    $this->resize_image($image_upload, $path, 740);
-                    $this->resize_image($image_upload, $path, 580);
-                    $this->resize_image($image_upload, $path, 320);
-                    $this->resize_image($image_upload, $path, 200);
-
-                    if($new_image_name !== false) {
-                        // if it worked, set it as the question_image
-                        $question_image = $new_image_name;
-                    }
-                }
-            }
-
-
-        }
 
         return $question_image;
     }
@@ -404,10 +371,10 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             self::$question['question_id'] = $pdo->lastInsertId();
             // set-up our response array
             $question_response = array(
-                                        'question_id' => self::$question['question_id'],
                                         'status'       => 'success',
-                                        'action'       => 'insert'
+                                        'action'       => 'insert',
                                 );
+            $question_response = array_merge($this->build_question_response(), $question_response);
             // pass the response array to our response object
             parent::$response_obj->set_question_response($question_response, self::$question);
 
@@ -464,10 +431,10 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         if($stmt !== false) {
             // set-up our response array
             $question_response = array(
-                                        'question_id' => self::$question['question_id'],
                                         'status'       => 'success',
                                         'action'       => 'update'
                                 );
+            $question_response = array_merge($this->build_question_response(), $question_response);
             // pass the response array to our response object
             parent::$response_obj->set_question_response($question_response, self::$question);
             // see if we were deleting a question in here...
@@ -482,6 +449,19 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         } else {
             parent::$response_obj->add_error('Question number '.self::$question['question_order'].' could not be updated.');
         }
+    }
+
+    protected function build_question_response() {
+        // build all the values for the question and return them in the JSON array
+        return array(
+                'question_id' => self::$question['question_id'],
+                'question_title' => self::$question['question_title'],
+                'question_image' => self::$question['question_image'],
+                'question_image_alt' => self::$question['question_image_alt'],
+                'question_type' => self::$question['question_type'],
+                'question_explanation' => self::$question['question_explanation'],
+                'question_order' => self::$question['question_order']
+            );
     }
 
     /**

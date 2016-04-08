@@ -73,6 +73,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         wp_localize_script( $this->plugin_name.'-quiz-create','quizCreate', array(
     		'ajax_url' => admin_url( 'admin-ajax.php' ),
             'quiz_create_url' => ENP_QUIZ_CREATE_URL,
+            'quiz_image_url' => ENP_QUIZ_IMAGE_URL,
     	));
 
         wp_enqueue_script( $this->plugin_name.'-quiz-create' );

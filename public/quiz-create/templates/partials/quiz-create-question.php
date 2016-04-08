@@ -21,7 +21,7 @@
         </label>
         <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $question_array_i;?>][question_title]" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_question_title();?></textarea>
 
-        <input type="hidden" id="enp-question-image-<?echo $question_array_i;?>" class="enp-question-image__input" name="enp_question[<?echo $question_array_i;?>][question_image]" value="<? echo $question->get_question_image();?>">
+        <input type="hidden" id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input" name="enp_question[<?echo $question_array_i;?>][question_image]" value="<? echo $question->get_question_image();?>">
 
         <?
             if(!empty($question->get_question_image()) || $question_id === 'questionTemplateID') {?>
