@@ -22,7 +22,7 @@ jQuery( document ).ready( function( $ ) {
     });
 
     // hide descriptions
-    $('.enp-question-image-alt__input, .enp-question-image-alt__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
+    //$('.enp-question-image-alt__input, .enp-question-image-alt__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
     // set titles as the values are being typed
     $(document).on('keyup', '.enp-question-title__textarea', function() {
         // get the value of the textarea we're typing in
@@ -71,14 +71,24 @@ jQuery( document ).ready( function( $ ) {
         var response,
             userActionAction,
             userActionElement;
+
+
+        //var quizForm = new FormData($('.enp-quiz-form'));
+        var quizForm = document.getElementById("enp-quiz-create-form");
+        var fd = new FormData(quizForm);
+        //var file = $(document).find('input[type="file"]');
+        //var caption = $(this).find('input[name=img_caption]');
+        //var individual_file = file[0].files[0];
+
+        fd.append('enp-quiz-submit', userAction);
+        fd.append('action', 'save_quiz');
+
         $.ajax( {
             type: 'POST',
              url  : quizCreate.ajax_url,
-             data : {
-                action      : 'save_quiz',
-                quiz : $('.enp-quiz-form').serialize(),
-                quizSubmit : userAction,
-             },
+             data : fd,
+             processData: false,  // tell jQuery not to process the data
+             contentType: false,   // tell jQuery not to set contentType
              beforeSend : function( d ) {
                 console.log( 'Before send', d );
              }

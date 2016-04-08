@@ -341,7 +341,9 @@ class Enp_quiz_Create {
 
 		$params = array();
 		// check if we're doing ajax or a normal post request
-		if (defined('DOING_AJAX') && DOING_AJAX) {
+		/*if (defined('DOING_AJAX') && DOING_AJAX) {
+			wp_send_json($_POST);
+			exit();
 			// doing ajax, so set the vars based on
 			// our passed params
 			$response = $_POST['quiz'];
@@ -355,7 +357,7 @@ class Enp_quiz_Create {
 			$posted_user_action = $_POST['quizSubmit'];
 			$posted_nonce = $params['enp_quiz_nonce'];
 
-	   } else {
+	   } else {*/
 		   if(isset($_POST['enp_quiz'])) {
 			   $posted_quiz = $_POST['enp_quiz'];
 		   }
@@ -370,7 +372,7 @@ class Enp_quiz_Create {
 			if(isset($_POST['enp_quiz_nonce'])) {
 				$posted_nonce = $_POST['enp_quiz_nonce'];
 			}
-	   }
+	  // }
 
 	   //Is it a POST request?
  	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
