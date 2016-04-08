@@ -327,8 +327,6 @@ jQuery( document ).ready( function( $ ) {
         // remove question
         $('#enp-question--'+questionID).remove();
 
-        // append question deleted message
-        appendMessage('Question deleted.', 'success');
 
     }
 
@@ -635,7 +633,7 @@ jQuery( document ).ready( function( $ ) {
         $('#enp-question--'+questionID+' .enp-question-image-upload').remove();
         $('#enp-question--'+questionID+' .enp-question-image-upload__input').remove();
         $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
-        
+
         // It's the first message in the array, so it'll output "Image Uploaded for Question #..."
         // add the value for this question in the input field
         $('#enp-question--'+questionID+' .enp-question-image__input').val(question.question_image);
@@ -657,8 +655,6 @@ jQuery( document ).ready( function( $ ) {
         changeQuestionTemplateVal($('.enp-button__question-image-delete', newImageContainer), questionID);
         // add it in to the question
         $('#enp-question--'+questionID+' .enp-question-image__input').after(newImageContainer);
-        // append the image container
-        // appendMessage('Quiz Saved.', 'success');
 
     }
 
@@ -709,8 +705,6 @@ jQuery( document ).ready( function( $ ) {
         imageFile = question.question_image;
         console.log('image deleted '+imageFile);
 
-        // It's the first message in the array, so it'll output "Image Deleted for Question #..."
-        //appendMessage('Quiz Saved.', 'success');
     }
 
 
