@@ -1,4 +1,10 @@
 jQuery( document ).ready( function( $ ) {
+    // TEST CODE
+    /*var children = $('#enp-question--newQuestionTemplateID').children;
+    for (var i = 0; i < children.length; i++) {
+      console.logchildren[i];
+      // Do stuff
+  }*/
     // ready the questions as accordions
     $('.enp-question-content').each(function() {
         var accordion,

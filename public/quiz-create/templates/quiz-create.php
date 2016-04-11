@@ -22,11 +22,15 @@
 // var_dump($user_action);
 //
 
- if(is_numeric($quiz->get_quiz_id()) || is_int($quiz->get_quiz_id())) {
-     $quiz_action_url = site_url('enp-quiz/quiz-create/').$quiz->get_quiz_id().'/';
+$quiz_id = $quiz->get_quiz_id();
+
+ if(is_numeric($quiz_id) || is_int($quiz_id)) {
+     $quiz_action_url = site_url('enp-quiz/quiz-create/').$quiz_id.'/';
  } else {
      $quiz_action_url = site_url('enp-quiz/quiz-create/new/');
  }
+ if(empty($quiz_id))
+ { $new_quiz_flag= '1'; } else { $new_quiz_flag= '0'; }
 ?>
 
 <section class="enp-container enp-quiz-form-container">
@@ -39,9 +43,9 @@
 
     <form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo htmlentities($quiz_action_url); ?>">
         <?php $enp_quiz_nonce->outputKey();?>
-        <input id="enp-quiz-id" type="hidden" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id(); ?>" />
+        <input id="enp-quiz-id" type="hidden" name="enp_quiz[quiz_id]" value="<?php echo $quiz_id; ?>" />
 
-        <input id="enp-quiz-new" type="hidden" name="enp_quiz[new_quiz]" value="<?php echo (empty($quiz->get_quiz_id()) ? '1' : '0'); ?>" />
+        <input id="enp-quiz-new" type="hidden" name="enp_quiz[new_quiz]" value="<?php echo $new_quiz_flag;?>" />
 
         <fieldset class="enp-fieldset enp-quiz-title">
             <label class="enp-label enp-quiz-title__label" for="quiz-title">

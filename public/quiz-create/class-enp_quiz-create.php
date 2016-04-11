@@ -129,14 +129,13 @@ class Enp_quiz_Create {
 	* @since    0.0.1
 	*/
 	public function enp_quiz_template_rewrite_catch() {
-		// make sure we have a user
-		// and if they're accessing a quiz, that they own it
-		$this->validate_user();
-
-		// validated
 		global $wp_query;
 		// see if enp_quiz_template is one of the query_vars posted
 		if ( array_key_exists( 'enp_quiz_template', $wp_query->query_vars ) ) {
+			// make sure we have a user
+			// and if they're accessing a quiz, that they own it
+			$this->validate_user();
+
 			// if it's there, then see what the value is
 			$this->template = $wp_query->get( 'enp_quiz_template' );
 			$this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH.'/'.$this->template.'.php';

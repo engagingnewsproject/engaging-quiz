@@ -6,6 +6,8 @@
     } else {
         $question_array_i = $question_i;
     }
+
+    $question_image = $question->get_question_image();
 ?>
 
 <section id="enp-question--<? echo $question_id;?>" class="enp-question-content">
@@ -21,10 +23,10 @@
         </label>
         <textarea class="enp-textarea enp-question-title__textarea" name="enp_question[<?echo $question_array_i;?>][question_title]" maxlength="255" placeholder="Why can't we tickle ourselves?"/><? echo $question->get_question_title();?></textarea>
 
-        <input type="hidden" id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input" name="enp_question[<?echo $question_array_i;?>][question_image]" value="<? echo $question->get_question_image();?>">
+        <input type="hidden" id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input" name="enp_question[<?echo $question_array_i;?>][question_image]" value="<? echo $question_image;?>">
 
         <?
-            if(!empty($question->get_question_image()) || $question_id === 'questionTemplateID') {?>
+            if(!empty($question_image) || $question_id === 'questionTemplateID') {?>
                 <div class="enp-question-image__container">
                     <? if ($question_id !== 'questionTemplateID') {?>
                         <img
@@ -37,7 +39,7 @@
                     <button class="enp-button enp-quiz-submit enp-button__question-image-delete" name="enp-quiz-submit" value="question-image--delete-<? echo $question_id;?>"><svg class="enp-icon enp-icon--delete enp-question__icon--question-image-delete"><use xlink:href="#icon-delete" /></svg></button>
                 </div>
             <?}
-            if(empty($question->get_question_image()) || $question_id === 'questionTemplateID')
+            if(empty($question_image) || $question_id === 'questionTemplateID')
              {?>
                 <label for="enp-question-image-upload-<?echo $question_id;?>" class="enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo">
                     <use xlink:href="#icon-photo" />
