@@ -19,7 +19,7 @@ if($quiz->get_quiz_status() === 'published') {
 ?>
 
 
-<nav class="enp-quiz-breadcrumbs">
+<nav id="enp-quiz-breadcrumbs" class="enp-quiz-breadcrumbs">
     <ul class="enp-quiz-breadcrumbs__list">
         <li class="enp-quiz-breadcrumbs__item">
             <a href="<?php echo $enp_create_url;?>"

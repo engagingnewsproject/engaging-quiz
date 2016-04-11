@@ -159,6 +159,15 @@
         }
 }
 
+@keyframes navSlideIn {
+    0% {
+        transform: translate3d(0, -200px, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
 
 .spinner {
   margin: 0 auto;

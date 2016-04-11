@@ -78,6 +78,9 @@ class Enp_quiz_Create {
         }
 		// custom action hook for displaying messages
         add_action( 'enp_quiz_display_messages', array($this, 'display_messages' ));
+
+		// remove wp_admin bar
+		add_filter('show_admin_bar', '__return_false');
 	}
 
 	public function set_enp_quiz_nonce() {

@@ -33,7 +33,7 @@ $quiz_id = $quiz->get_quiz_id();
  { $new_quiz_flag= '1'; } else { $new_quiz_flag= '0'; }
 ?>
 
-<section class="enp-container enp-quiz-form-container">
+<section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
     <?php
 
     include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');
@@ -71,7 +71,7 @@ $quiz_id = $quiz->get_quiz_id();
           <use xlink:href="#icon-add" />
         </svg> Add Question</button>
 
-        <button type="submit" class="enp-btn--submit enp-quiz-submit enp-btn--next-step enp-quiz-form__submit" name="enp-quiz-submit" value="quiz-preview">Preview <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-quiz-form__submit__icon">
+        <button type="submit" id="enp-btn--next-step" class="enp-btn--submit enp-quiz-submit enp-btn--next-step enp-quiz-form__submit" name="enp-quiz-submit" value="quiz-preview">Preview <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-quiz-form__submit__icon">
           <use xlink:href="#icon-chevron-right" />
         </svg></button>
 

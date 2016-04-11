@@ -279,13 +279,19 @@
             right: 20px;
             top: 10px;
             width: auto;
+            z-index: 999999;
+
+            &.enp-btn--next-step--fixed {
+                position: fixed;
+                animation: navSlideIn .25s;
+            }
         }
 
-        @include breakpoint(large) {
-            right: 0;
-        }
+
 
     }
+
+
 
 
     // UX interactions

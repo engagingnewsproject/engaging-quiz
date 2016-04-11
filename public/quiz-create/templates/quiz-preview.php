@@ -11,7 +11,7 @@
 */
 ?>
 
-<div class="enp-container enp-preview-page-container">
+<div class="enp-container enp-preview-page-container js-enp-quiz-create-form-container">
     <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');?>
     <?php do_action('enp_quiz_display_messages'); ?>
     <div class="enp-flex enp-preview-page-flex-container">
@@ -56,7 +56,7 @@
 
 
 
-                <button type="submit" class="enp-btn--submit enp-btn--next-step enp-preview-form__submit--publish" name="enp-quiz-submit" value="quiz-publish"><?echo $enp_next_button_name;?> <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-preview-form__submit__icon">
+                <button type="submit" id="enp-btn--next-step" class="enp-btn--submit enp-btn--next-step enp-preview-form__submit--publish" name="enp-quiz-submit" value="quiz-publish"><?echo $enp_next_button_name;?> <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-preview-form__submit__icon">
                   <use xlink:href="#icon-chevron-right" />
                 </svg></button>
             </form>
