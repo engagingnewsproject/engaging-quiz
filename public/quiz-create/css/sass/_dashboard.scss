@@ -65,6 +65,7 @@
 
     .enp-dash-item__title__icon {
         @include _(icon--inline);
+        left: 3px;
     }
 
     .enp-dash-item__controls {

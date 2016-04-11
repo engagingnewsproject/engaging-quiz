@@ -9,7 +9,9 @@
         $quiz_secondary_action_link = '<a href="'.ENP_QUIZ_PUBLISH_URL.$quiz_id.'">Embed</a>';
     } else {
         $quiz_link = ENP_QUIZ_CREATE_URL;
-        $quiz_title = '<a href="'.$quiz_link.$quiz_id.'"><span class="enp-screen-reader-text">Edit </span>'.$quiz->get_quiz_title().' <svg class="enp-icon enp-dash-item__title__icon"><use xlink:href="#icon-edit" /></svg>';
+        $quiz_title = '<a href="'.$quiz_link.$quiz_id.'"><span class="enp-screen-reader-text">Edit </span>'.$quiz->get_quiz_title();
+        // if you want to add back in the edit pencil icons
+        $quiz_title .= ' <svg class="enp-icon enp-dash-item__title__icon"><use xlink:href="#icon-edit" /></svg>';
         $quiz_primary_action_link = '<a href="'.ENP_QUIZ_CREATE_URL.$quiz_id.'">Edit</a>';
         $quiz_secondary_action_link = '<a href="'.ENP_QUIZ_PREVIEW_URL.$quiz_id.'">Preview</a>';
     }
