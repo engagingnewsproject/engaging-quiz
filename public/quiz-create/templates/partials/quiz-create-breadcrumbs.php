@@ -31,14 +31,12 @@ if($quiz->get_quiz_status() === 'published') {
          <use xlink:href="#icon-chevron-right" />
         </svg></li>
         <li class="enp-quiz-breadcrumbs__item">
-            <!--href="<? echo $enp_preview_url;?>-->
             <a class="enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--preview<?php echo $enp_preview_class;?>" href="<? echo $enp_preview_url;?>"><?echo $enp_preview_name;?></a>
         </li>
         <li class="enp-quiz-breadcrumbs__item"><svg class="enp-icon">
          <use xlink:href="#icon-chevron-right" />
         </svg></li>
         <li class="enp-quiz-breadcrumbs__item">
-            <!--href="<? echo $enp_publish_url;?>"-->
             <a class="enp-quiz-breadcrumbs__link<?php echo $enp_publish_class;?>" href="<? echo $enp_publish_url;?>"><?echo $enp_publish_name;?></a>
         </li>
     </ul>

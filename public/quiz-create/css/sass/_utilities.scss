@@ -360,6 +360,26 @@ $placeholders: ();
         position: fixed;
         bottom: 10px;
     }
+
+    .enp-quiz-message--saving__spinner {
+        margin-left: -10px;
+    }
+
+    .enp-quiz-message--saving__text {
+        font-size: 1rem;
+    }
+}
+
+.enp-sticky {
+    position: relative;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 999;
+
+    &.enp-sticky--fixed {
+        position: fixed;
+    }
 }
 
 @include placeholder('focus--glow') {

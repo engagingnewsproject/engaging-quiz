@@ -4,9 +4,9 @@ jQuery( document ).ready( function( $ ) {
     for (var i = 0; i < children.length; i++) {
       console.logchildren[i];
       // Do stuff
-  }*/
+    }*/
     // ready the questions as accordions
-    $('.enp-question-content').each(function() {
+    $('.enp-question-content').each(function(i) {
         var accordion,
             question_title,
             question_content;
@@ -15,7 +15,7 @@ jQuery( document ).ready( function( $ ) {
         question_title = $('.enp-question-title__textarea', this).val();
         // if it's empty, set it as an empty string
         if(question_title === undefined || question_title === '') {
-            question_title = 'Untitled';
+            question_title = 'Question';
         }
         // set-up question_content var
         question_content = $(this);
@@ -261,7 +261,7 @@ jQuery( document ).ready( function( $ ) {
     // and add message/animation to show stuff is happening
     function setWait() {
         // TODO: animation to show stuff is happening and they should wait a sec
-        $('.enp-quiz-message-ajax-container').append('<p class="enp-quiz-message--saving">Saving...</p>');
+        $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message--saving">'+waitSpinner('enp-quiz-message--saving__spinner')+'<div class="enp-quiz-message--saving__text">Saving</div></div>');
         // add click wait class
         $('.enp-quiz-submit').addClass('enp-quiz-submit--wait');
     }
@@ -277,9 +277,12 @@ jQuery( document ).ready( function( $ ) {
     // Show success messages
     function displayMessages(message) {
         // loop through success messages
-        for(var success_i = 0; success_i < message.success.length; success_i++) {
-            appendMessage(message.success[success_i], 'success');
-        }
+        //for(var success_i = 0; success_i < message.success.length; success_i++) {
+            if(typeof message.success !== 'undefined' && message.success.length > 0) {
+                appendMessage('Quiz Saved.', 'success');
+            }
+
+        //}
 
         // Show error messages
         for(var error_i = 0; error_i < message.error.length; error_i++) {
@@ -624,7 +627,11 @@ jQuery( document ).ready( function( $ ) {
 
     function temp_addQuestionImage(question_id) {
         $('#enp-question--'+questionID+' .enp-question-image-upload').hide();
-        $('#enp-question--'+questionID+' .enp-question-image-upload').after('<div class="spinner enp-image-upload-wait"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+        $('#enp-question--'+questionID+' .enp-question-image-upload').after(waitSpinner('enp-image-upload-wait'));
+    }
+
+    function waitSpinner(waitClass) {
+        return '<div class="spinner '+waitClass+'"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>';
     }
 
     function unset_tempAddQuestionImage(question_id) {
