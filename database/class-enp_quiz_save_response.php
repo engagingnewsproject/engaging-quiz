@@ -19,6 +19,8 @@
  */
 class Enp_quiz_Save_response extends Enp_quiz_Save {
     public $quiz_id,
+           $quiz_title,
+           $quiz_status,
            $status,
            $action,
            $message = array('error'=>array(),'success'=>array()),
@@ -58,7 +60,18 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     }
 
     /**
-    * Gets reponse from save quiz option class and and assigns them
+    * Gets response from quiz save class and assigns values to our response object
+    */
+    public function set_quiz_response($quiz) {
+        $this->set_quiz_id($quiz['quiz_id']);
+        $this->quiz_title = $quiz['quiz_title'];
+        $this->quiz_status = $quiz['quiz_status'];
+        $this->quiz_finish_message = $quiz['quiz_finish_message'];
+        $this->quiz_updated_at = $quiz['quiz_updated_at'];
+    }
+
+    /**
+    * Gets response from save quiz option class and and assigns them
     * to our response object
     *
     * @param $quiz_option_response = array() of values like 'action', 'status', and 'quiz_option_id'

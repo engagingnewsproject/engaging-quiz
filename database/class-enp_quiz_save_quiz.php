@@ -412,10 +412,12 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            self::$response_obj->set_quiz_id($pdo->lastInsertId());
+            self::$quiz['quiz_id'] = $pdo->lastInsertId();
             self::$response_obj->set_status('success');
             self::$response_obj->set_action('insert');
             self::$response_obj->add_success('Quiz created.');
+            // build a full response object
+            self::$response_obj->set_quiz_response(self::$quiz);
 
         } else {
             self::$response_obj->add_error('Quiz could not be added to the database. Try again and if it continues to not work, send us an email with details of how you got to this error.');
@@ -447,10 +449,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         // success!
         if($stmt !== false) {
-            self::$response_obj->set_quiz_id(self::$quiz['quiz_id']);
             self::$response_obj->set_status('success');
             self::$response_obj->set_action('update');
             self::$response_obj->add_success('Quiz saved.');
+            // build a full response object
+            self::$response_obj->set_quiz_response(self::$quiz);
         } else {
             self::$response_obj->add_error('Quiz could not be updated. Try again and if it continues to not work, send us an email with details of how you got to this error.');
         }
