@@ -25,7 +25,7 @@
 
         <input type="hidden" id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input" name="enp_question[<?echo $question_array_i;?>][question_image]" value="<? echo $question_image;?>">
 
-        <?
+        <?php
             if(!empty($question_image) || $question_id === 'questionTemplateID') {?>
                 <div class="enp-question-image__container">
                     <? if ($question_id !== 'questionTemplateID') {?>

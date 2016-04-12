@@ -1,10 +1,5 @@
 jQuery( document ).ready( function( $ ) {
-    // TEST CODE
-    /*var children = $('#enp-question--newQuestionTemplateID').children;
-    for (var i = 0; i < children.length; i++) {
-      console.logchildren[i];
-      // Do stuff
-    }*/
+
     // ready the questions as accordions
     $('.enp-question-content').each(function(i) {
         var accordion,
@@ -29,6 +24,9 @@ jQuery( document ).ready( function( $ ) {
 
     // hide descriptions
     $('.enp-button__question-image-upload, .enp-question-image-upload__input').hide();
+
+    //*** END SETUP ***//
+
     // set titles as the values are being typed
     $(document).on('keyup', '.enp-question-title__textarea', function() {
         // get the value of the textarea we're typing in
@@ -376,9 +374,11 @@ jQuery( document ).ready( function( $ ) {
         newAccordionHeader = templateAccordionHeader.clone();
         newQuestion = templateQuestion.clone();
 
-        // just temporarily so the CSS won't hide it
-        newAccordionHeader.attr('id', 'enp-question--newQuestionTemplateID__accordion-header');
-        newQuestion.attr('id', 'enp-question--newQuestionTemplateID');
+        // just temporarily so the CSS won't hide it and we have a hook to find it
+        // change the accordion header ID
+        findReplaceAttr(newAccordionHeader, 'id', /questionTemplateID/, 'newQuestionTemplateID');
+        // change the question id
+        findReplaceAttr(newQuestion, 'id', /questionTemplateID/, 'newQuestionTemplateID');
 
         // remove the image part (they can't already have an image for it...)
         $('.enp-question-image__container', newQuestion).remove();
@@ -415,32 +415,13 @@ jQuery( document ).ready( function( $ ) {
         // new question
         question = $('#enp-question--newQuestionTemplateID');
 
-        // change the accordion header ID
-        changeQuestionTemplateAttr(accordionHeader, 'id', questionID, /newQuestionTemplateID/);
-        // change the question classes/ids
-        changeQuestionTemplateAttr(question, 'id', questionID, /newQuestionTemplateID/);
-        // change the question id value in the hidden input
-        changeQuestionTemplateVal($('.enp-question-id', question), questionID);
-        // change the delete button value
-        changeQuestionTemplateVal($('.enp-question__button--delete', question), questionID);
-        // change the image input id
-        changeQuestionTemplateAttr($('.enp-question-image__input', question), 'id', questionID);
-        // change the image upload label for
-        changeQuestionTemplateAttr($('.enp-question-image-upload', question), 'for', questionID);
-        // change the image upload input id
-        changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'id', questionID);
-        changeQuestionTemplateAttr($('.enp-question-image-upload__input', question), 'name', questionID);
-        changeQuestionTemplateVal($('.enp-button__question-image-upload', question), questionID);
-        // question type for/id
-        // slider
-        changeQuestionTemplateAttr($('.enp-question-type__input--slider', question), 'id', questionID);
-        changeQuestionTemplateAttr($('.enp-question-type__label--slider', question), 'for', questionID);
-        // mc option
-        changeQuestionTemplateAttr($('.enp-question-type__input--mc', question), 'id', questionID);
-        changeQuestionTemplateAttr($('.enp-question-type__label--mc', question), 'for', questionID);
+        // find/replace all attributes and values on this question
+        findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID'), /questionTemplateID/, questionID);
 
-        changeQuestionTemplateVal($('.enp-mc-option__button--correct', question), questionID);
-        changeQuestionTemplateVal($('.enp-mc-option__add', question), questionID);
+        // change the accordion header ID
+        findReplaceAttr(accordionHeader, 'id', /newQuestionTemplateID/, questionID);
+        // change the question classes/ids
+        findReplaceAttr(question, 'id', /newQuestionTemplateID/, questionID);
 
         // change the default MCOptionIDs
         addMCOption(mcOptionID, questionID);
@@ -449,51 +430,11 @@ jQuery( document ).ready( function( $ ) {
         // setup question index and regex
         question_index = getQuestionIndex(questionID);
         question_index_pattern = /enp_question\[questionCounterTemplate\]/;
-        // reindex/change the input names
-        $('input, textarea', question).each(function () {
-            var inputName = $(this).prop('name');
-            // change the index of the form array for the question
-            new_inputName = inputName.replace(question_index_pattern, 'enp_question['+question_index+']');
-            $(this).attr('name', new_inputName);
-        });
-        // add the mc option
-
-    }
-
-    function changeQuestionTemplateAttr(obj, attr, questionID, pattern) {
-        // set default pattern if not passed in the function
-        pattern = typeof pattern !== 'undefined' ? pattern : /questionTemplateID/;
-        // create the new attribute value
-        newAttrVal = obj.attr(attr).replace(pattern, questionID);
-        // set the new attribute value
-        obj.attr(attr, newAttrVal);
-    }
-
-    function changeQuestionTemplateVal(obj, questionID, pattern) {
-        // set default pattern if not passed in the function
-        pattern = typeof pattern !== 'undefined' ? pattern : /questionTemplateID/;
-        // create the new value
-        newObjVal = obj.val().replace(pattern, questionID);
-        // set the new value
-        obj.val(newObjVal);
-    }
-
-    function changeMCOptionTemplateAttr(obj, attr, mcOptionID, pattern) {
-        // set default pattern if not passed in the function
-        pattern = typeof pattern !== 'undefined' ? pattern : /mcOptionTemplateID/;
-        // create the new attribute value
-        newObjVal = obj.attr(attr).replace(pattern, mcOptionID);
-        // set the new attribute value
-        obj.attr(attr, newObjVal);
-    }
-
-    function changeMCOptionTemplateVal(obj, mcOptionID, pattern) {
-        // set default pattern if not passed in the function
-        pattern = typeof pattern !== 'undefined' ? pattern : /mcOptionTemplateID/;
-        // create the new value
-        newObjVal = obj.val().replace(pattern, mcOptionID);
-        // set the new value
-        obj.val(newObjVal);
+        question_index_replace = 'enp_question['+question_index+']';
+        // find/replace all index attributes (just in the name, but it'll search all attributes)
+        // TODO: limit search by inputs/textareas?
+        // TODO: Integrate this into the previous search so it's just one loop instead of several?
+        findReplaceDomAttributes(document.getElementById('enp-question--'+questionID), question_index_pattern, question_index_replace);
     }
 
     // set MC Option as correct and unset all other mc options for that question
@@ -532,6 +473,9 @@ jQuery( document ).ready( function( $ ) {
         var new_mcOption,
             addMCOptionButton;
         new_mcOption = $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID');
+
+        new_mcOption_el = document.querySelector('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID');
+
         // change the id
         $('.enp-mc-option-id', new_mcOption).val(new_mcOptionID);
         // change the delete button value
@@ -655,7 +599,6 @@ jQuery( document ).ready( function( $ ) {
         newImageContainer = $('#enp-question--questionTemplateID .enp-question-image__container').clone();
 
         imageFile = question.question_image;
-        console.log(imageFile);
         // get the 580 wide one
         imageFile = imageFile.replace(/-original/g, '580w');
 
@@ -734,4 +677,85 @@ jQuery( document ).ready( function( $ ) {
         imageSubmit = $(this).siblings('.enp-button__question-image-upload');
         imageSubmit.trigger('click');
     });
+
+    /**
+    * Replace all attributes with regex replace/string of an element
+    * and its children
+    *
+    * @param el: DOM element
+    * @param pattern: regex pattern for matching with replace();
+    * @param replace: string if pattern matches, what you want
+    *        the pattern to be replaced with
+    */
+    function findReplaceDomAttributes(el, pattern, replace) {
+        // replace on the passed dom attributes
+        replaceAttributes(el, pattern, replace);
+        // see if it has children
+        if(el.children) {
+            // loop the children
+            // This function will also replace the attributes
+            loopChildren(el.children, pattern, replace);
+        }
+    }
+
+    /**
+    * Loop through the children of an element, replace it's attributes,
+    * and search for more children to loop
+    *
+    * @param nodes: el.children
+    * @param pattern: regex pattern for matching with replace();
+    * @param replace: string if pattern matches, what you want
+    *        the pattern to be replaced with
+    */
+    function loopChildren(children, pattern, replace)
+    {
+        var el;
+        for(var i=0;i<children.length;i++)
+        {
+            el = children[i];
+            // replace teh attributes on this element
+            replaceAttributes(el, pattern, replace);
+
+            if(el.children){
+                loopChildren(el.children, pattern, replace);
+            }
+
+        }
+    }
+
+    /**
+    * replace all attributes on an element with regex replace()
+    * @param el: DOM element
+    * @param pattern: regex pattern for matching with replace();
+    * @param replace: string if pattern matches, what you want
+    *        the pattern to be replaced with
+    */
+    function replaceAttributes(el, pattern, replace) {
+        for (var att, i = 0, atts = el.attributes, n = atts.length; i < n; i++){
+            att = atts[i];
+            newAttrVal = att.nodeValue.replace(pattern, replace);
+
+            // if the new val and the old val match, then nothing was replaced,
+            // so we can skip it
+            if(newAttrVal !== att.nodeValue) {
+
+                if(att.nodeName === 'value') {
+                    // I heard value was trickier to track and update cross-browser,
+                    // so use jQuery til further notice...
+                    $(el).val(newAttrVal);
+                } else {
+                    el.setAttribute(att.nodeName, newAttrVal);
+                }
+                console.log('Replaced '+att.nodeName+' '+att.nodeValue);
+            }
+        }
+    }
+
+    // for working with cloned jQuery objects
+    function findReplaceAttr(obj, attr, pattern, replace) {
+        // create the new attribute value
+        newAttrVal = obj.attr(attr).replace(pattern, replace);
+        // set the new attribute value
+        obj.attr(attr, newAttrVal);
+    }
 });
