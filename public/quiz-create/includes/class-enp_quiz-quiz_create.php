@@ -83,8 +83,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
         wp_enqueue_script( $this->plugin_name.'-quiz-create' );
 
-        // wp media uploader
-        wp_enqueue_media();
+    
 
 	}
 
