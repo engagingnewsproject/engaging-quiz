@@ -58,9 +58,7 @@ $quiz_id = $quiz->get_quiz_id();
             $question_i = 0;
             // count the number of questions
             $question_ids = $quiz->get_questions();
-            // a little hack-ey, but we're only using this as a JS template
-            // so it will run the loop once (or again) so we have access to it
-            $question_ids[] = 'questionTemplateID';
+
             foreach($question_ids as $question_id) {
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
                 $question_i++;
@@ -75,6 +73,27 @@ $quiz_id = $quiz->get_quiz_id();
           <use xlink:href="#icon-chevron-right" />
         </svg></button>
 
+
+        <?php // set-up javascript templates
+
+            $question_id = '{{question_id}}';
+            $question_i = '{{question_position}}';
+            // set-up our template
+            echo '<script type="text/template" id="question_template">';
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
+            // end our template
+            echo '</script>';
+
+            $mc_option_id = '{{mc_option_id}}';
+            $mc_option_i = '{{mc_option_position}}';
+            // set-up our template
+            echo '<script type="text/template" id="mc_option_template">';
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option.php');
+            // end our template
+            echo '</script>';
+
+
+        ?>
 
     </form>
 </section>
