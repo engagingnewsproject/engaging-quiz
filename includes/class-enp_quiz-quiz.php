@@ -433,6 +433,51 @@ class Enp_quiz_Quiz {
     }
 
     /**
+    * Create an entire quiz json object with all question and mc option data
+    */
+    public function get_quiz_json() {
+        $quiz = (array) $this;
+        $question_ids = $this->get_questions();
+        // create a blank question array
+        // remove what we don't need
+        unset($quiz['questions']);
+        unset($quiz['quiz_owner']);
+        unset($quiz['quiz_created_by']);
+        unset($quiz['quiz_updated_by']);
+
+        $quiz['question'] = array();
+        // loop questions
+        foreach($question_ids as $question_id) {
+            // get question object
+            $question = new Enp_quiz_Question($question_id);
+            // cast object to array
+            $question_array = (array) $question;
+            // remove what we don't need
+            unset($question_array['quiz_id']);
+            unset($question_array['mc_options']);
+            // get question type
+            $question_type = $question->get_question_type();
+            // if mc, get mc options
+            if($question_type === 'mc') {
+                // get the mc options
+                $mc_option_ids = $question->get_mc_options();
+                // create a mc_options_array
+                $question_array['mc_option'] = array();
+                // create the MC Options
+                foreach($mc_option_ids as $mc_option_id) {
+                    // build mc option object
+                    $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                    // cast object to array in question_array
+                    $question_array['mc_option'][] = (array) $mc_option;
+                }
+            }
+            // add this question to the array we'll send via json
+            $quiz['question'][] = $question_array;
+        }
+        return json_encode($quiz);
+    }
+
+    /**
     * Get the value we should be saving on a quiz
     * get posted if present, if not, get object. This is so we give them their
     * current entry if we don't *actually* save yet.
