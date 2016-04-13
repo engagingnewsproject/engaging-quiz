@@ -2,25 +2,29 @@ jQuery( document ).ready( function( $ ) {
 
     // ready the questions as accordions
     $('.enp-question-content').each(function(i) {
+        // set up accordions
+        setUpAccordion($(this));
+    });
+
+    function setUpAccordion(obj) {
         var accordion,
             question_title,
             question_content;
-
         // get the value for the title
-        question_title = $('.enp-question-title__textarea', this).val();
+        question_title = $('.enp-question-title__textarea', obj).val();
         // if it's empty, set it as an empty string
         if(question_title === undefined || question_title === '') {
             question_title = 'Question';
         }
         // set-up question_content var
-        question_content = $(this);
+        question_content = obj;
         // create the title and content accordion object so our headings can get created
-        accordion = {title: question_title, content: question_content, baseID: $(this).attr('id')};
+        accordion = {title: question_title, content: question_content, baseID: obj.attr('id')};
         //returns an accordion object with the header object and content object
         accordion = enp_accordion__create_headers(accordion);
         // set-up all the accordion classes and start classes (so they're closed by default)
         enp_accordion__setup(accordion);
-    });
+    }
 
     // hide descriptions
     $('.enp-button__question-image-upload, .enp-question-image-upload__input').hide();
@@ -364,27 +368,28 @@ jQuery( document ).ready( function( $ ) {
 
 
     function temp_addQuestion() {
-        var templateQuestion,
-            templateAccordionHeader,
-            newQuestion,
-            newAccordionHeader;
 
-        templateAccordionHeader = $('#enp-question--questionTemplateID__accordion-header');
-        templateQuestion = $('#enp-question--questionTemplateID');
-        newAccordionHeader = templateAccordionHeader.clone();
-        newQuestion = templateQuestion.clone();
+        templateParams = {question_id: 'newQuestionTemplateID',
+                question_position: 'newQuestionPosition'};
 
-        // just temporarily so the CSS won't hide it and we have a hook to find it
-        // change the accordion header ID
-        findReplaceAttr(newAccordionHeader, 'id', /questionTemplateID/, 'newQuestionTemplateID');
-        // change the question id
-        findReplaceAttr(newQuestion, 'id', /questionTemplateID/, 'newQuestionTemplateID');
+        // add the template in
+        $('.enp-quiz-form__add-question').before(questionTemplate(templateParams));
 
-        // remove the image part (they can't already have an image for it...)
-        $('.enp-question-image__container', newQuestion).remove();
+        newQuestion = $('#enp-question--newQuestionTemplateID');
+        // add the question upload area
+        $('.enp-question-image-alt__label', newQuestion).before(questionImageUploadTemplate(templateParams));
+        // hide the new image buttons
+        $('.enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
 
-        newQuestion.insertBefore(templateAccordionHeader);
-        newAccordionHeader.insertBefore(newQuestion);
+        // add a temp MC option
+        temp_addMCOption('newQuestionTemplateID');
+
+        // set-up accordion
+        // set-up question_content var
+        setUpAccordion($('#enp-question--newQuestionTemplateID'));
+
+    //    newQuestion.insertBefore(templateAccordionHeader);
+    //    newAccordionHeader.insertBefore(newQuestion);
     }
 
     // undo our temp action
@@ -408,33 +413,19 @@ jQuery( document ).ready( function( $ ) {
 
     // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
     function addQuestion(questionID, mcOptionID) {
-        var question,
-            accordionHeader;
-        // new accordion header
-        accordionHeader = $('#enp-question--newQuestionTemplateID__accordion-header');
-        // new question
-        question = $('#enp-question--newQuestionTemplateID');
 
         // find/replace all attributes and values on this question
-        findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID'), /questionTemplateID/, questionID);
+        findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID'), /newQuestionTemplateID/, questionID);
+        // find replace on accordion
+        findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID__accordion-header'), /newQuestionTemplateID/, questionID);
 
-        // change the accordion header ID
-        findReplaceAttr(accordionHeader, 'id', /newQuestionTemplateID/, questionID);
-        // change the question classes/ids
-        findReplaceAttr(question, 'id', /newQuestionTemplateID/, questionID);
+        // find/replace all array index attributes
+        findReplaceDomAttributes(document.getElementById('enp-question--'+questionID), /newQuestionPosition/, getQuestionIndex(questionID));
 
         // change the default MCOptionIDs
         addMCOption(mcOptionID, questionID);
 
-        // change the question array iterator
-        // setup question index and regex
-        question_index = getQuestionIndex(questionID);
-        question_index_pattern = /enp_question\[questionCounterTemplate\]/;
-        question_index_replace = 'enp_question['+question_index+']';
-        // find/replace all index attributes (just in the name, but it'll search all attributes)
-        // TODO: limit search by inputs/textareas?
-        // TODO: Integrate this into the previous search so it's just one loop instead of several?
-        findReplaceDomAttributes(document.getElementById('enp-question--'+questionID), question_index_pattern, question_index_replace);
+
     }
 
     // set MC Option as correct and unset all other mc options for that question
@@ -455,56 +446,30 @@ jQuery( document ).ready( function( $ ) {
 
     function temp_addMCOption(questionID) {
         // clone the template
-        var new_mcOption = $('#enp-question--questionTemplateID .enp-mc-option:first').clone();
+        temp_mc_option = mcOptionTemplate({question_id: questionID, question_position: 'newQuestionPosition', mc_option_id: 'newMCOptionID', mc_option_position: 'newMCOptionPosition'});
+
         // insert it
-        new_mcOption.insertBefore($('#enp-question--'+questionID+' .enp-mc-option--add'));
+        $('#enp-question--'+questionID+' .enp-mc-option--add').before(temp_mc_option);
+
         // focus it
         $('#enp-question--'+questionID+' .enp-mc-option--inputs:last .enp-mc-option__input').focus();
     }
 
     function unset_tempAddMCOption(questionID) {
-        $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID').remove();
+        $('#enp-question--'+questionID+' #enp-mc-option--newMCOptionID').remove();
         appendMessage('Multiple Choice Option could not be added. Please reload the page and try again.', 'error');
     }
 
     // add MC option ID, question ID, question index, and mc option index
     function addMCOption(new_mcOptionID, questionID) {
 
-        var new_mcOption,
-            addMCOptionButton;
-        new_mcOption = $('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID');
+        new_mcOption_el = document.querySelector('#enp-question--'+questionID+' #enp-mc-option--newMCOptionID');
 
-        new_mcOption_el = document.querySelector('#enp-question--'+questionID+' #enp-mc-option--mcOptionTemplateID');
-
-        // change the id
-        $('.enp-mc-option-id', new_mcOption).val(new_mcOptionID);
-        // change the delete button value
-        $('.enp-mc-option__button--delete', new_mcOption).val('mc-option--delete-'+new_mcOptionID);
-        // change the correct button value
-        $('.enp-mc-option__button--correct', new_mcOption).val('mc-option--correct__question-'+questionID+'__mc-option-'+new_mcOptionID);
-        // change the ID
-        $(new_mcOption).attr('id', 'enp-mc-option--'+new_mcOptionID);
-
-        // setup question index and regex
-        question_index = getQuestionIndex(questionID);
-        question_index_pattern = /enp_question\[(.*?)\]/;
-        // setup mcoption index and regex
-        mc_option_pattern = /\[mc_option\]\[(.*?)\]/;
-        new_mc_option_index = $('#enp-question--'+questionID+' .enp-mc-option__input').length - 1;
-        // reindex/change the input names
-        $('input', new_mcOption).each(function () {
-            var inputName = $(this).prop('name');
-            // change the index of the form array for the question
-            new_inputName = inputName.replace(question_index_pattern, 'enp_question['+question_index+']');
-            $(this).attr('name', new_inputName);
-
-            // get it again, because it's been updated
-            inputName = $(this).prop('name');
-            // change the index of the form array for the mc_option
-            new_inputName = inputName.replace(mc_option_pattern, '[mc_option]['+new_mc_option_index+']');
-            console.log(new_inputName);
-            $(this).attr('name', new_inputName);
-        });
+        // find/replace all index attributes (just in the name, but it'll search all attributes)
+        findReplaceDomAttributes(new_mcOption_el, /newQuestionPosition/, getQuestionIndex(questionID));
+        new_mc_option_index = $('#enp-question--'+questionID+' .enp-mc-option--inputs').length - 1;
+        findReplaceDomAttributes(new_mcOption_el, /newMCOptionPosition/, new_mc_option_index);
+        findReplaceDomAttributes(new_mcOption_el, /newMCOptionID/, new_mcOptionID);
     }
 
     function getQuestionIndex(questionID) {
@@ -591,12 +556,13 @@ jQuery( document ).ready( function( $ ) {
         $('#enp-question--'+questionID+' .enp-question-image-upload__input').remove();
         $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
 
-        // It's the first message in the array, so it'll output "Image Uploaded for Question #..."
+
         // add the value for this question in the input field
         $('#enp-question--'+questionID+' .enp-question-image__input').val(question.question_image);
 
-        // clone the image container
-        newImageContainer = $('#enp-question--questionTemplateID .enp-question-image__container').clone();
+        // load the new image template
+        templateParams ={question_id: questionID, question_position: getQuestionIndex(questionID)};
+        $('#enp-question--'+questionID+' .enp-question-image__input').after(questionImageTemplate(templateParams));
 
         imageFile = question.question_image;
         // get the 580 wide one
@@ -606,11 +572,7 @@ jQuery( document ).ready( function( $ ) {
         imageURL = quizCreate.quiz_image_url + $('#enp-quiz-id').val() + '/' + questionID + '/' + imageFile;
 
         // insert the image
-        newImageContainer.prepend('<img class="enp-question-image enp-question-image" src="'+imageURL+'" alt="'+question.question_image_alt+'"/>');
-        // change the delete button value
-        changeQuestionTemplateVal($('.enp-button__question-image-delete', newImageContainer), questionID);
-        // add it in to the question
-        $('#enp-question--'+questionID+' .enp-question-image__input').after(newImageContainer);
+        $('#enp-question--'+questionID+' .enp-question-image__container').prepend('<img class="enp-question-image enp-question-image" src="'+imageURL+'" alt="'+question.question_image_alt+'"/>');
 
     }
 
@@ -640,27 +602,18 @@ jQuery( document ).ready( function( $ ) {
     function removeQuestionImage(question) {
         questionID = question.question_id;
 
-        $('#enp-question--'+questionID+' .enp-question-image__container').remove();
+        question = $('#enp-question--'+questionID);
+
+        $('.enp-question-image__container', question).remove();
         // clear the input
-        $('#enp-question--'+questionID+' .enp-question-image__input').val('');
+        $('.enp-question-image__input',question).val('');
 
         // bring the labels back
-        // it doesn't exist, so we'll have to grab it from the template and change the values
-        imageLabel = $('#enp-question--questionTemplateID .enp-question-image-upload').clone();
-        changeQuestionTemplateAttr(imageLabel, 'for', questionID);
-        imageUpload = $('#enp-question--questionTemplateID .enp-button__question-image-upload').clone();
-        changeQuestionTemplateVal(imageUpload, questionID);
-        imageFileSelect = $('#enp-question--questionTemplateID .enp-question-image-upload__input').clone();
-        changeQuestionTemplateAttr(imageFileSelect, 'name' ,questionID);
-        changeQuestionTemplateAttr(imageFileSelect, 'id' ,questionID);
-        // insert the cloned elements
-        imageUpload.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
-        imageFileSelect.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
-        imageLabel.insertAfter('#enp-question--'+questionID+' .enp-question-image__input');
-
-        imageFile = question.question_image;
-        console.log('image deleted '+imageFile);
-
+        // load the new image template
+        templateParams ={question_id: questionID, question_position: getQuestionIndex(questionID)};
+        $('.enp-question-image__input',question).after(questionImageUploadTemplate(templateParams));
+        // hide the upload button
+        $('.enp-button__question-image-upload, .enp-question-image-upload__input', question).hide();
     }
 
 
@@ -758,4 +711,15 @@ jQuery( document ).ready( function( $ ) {
         // set the new attribute value
         obj.attr(attr, newAttrVal);
     }
+
+    // set-up templates
+    // turn on mustache/handlebars style templating
+    _.templateSettings = {
+      interpolate: /\{\{(.+?)\}\}/g
+    };
+    var questionTemplate = _.template($('#question_template').html());
+    var questionImageTemplate = _.template($('#question_image_template').html());
+    var questionImageUploadTemplate = _.template($('#question_image_upload_template').html());
+    var mcOptionTemplate = _.template($('#mc_option_template').html());
+    //$('#enp-quiz').prepend(questionTemplate({question_id: '999', question_position: '53'}));
 });

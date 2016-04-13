@@ -58,10 +58,11 @@ $quiz_id = $quiz->get_quiz_id();
             $question_i = 0;
             // count the number of questions
             $question_ids = $quiz->get_questions();
-
-            foreach($question_ids as $question_id) {
-                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
-                $question_i++;
+            if(!empty($question_ids)){
+                foreach($question_ids as $question_id) {
+                    include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
+                    $question_i++;
+                }
             }
         ?>
 
@@ -82,6 +83,14 @@ $quiz_id = $quiz->get_quiz_id();
             echo '<script type="text/template" id="question_template">';
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
             // end our template
+            echo '</script>';
+
+            echo '<script type="text/template" id="question_image_template">';
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question-image.php');
+            echo '</script>';
+
+            echo '<script type="text/template" id="question_image_upload_template">';
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question-image-upload.php');
             echo '</script>';
 
             $mc_option_id = '{{mc_option_id}}';

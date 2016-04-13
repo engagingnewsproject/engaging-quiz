@@ -26,30 +26,10 @@
         <input type="hidden" id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input" name="enp_question[<?echo $question_i;?>][question_image]" value="<? echo $question_image;?>">
 
         <?php
-            if(!empty($question_image) || $question_id === '{{question_id}}') {?>
-                <div class="enp-question-image__container">
-                    <? if ($question_id !== '{{question_id}}') {?>
-                        <img
-                            class="enp-question-image enp-question-image"
-                            src="<? echo $question->get_question_image_src();?>"
-                            srcset="<? echo $question->get_question_image_srcset();?>"
-                            alt="<? echo $question->get_question_image_alt();?>"
-                        />
-                    <? } ?>
-                    <button class="enp-button enp-quiz-submit enp-button__question-image-delete" name="enp-quiz-submit" value="question-image--delete-<? echo $question_id;?>"><svg class="enp-icon enp-icon--delete enp-question__icon--question-image-delete"><use xlink:href="#icon-delete" /></svg></button>
-                </div>
-            <?}
-            if(empty($question_image) || $question_id === '{{question_id}}')
-             {?>
-                <label for="enp-question-image-upload-<?echo $question_id;?>" class="enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo">
-                    <use xlink:href="#icon-photo" />
-                </svg>
-                <svg class="enp-icon enp-icon--add enp-question-image-upload__icon--add">
-                    <use xlink:href="#icon-add" />
-                </svg> Add Image</label>
-                <input id="enp-question-image-upload-<?echo $question_id;?>" type="file" accept="image/*" class="enp-question-image-upload__input" name="question_image_upload_<?echo $question_id;?>">
-                <button class="enp-button enp-quiz-submit enp-button__question-image-upload" name="enp-quiz-submit" value="question-image--upload-<? echo $question_id;?>">Upload Image</button>
-            <?
+            if(!empty($question_image)) {
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question-image.php');
+            } elseif($question_id !== '{{question_id}}') {
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question-image-upload.php');
             }
         ?>
 
