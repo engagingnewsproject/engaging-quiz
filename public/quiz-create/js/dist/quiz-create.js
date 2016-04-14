@@ -1,7 +1,7 @@
 jQuery( document ).ready( function( $ ) {// append ajax response message
 function appendMessage(message, status) {
     var messageID = Math.floor((Math.random() * 1000) + 1);
-    $('.enp-quiz-message-ajax-container-DAWG').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+messageID+'"><p class="enp-message__list enp-message__list--'+status+'">'+message+'</p></div>');
+    $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+messageID+'"><p class="enp-message__list enp-message__list--'+status+'">'+message+'</p></div>');
 
     $('.enp-message-'+messageID).delay(3500).fadeOut(function(){
         $('.enp-message-'+messageID).fadeOut();
