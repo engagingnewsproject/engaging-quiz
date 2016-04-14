@@ -376,9 +376,6 @@ class Enp_quiz_Create {
  		   }
  	   }
 	   // initiate the save_quiz object
-
-
-
 		// get access to wpdb
 		global $wpdb;
 		// set-up an empty array for our quiz submission
@@ -396,14 +393,8 @@ class Enp_quiz_Create {
 					);
 		}
 
-		if(isset($posted_question)) {
-			// we have a template being passed on each quiz (for JS)
-			// so we need to extract that template from the array
-			unset($posted_question['questionCounterTemplate']);
-			// now check if it still has anything in it
-			if(!empty($posted_question)) {
-				$quiz['question'] = $posted_question;
-			}
+		if(isset($posted_question) && !empty($posted_question)) {
+			$quiz['question'] = $posted_question;
 		}
 
 		if(isset($posted_user_action) && !empty($posted_user_action)) {

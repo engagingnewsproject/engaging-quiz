@@ -40,10 +40,21 @@ jQuery( document ).ready( function( $ ) {
 
     });
 
+
     // ajax submission
     $(document).on('click', '.enp-quiz-submit', function(e) {
+
         if(!$(this).hasClass('enp-btn--next-step')) {
             e.preventDefault();
+            // if new quiz flag is 1, then check for a title before continue
+            if($('#enp-quiz-new').val() === '1') {
+                // check for a title
+                if($('.enp-quiz-title__textarea').val() === '') {
+                    $('.enp-quiz-title__textarea').focus();
+                    appendMessage('Please enter a title for your quiz.', 'error');
+                    return false;
+                }
+            }
 
             // add an "Are you sure about that?"
             if($(this).hasClass('enp-question__button--delete')) {
@@ -100,96 +111,7 @@ jQuery( document ).ready( function( $ ) {
              }
         } )
         // success
-        .done( function( response, textStatus, jqXHR ) {
-            // console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
-            //console.log( 'AJAX done', jqXHR.responseJSON );
-            console.log(jqXHR.responseJSON);
-            response = $.parseJSON(jqXHR.responseJSON);
-            userActionAction = response.user_action.action;
-            userActionElement = response.user_action.element;
-            // see if we've created a new quiz
-            if(response.status === 'success' && response.action === 'insert') {
-                // set-up quiz
-                setNewQuiz(response);
-            }
-            // check user action
-            if(userActionAction == 'add' && userActionElement == 'question') {
-                var newQuestionResponse = getNewQuestion(response.question);
-
-                if(newQuestionResponse !== false && newQuestionResponse.question_id !== undefined && parseInt(newQuestionResponse.question_id) > 0) {
-                    // we have a new question!
-                    new_questionID = newQuestionResponse.question_id;
-                    new_mcOption = getNewMCOption(new_questionID, response.question);
-                    addQuestion(new_questionID, new_mcOption.mc_option_id);
-                } else {
-                    unset_tempAddQuestion();
-                }
-            }
-            // remove Question
-            else if(userActionAction == 'delete' && userActionElement == 'question') {
-                // check to see if the action was completed
-                questionID = response.user_action.details.question_id;
-                questionResponse = checkQuestionSaveStatus(questionID, response.question);
-                if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
-                    removeQuestion(questionID);
-                } else {
-                    temp_unsetRemoveQuestion(questionID);
-                }
-
-            } else if(userActionAction == 'delete' && userActionElement == 'mc_option') {
-                // check to see if the action was completed
-                var mcOptionID = response.user_action.details.mc_option_id;
-                mcOptionResponse = checkMCOptionSaveStatus(mcOptionID, response.question);
-                if(mcOptionResponse !== false && mcOptionResponse.action === 'update' && mcOptionResponse.status === 'success') {
-                    removeMCOption(mcOptionID);
-                } else {
-                    temp_unsetRemoveMCOption(mcOptionID);
-                }
-
-            }
-            // add mc_option
-            else if(userActionAction == 'add' && userActionElement == 'mc_option') {
-                // get the new inserted mc_option_id
-                questionID = response.user_action.details.question_id;
-                var newMCOptionResponse = getNewMCOption(questionID, response.question);
-                if(newMCOptionResponse !== false && newMCOptionResponse.mc_option_id !== undefined && parseInt(newMCOptionResponse.mc_option_id) > 0) {
-                    // looks good! add the mc option
-                    addMCOption(newMCOptionResponse.mc_option_id, questionID);
-                } else {
-                    // uh oh, something didn't go right. Remove it.
-                    unset_tempAddMCOption(questionID);
-                }
-            }
-            // set correct mc_option
-            else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
-                // set the correct one
-                setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
-            }
-            // add question image
-            else if(userActionAction == 'upload' && userActionElement == 'question_image') {
-                // check to see if the action was completed
-                questionID = response.user_action.details.question_id;
-                questionResponse = checkQuestionSaveStatus(questionID, response.question);
-                if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
-                    addQuestionImage(questionResponse);
-                } else {
-                    temp_unsetAddQuestionImage(questionID);
-                }
-            }
-            // remove image
-            else if(userActionAction == 'delete' && userActionElement == 'question_image') {
-                // check to see if the action was completed
-                questionID = response.user_action.details.question_id;
-                questionResponse = checkQuestionSaveStatus(questionID, response.question);
-                if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
-                    removeQuestionImage(questionResponse);
-                } else {
-                    temp_unsetRemoveQuestionImage(questionID);
-                }
-            }
-            // show ajax messages
-            displayMessages(response.message);
-        } )
+        .done( successCallback )
         .fail( function( jqXHR, textStatus, errorThrown ) {
             console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
         } )
@@ -201,6 +123,105 @@ jQuery( document ).ready( function( $ ) {
             // remove wait class elements
             unsetWait();
         });
+    }
+
+    function successCallback( response, textStatus, jqXHR ) {
+        // console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
+        //console.log( 'AJAX done', jqXHR.responseJSON );
+        console.log(jqXHR.responseJSON);
+        if(jqXHR.responseJSON === undefined) {
+            // error :(
+            unsetWait();
+            appendMessage('Something went wrong. Please reload the page and try again.', 'error');
+            return false;
+        }
+
+        response = $.parseJSON(jqXHR.responseJSON);
+
+        userActionAction = response.user_action.action;
+        userActionElement = response.user_action.element;
+        // see if we've created a new quiz
+        if(response.status === 'success' && response.action === 'insert') {
+            // set-up quiz
+            setNewQuiz(response);
+        }
+        // check user action
+        if(userActionAction == 'add' && userActionElement == 'question') {
+            var newQuestionResponse = getNewQuestion(response.question);
+
+            if(newQuestionResponse !== false && newQuestionResponse.question_id !== undefined && parseInt(newQuestionResponse.question_id) > 0) {
+                // we have a new question!
+                new_questionID = newQuestionResponse.question_id;
+                new_mcOption = getNewMCOption(new_questionID, response.question);
+                addQuestion(new_questionID, new_mcOption.mc_option_id);
+            } else {
+                unset_tempAddQuestion();
+            }
+        }
+        // remove Question
+        else if(userActionAction == 'delete' && userActionElement == 'question') {
+            // check to see if the action was completed
+            questionID = response.user_action.details.question_id;
+            questionResponse = checkQuestionSaveStatus(questionID, response.question);
+            if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                removeQuestion(questionID);
+            } else {
+                temp_unsetRemoveQuestion(questionID);
+            }
+
+        } else if(userActionAction == 'delete' && userActionElement == 'mc_option') {
+            // check to see if the action was completed
+            var mcOptionID = response.user_action.details.mc_option_id;
+            mcOptionResponse = checkMCOptionSaveStatus(mcOptionID, response.question);
+            if(mcOptionResponse !== false && mcOptionResponse.action === 'update' && mcOptionResponse.status === 'success') {
+                removeMCOption(mcOptionID);
+            } else {
+                temp_unsetRemoveMCOption(mcOptionID);
+            }
+
+        }
+        // add mc_option
+        else if(userActionAction == 'add' && userActionElement == 'mc_option') {
+            // get the new inserted mc_option_id
+            questionID = response.user_action.details.question_id;
+            var newMCOptionResponse = getNewMCOption(questionID, response.question);
+            if(newMCOptionResponse !== false && newMCOptionResponse.mc_option_id !== undefined && parseInt(newMCOptionResponse.mc_option_id) > 0) {
+                // looks good! add the mc option
+                addMCOption(newMCOptionResponse.mc_option_id, questionID);
+            } else {
+                // uh oh, something didn't go right. Remove it.
+                unset_tempAddMCOption(questionID);
+            }
+        }
+        // set correct mc_option
+        else if(userActionAction == 'set_correct' && userActionElement == 'mc_option') {
+            // set the correct one
+            setCorrectMCOption(response.user_action.details.mc_option_id, response.user_action.details.question_id);
+        }
+        // add question image
+        else if(userActionAction == 'upload' && userActionElement == 'question_image') {
+            // check to see if the action was completed
+            questionID = response.user_action.details.question_id;
+            questionResponse = checkQuestionSaveStatus(questionID, response.question);
+            if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                addQuestionImage(questionResponse);
+            } else {
+                temp_unsetAddQuestionImage(questionID);
+            }
+        }
+        // remove image
+        else if(userActionAction == 'delete' && userActionElement == 'question_image') {
+            // check to see if the action was completed
+            questionID = response.user_action.details.question_id;
+            questionResponse = checkQuestionSaveStatus(questionID, response.question);
+            if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
+                removeQuestionImage(questionResponse);
+            } else {
+                temp_unsetRemoveQuestionImage(questionID);
+            }
+        }
+        // show ajax messages
+        displayMessages(response.message);
     }
 
     function setNewQuiz(response) {
@@ -388,8 +409,9 @@ jQuery( document ).ready( function( $ ) {
         // set-up question_content var
         setUpAccordion($('#enp-question--newQuestionTemplateID'));
 
-    //    newQuestion.insertBefore(templateAccordionHeader);
-    //    newAccordionHeader.insertBefore(newQuestion);
+        // focus the accordion button
+        $('#enp-question--newQuestionTemplateID__accordion-header').focus();
+
     }
 
     // undo our temp action
