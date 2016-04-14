@@ -1,5 +1,4 @@
 jQuery( document ).ready( function( $ ) {
-
     function setUpAccordion(obj) {
         var accordion,
             question_title,
@@ -118,8 +117,6 @@ jQuery( document ).ready( function( $ ) {
     }
 
     function quizSaveSuccess( response, textStatus, jqXHR ) {
-        // console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
-        //console.log( 'AJAX done', jqXHR.responseJSON );
         console.log(jqXHR.responseJSON);
         if(jqXHR.responseJSON === undefined) {
             // error :(

@@ -109,8 +109,7 @@ class Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'js/enp_quiz-create.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-quiz-create' );
+
 
 	}
 	/*
