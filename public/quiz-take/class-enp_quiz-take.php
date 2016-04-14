@@ -75,9 +75,6 @@ class Enp_quiz_Take {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-quiz-take', plugin_dir_url( __FILE__ ) . 'js/enp_quiz-take.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-quiz-take' );
-
 	}
 
 }
