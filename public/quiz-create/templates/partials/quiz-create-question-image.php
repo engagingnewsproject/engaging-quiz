@@ -1,7 +1,7 @@
 <div class="enp-question-image__container">
     <? if ($question_id !== '{{question_id}}') {?>
         <img
-            class="enp-question-image enp-question-image"
+            class="enp-question-image"
             src="<? echo $question->get_question_image_src();?>"
             srcset="<? echo $question->get_question_image_srcset();?>"
             alt="<? echo $question->get_question_image_alt();?>"

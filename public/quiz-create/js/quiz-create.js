@@ -1,11 +1,5 @@
 jQuery( document ).ready( function( $ ) {
 
-    // ready the questions as accordions
-    $('.enp-question-content').each(function(i) {
-        // set up accordions
-        setUpAccordion($(this));
-    });
-
     function setUpAccordion(obj) {
         var accordion,
             question_title,
@@ -27,7 +21,7 @@ jQuery( document ).ready( function( $ ) {
     }
 
     // hide descriptions
-    $('.enp-button__question-image-upload, .enp-question-image-upload__input').hide();
+    $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
 
     //*** END SETUP ***//
 
@@ -400,7 +394,7 @@ jQuery( document ).ready( function( $ ) {
         // add the question upload area
         $('.enp-question-image-alt__label', newQuestion).before(questionImageUploadTemplate(templateParams));
         // hide the new image buttons
-        $('.enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
+        $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
 
         // add a temp MC option
         temp_addMCOption('newQuestionTemplateID');
@@ -628,29 +622,30 @@ jQuery( document ).ready( function( $ ) {
 
         $('.enp-question-image__container', question).remove();
         // clear the input
-        $('.enp-question-image__input',question).val('');
+        $('.enp-question-image__input', question).val('');
 
         // bring the labels back
         // load the new image template
         templateParams ={question_id: questionID, question_position: getQuestionIndex(questionID)};
         $('.enp-question-image__input',question).after(questionImageUploadTemplate(templateParams));
         // hide the upload button
-        $('.enp-button__question-image-upload, .enp-question-image-upload__input', question).hide();
+        $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input', question).hide();
+        // bring the swanky upload image visual button back
+        $('.enp-question-image__input',question).after(questionImageUploadButtonTemplate());
+        // focus the button in case they want to upload a new one
+        $('.enp-question-image-upload',question).focus();
     }
 
-
-    $('document').on('click', '.enp-question-image-upload', function() {
-        imageLabel = $(this);
-        imageInput = imageLabel.siblings('.enp-question-image__input');
-        imageSubmit = imageLabel.siblings('.enp-button__question-image-upload');
-        oldImageSubmit = imageSubmit.val();
-        imageInput.trigger('click'); // bring up file selector
+    $(document).on('click', '.enp-question-image-upload', function() {
+        imageUploadInput = $(this).siblings('.enp-question-image-upload__input');
+        imageUploadInput.trigger('click'); // bring up file selector
     });
 
     $(document).on('change', '.enp-question-image-upload__input',  function() {
-        console.log('the image to be uploaded is'+$(this).val());
         imageSubmit = $(this).siblings('.enp-button__question-image-upload');
         imageSubmit.trigger('click');
+        // move focus to image description input
+        imageSubmit.siblings('.enp-question-image-alt__input').focus();
     });
 
     /**
@@ -741,7 +736,19 @@ jQuery( document ).ready( function( $ ) {
     };
     var questionTemplate = _.template($('#question_template').html());
     var questionImageTemplate = _.template($('#question_image_template').html());
+    var questionImageUploadButtonTemplate = _.template($('#question_image_upload_button_template').html());
     var questionImageUploadTemplate = _.template($('#question_image_upload_template').html());
     var mcOptionTemplate = _.template($('#mc_option_template').html());
     //$('#enp-quiz').prepend(questionTemplate({question_id: '999', question_position: '53'}));
+
+    // ready the questions as accordions
+    $('.enp-question-content').each(function(i) {
+        // set up accordions
+        setUpAccordion($(this));
+        // add in image upload button template if it doesn't have an image
+        if($('.enp-question-image', this).length === 0) {
+            $('.enp-question-image__input', this).after(questionImageUploadButtonTemplate());
+        }
+
+    });
 });

@@ -83,8 +83,18 @@ $quiz_id = $quiz->get_quiz_id();
             echo '<script type="text/template" id="question_template">';
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
             // end our template
-            echo '</script>';
+            echo '</script>';?>
 
+            <script type="text/template" id="question_image_upload_button_template">
+                <button type="button" class="enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo">
+                    <use xlink:href="#icon-photo" />
+                </svg>
+                <svg class="enp-icon enp-icon--add enp-question-image-upload__icon--add">
+                    <use xlink:href="#icon-add" />
+                </svg> Add Image</button>
+            </script>
+
+            <?php
             echo '<script type="text/template" id="question_image_template">';
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question-image.php');
             echo '</script>';
