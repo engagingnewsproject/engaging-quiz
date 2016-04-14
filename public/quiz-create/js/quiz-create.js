@@ -66,15 +66,12 @@ jQuery( document ).ready( function( $ ) {
             if($(this).hasClass('enp-quiz-submit--wait')) {
                 console.log('waiting...');
                 return false;
-                // TODO: animation to show stuff is happening and they should wait a sec
             } else {
                 setWait();
             }
 
             // ajax send
             var userAction = $(this).val();
-            // this sets up the immediate actions so it's faster to respond
-            setTemp(userAction);
             // save the quiz
             saveQuiz(userAction);
         }
@@ -94,18 +91,19 @@ jQuery( document ).ready( function( $ ) {
         // append our action for wordpress AJAX call
         fd.append('action', 'save_quiz');
 
+        // this sets up the immediate actions so it feels faster to the user
+        // Optimistic Ajax
+        setTemp(userAction);
+
         $.ajax( {
             type: 'POST',
              url  : quizCreate.ajax_url,
              data : fd,
              processData: false,  // tell jQuery not to process the data
              contentType: false,   // tell jQuery not to set contentType
-             beforeSend : function( d ) {
-                console.log( 'Before send', d );
-             }
         } )
         // success
-        .done( successCallback )
+        .done( quizSaveSuccess )
         .fail( function( jqXHR, textStatus, errorThrown ) {
             console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
         } )
@@ -119,7 +117,7 @@ jQuery( document ).ready( function( $ ) {
         });
     }
 
-    function successCallback( response, textStatus, jqXHR ) {
+    function quizSaveSuccess( response, textStatus, jqXHR ) {
         // console.log( 'AJAX done', textStatus, jqXHR, jqXHR.getAllResponseHeaders() );
         //console.log( 'AJAX done', jqXHR.responseJSON );
         console.log(jqXHR.responseJSON);
@@ -395,6 +393,10 @@ jQuery( document ).ready( function( $ ) {
         $('.enp-question-image-alt__label', newQuestion).before(questionImageUploadTemplate(templateParams));
         // hide the new image buttons
         $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
+
+        // add the swanky image upload button
+        // bring the swanky upload image visual button back
+        $('.enp-question-image__input',newQuestion).after(questionImageUploadButtonTemplate());
 
         // add a temp MC option
         temp_addMCOption('newQuestionTemplateID');

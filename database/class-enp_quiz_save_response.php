@@ -410,8 +410,14 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     *
     */
     public function validate_question_mc_options($question) {
-        $mc_options = $question['mc_option'];
+
         $return_message = 'no_mc_options';
+        if(!array_key_exists('mc_option', $question)) {
+            return $return_message;
+        } else {
+            $mc_options = $question['mc_option'];
+        }
+
         if(empty($mc_options)) {
             $this->add_error('Question '.($question['question_order']+1).' is missing multiple choice options.');
             $return_message = 'no_mc_options';
