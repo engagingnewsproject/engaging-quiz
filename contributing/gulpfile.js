@@ -72,12 +72,12 @@ gulp.task('concatQuizCreateJS', function() {
         ];
     filename = 'quiz-create';
     dist = '../enp-quiz/public/quiz-create/js/dist/';
-    concatjQuery(src, filename, dist);
+    return concatjQuery(src, filename, dist);
 });
 
 gulp.task('compressQuizCreateJS', function() {
     dist = '../enp-quiz/public/quiz-create/js/dist/';
-    compressJS(dist);
+    return compressJS(dist);
 });
 
 gulp.task('quizTakeJS', function(callback) {
@@ -90,12 +90,12 @@ gulp.task('concatQuizTakeJS', function() {
     src = "../enp-quiz/public/quiz-take/js/quiz-take/*.js";
     filename = 'quiz-take';
     dist = '../enp-quiz/public/quiz-take/js/dist/';
-    concatjQuery(src, filename, dist);
+    return concatjQuery(src, filename, dist);
 });
 
 gulp.task('compressQuizTakeJS', function() {
     dist = '../enp-quiz/public/quiz-take/js/dist/';
-    compressJS(dist);
+    return compressJS(dist);
 });
 
 function concatjQuery(src, filename, dist) {
