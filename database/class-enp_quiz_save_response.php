@@ -26,7 +26,7 @@ class Enp_quiz_Save_response {
     * @param $response (array) data we'll be saving to the response table
     * @return builds and returns a response message
     */
-    protected function insert_response($response) {
+    public function insert_response($response) {
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
@@ -38,12 +38,12 @@ class Enp_quiz_Save_response {
         $sql = "INSERT INTO ".$pdo->response_table." (
                                             question_id,
                                             response_correct,
-                                            response_created_at,
+                                            response_created_at
                                         )
                                         VALUES(
                                             :question_id,
                                             :response_correct,
-                                            :response_created_at,
+                                            :response_created_at
                                         )";
         // insert the mc_option into the database
         $stmt = $pdo->query($sql, $params);
@@ -59,13 +59,14 @@ class Enp_quiz_Save_response {
                                         'action'       => 'insert'
                                 );
             // see what type of question we're working on and save that response
-            if($response['response_type'] === 'mc') {
+            if($response['question_type'] === 'mc') {
                 // we added a mc_option successfully, let them know!
                 $response_mc = new Enp_quiz_Save_response_MC();
-                $response_mc->insert_response_mc($response);
+                $response_mc_response = $response_mc->insert_response_mc($response);
                 // merge the arrays and return it
-                $response = array_merge($response, $response_mc);
-                return $response;
+                $response_response = array_merge($response, $response_response);
+                $response_response = array_merge($response_response, $response_mc_response);
+                return $response_response;
             }
         } else {
             // handle errors

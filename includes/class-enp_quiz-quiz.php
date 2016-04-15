@@ -447,34 +447,36 @@ class Enp_quiz_Quiz {
 
         $quiz['question'] = array();
         // loop questions
-        foreach($question_ids as $question_id) {
-            // get question object
-            $question = new Enp_quiz_Question($question_id);
-            // cast object to array
-            $question_array = (array) $question;
-            // remove what we don't need
-            unset($question_array['quiz_id']);
-            unset($question_array['mc_options']);
-            // get question type
-            $question_type = $question->get_question_type();
-            $question_array['question_image_src'] = $question->get_question_image_src();
-            $question_array['question_image_srcset'] = $question->get_question_image_srcset();
-            // if mc, get mc options
-            if($question_type === 'mc') {
-                // get the mc options
-                $mc_option_ids = $question->get_mc_options();
-                // create a mc_options_array
-                $question_array['mc_option'] = array();
-                // create the MC Options
-                foreach($mc_option_ids as $mc_option_id) {
-                    // build mc option object
-                    $mc_option = new Enp_quiz_MC_option($mc_option_id);
-                    // cast object to array in question_array
-                    $question_array['mc_option'][] = (array) $mc_option;
+        if(!empty($question_ids)) {
+            foreach($question_ids as $question_id) {
+                // get question object
+                $question = new Enp_quiz_Question($question_id);
+                // cast object to array
+                $question_array = (array) $question;
+                // remove what we don't need
+                unset($question_array['quiz_id']);
+                unset($question_array['mc_options']);
+                // get question type
+                $question_type = $question->get_question_type();
+                $question_array['question_image_src'] = $question->get_question_image_src();
+                $question_array['question_image_srcset'] = $question->get_question_image_srcset();
+                // if mc, get mc options
+                if($question_type === 'mc') {
+                    // get the mc options
+                    $mc_option_ids = $question->get_mc_options();
+                    // create a mc_options_array
+                    $question_array['mc_option'] = array();
+                    // create the MC Options
+                    foreach($mc_option_ids as $mc_option_id) {
+                        // build mc option object
+                        $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                        // cast object to array in question_array
+                        $question_array['mc_option'][] = (array) $mc_option;
+                    }
                 }
+                // add this question to the array we'll send via json
+                $quiz['question'][] = $question_array;
             }
-            // add this question to the array we'll send via json
-            $quiz['question'][] = $question_array;
         }
         return json_encode($quiz);
     }

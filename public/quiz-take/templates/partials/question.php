@@ -1,5 +1,6 @@
 
 <input type="hidden" name="enp-question-id" value="<? echo $question_id;?>"/>
+<input type="hidden" name="enp-question-type" value="<? echo $question_type;?>"/>
 <fieldset class="enp-question__fieldset">
     <legend class="enp-question__legend enp-question__question"><? echo $question_title;?></legend>
 
@@ -30,7 +31,7 @@
         }
     }?>
 
-    <button class="enp-btn enp-options__submit enp-question__submit">Submit Answer <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
+    <button type="submit" class="enp-btn enp-options__submit enp-question__submit" name="enp-question-submit" value="enp-question-submit">Submit Answer <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
       <use xlink:href="#icon-chevron-right" />
     </svg></button>
 </fieldset>

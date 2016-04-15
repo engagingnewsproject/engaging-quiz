@@ -15,7 +15,7 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 
-class Enp_quiz_Save_response_MC {
+class Enp_quiz_Save_response_MC extends Enp_quiz_Save_response {
 
     public function __construct() {
 
@@ -31,16 +31,16 @@ class Enp_quiz_Save_response_MC {
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
         $params = array(':response_id'      => $response['response_id'],
-                        ':mc_option_id'=> $response['mc_option_id'],
+                        ':mc_option_id'=> $response['question_response']
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->response_mc_table." (
                                             response_id,
-                                            mc_option_id,
+                                            mc_option_id
                                         )
                                         VALUES(
                                             :response_id,
-                                            :mc_option_id,
+                                            :mc_option_id
                                         )";
         // insert the mc_option into the database
         $stmt = $pdo->query($sql, $params);
@@ -56,7 +56,7 @@ class Enp_quiz_Save_response_MC {
                                         'action'       => 'insert'
                                 );
             // see what type of question we're working on and save that response
-            if($response['response_type'] === 'mc') {
+            if($response['question_type'] === 'mc') {
                 // we added a mc_option successfully, let them know!
                 return $response;
             }

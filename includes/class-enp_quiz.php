@@ -70,8 +70,6 @@ class Enp_quiz {
 		// We HAVE to build this because it's not accesible to the AJAX calls otherwise
 		// We could pass it to if (defined('DOING_AJAX') && DOING_AJAX) { though
 		$this->load_quiz_create();
-		// Run the quiz take class
-		$this->load_quiz_take();
 
 	}
 
@@ -109,22 +107,6 @@ class Enp_quiz {
 
 	}
 
-	/**
-	 * Load the quiz_take public facing class
-	 *
-	 * @since    0.0.1
-	 * @access   private
-	 */
-	private function load_quiz_take() {
-		/**
-		 * The class responsible for defining all actions that occur in the public-facing quiz creation
-		 * side of the site.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/quiz-take/class-enp_quiz-take.php';
-
-		$quiz_take = new Enp_quiz_Take( $this->get_plugin_name(), $this->get_version() );
-
-	}
 
 	/**
 	 * The name of the plugin used to uniquely identify it within the context of

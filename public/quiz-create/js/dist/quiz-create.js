@@ -241,7 +241,6 @@ function displayMessages(message) {
         if(typeof message.success !== 'undefined' && message.success.length > 0) {
             appendMessage('Quiz Saved.', 'success');
         }
-
     //}
 
     // Show error messages

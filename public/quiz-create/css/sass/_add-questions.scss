@@ -295,6 +295,11 @@
 
 
     // UX interactions
+    .enp-mc-option--inputs,
+    .enp-accordion-header {
+        animation: slideInBottom .4s ease-out forwards;
+    }
+
     .enp-mc-option--remove,
     .enp-question--remove,
     .enp-question__image--remove {
@@ -309,7 +314,4 @@
         width: 100%;
     }
 
-    .enp-accordion-header {
-        animation: slideInBottom .4s ease-out forwards;
-    }
 }
