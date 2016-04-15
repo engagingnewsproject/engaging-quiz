@@ -247,6 +247,7 @@ class Enp_quiz_Question {
     * @return question_image from the object
     */
     public function get_question_image_src() {
+        $question_image_src = '';
         $question_image = $this->question_image;
         if(!empty($question_image)) {
             $question_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$question_image;

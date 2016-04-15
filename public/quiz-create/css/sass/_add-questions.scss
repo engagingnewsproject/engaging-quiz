@@ -308,4 +308,8 @@
         margin-bottom: 1rem;
         width: 100%;
     }
+
+    .enp-accordion-header {
+        animation: slideInBottom .4s ease-out forwards;
+    }
 }

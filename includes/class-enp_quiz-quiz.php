@@ -457,6 +457,8 @@ class Enp_quiz_Quiz {
             unset($question_array['mc_options']);
             // get question type
             $question_type = $question->get_question_type();
+            $question_array['question_image_src'] = $question->get_question_image_src();
+            $question_array['question_image_srcset'] = $question->get_question_image_srcset();
             // if mc, get mc options
             if($question_type === 'mc') {
                 // get the mc options
