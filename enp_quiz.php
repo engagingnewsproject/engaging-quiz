@@ -72,7 +72,7 @@ require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz_option.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_question.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_mc_option.php';
-require plugin_dir_path( __FILE__ ) . 'database/class-Enp_quiz_Save_quiz_Response.php';
+require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz_response.php';
 
 
 /**

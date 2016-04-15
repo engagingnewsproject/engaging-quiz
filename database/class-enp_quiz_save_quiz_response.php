@@ -1,4 +1,5 @@
-<?/**
+<?php
+/**
  * Response messages for saving quizzes
  *
  * @link       http://engagingnewsproject.org
