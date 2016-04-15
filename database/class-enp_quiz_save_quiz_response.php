@@ -17,7 +17,7 @@
  * @subpackage Enp_quiz/database
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Save_response extends Enp_quiz_Save {
+class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
     public $quiz_id,
            $quiz_title,
            $quiz_status,
@@ -243,7 +243,7 @@ class Enp_quiz_Save_response extends Enp_quiz_Save {
     * Runs all checks to validate and build error messages on quiz form
     * All the functions it runs add to the response object if there are errors
     *
-    * @usage $response = new Enp_quiz_Save_response();
+    * @usage $response = new Enp_quiz_Save_quiz_Response();
     *        $validate = $response->validate_quiz_and_questions($quiz);
     *        var_dump($validate); // returns 'invalid' or 'valid'
     *        var_dump($response->get_error_messages()); // all error messages

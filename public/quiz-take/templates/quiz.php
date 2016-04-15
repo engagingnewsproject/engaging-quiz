@@ -127,7 +127,6 @@ $has_slider = false;
 <?php
 if($has_mc === true) {
     $mc_option_id = '{{mc_option_id}}';
-    $mc_option_correct = '{{mc_option_correct}}';
     $mc_option_content = '{{mc_option_content}}';
     echo '<script type="text/template" id="mc_option_template">';
     include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');

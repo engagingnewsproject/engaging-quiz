@@ -134,11 +134,11 @@ $valid_quiz = array (
     ),
 );
 
-$response = new Enp_quiz_Save_response();
+$response = new Enp_quiz_Save_quiz_Response();
 $validate = $response->validate_quiz_and_questions($invalid_quiz);
 var_dump($validate); // should return 'invalid'
 var_dump($response->message['error']); // should be array of error messages
-$response = new Enp_quiz_Save_response();
+$response = new Enp_quiz_Save_quiz_Response();
 $validate = $response->validate_quiz_and_questions($valid_quiz);
 var_dump($validate); // should return 'valid'
 var_dump($response->message['error']); // should be empty array

@@ -35,7 +35,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         self::$quiz = $this->flatten_quiz_array(self::$quiz);
 
         // Open a new response object
-        self::$response_obj = new Enp_quiz_Save_response();
+        self::$response_obj = new Enp_quiz_Save_quiz_Response();
         // setup the user_action response
         self::$response_obj->set_user_action_response(self::$quiz);
         // these are referenced a lot, so lets set a quick link up for them

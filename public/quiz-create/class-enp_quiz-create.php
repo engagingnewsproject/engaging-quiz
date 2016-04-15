@@ -222,7 +222,7 @@ class Enp_quiz_Create {
 	* It won't SAVE their previous settings, but they will still be able to edit them.
 	*/
 	public function validate_quiz_redirect($quiz, $publish = false) {
-		$response = new Enp_quiz_Save_response();
+		$response = new Enp_quiz_Save_quiz_Response();
         $validate = $response->validate_quiz_and_questions($quiz);
         if($validate === 'invalid') {
 			// combine the arrays
