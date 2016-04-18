@@ -71,6 +71,17 @@ class Enp_quiz_Question {
         $this->question_type = $this->set_question_type();
         $this->question_explanation = $this->set_question_explanation();
         $this->question_order = $this->set_question_order();
+        // response/view data
+        $this->question_views = $this->set_question_views();
+        $this->question_responses = $this->set_question_responses();
+        $this->question_responses_correct = $this->set_question_responses_correct();
+        $this->question_responses_incorrect = $this->set_question_responses_incorrect();
+        $this->question_responses_correct_percentage = $this->set_question_responses_correct_percentage();
+        $this->question_responses_incorrect_percentage = $this->set_question_responses_incorrect_percentage();
+        $this->question_score_ = $this->set_question_score_average();
+        $this->question_time_spent = $this->set_question_time_spent();
+        $this->question_time_spent_average = $this->set_question_time_spent_average();
+
         $this->question_is_deleted = $this->set_question_is_deleted();
         if($this->question_type === 'mc') {
             $this->mc_options = $this->set_mc_options();
@@ -197,6 +208,96 @@ class Enp_quiz_Question {
             $mc_options[] = (int) $mc_option['mc_option_id'];
         }
         return $mc_options;
+    }
+
+    /**
+    * Set the question_views for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_views field from the database
+    */
+    protected function set_question_views() {
+        $question_views = self::$question['question_views'];
+        return $question_views;
+    }
+
+    /**
+    * Set the question_responses for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_responses field from the database
+    */
+    protected function set_question_responses() {
+        $question_responses = self::$question['question_responses'];
+        return $question_responses;
+    }
+
+    /**
+    * Set the question_responses_correct for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_responses_correct field from the database
+    */
+    protected function set_question_responses_correct() {
+        $question_responses_correct = self::$question['question_responses_correct'];
+        return $question_responses_correct;
+    }
+
+    /**
+    * Set the question_responses_incorrect for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_responses_incorrect field from the database
+    */
+    protected function set_question_responses_incorrect() {
+        $question_responses_incorrect = self::$question['question_responses_incorrect'];
+        return $question_responses_incorrect;
+    }
+
+    /**
+    * Set the question_responses_correct_percentage for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_responses_correct_percentage field from the database
+    */
+    protected function set_question_responses_correct_percentage() {
+        $question_responses_correct_percentage = self::$question['question_responses_correct_percentage'];
+        return $question_responses_correct_percentage;
+    }
+
+    /**
+    * Set the question_responses_incorrect_percentage for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_responses_incorrect_percentage field from the database
+    */
+    protected function set_question_responses_incorrect_percentage() {
+        $question_responses_incorrect_percentage = self::$question['question_responses_incorrect_percentage'];
+        return $question_responses_incorrect_percentage;
+    }
+
+    /**
+    * Set the question_score_average for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_score_average field from the database
+    */
+    protected function set_question_score_average() {
+        $question_score_average = self::$question['question_score_average'];
+        return $question_score_average;
+    }
+
+    /**
+    * Set the question_time_spent for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_time_spent field from the database
+    */
+    protected function set_question_time_spent() {
+        $question_time_spent = self::$question['question_time_spent'];
+        return $question_time_spent;
+    }
+
+    /**
+    * Set the question_time_spent_average for our Quiz Object
+    * @param $question = question row from question database table
+    * @return question_time_spent_average field from the database
+    */
+    protected function set_question_time_spent_average() {
+        $question_time_spent_average = self::$question['question_time_spent_average'];
+        return $question_time_spent_average;
     }
 
     /**
@@ -347,6 +448,136 @@ class Enp_quiz_Question {
     public function get_mc_options() {
         $mc_options = $this->mc_options;
         return $mc_options;
+    }
+
+    /**
+    * Get the question_views for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_views() {
+        $question_views = $this->question_views;
+        return $question_views;
+    }
+
+    /**
+    * Get the question_responses for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_responses() {
+        $question_responses = $this->question_responses;
+        return $question_responses;
+    }
+
+    /**
+    * Get the question_responses_correct for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_responses_correct() {
+        $question_responses_correct = $this->question_responses_correct;
+        return $question_responses_correct;
+    }
+
+    /**
+    * Get the question_incorrect for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_incorrect() {
+        $question_incorrect = $this->question_incorrect;
+        return $question_incorrect;
+    }
+
+    /**
+    * Get the question_correct_percentage for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_correct_percentage() {
+        $question_correct_percentage = $this->question_correct_percentage;
+        return $question_correct_percentage;
+    }
+
+    /**
+    * Get the question_incorrect_percentage for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_incorrect_percentage() {
+        $question_incorrect_percentage = $this->question_incorrect_percentage;
+        return $question_incorrect_percentage;
+    }
+
+    /**
+    * Get the question_score_average for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_score_average() {
+        $question_score_average = $this->question_score_average;
+        return $question_score_average;
+    }
+
+    /**
+    * Get the question_time_spent for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_time_spent() {
+        $question_time_spent = $this->question_time_spent;
+        return $question_time_spent;
+    }
+
+    /**
+    * Get the question_views for our Question Object
+    * @param $question = question object
+    * @return array of mc_option_id's as integers
+    */
+    public function get_question_time_spent_average() {
+        $question_time_spent_average = $this->question_time_spent_average;
+        return $question_time_spent_average;
+    }
+
+    /**
+    * Get the built question with all MC Option / Slider data for taking quizzes
+    *
+    * @param $question = question object
+    * @return array with full question data for taking quizzes or converting to JSON
+    */
+    public function get_take_question_array() {
+        // cast object to array
+        $question_array = (array) $this;
+        // remove what we don't need
+        unset($question_array['quiz_id']);
+        unset($question_array['mc_options']);
+        // get question type
+        $question_type = $this->get_question_type();
+        // get question images info
+        $question_array['question_image_src'] = $this->get_question_image_src();
+        $question_array['question_image_srcset'] = $this->get_question_image_srcset();
+        // if mc, get mc options
+        if($question_type === 'mc') {
+            // get the mc options
+            $mc_option_ids = $this->get_mc_options();
+            // create a mc_options_array
+            $question_array['mc_option'] = array();
+            // create the MC Options
+            foreach($mc_option_ids as $mc_option_id) {
+                // build mc option object
+                $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                // cast object to array in question_array
+                $mc_option_array = $mc_option->get_take_mc_option_array();
+                $question_array['mc_option'][] = $mc_option_array;
+            }
+        }
+        return $question_array;
+    }
+
+    public function get_take_question_json() {
+        $question = $this->get_take_question_array();
+        return json_encode($question);
     }
 
     /**

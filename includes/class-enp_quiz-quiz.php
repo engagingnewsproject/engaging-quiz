@@ -18,7 +18,13 @@ class Enp_quiz_Quiz {
             $quiz_title_display,
             $quiz_width,
             $quiz_bg_color,
-            $quiz_text_color;
+            $quiz_text_color,
+            $quiz_views,
+            $quiz_starts,
+            $quiz_finishes,
+            $quiz_score_average,
+            $quiz_time_spent,
+            $quiz_time_spent_average;
 
     protected static $quiz;
 
@@ -76,8 +82,13 @@ class Enp_quiz_Quiz {
         $this->quiz_created_at = $this->set_quiz_created_at();
         $this->quiz_updated_by = $this->set_quiz_updated_by();
         $this->quiz_updated_at = $this->set_quiz_updated_at();
-        //$this->quiz_color_border = $this->set_quiz_color_border();
         $this->questions = $this->set_questions();
+        $this->quiz_views = $this->set_quiz_views();
+        $this->quiz_starts = $this->set_quiz_starts();
+        $this->quiz_finishes = $this->set_quiz_finishes();
+        $this->quiz_score_average = $this->set_quiz_score_average();
+        $this->quiz_time_spent = $this->set_quiz_time_spent();
+        $this->quiz_time_spent_average = $this->set_quiz_time_spent_average();
 
         // set options
         $this->set_quiz_options();
@@ -218,43 +229,6 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Set the quiz_bg_color for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_bg_color field from the database
-    */
-    /*
-    protected function set_quiz_bg_color() {
-        // TODO: Validate HEX
-        $quiz_bg_color = self::$quiz['quiz_bg_color'];
-        return $quiz_bg_color;
-    }
-    */
-
-    /**
-    * Set the quiz_text_color for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_text_color field from the database
-    */
-    /*
-    protected function set_quiz_text_color() {
-        // TODO: Validate HEX
-        $quiz_text_color = self::$quiz['quiz_text_color'];
-        return $quiz_text_color;
-    }
-    */
-    /**
-    * Set the quiz_color_border for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_color_border field from the database
-    */
-    /*
-    protected function set_quiz_color_border() {
-        // TODO: Validate HEX
-        $quiz_color_border = self::$quiz['quiz_color_border'];
-        return $quiz_color_border;
-    }
-    */
-    /**
     * Set the questions for our Quiz Object
     * @param $quiz_id
     * @return questions array of ids array(3,4,5) from the database
@@ -279,6 +253,66 @@ class Enp_quiz_Quiz {
             $questions[] = (int) $question['question_id'];
         }
         return $questions;
+    }
+
+    /**
+    * Set the views for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return views field from the database
+    */
+    protected function set_quiz_views() {
+        $views = self::$quiz['quiz_views'];
+        return $views;
+    }
+
+    /**
+    * Set the starts for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return starts field from the database
+    */
+    protected function set_quiz_starts() {
+        $starts = self::$quiz['quiz_starts'];
+        return $starts;
+    }
+
+    /**
+    * Set the finishes for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return finishes field from the database
+    */
+    protected function set_quiz_finishes() {
+        $finishes = self::$quiz['quiz_finishes'];
+        return $finishes;
+    }
+
+    /**
+    * Set the score_average for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return score_average field from the database
+    */
+    protected function set_quiz_score_average() {
+        $score_average = self::$quiz['quiz_score_average'];
+        return $score_average;
+    }
+
+    /**
+    * Set the time_spent for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return time_spent field from the database
+    */
+    protected function set_quiz_time_spent() {
+        $time_spent = self::$quiz['quiz_time_spent'];
+        return $time_spent;
+    }
+
+    /**
+    * Set the time_spent_average for our Quiz Object
+    * @param $quiz = quiz row from quiz database table
+    * @return time_spent_average field from the database
+    */
+    protected function set_quiz_time_spent_average() {
+        $time_spent_average = self::$quiz['quiz_time_spent_average'];
+        return $time_spent_average;
     }
 
     /**
@@ -412,17 +446,6 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Get the quiz_color_border for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
-    /*
-    public function get_quiz_color_border() {
-        $quiz_color_border = $this->quiz_color_border;
-        return $quiz_color_border;
-    }
-    */
-    /**
     * Get the questions for our Quiz Object
     * @param $quiz = quiz object
     * @return array of question_id's as integers
@@ -432,54 +455,110 @@ class Enp_quiz_Quiz {
         return $questions;
     }
 
+
+    /**
+    * Get the quiz views for our Quiz Object
+    * @param $quiz = quiz object
+    * @return Date formatted Y-m-d H:i:s
+    */
+    public function get_quiz_views() {
+        $quiz_views = $this->quiz_views;
+        return $quiz_views;
+    }
+
+    /**
+    * Get the quiz starts for our Quiz Object
+    * @param $quiz = quiz object
+    * @return Date formatted Y-m-d H:i:s
+    */
+    public function get_quiz_starts() {
+        $quiz_starts = $this->quiz_starts;
+        return $quiz_starts;
+    }
+
+    /**
+    * Get the quiz finishes for our Quiz Object
+    * @param $quiz = quiz object
+    * @return Date formatted Y-m-d H:i:s
+    */
+    public function get_quiz_finishes() {
+        $quiz_finishes = $this->quiz_finishes;
+        return $quiz_finishes;
+    }
+
+    /**
+    * Get the quiz score_average for our Quiz Object
+    * @param $quiz = quiz object
+    * @return Date formatted Y-m-d H:i:s
+    */
+    public function get_quiz_score_average() {
+        $quiz_score_average = $this->quiz_score_average;
+        return $quiz_score_average;
+    }
+
+    /**
+    * Get the quiz time_spent for our Quiz Object
+    * @param $quiz = quiz object
+    * @return Date formatted Y-m-d H:i:s
+    */
+    public function get_quiz_time_spent() {
+        $quiz_time_spent = $this->quiz_time_spent;
+        return $quiz_time_spent;
+    }
+
+    /**
+    * Get the quiz time_spent_average for our Quiz Object
+    * @param $quiz = quiz object
+    * @return Date formatted Y-m-d H:i:s
+    */
+    public function get_quiz_time_spent_average() {
+        $quiz_time_spent_average = $this->quiz_time_spent_average;
+        return $quiz_time_spent_average;
+    }
+
+
     /**
     * Create an entire quiz json object with all question and mc option data
     */
     public function get_quiz_json() {
+        $quiz = $this->get_take_quiz_array();
+        return json_encode($quiz);
+    }
+
+    public function get_take_quiz_array() {
         $quiz = (array) $this;
-        $question_ids = $this->get_questions();
-        // create a blank question array
-        // remove what we don't need
-        unset($quiz['questions']);
         unset($quiz['quiz_owner']);
         unset($quiz['quiz_created_by']);
         unset($quiz['quiz_updated_by']);
 
+        return $quiz;
+    }
+
+    /**
+    * If you ever need the entirely built quiz at once with all questions
+    * and all MC Option/Slider data
+    * @return array of quiz and questions
+    */
+    public function get_quiz_with_full_questions_array() {
+        $quiz = $this->get_take_quiz_array();
+        $question_ids = $this->get_questions();
+        // create a blank question array
+        // remove what we don't need
+        unset($quiz['questions']);
         $quiz['question'] = array();
         // loop questions
         if(!empty($question_ids)) {
             foreach($question_ids as $question_id) {
                 // get question object
                 $question = new Enp_quiz_Question($question_id);
-                // cast object to array
-                $question_array = (array) $question;
-                // remove what we don't need
-                unset($question_array['quiz_id']);
-                unset($question_array['mc_options']);
-                // get question type
-                $question_type = $question->get_question_type();
-                $question_array['question_image_src'] = $question->get_question_image_src();
-                $question_array['question_image_srcset'] = $question->get_question_image_srcset();
-                // if mc, get mc options
-                if($question_type === 'mc') {
-                    // get the mc options
-                    $mc_option_ids = $question->get_mc_options();
-                    // create a mc_options_array
-                    $question_array['mc_option'] = array();
-                    // create the MC Options
-                    foreach($mc_option_ids as $mc_option_id) {
-                        // build mc option object
-                        $mc_option = new Enp_quiz_MC_option($mc_option_id);
-                        // cast object to array in question_array
-                        $question_array['mc_option'][] = (array) $mc_option;
-                    }
-                }
+                $question_array = $question->get_take_question_array();
                 // add this question to the array we'll send via json
                 $quiz['question'][] = $question_array;
             }
         }
-        return json_encode($quiz);
+        return $quiz;
     }
+
 
     /**
     * Get the value we should be saving on a quiz

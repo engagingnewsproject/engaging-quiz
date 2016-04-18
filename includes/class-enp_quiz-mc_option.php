@@ -168,6 +168,17 @@ class Enp_quiz_MC_option {
     }
 
     /**
+    * Get the built question with all MC Option data for taking a quiz
+    *
+    * @param $mc_option = mc_option object
+    * @return array with full mc_option data for taking quizzes or converting to JSON
+    */
+    public function get_take_mc_option_array() {
+        // for now, just cast object to array. Later we may need to process this more
+        return (array) $this;
+    }
+
+    /**
     * Get the value we should be saving on a mc_option
     * get posted if present, if not, get object. This is so we give them their
     * current entry if we don't *actually* save yet.

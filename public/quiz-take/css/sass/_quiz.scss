@@ -191,7 +191,7 @@
 
     .enp-explanation {
         background: #fff;
-        @include _(hidden--accessible);
+        //@include _(hidden--accessible);
         transition: all .1s;
     }
 

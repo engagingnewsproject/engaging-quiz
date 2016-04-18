@@ -6,80 +6,72 @@
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
+
     if(isset($_GET['quiz_id'])) {
         $quiz_id = $_GET['quiz_id'];
         // set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
         require '../../../../../enp-quiz-config.php';
         require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
         // load up quiz_take class
-        $quiz_take = new Enp_quiz_Take();
+        $qt = new Enp_quiz_Take($quiz_id);
+        $quiz = $qt->quiz;
 
-        if(isset($_POST['enp-question-submit'])) {
-        	$quiz_take->save_response();
-        }
-        // load our quiz json
-        $quiz = $quiz_take->load_quiz($quiz_id);
-
-        // check if we have a quiz
-        if(empty($quiz->quiz_id)) {
-            echo 'Quiz ID '.$quiz_id.' not found';
-            exit;
-        } else {
-            // set-up Vars
-            foreach($quiz as $key=>$value ) {
-                // $$key will be what the key of the array is
-                // if $key = 'quiz_title', then $$key will be available as $quiz_title
-                $$key = $value;
-            }
-            $question_count = count($question);
-            // get current state
-            // which question are we on?
-            $question = $quiz->question[0];
-            // set-up vars like $question_title, etc
-            foreach($question as $key=>$value ) {
+        // check if we have a question
+        if(!empty($qt->question->question_title)) {
+            // set-up vars like $qt->question_title, etc
+            foreach($qt->question as $key=>$value ) {
                 // $$key will be what the key of the array is
                 // if $key = 'quiz_title', then $$key will be available as $quiz_title
                 $$key = $value;
             }
         }
+
     } else {
         echo 'No quiz requested';
         exit;
     }
     // load styles
-    $quiz_take->styles();
+    $qt->styles();
     ?>
 
 </head>
 <body id="enp-quiz">
 <?php //add in our SVG
-    echo $quiz_take->load_svg();
+    echo $qt->load_svg();
 ?>
 <section class="enp-quiz__container">
-    <?php // prepare styles
-    $styles = array('quiz_bg_color'=>$quiz_bg_color, 'quiz_text_color'=>$quiz_text_color);
+    <?php
     // echo styles
-    echo $quiz_take->load_quiz_styles($styles);?>
+    echo $qt->load_quiz_styles();?>
     <header class="enp-quiz__header">
-        <h3 class="enp-quiz__title"><? echo $quiz_title;?></h3>
+        <h3 class="enp-quiz__title"><?php echo $qt->quiz_title;?></h3>
         <div class="enp-quiz__progress">
             <div class="enp-quiz__progress__bar">
-                <div class="enp-quiz__progress__bar__question-count">1/<?php echo $question_count;?></div>
+                <div class="enp-quiz__progress__bar__question-count"><?php echo  $qt->current_question_number;?>/<?php echo $qt->total_questions;?></div>
             </div>
         </div>
     </header>
 
     <section class="enp-question__container enp-question__container--unanswered">
-        <form class="enp-question__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_URL).$quiz_id; ?>">
-            <?php                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');?>
+        <form class="enp-question__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_URL).$qt->quiz->quiz_id; ?>">
+            <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->quiz_id;?>"/>
+            <?php
+            if(!empty($qt->state) && $qt->state === 'question') {
+                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
+            } elseif($qt->state === 'question_explanation') {
+                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
+            } elseif($qt->state === 'quiz_end') {
+                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-results.php');
+            } else {
+                // shouldn't happen
+                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
+            }?>
         </form>
 
-        <? include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');?>
+
 
     </section>
 
-
-    <? // include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-results.php');?>
 </section>
 
 
@@ -91,7 +83,7 @@ $has_slider = false;
 <script type="text/template" id="question_template">
     <?php
     // set-up handlebar values to inject into template
-    foreach($question as $key=>$value ) {
+    foreach($qt->question as $key=>$value ) {
         // $$key will be what the key of the array is
         // if $key = 'quiz_title', then $$key will be available as $quiz_title
         $$key = '{{'.$key.'}}';
@@ -122,7 +114,7 @@ if($has_mc === true) {
 }
 
 // load scripts
-$quiz_take->scripts();
+$qt->scripts();
 ?>
 
 

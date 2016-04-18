@@ -21,11 +21,40 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Take {
+	public $quiz,
+		   $question,
+		   $state = '',
+		   $total_questions,
+		   $current_question,
+		   $response = array();
 
-
-	public function __construct( ) {
+	public function __construct($quiz_id = false) {
 		// hello!
 		$this->load_files();
+		// check if we have a posted var
+		if(isset($_POST['enp-question-submit'])) {
+            $response = $this->save_response();
+            // parse the JSON response
+            $this->response = json_decode($response);
+			// var_dump($this->response);
+        }
+		// get our quiz
+		$this->quiz = $this->load_quiz($quiz_id);
+		// make sure a quiz got loaded
+		$this->validate_quiz();
+		// set-up Vars for quizzes
+		foreach($this->quiz as $key=>$value ) {
+			// $$key will be what the key of the array is
+			// if $key = 'quiz_title', then $$key will be available as $quiz_title
+			$this->$key = $value;
+		}
+		// set our state
+		$this->set_state();
+		// set question
+		$this->set_question();
+		// set random vars we'll need
+		$this->set_total_questions();
+		$this->set_current_question_number();
 	}
 
 	/**
@@ -71,22 +100,31 @@ class Enp_quiz_Take {
         return json_decode($quiz);
 	}
 
+	public function validate_quiz() {
+		if(empty($this->quiz->quiz_id)) {
+            echo 'Quiz not found';
+            exit;
+        } else {
+			return true;
+		}
+	}
+
 	public function load_svg() {
 		$svg = file_get_contents(ENP_QUIZ_PLUGIN_URL.'/public/quiz-take/svg/symbol-defs.svg');
 	    return $svg;
 	}
 
-	public function load_quiz_styles($styles) {
+	public function load_quiz_styles() {
 		return '<style tyle="text/css">
 #enp-quiz .enp-quiz__container {
-    background-color: '.$styles["quiz_bg_color"].';
-    color: '.$styles["quiz_text_color"].';
+    background-color: '.$this->quiz->quiz_bg_color.';
+    color: '.$this->quiz->quiz_text_color.';
 }
 #enp-quiz .enp-quiz__title,
 #enp-quiz .enp-question__question,
 #enp-quiz .enp-option__label,
 #enp-quiz .enp-question__helper {
-    color: '.$styles["quiz_text_color"].';
+    color: '.$this->quiz->quiz_text_color.';
 }
 </style>';
 	}
@@ -95,6 +133,10 @@ class Enp_quiz_Take {
 	*/
 	public function save_response() {
 		// get the posted data
+		if(isset($_POST['enp-quiz-id'])) {
+			$quiz_id = $_POST['enp-quiz-id'];
+		}
+
 		if(isset($_POST['enp-question-id'])) {
 			$question_id = $_POST['enp-question-id'];
 		}
@@ -105,42 +147,90 @@ class Enp_quiz_Take {
 
 		if(isset($_POST['enp-question-response'])) {
 			$question_response = $_POST['enp-question-response'];
-			// find out if their response is correct or not
-			if($question_type === 'mc') {
-				// validate that this ID is attached to this question
-				$question = new Enp_quiz_Question($question_id);
-				$question_mc_options = $question->get_mc_options();
-				if(in_array($question_response, $question_mc_options)) {
-					// it's legit! see if it's right...
-					$mc = new Enp_quiz_MC_option($question_response);
-					// will return 0 if wrong, 1 if right. We don't care if
-					// it's right or not, just that we KNOW if it's right or not
-					$response_correct = $mc->get_mc_option_correct();
-				} else {
-					// not a legit response
-					var_dump('Selected option not allowed.');
-				}
+		}
 
-			}
+		// get user action
+		if(isset($_POST['enp-question-submit'])) {
+			$button_clicked = $_POST['enp-question-submit'];
 		}
 
 		// set the date_time to pass
 		$date_time = date("Y-m-d H:i:s");
 
 		$response = array(
+						'quiz_id'	=> $quiz_id,
 						'question_id' => $question_id,
 						'question_type' => $question_type,
 						'question_response' => $question_response,
-						'response_correct'  => $response_correct,
 						'response_created_at' => $date_time,
+						'user_action' => $button_clicked,
 						);
 
 		// save the response
 		$save_response = new Enp_quiz_Save_response();
-		$response_response = $save_response->insert_response($response);
-		$response_response = json_encode($response_response);
-		var_dump($response_response);
-		return $response_response;
+		$return_response = $save_response->save_response($response);
+		// encode to JSON to send to browser
+		$return_response = json_encode($return_response);
+		// set it as our response object
+		$this->response = $return_response;
+		return $return_response;
 	}
+
+	public function set_total_questions() {
+		$this->total_questions = count($this->quiz->questions);
+	}
+
+	public function set_current_question_number() {
+		$this->current_question_number = $this->question->question_order + 1;
+	}
+
+	/**
+	* Set the data context for the question.
+	* Decide which question we need based on current quiz state.
+	*
+	* @param $response (array) response from server, if present
+	* @param $quiz (object) Enp_quiz_Quiz()
+	* @return $question (array) The question we need to display
+	*/
+	public function set_question() {
+		$question = array();
+		$question_id = '';
+		if(isset($this->response) && !empty($this->response)) {
+			// see what we should do
+			if($this->state === 'question_explanation') {
+				// show the question explanation template
+				// we'll still need this question so we can get the explanation
+				$question_id = $this->response->question_id;
+			}
+			elseif($this->state === 'question') {
+				$question = $this->response->next_question;
+			}
+		}
+		// elseif(check cookies?) {}
+		else {
+			// set the first question off of the question_ids from the quiz
+			$question_id = $this->quiz->questions[0];
+		}
+
+		// if we have a question id, get the question data for it
+		if(!empty($question_id)) {
+			$question = new Enp_quiz_Question($question_id);
+			$question = $question->get_take_question_json();
+			$question = json_decode($question);
+		}
+
+		$this->question = $question;
+		return $question;
+	}
+
+	public function set_state() {
+		if(isset($this->response) && !empty($this->response)) {
+			$this->state = $this->response->state;
+		}
+	}
+
+	// TODO: Load correct template with vars
+	// TODO: Set question vars
+	// TODO: Create JS Templates
 
 }
