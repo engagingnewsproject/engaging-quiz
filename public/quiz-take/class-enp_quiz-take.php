@@ -292,14 +292,29 @@ class Enp_quiz_Take {
 		// clone the object so we don't reset its own values
 		$qt = clone $this;
 		foreach($qt->question as $key => $value) {
-			$qt->question->$key = '{{'.$key.'}}';
+			if($key === 'question_image') {
+				// question_image should be blank
+				// because it messes up the templating for srcset
+				// and src when it thinks it has a value
+				$qt->question->$key = '';
+			} else {
+				$qt->question->$key = '{{'.$key.'}}';
+			}
 		}
 
-		$template = '<script type="text/template" id="question_template">';
+		// image template
+		$template = '<script type="text/template" id="question_image_template">';
 		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question-image.php');
 		$template .= ob_get_clean();
 		$template .= '</script>';
+		$template .= '<script type="text/template" id="question_template">';
+		ob_start();
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question.php');
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+
 
 		return $template;
 	}
@@ -313,6 +328,9 @@ class Enp_quiz_Take {
 		$qt = clone $this;
 
 		foreach($qt->question as $key => $value) {
+			if($key === 'question_image') {
+				// set it to a bogus image value that matches at least
+			}
 			$qt->question->$key = '{{'.$key.'}}';
 		}
 

@@ -6,12 +6,7 @@
 
     <?php
     if(!empty($qt->question->get_question_image())) {
-        echo '<img
-            class="enp-question-image enp-question-image"
-            src="'.$qt->question->get_question_image_src().'"
-            srcset="'.$qt->question->get_question_image_srcset().'"
-            alt="'.$qt->question->get_question_image_alt().'"
-        />';
+        include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-image.php');
     }
 
     if($qt->question->get_question_type() === 'mc') {?>

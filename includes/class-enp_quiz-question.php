@@ -9,6 +9,8 @@ class Enp_quiz_Question {
             $question_id,
             $question_title,
             $question_image,
+            $question_image_src,
+            $question_image_srcset,
             $question_image_alt,
             $question_type,
             $question_explanation,
@@ -76,6 +78,8 @@ class Enp_quiz_Question {
         $this->quiz_id = $this->set_quiz_id();
         $this->question_title = $this->set_question_title();
         $this->question_image = $this->set_question_image();
+        $this->question_image_src = $this->set_question_image_src();
+        $this->question_image_srcset = $this->set_question_image_srcset();
         $this->question_image_alt = $this->set_question_image_alt();
         $this->question_type = $this->set_question_type();
         $this->question_explanation = $this->set_question_explanation();
@@ -138,6 +142,46 @@ class Enp_quiz_Question {
         $question_image = self::$question['question_image'];
 
         return $question_image;
+    }
+
+    /**
+    * Set the question_image for our Quiz Object
+    * We want to set the url, but the question_image just sets the filename
+    * we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+    * @param $question = question object
+    * @return question_image from the object
+    */
+    public function set_question_image_src() {
+        $question_image_src = '';
+        $question_image = $this->question_image;
+        if(!empty($question_image)) {
+            $question_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$question_image;
+        }
+        return $question_image_src;
+    }
+
+    /**
+    * Set the question_image for our Quiz Object
+    * @param $question = question object
+    * @return question_image from the object
+    */
+    public function set_question_image_srcset() {
+        if(empty($this->question_image)) {
+            return '';
+        }
+        // -original is our stored filename so we can explode by that
+        // and generate our new filenames
+        $filename = explode('-original', $this->question_image);
+        $name = $filename[0];
+        $ext = $filename[1];
+        $sizes = array(1000,740,580,320,200);
+        $srcset = '';
+        foreach($sizes as $size) {
+            $srcset .= ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$name.$size.'w'.$ext.' '.($size+10).'w,';
+        }
+        // remove the trailing comma
+        $srcset = rtrim($srcset, ",");
+        return $srcset;
     }
 
     /**
@@ -350,43 +394,23 @@ class Enp_quiz_Question {
     }
 
     /**
-    * Get the question_image for our Quiz Object
-    * We want to set the url, but the question_image just sets the filename
-    * we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+    * Get the question_image_src for our Quiz Object
     * @param $question = question object
-    * @return question_image from the object
+    * @return question_image_src from the object
     */
     public function get_question_image_src() {
-        $question_image_src = '';
-        $question_image = $this->question_image;
-        if(!empty($question_image)) {
-            $question_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$question_image;
-        }
+        $question_image_src = $this->question_image_src;
         return $question_image_src;
     }
 
     /**
-    * Get the question_image for our Quiz Object
+    * Get the question_image_srcset for our Quiz Object
     * @param $question = question object
-    * @return question_image from the object
+    * @return question_image_srcset from the object
     */
     public function get_question_image_srcset() {
-        if(empty($this->question_image)) {
-            return '';
-        }
-        // -original is our stored filename so we can explode by that
-        // and generate our new filenames
-        $filename = explode('-original', $this->question_image);
-        $name = $filename[0];
-        $ext = $filename[1];
-        $sizes = array(1000,740,580,320,200);
-        $srcset = '';
-        foreach($sizes as $size) {
-            $srcset .= ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$name.$size.'w'.$ext.' '.($size+10).'w,';
-        }
-        // remove the trailing comma
-        $srcset = rtrim($srcset, ",");
-        return $srcset;
+        $question_image_srcset = $this->question_image_srcset;
+        return $question_image_srcset;
     }
 
     public function get_question_image_thumbnail() {
