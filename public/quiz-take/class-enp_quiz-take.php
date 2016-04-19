@@ -28,15 +28,20 @@ class Enp_quiz_Take {
 		   $current_question,
 		   $response = array();
 
+	/**
+	* This is a big constructor. We require our files, check for $_POST submission,
+	* set states, and all other details we're sure to need for our templating
+	*
+	*/
 	public function __construct($quiz_id = false) {
-		// hello!
+		// require files
 		$this->load_files();
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
             $response = $this->save_response();
             // parse the JSON response
             $this->response = json_decode($response);
-			// var_dump($this->response);
+			var_dump($this->response);
         }
 		// get our quiz
 		$this->quiz = $this->load_quiz($quiz_id);
@@ -229,8 +234,33 @@ class Enp_quiz_Take {
 		}
 	}
 
-	// TODO: Load correct template with vars
-	// TODO: Set question vars
-	// TODO: Create JS Templates
+
+	public function question_explanation_js_template() {
+		$mc_option_id = '{{mc_option_id}}';
+	    $mc_option_content = '{{mc_option_content}}';
+	    $template = '<script type="text/template" id="question_explanation_template">';
+		ob_start();
+	    include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
+		$template .= ob_get_clean();
+	    $template .= '</script>';
+
+		return $template;
+	}
+
+
+
+	public function mc_option_js_template() {
+
+		$mc_option_id = '{{mc_option_id}}';
+	    $mc_option_content = '{{mc_option_content}}';
+	    $template = '<script type="text/template" id="mc_option_template">';
+		ob_start();
+	    include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
+		$template .= ob_get_clean();
+	    $template .= '</script>';
+
+		return $template;
+	}
+
 
 }

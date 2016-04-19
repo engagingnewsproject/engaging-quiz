@@ -14,7 +14,6 @@
         require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
         // load up quiz_take class
         $qt = new Enp_quiz_Take($quiz_id);
-        $quiz = $qt->quiz;
 
         // check if we have a question
         if(!empty($qt->question->question_title)) {
@@ -44,7 +43,7 @@
     // echo styles
     echo $qt->load_quiz_styles();?>
     <header class="enp-quiz__header">
-        <h3 class="enp-quiz__title"><?php echo $qt->quiz_title;?></h3>
+        <h3 class="enp-quiz__title"><?php echo $qt->quiz->quiz_title;?></h3>
         <div class="enp-quiz__progress">
             <div class="enp-quiz__progress__bar">
                 <div class="enp-quiz__progress__bar__question-count"><?php echo  $qt->current_question_number;?>/<?php echo $qt->total_questions;?></div>
@@ -75,11 +74,7 @@
 </section>
 
 
-<?php
-// set-up templates
-$has_mc = false;
-$has_slider = false;
-?>
+
 <script type="text/template" id="question_template">
     <?php
     // set-up handlebar values to inject into template
@@ -87,32 +82,17 @@ $has_slider = false;
         // $$key will be what the key of the array is
         // if $key = 'quiz_title', then $$key will be available as $quiz_title
         $$key = '{{'.$key.'}}';
-        if($key === 'question_type' && $value === 'mc') {
-            $has_mc = true;
-        }
-        if($key === 'question_type' && $value === 'slider') {
-            $has_slider = true;
-        }
-
     }
     include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');?>
 </script>
 
 
 
-<script type="text/template" id="question_explanation_template">
-    <?php include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');?>
-</script>
+
 
 <?php
-if($has_mc === true) {
-    $mc_option_id = '{{mc_option_id}}';
-    $mc_option_content = '{{mc_option_content}}';
-    echo '<script type="text/template" id="mc_option_template">';
-    include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
-    echo '</script>';
-}
-
+echo $qt->question_explanation_js_template();
+echo $qt->mc_option_js_template();
 // load scripts
 $qt->scripts();
 ?>
