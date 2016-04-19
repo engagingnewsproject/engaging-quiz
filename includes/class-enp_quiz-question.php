@@ -13,6 +13,15 @@ class Enp_quiz_Question {
             $question_type,
             $question_explanation,
             $question_order,
+            $question_views,
+            $question_responses,
+            $question_responses_correct,
+            $question_responses_incorrect,
+            $question_responses_correct_percentage,
+            $question_responses_incorrect_percentage,
+            $question_score_average,
+            $question_time_spent,
+            $question_time_spent_average,
             $mc_options = array();
 
     protected static $question;
@@ -78,7 +87,7 @@ class Enp_quiz_Question {
         $this->question_responses_incorrect = $this->set_question_responses_incorrect();
         $this->question_responses_correct_percentage = $this->set_question_responses_correct_percentage();
         $this->question_responses_incorrect_percentage = $this->set_question_responses_incorrect_percentage();
-        $this->question_score_ = $this->set_question_score_average();
+        $this->question_score_average = $this->set_question_score_average();
         $this->question_time_spent = $this->set_question_time_spent();
         $this->question_time_spent_average = $this->set_question_time_spent_average();
 
@@ -491,23 +500,23 @@ class Enp_quiz_Question {
     }
 
     /**
-    * Get the question_correct_percentage for our Question Object
+    * Get the question_responses_correct_percentage for our Question Object
     * @param $question = question object
     * @return array of mc_option_id's as integers
     */
-    public function get_question_correct_percentage() {
-        $question_correct_percentage = $this->question_correct_percentage;
-        return $question_correct_percentage;
+    public function get_question_responses_correct_percentage() {
+        $question_responses_correct_percentage = $this->question_responses_correct_percentage;
+        return $question_responses_correct_percentage;
     }
 
     /**
-    * Get the question_incorrect_percentage for our Question Object
+    * Get the question_responses_incorrect_percentage for our Question Object
     * @param $question = question object
     * @return array of mc_option_id's as integers
     */
-    public function get_question_incorrect_percentage() {
-        $question_incorrect_percentage = $this->question_incorrect_percentage;
-        return $question_incorrect_percentage;
+    public function get_question_responses_incorrect_percentage() {
+        $question_responses_incorrect_percentage = $this->question_responses_incorrect_percentage;
+        return $question_responses_incorrect_percentage;
     }
 
     /**

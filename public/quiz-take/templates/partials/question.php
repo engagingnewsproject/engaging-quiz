@@ -1,32 +1,23 @@
 
-<input type="hidden" name="enp-question-id" value="<? echo $question_id;?>"/>
-<input type="hidden" name="enp-question-type" value="<? echo $question_type;?>"/>
+<input type="hidden" name="enp-question-id" value="<? echo $qt->question->get_question_id();?>"/>
+<input type="hidden" name="enp-question-type" value="<? echo $qt->question->get_question_type();?>"/>
 <fieldset class="enp-question__fieldset">
-    <legend class="enp-question__legend enp-question__question"><? echo $question_title;?></legend>
+    <legend class="enp-question__legend enp-question__question"><? echo $qt->question->get_question_title();?></legend>
 
     <?php
-    if(!empty($question_image)) {
+    if(!empty($qt->question->get_question_image())) {
         echo '<img
             class="enp-question-image enp-question-image"
-            src="'.$question_image_src.'"
-            srcset="'.$question_image_srcset.'"
-            alt="'.$question_image_alt.'"
+            src="'.$qt->question->get_question_image_src().'"
+            srcset="'.$qt->question->get_question_image_srcset().'"
+            alt="'.$qt->question->get_question_image_alt().'"
         />';
     }
 
-    if($question_type === 'mc') {?>
+    if($qt->question->get_question_type() === 'mc') {?>
         <p class="enp-question__helper">Select one option.</p>
-        <?foreach($mc_option as $mc_option) {
-            foreach($mc_option as $key=>$value ) {
-                // $$key will be what the key of the array is
-                // if $key = 'quiz_title', then $$key will be available as $quiz_title
-                $$key = $value;
-            }
-            if($mc_option_correct === '1') {
-                $mc_option_correct = 'correct';
-            } else {
-                $mc_option_correct = 'incorrect';
-            }
+        <?foreach($qt->question->get_mc_options() as $mc_option_id) {
+            $mc_option = new Enp_quiz_MC_option($mc_option_id);
             include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
         }
     }?>

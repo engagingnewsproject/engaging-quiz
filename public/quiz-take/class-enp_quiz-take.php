@@ -26,6 +26,8 @@ class Enp_quiz_Take {
 		   $state = '',
 		   $total_questions,
 		   $current_question,
+		   $question_explanation_title,
+		   $question_explanation_percentage,
 		   $response = array();
 
 	/**
@@ -41,29 +43,27 @@ class Enp_quiz_Take {
             $response = $this->save_response();
             // parse the JSON response
             $this->response = json_decode($response);
-			var_dump($this->response);
+			//var_dump($this->response);
         }
 		// get our quiz
-		$this->quiz = $this->load_quiz($quiz_id);
+		$this->quiz = new Enp_quiz_Quiz($quiz_id);
 		// make sure a quiz got loaded
 		$this->validate_quiz();
-		// set-up Vars for quizzes
-		foreach($this->quiz as $key=>$value ) {
-			// $$key will be what the key of the array is
-			// if $key = 'quiz_title', then $$key will be available as $quiz_title
-			$this->$key = $value;
-		}
+
 		// set our state
 		$this->set_state();
 		// set question
 		$this->set_question();
+		if($this->state === 'question_explanation') {
+			$this->set_question_explanation_vars();
+		}
 		// set random vars we'll need
 		$this->set_total_questions();
 		$this->set_current_question_number();
 	}
 
 	/**
-	 * Register and enqueue the stylesheets for quiz take
+	 * Stylesheets for quiz take
 	 *
 	 * @since    0.0.1
 	 */
@@ -75,7 +75,7 @@ class Enp_quiz_Take {
 	}
 
 	/**
-	 * Register and enqueue the JavaScript for quiz take
+	 * JavaScript for quiz take
 	 *
 	 * @since    0.0.1
 	 */
@@ -86,6 +86,10 @@ class Enp_quiz_Take {
 		}
 	}
 
+	/**
+	* Require all the files we'll need. This is loaded outside of WP, so we need
+	* to require everything we need on our own.
+	*/
 	public function load_files() {
 		// require the necessary files
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz.php';
@@ -98,15 +102,11 @@ class Enp_quiz_Take {
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_response_mc.php';
 	}
 
-	public function load_quiz($quiz_id) {
-		// set-up our quiz
-        $quiz = new Enp_quiz_Quiz($quiz_id);
-        $quiz = $quiz->get_quiz_json();
-        return json_decode($quiz);
-	}
-
+	/**
+	* Quick check to see if we have a valid quiz before moving on
+	*/
 	public function validate_quiz() {
-		if(empty($this->quiz->quiz_id)) {
+		if(empty($this->quiz->get_quiz_id())) {
             echo 'Quiz not found';
             exit;
         } else {
@@ -114,27 +114,37 @@ class Enp_quiz_Take {
 		}
 	}
 
+	/**
+	* Add all of our SVG to the DOM
+	*/
 	public function load_svg() {
 		$svg = file_get_contents(ENP_QUIZ_PLUGIN_URL.'/public/quiz-take/svg/symbol-defs.svg');
 	    return $svg;
 	}
 
+	/**
+	* Quiz Option styles that we need to override our own CSS
+	*/
 	public function load_quiz_styles() {
 		return '<style tyle="text/css">
 #enp-quiz .enp-quiz__container {
-    background-color: '.$this->quiz->quiz_bg_color.';
-    color: '.$this->quiz->quiz_text_color.';
+    background-color: '.$this->quiz->get_quiz_bg_color().';
+    color: '.$this->quiz->get_quiz_text_color().';
 }
 #enp-quiz .enp-quiz__title,
 #enp-quiz .enp-question__question,
 #enp-quiz .enp-option__label,
 #enp-quiz .enp-question__helper {
-    color: '.$this->quiz->quiz_text_color.';
+    color: '.$this->quiz->get_quiz_text_color().';
 }
 </style>';
 	}
+
 	/**
 	* Save quiz responses
+	* When someone submits a question answer, they're Responding to the question
+	* This processes the response and sends it over to our save response class
+	*
 	*/
 	public function save_response() {
 		// get the posted data
@@ -174,15 +184,14 @@ class Enp_quiz_Take {
 		// save the response
 		$save_response = new Enp_quiz_Save_response();
 		$return_response = $save_response->save_response($response);
-		// encode to JSON to send to browser
-		$return_response = json_encode($return_response);
 		// set it as our response object
 		$this->response = $return_response;
+		$return_response = json_encode($return_response);
 		return $return_response;
 	}
 
 	public function set_total_questions() {
-		$this->total_questions = count($this->quiz->questions);
+		$this->total_questions = count($this->quiz->get_questions());
 	}
 
 	public function set_current_question_number() {
@@ -208,24 +217,28 @@ class Enp_quiz_Take {
 				$question_id = $this->response->question_id;
 			}
 			elseif($this->state === 'question') {
-				$question = $this->response->next_question;
+				$question_id = $this->response->next_question_id;
 			}
 		}
 		// elseif(check cookies?) {}
 		else {
+			$question_ids = $this->quiz->get_questions();
 			// set the first question off of the question_ids from the quiz
-			$question_id = $this->quiz->questions[0];
+			$question_id = $question_ids[0];
 		}
 
 		// if we have a question id, get the question data for it
 		if(!empty($question_id)) {
 			$question = new Enp_quiz_Question($question_id);
-			$question = $question->get_take_question_json();
-			$question = json_decode($question);
 		}
 
 		$this->question = $question;
 		return $question;
+	}
+
+	public function set_question_explanation_vars() {
+		$this->set_question_explanation_title();
+		$this->set_question_explanation_percentage();
 	}
 
 	public function set_state() {
@@ -236,11 +249,9 @@ class Enp_quiz_Take {
 
 
 	public function question_explanation_js_template() {
-		$mc_option_id = '{{mc_option_id}}';
-	    $mc_option_content = '{{mc_option_content}}';
 	    $template = '<script type="text/template" id="question_explanation_template">';
 		ob_start();
-	    include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
+	    //include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
 		$template .= ob_get_clean();
 	    $template .= '</script>';
 
@@ -251,16 +262,53 @@ class Enp_quiz_Take {
 
 	public function mc_option_js_template() {
 
-		$mc_option_id = '{{mc_option_id}}';
-	    $mc_option_content = '{{mc_option_content}}';
 	    $template = '<script type="text/template" id="mc_option_template">';
 		ob_start();
-	    include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
+	    //include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
 		$template .= ob_get_clean();
 	    $template .= '</script>';
 
 		return $template;
 	}
 
+	// getters
+	public function get_state() {
+		return $this->state;
+	}
+
+	public function get_total_questions() {
+		return $this->total_questions;
+	}
+
+	public function get_current_question_number() {
+		return $this->current_question_number;
+	}
+
+	public function set_question_explanation_title() {
+		$title = 'Incorrect';
+		if($this->response->response_correct === '1') {
+			$title = 'Correct';
+		}
+		$this->question_explanation_title = $title;
+	}
+
+	public function set_question_explanation_percentage() {
+
+		if($this->response->response_correct === '1') {
+			$percentage = $this->question->get_question_responses_correct_percentage();
+		} else {
+			$percentage = $this->question->get_question_responses_incorrect_percentage();
+		}
+		$this->question_explanation_percentage = $percentage;
+	}
+
+	public function get_question_explanation_title() {
+		return $this->question_explanation_title;
+	}
+
+	public function get_question_explanation_percentage() {
+		// build this off the response
+		return $this->question_explanation_percentage;
+	}
 
 }
