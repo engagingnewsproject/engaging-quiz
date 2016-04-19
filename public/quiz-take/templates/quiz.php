@@ -65,22 +65,8 @@
 
 
 
-<script type="text/template" id="question_template">
-    <?php
-    // set-up handlebar values to inject into template
-    foreach($qt->question as $key=>$value ) {
-        // $$key will be what the key of the array is
-        // if $key = 'quiz_title', then $$key will be available as $quiz_title
-        $$key = '{{'.$key.'}}';
-    }
-    include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');?>
-</script>
-
-
-
-
-
 <?php
+echo $qt->question_js_templates();
 echo $qt->question_explanation_js_template();
 echo $qt->mc_option_js_template();
 // load scripts

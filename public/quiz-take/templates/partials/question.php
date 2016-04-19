@@ -18,7 +18,7 @@
         <p class="enp-question__helper">Select one option.</p>
         <?foreach($qt->question->get_mc_options() as $mc_option_id) {
             $mc_option = new Enp_quiz_MC_option($mc_option_id);
-            include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
+            include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
         }
     }?>
 

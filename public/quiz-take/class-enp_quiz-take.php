@@ -248,29 +248,6 @@ class Enp_quiz_Take {
 	}
 
 
-	public function question_explanation_js_template() {
-	    $template = '<script type="text/template" id="question_explanation_template">';
-		ob_start();
-	    //include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
-		$template .= ob_get_clean();
-	    $template .= '</script>';
-
-		return $template;
-	}
-
-
-
-	public function mc_option_js_template() {
-
-	    $template = '<script type="text/template" id="mc_option_template">';
-		ob_start();
-	    //include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc_option.php');
-		$template .= ob_get_clean();
-	    $template .= '</script>';
-
-		return $template;
-	}
-
 	// getters
 	public function get_state() {
 		return $this->state;
@@ -293,7 +270,6 @@ class Enp_quiz_Take {
 	}
 
 	public function set_question_explanation_percentage() {
-
 		if($this->response->response_correct === '1') {
 			$percentage = $this->question->get_question_responses_correct_percentage();
 		} else {
@@ -309,6 +285,71 @@ class Enp_quiz_Take {
 	public function get_question_explanation_percentage() {
 		// build this off the response
 		return $this->question_explanation_percentage;
+	}
+
+
+	public function question_js_templates() {
+		// clone the object so we don't reset its own values
+		$qt = clone $this;
+		foreach($qt->question as $key => $value) {
+			$qt->question->$key = '{{'.$key.'}}';
+		}
+
+		$template = '<script type="text/template" id="question_template">';
+		ob_start();
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+		return $template;
+	}
+	/**
+	* I can't think of a better way to do this right now, but I think this is OK
+	* It loops all keys in the object and sets the values as handlebar style strings
+	* and injects it into the template
+	*/
+	public function question_explanation_js_template() {
+		// clone the object so we don't reset its own values
+		$qt = clone $this;
+
+		foreach($qt->question as $key => $value) {
+			$qt->question->$key = '{{'.$key.'}}';
+		}
+
+		foreach($qt as $key => $value) {
+			// we don't want to unset our question object
+			if($key !== 'question') {
+				$qt->$key = '{{'.$key.'}}';
+			}
+		}
+
+		$template = '<script type="text/template" id="question_explanation_template">';
+		ob_start();
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question-explanation.php');
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+		return $template;
+	}
+
+
+	/**
+	* I can't think of a better way to do this right now, but I think this is OK
+	* It loops all keys in the object and sets the values as handlebar style strings
+	* and injects it into the template
+	*/
+	public function mc_option_js_template() {
+		$mc_option = new Enp_quiz_MC_option(0);
+		foreach($mc_option as $key => $value) {
+			$mc_option->$key = '{{'.$key.'}}';
+		}
+		$template = '<script type="text/template" id="mc_option_template">';
+		ob_start();
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+		return $template;
 	}
 
 }
