@@ -25,7 +25,8 @@ class Enp_quiz_Take {
 		   $question,
 		   $state = '',
 		   $total_questions,
-		   $current_question,
+		   $current_question_number,
+		   $current_score,
 		   $question_explanation_title,
 		   $question_explanation_percentage,
 		   $response = array();
@@ -70,6 +71,14 @@ class Enp_quiz_Take {
 
 		// set cookies we'll need on reload or correct/incorrect amounts
 		$this->set_cookies();
+
+		// more random vars
+		// set the score if we're at the end
+		if($this->state === 'quiz_end') {
+			// figure out their score
+			$this->set_current_score();
+		}
+
 	}
 
 	/**
@@ -256,6 +265,31 @@ class Enp_quiz_Take {
 	}
 
 	/**
+	* Get the person's score (what the % of their score is)
+	* @param cookies
+	* @return score (int)
+	*/
+	public function set_current_score() {
+		$quiz_id = $this->quiz->get_quiz_id();
+		$question_ids = $this->quiz->get_questions();
+		$correct = 0;
+		// loop through all questions and see if there are cookies set
+		foreach($question_ids as $question_id) {
+			// build cookie name
+			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
+			if(isset($_COOKIE[$cookie_name])) {
+				if($_COOKIE[$cookie_name] === '1') {
+					$correct++;
+				}
+			}
+		}
+
+		// calculate the score
+		$this->current_score = ($correct / $this->total_questions) * 100;
+
+	}
+
+	/**
 	* Set the data context for the question.
 	* Decide which question we need based on current quiz state.
 	*
@@ -339,6 +373,21 @@ class Enp_quiz_Take {
 
 	public function get_current_question_number() {
 		return $this->current_question_number;
+	}
+
+	public function get_current_score() {
+		return $this->current_score;
+	}
+
+	public function get_score_circle_dashoffset() {
+		$dashoffset = 0;
+		if(!empty($this->current_score)) {
+			// calculate the score dashoffset
+            $r = 90;
+            $c = M_PI*($r*2);
+            $dashoffset = ((100-$this->get_current_score())/100)*$c;
+		}
+		return $dashoffset;
 	}
 
 	public function set_question_explanation_title() {
