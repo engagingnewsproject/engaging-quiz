@@ -33,8 +33,8 @@
 
     .enp-quiz__progress__bar {
         position: relative;
-        // this would be calculated based on entry
-        width: 0%;
+        // this will be calculated on load
+        width: 0;
         height: 3px;
         background: $green;
         transition: all .5s ease-in-out;
