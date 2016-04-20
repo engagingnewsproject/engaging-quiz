@@ -15,7 +15,7 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 
-class Enp_quiz_Save_response_MC extends Enp_quiz_Save_response {
+class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Response {
 
     public function __construct() {
 

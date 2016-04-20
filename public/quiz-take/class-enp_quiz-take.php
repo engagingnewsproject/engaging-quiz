@@ -54,6 +54,12 @@ class Enp_quiz_Take {
 		$this->set_state();
 		// set question
 		$this->set_question();
+	
+		// save a question view if we're on a question
+		if($this->state === 'question') {
+			$this->save_question_view();
+		}
+
 		if($this->state === 'question_explanation') {
 			$this->set_question_explanation_vars();
 		}
@@ -99,8 +105,9 @@ class Enp_quiz_Take {
         // Database
         require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_response.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_response_mc.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
 	}
 
 	/**
@@ -264,6 +271,13 @@ class Enp_quiz_Take {
 		return $question;
 	}
 
+	/**
+	* Everytime a quiz take is loaded, save a view to the DB
+	*/
+	public function save_question_view() {
+		$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->question->question_id);
+	}
+
 	public function set_question_explanation_vars() {
 		$this->set_question_explanation_title();
 		$this->set_question_explanation_percentage();
@@ -272,6 +286,9 @@ class Enp_quiz_Take {
 	public function set_state() {
 		if(isset($this->response) && !empty($this->response)) {
 			$this->state = $this->response->state;
+		} // elseif(check cookies)
+		else {
+			$this->state = 'question';
 		}
 	}
 

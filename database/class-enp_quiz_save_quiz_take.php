@@ -26,28 +26,19 @@ class Enp_quiz_Save_quiz_take {
     }
 
     public function save_quiz_take($data) {
-        // check to see if we have data
-        if(empty($data)) {
-            self::$return['error'][] = 'No Data to save.';
-        }
-        // check if we have a user action set
-        elseif(empty($data['user_action'])) {
-            self::$return['error'][] = 'No user action set.';
-        }
-        // check to make sure we have a quiz id
-        elseif(empty($data['quiz_id'])) {
-            self::$return['error'][] = 'No quiz id set.';
+        $valid = $this->validate_save_quiz_take($data);
+        if($valid === false) {
+            return self::$return;
         }
 
         self::$quiz = new Enp_quiz_Quiz($data['quiz_id']);
 
         // decide what we're saving based on the user_action
         if($data['user_action'] === 'enp-question-submit') {
-            $save_response = new Enp_quiz_Save_response();
+            $save_response = new Enp_quiz_Save_quiz_take_Response();
             $save_response = $save_response->save_response($data);
         } elseif($data['user_action'] === 'enp-next-question') {
-            $save_question_view = new Enp_quiz_Save_question_view();
-            $save_response = $save_question_view->save_question_view($data);
+
         }
 
         // check to make sure whatever we saved returned a response
@@ -64,6 +55,26 @@ class Enp_quiz_Save_quiz_take {
         // convert to JSON and return it
         self::$return = json_encode(self::$return);
         return self::$return;
+    }
+
+    protected function validate_save_quiz_take($data) {
+        $valid = false;
+        // check to see if we have data
+        if(empty($data)) {
+            self::$return['error'][] = 'No Data to save.';
+        }
+        // check if we have a user action set
+        if(empty($data['user_action'])) {
+            self::$return['error'][] = 'No user action set.';
+        }
+        // check to make sure we have a quiz id
+        if(empty($data['quiz_id'])) {
+            self::$return['error'][] = 'No Quiz ID set.';
+        }
+        if(empty($return['error'])) {
+            $valid = true;
+        }
+        return $valid;
     }
 
     /**
