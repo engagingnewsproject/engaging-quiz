@@ -54,7 +54,7 @@ class Enp_quiz_Take {
 		$this->set_state();
 		// set question
 		$this->set_question();
-	
+
 		// save a question view if we're on a question
 		if($this->state === 'question') {
 			$this->save_question_view();
@@ -229,7 +229,14 @@ class Enp_quiz_Take {
 	}
 
 	public function set_current_question_number() {
-		$this->current_question_number = $this->question->question_order + 1;
+		// if we're at the end, the current question number is the total of the questions
+		if($this->state === 'quiz_end') {
+			$current_number = $this->total_questions;
+		} else {
+			$current_number = $this->question->question_order + 1;
+		}
+		$this->current_question_number = $current_number;
+
 	}
 
 	/**
@@ -252,7 +259,7 @@ class Enp_quiz_Take {
 			}
 			// if a state is set(meaning, we have a response) & the state is 'question', that means we're moving on, so get the next_question response
 			elseif($this->state === 'question') {
-				$question_id = $this->response->next_question_id;
+				$question_id = $this->response->next_question->question_id;
 			}
 		}
 		// elseif(check cookies?) {}
