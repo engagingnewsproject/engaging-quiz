@@ -134,6 +134,14 @@ class Enp_quiz_Take {
 	* Quiz Option styles that we need to override our own CSS
 	*/
 	public function load_quiz_styles() {
+		// figure out the width of our progress bar
+		$progress_bar_width = $this->current_question_number/$this->total_questions;
+		// reduce the number a little if we're at the very end so it still looks like there's more to go
+		if($this->state !== 'quiz_end' && $progress_bar_width === 1) {
+			$progress_bar_width = .9;
+		}
+		$progress_bar_width = number_format( $progress_bar_width * 100, 2 ) . '%';
+
 		return '<style tyle="text/css">
 #enp-quiz .enp-quiz__container {
     background-color: '.$this->quiz->get_quiz_bg_color().';
@@ -145,7 +153,11 @@ class Enp_quiz_Take {
 #enp-quiz .enp-question__helper {
     color: '.$this->quiz->get_quiz_text_color().';
 }
+#enp-quiz .enp-quiz__progress__bar {
+	width: '.$progress_bar_width.';
+}
 </style>';
+
 	}
 
 	public function save_quiz_take() {

@@ -51,9 +51,6 @@
                  include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
             } elseif($state === 'quiz_end') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-results.php');
-            } else {
-                // shouldn't happen
-                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
             }?>
         </form>
 
