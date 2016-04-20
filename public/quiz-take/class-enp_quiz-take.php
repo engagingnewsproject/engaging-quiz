@@ -40,7 +40,7 @@ class Enp_quiz_Take {
 		$this->load_files();
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
-            $response = $this->save_response();
+            $response = $this->save_quiz_take();
             // parse the JSON response
             $this->response = json_decode($response);
 			//var_dump($this->response);
@@ -98,6 +98,7 @@ class Enp_quiz_Take {
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
         // Database
         require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_response.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_response_mc.php';
 	}
@@ -140,54 +141,80 @@ class Enp_quiz_Take {
 </style>';
 	}
 
-	/**
-	* Save quiz responses
-	* When someone submits a question answer, they're Responding to the question
-	* This processes the response and sends it over to our save response class
-	*
-	*/
-	public function save_response() {
+	public function save_quiz_take() {
+		$response = false;
+		$save_data = array();
+		// get user action
+		if(isset($_POST['enp-question-submit'])) {
+			$save_data['user_action'] = $_POST['enp-question-submit'];
+		}
 		// get the posted data
 		if(isset($_POST['enp-quiz-id'])) {
-			$quiz_id = $_POST['enp-quiz-id'];
+			$save_data['quiz_id'] = $_POST['enp-quiz-id'];
 		}
 
+		if($save_data['user_action'] === 'enp-question-submit') {
+			// build the data array
+			$save_data = $this->build_response_data($save_data);
+		} elseif($save_data['user_action'] === 'enp-next-question') {
+			// build the data array
+			$save_data = $this->build_moving_on_data($save_data);
+		}
+
+		// save the response
+		$save_quiz_take = new Enp_quiz_Save_quiz_take();
+		$response = $save_quiz_take->save_quiz_take($save_data);
+
+		return $response;
+	}
+
+	public function build_response_data($response_array) {
+
+		// set defaults
+		$response_data = array(
+						'quiz_id'	=> '',
+						'question_id' => '',
+						'question_type' => '',
+						'question_response' => '',
+						'response_created_at' => date("Y-m-d H:i:s"),
+						'user_action' => '',
+						);
+		// merge the passed values with our defaults
+		$response_data = array_merge($response_data, $response_array);
+
 		if(isset($_POST['enp-question-id'])) {
-			$question_id = $_POST['enp-question-id'];
+			$response_data['question_id'] = $_POST['enp-question-id'];
 		}
 
 		if(isset($_POST['enp-question-type'])) {
-			$question_type = $_POST['enp-question-type'];
+			$response_data['question_type'] = $_POST['enp-question-type'];
 		}
 
 		if(isset($_POST['enp-question-response'])) {
-			$question_response = $_POST['enp-question-response'];
+			$response_data['question_response'] = $_POST['enp-question-response'];
 		}
 
-		// get user action
-		if(isset($_POST['enp-question-submit'])) {
-			$button_clicked = $_POST['enp-question-submit'];
-		}
+		return $response_data;
+	}
 
-		// set the date_time to pass
-		$date_time = date("Y-m-d H:i:s");
 
-		$response = array(
-						'quiz_id'	=> $quiz_id,
-						'question_id' => $question_id,
-						'question_type' => $question_type,
-						'question_response' => $question_response,
-						'response_created_at' => $date_time,
-						'user_action' => $button_clicked,
+	public function build_moving_on_data($moving_on_array) {
+
+		// set defaults
+		$moving_on_data = array(
+						'quiz_id'	=> '',
+						'question_id' => '',
+						'moving_on_created_at' => date("Y-m-d H:i:s"),
+						'user_action' => '',
 						);
+		// merge the passed values with our defaults
+		$moving_on_data = array_merge($moving_on_data, $moving_on_array);
 
-		// save the response
-		$save_response = new Enp_quiz_Save_response();
-		$return_response = $save_response->save_response($response);
-		// set it as our response object
-		$this->response = $return_response;
-		$return_response = json_encode($return_response);
-		return $return_response;
+		if(isset($_POST['enp-question-id'])) {
+			$moving_on_data['question_id'] = $_POST['enp-question-id'];
+		}
+
+		return $moving_on_data;
 	}
 
 	public function set_total_questions() {
@@ -216,6 +243,7 @@ class Enp_quiz_Take {
 				// we'll still need this question so we can get the explanation
 				$question_id = $this->response->question_id;
 			}
+			// if a state is set(meaning, we have a response) & the state is 'question', that means we're moving on, so get the next_question response
 			elseif($this->state === 'question') {
 				$question_id = $this->response->next_question_id;
 			}
@@ -262,9 +290,9 @@ class Enp_quiz_Take {
 	}
 
 	public function set_question_explanation_title() {
-		$title = 'Incorrect';
+		$title = 'incorrect';
 		if($this->response->response_correct === '1') {
-			$title = 'Correct';
+			$title = 'correct';
 		}
 		$this->question_explanation_title = $title;
 	}

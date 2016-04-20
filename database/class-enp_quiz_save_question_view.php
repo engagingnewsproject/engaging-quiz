@@ -1,6 +1,6 @@
 <?php
 /**
- * Save responses from people taking quizzes
+ * Save a question view
  *
  * @link       http://engagingnewsproject.org
  * @since      0.0.1
@@ -15,22 +15,22 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 
-class Enp_quiz_Save_response extends Enp_quiz_Save_quiz_take {
-    public static $response;
+class Enp_quiz_Save_question_view extends Enp_quiz_Save_take_quiz {
+    public static $question;
 
     public function __construct() {
 
     }
 
-    public function save_response($response) {
-        $response = $this->validate_response_data($response);
+    public function save_question_view($response) {
+        $response = $this->validate_question_view_data($response);
         // everything looks good! insert it and return the response
         $return = $this->insert_response($response);
 
         return $return;
     }
 
-    protected function validate_response_data($response) {
+    protected function validate_question_view_data($response) {
         // find out if their response is correct or not
         if($response['question_type'] === 'mc') {
             $valid = $this->validate_mc_option_response($response);
@@ -40,32 +40,6 @@ class Enp_quiz_Save_response extends Enp_quiz_Save_quiz_take {
             }
         }
         return $response;
-    }
-
-    protected function validate_mc_option_response($response) {
-        $valid = false;
-        // validate that this ID is attached to this question
-        $question = new Enp_quiz_Question($response['question_id']);
-        $question_mc_options = $question->get_mc_options();
-        // see if the id of the mc option they submitted is actually IN that question's mc option ids
-        if(in_array($response['question_response'], $question_mc_options)) {
-            $valid = true;
-        } else {
-            // TODO Handle errors?
-            // not a legit mc option response
-            var_dump('Selected option not allowed.');
-        }
-        return $valid;
-    }
-
-    protected function is_mc_option_response_correct($response) {
-        // it's legit! see if it's right...
-        $mc = new Enp_quiz_MC_option($response['question_response']);
-        // will return 0 if wrong, 1 if right. We don't care if
-        // it's right or not, just that we KNOW if it's right or not
-        $response_correct = $mc->get_mc_option_correct();
-
-        return $response_correct;
     }
 
     /**

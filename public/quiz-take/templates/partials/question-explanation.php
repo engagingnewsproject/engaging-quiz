@@ -1,4 +1,5 @@
-<section class="enp-explanation">
+<section class="enp-explanation enp-explanation--<?php echo $qt->get_question_explanation_title();?>">
+    <input type="hidden" name="enp-question-id" value="<? echo $qt->question->get_question_id();?>"/>
     <header class="enp-explanation__header">
         <h3 class="enp-explanation__title">
             <span class="enp-explanation__title__text"><?php echo $qt->get_question_explanation_title();?></span>
