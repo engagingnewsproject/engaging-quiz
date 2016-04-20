@@ -205,10 +205,21 @@
 
     .enp-explanation--correct {
         box-shadow: inset 4px 0 0 $green;
+
+        // set our text for after the percentage
+        .enp-explanation__percentage:after {
+            content: '% Got This Right';
+        }
     }
 
     .enp-explanation--incorrect {
         box-shadow: inset 4px 0 0 $red;
+
+        // set our text for after the percentage
+        .enp-explanation__percentage:after {
+            content: '% Got This Wrong';
+        }
+
     }
 
     .enp-explanation__title {
@@ -220,6 +231,10 @@
         font-weight: 500;
         color: #565656;
         margin-left: 4px;
+
+        &:after {
+            content: '%';
+        }
     }
 
     .enp-explanation--correct .enp-explanation__title {

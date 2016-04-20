@@ -486,7 +486,7 @@ class Enp_quiz_Question {
     /**
     * Get the question_views for our Question Object
     * @param $question = question object
-    * @return array of mc_option_id's as integers
+    * @return int question_views
     */
     public function get_question_views() {
         $question_views = $this->question_views;
@@ -496,7 +496,7 @@ class Enp_quiz_Question {
     /**
     * Get the question_responses for our Question Object
     * @param $question = question object
-    * @return array of mc_option_id's as integers
+    * @return int question_responses
     */
     public function get_question_responses() {
         $question_responses = $this->question_responses;
@@ -506,7 +506,7 @@ class Enp_quiz_Question {
     /**
     * Get the question_responses_correct for our Question Object
     * @param $question = question object
-    * @return array of mc_option_id's as integers
+    * @return int question_responses_correct
     */
     public function get_question_responses_correct() {
         $question_responses_correct = $this->question_responses_correct;
@@ -516,7 +516,7 @@ class Enp_quiz_Question {
     /**
     * Get the question_incorrect for our Question Object
     * @param $question = question object
-    * @return array of mc_option_id's as integers
+    * @return int question_responses_incorrect
     */
     public function get_question_incorrect() {
         $question_incorrect = $this->question_incorrect;
@@ -525,21 +525,23 @@ class Enp_quiz_Question {
 
     /**
     * Get the question_responses_correct_percentage for our Question Object
+    * and format it as a percentage (43%);
     * @param $question = question object
-    * @return array of mc_option_id's as integers
+    * @return string '44%';
     */
     public function get_question_responses_correct_percentage() {
-        $question_responses_correct_percentage = $this->question_responses_correct_percentage;
+        $question_responses_correct_percentage = round($this->question_responses_correct_percentage * 100 );
         return $question_responses_correct_percentage;
     }
 
     /**
     * Get the question_responses_incorrect_percentage for our Question Object
+    * and format it as a percentage (43%);
     * @param $question = question object
-    * @return array of mc_option_id's as integers
+    * @return string '44%';
     */
     public function get_question_responses_incorrect_percentage() {
-        $question_responses_incorrect_percentage = $this->question_responses_incorrect_percentage;
+        $question_responses_incorrect_percentage = round($this->question_responses_incorrect_percentage * 100 );
         return $question_responses_incorrect_percentage;
     }
 
