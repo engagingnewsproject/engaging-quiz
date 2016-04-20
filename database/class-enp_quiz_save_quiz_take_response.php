@@ -119,7 +119,8 @@ class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
             } elseif($response['question_type'] === 'slider') {
                 // TODO: Build slider save response
             }
-
+            // update question response data
+            $this->update_question_response_data($response);
 
 
         } else {
@@ -128,5 +129,57 @@ class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
         }
         // return response
         return $return;
+    }
+
+    /**
+    * Connects to DB and updates the question response data.
+    * @param $response (array) data we'll be using to update the question table
+    * @return only returns errors
+    */
+    protected function update_question_response_data($response) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // setup our SQL statement variables so we don't need to have a correct query, incorrect query, and a rebuild % query. A little convoluted, but fast.
+        $question_responses = 'question_responses';
+        if($response['response_correct'] === '1') {
+            $question_response_state = 'question_responses_correct';
+
+        } else {
+            $question_response_state = 'question_responses_incorrect';
+
+        }
+        // Get our Parameters ready
+        $params = array(':question_id' => $response['question_id']);
+        // write our SQL statement
+        /**
+        * IMPORTANT: Interestingly, the (question_responses + 1)
+        * and (correct or incorrect + 1) statements update BEFORE the
+        * percentage math happens, so we don't need to add the + 1
+        * into those queries. The math will be correct with the updated values.
+        */
+        $sql = "UPDATE ".$pdo->question_table."
+                   SET  question_responses = question_responses + 1,
+                        ".$question_response_state." = ".$question_response_state." + 1,
+                        question_responses_correct_percentage = question_responses_correct/question_responses,
+                        question_responses_incorrect_percentage = question_responses_incorrect/question_responses
+                 WHERE  question_id = :question_id";
+        // update the question view the database
+        $stmt = $pdo->query($sql, $params);
+
+        // success!
+        if($stmt !== false) {
+            // rebuild the percentages now
+            $this->update_question_response_data_percentages($response);
+        } else {
+            // handle errors
+            self::$return['error'][] = 'Update question response data failed.';
+        }
+
+        // return response
+        return self::$return;
+    }
+
+    protected function update_question_response_data_percentages($response) {
+
     }
 }
