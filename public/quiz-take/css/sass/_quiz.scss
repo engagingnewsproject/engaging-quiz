@@ -49,9 +49,14 @@
 
     .enp-question__container {
         @include _(container);
-        padding: 2.6rem 3rem;
         overflow: hidden;
         color: $font;
+        padding-top: 2rem;
+        
+        @include breakpoint(medium) {
+            padding: 2.6rem 3rem;
+        }
+
     }
 
     .enp-question__form {

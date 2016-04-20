@@ -197,10 +197,11 @@ $placeholders: ();
 
     .#{$rootBEM} {
         @include _(ul-no-style);
-        @include _(flex-center);
+        text-align: center;
     }
 
     .#{$rootBEM}__item {
+        display: inline-block;
         margin-right: 20px;
 
         &:last-child {
