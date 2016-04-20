@@ -1,28 +1,30 @@
+<?php
+// STARTUP
+// display errors
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
+if(isset($_GET['quiz_id'])) {
+    $quiz_id = $_GET['quiz_id'];
+    // set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
+    require '../../../../../enp-quiz-config.php';
+    require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
+    // load up quiz_take class
+    $qt = new Enp_quiz_Take($quiz_id);
+    $state = $qt->get_state();
+} else {
+    echo 'No quiz requested';
+    exit;
+}
+
+?>
 <html lang="en-US">
 <head>
-    <?php
-    // display errors
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-
-
-    if(isset($_GET['quiz_id'])) {
-        $quiz_id = $_GET['quiz_id'];
-        // set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
-        require '../../../../../enp-quiz-config.php';
-        require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
-        // load up quiz_take class
-        $qt = new Enp_quiz_Take($quiz_id);
-        $state = $qt->get_state();
-    } else {
-        echo 'No quiz requested';
-        exit;
-    }
-    // load styles
-    $qt->styles();
-    ?>
-
+    <title><?php echo $qt->quiz->get_quiz_title();?></title>
+    <?php // load styles
+    $qt->styles();?>
 </head>
 <body id="enp-quiz">
 <?php //add in our SVG

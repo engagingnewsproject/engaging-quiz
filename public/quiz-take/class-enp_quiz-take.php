@@ -63,9 +63,13 @@ class Enp_quiz_Take {
 		if($this->state === 'question_explanation') {
 			$this->set_question_explanation_vars();
 		}
+
 		// set random vars we'll need
 		$this->set_total_questions();
 		$this->set_current_question_number();
+
+		// set cookies we'll need on reload or correct/incorrect amounts
+		$this->set_cookies();
 	}
 
 	/**
@@ -262,6 +266,7 @@ class Enp_quiz_Take {
 	public function set_question() {
 		$question = array();
 		$question_id = '';
+		$question_id_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_question_id';
 		if(isset($this->response) && !empty($this->response)) {
 			// see what we should do
 			if($this->state === 'question_explanation') {
@@ -274,7 +279,11 @@ class Enp_quiz_Take {
 				$question_id = $this->response->next_question->question_id;
 			}
 		}
-		// elseif(check cookies?) {}
+		// check for cookies to see if we're on a page reload or something
+		elseif(isset($_COOKIE[$question_id_cookie_name])) {
+			$question_id = $_COOKIE[$question_id_cookie_name];
+		}
+		// probably new pageload. just get the first question of the quiz
 		else {
 			$question_ids = $this->quiz->get_questions();
 			// set the first question off of the question_ids from the quiz
@@ -303,9 +312,16 @@ class Enp_quiz_Take {
 	}
 
 	public function set_state() {
+		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
+		// set state off response, if it's there
 		if(isset($this->response) && !empty($this->response)) {
 			$this->state = $this->response->state;
-		} // elseif(check cookies)
+		}
+		// try to set the state from the cookie
+		elseif(isset($_COOKIE[$quiz_state_cookie_name])) {
+			$this->state = $_COOKIE[$quiz_state_cookie_name];
+		}
+		// probably a new quiz
 		else {
 			$this->state = 'question';
 		}
@@ -349,6 +365,34 @@ class Enp_quiz_Take {
 	public function get_question_explanation_percentage() {
 		// build this off the response
 		return $this->question_explanation_percentage;
+	}
+
+	/**
+	* We need cookies for quiz state and how they're doing score wise
+	* On each page load we'll save cookies as a snapshot of the current state
+	*/
+	public function set_cookies() {
+		$week = time() + (86400 * 7);
+		$quiz_id = $this->quiz->get_quiz_id();
+
+		// quiz state
+		if(!empty($this->state)) {
+			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $week);
+		} else {
+			return false;
+		}
+
+		// question number
+		if($this->state === 'question') {
+			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->question->get_question_id(), $week);
+		}
+		// if we're on a question explanation, how'd they do for that question?
+		// next question
+		elseif($this->state === 'question_explanation') {
+			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->question->get_question_id(), $this->response->response_correct, $week);
+		}
+
+
 	}
 
 
