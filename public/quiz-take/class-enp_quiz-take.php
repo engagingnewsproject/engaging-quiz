@@ -22,11 +22,10 @@
  */
 class Enp_quiz_Take {
 	public $quiz,
-		   $question,
 		   $state = '',
 		   $total_questions,
+		   $current_question_id,
 		   $current_question_number,
-		   $current_score,
 		   $question_explanation_title,
 		   $question_explanation_percentage,
 		   $response = array();
@@ -53,20 +52,10 @@ class Enp_quiz_Take {
 
 		// set our state
 		$this->set_state();
-		// set question
-		$this->set_question();
-
-		// save a question view if we're on a question
-		if($this->state === 'question') {
-			$this->save_question_view();
-		}
-
-		if($this->state === 'question_explanation') {
-			$this->set_question_explanation_vars();
-		}
 
 		// set random vars we'll need
 		$this->set_total_questions();
+		$this->set_current_question_id();
 		$this->set_current_question_number();
 
 		// set cookies we'll need on reload or correct/incorrect amounts
@@ -76,7 +65,7 @@ class Enp_quiz_Take {
 		// set the score if we're at the end
 		if($this->state === 'quiz_end') {
 			// figure out their score
-			$this->set_current_score();
+			$this->set_quiz_end();
 		}
 
 	}
@@ -115,6 +104,9 @@ class Enp_quiz_Take {
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-quiz.php';
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-question.php';
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
+		// Quiz Take Classes
+		require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_quiz_end.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_question.php';
         // Database
         require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
@@ -253,51 +245,7 @@ class Enp_quiz_Take {
 		$this->total_questions = count($this->quiz->get_questions());
 	}
 
-	public function set_current_question_number() {
-		// if we're at the end, the current question number is the total of the questions
-		if($this->state === 'quiz_end') {
-			$current_number = $this->total_questions;
-		} else {
-			$current_number = $this->question->question_order + 1;
-		}
-		$this->current_question_number = $current_number;
-
-	}
-
-	/**
-	* Get the person's score (what the % of their score is)
-	* @param cookies
-	* @return score (int)
-	*/
-	public function set_current_score() {
-		$quiz_id = $this->quiz->get_quiz_id();
-		$question_ids = $this->quiz->get_questions();
-		$correct = 0;
-		// loop through all questions and see if there are cookies set
-		foreach($question_ids as $question_id) {
-			// build cookie name
-			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
-			if(isset($_COOKIE[$cookie_name])) {
-				if($_COOKIE[$cookie_name] === '1') {
-					$correct++;
-				}
-			}
-		}
-
-		// calculate the score
-		$this->current_score = ($correct / $this->total_questions) * 100;
-
-	}
-
-	/**
-	* Set the data context for the question.
-	* Decide which question we need based on current quiz state.
-	*
-	* @param $response (array) response from server, if present
-	* @param $quiz (object) Enp_quiz_Quiz()
-	* @return $question (array) The question we need to display
-	*/
-	public function set_question() {
+	public function set_current_question_id() {
 		$question = array();
 		$question_id = '';
 		$question_id_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_question_id';
@@ -324,25 +272,17 @@ class Enp_quiz_Take {
 			$question_id = $question_ids[0];
 		}
 
-		// if we have a question id, get the question data for it
-		if(!empty($question_id)) {
-			$question = new Enp_quiz_Question($question_id);
+		$this->current_question_id = $question_id;
+	}
+
+	public function set_current_question_number() {
+		// if we're at the end, the current question number is the total of the questions
+		if($this->state === 'quiz_end') {
+			$this->current_question_number = $this->total_questions;
+		} else {
+			//
+			$this->current_question_number = 0;
 		}
-
-		$this->question = $question;
-		return $question;
-	}
-
-	/**
-	* Everytime a quiz take is loaded, save a view to the DB
-	*/
-	public function save_question_view() {
-		$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->question->question_id);
-	}
-
-	public function set_question_explanation_vars() {
-		$this->set_question_explanation_title();
-		$this->set_question_explanation_percentage();
 	}
 
 	public function set_state() {
@@ -375,47 +315,6 @@ class Enp_quiz_Take {
 		return $this->current_question_number;
 	}
 
-	public function get_current_score() {
-		return $this->current_score;
-	}
-
-	public function get_score_circle_dashoffset() {
-		$dashoffset = 0;
-		if(!empty($this->current_score)) {
-			// calculate the score dashoffset
-            $r = 90;
-            $c = M_PI*($r*2);
-            $dashoffset = ((100-$this->get_current_score())/100)*$c;
-		}
-		return $dashoffset;
-	}
-
-	public function set_question_explanation_title() {
-		$title = 'incorrect';
-		if($this->response->response_correct === '1') {
-			$title = 'correct';
-		}
-		$this->question_explanation_title = $title;
-	}
-
-	public function set_question_explanation_percentage() {
-		if($this->response->response_correct === '1') {
-			$percentage = $this->question->get_question_responses_correct_percentage();
-		} else {
-			$percentage = $this->question->get_question_responses_incorrect_percentage();
-		}
-		$this->question_explanation_percentage = $percentage;
-	}
-
-	public function get_question_explanation_title() {
-		return $this->question_explanation_title;
-	}
-
-	public function get_question_explanation_percentage() {
-		// build this off the response
-		return $this->question_explanation_percentage;
-	}
-
 	/**
 	* We need cookies for quiz state and how they're doing score wise
 	* On each page load we'll save cookies as a snapshot of the current state
@@ -433,98 +332,16 @@ class Enp_quiz_Take {
 
 		// question number
 		if($this->state === 'question') {
-			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->question->get_question_id(), $week);
+			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $week);
 		}
 		// if we're on a question explanation, how'd they do for that question?
 		// next question
 		elseif($this->state === 'question_explanation') {
-			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->question->get_question_id(), $this->response->response_correct, $week);
+			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week);
 		}
 
 
 	}
 
-
-	public function question_js_templates() {
-		// clone the object so we don't reset its own values
-		$qt = clone $this;
-		foreach($qt->question as $key => $value) {
-			if($key === 'question_image') {
-				// question_image should be blank
-				// because it messes up the templating for srcset
-				// and src when it thinks it has a value
-				$qt->question->$key = '';
-			} else {
-				$qt->question->$key = '{{'.$key.'}}';
-			}
-		}
-
-		// image template
-		$template = '<script type="text/template" id="question_image_template">';
-		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question-image.php');
-		$template .= ob_get_clean();
-		$template .= '</script>';
-		$template .= '<script type="text/template" id="question_template">';
-		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question.php');
-		$template .= ob_get_clean();
-		$template .= '</script>';
-
-
-
-		return $template;
-	}
-	/**
-	* I can't think of a better way to do this right now, but I think this is OK
-	* It loops all keys in the object and sets the values as handlebar style strings
-	* and injects it into the template
-	*/
-	public function question_explanation_js_template() {
-		// clone the object so we don't reset its own values
-		$qt = clone $this;
-
-		foreach($qt->question as $key => $value) {
-			if($key === 'question_image') {
-				// set it to a bogus image value that matches at least
-			}
-			$qt->question->$key = '{{'.$key.'}}';
-		}
-
-		foreach($qt as $key => $value) {
-			// we don't want to unset our question object
-			if($key !== 'question') {
-				$qt->$key = '{{'.$key.'}}';
-			}
-		}
-
-		$template = '<script type="text/template" id="question_explanation_template">';
-		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question-explanation.php');
-		$template .= ob_get_clean();
-		$template .= '</script>';
-
-		return $template;
-	}
-
-
-	/**
-	* I can't think of a better way to do this right now, but I think this is OK
-	* It loops all keys in the object and sets the values as handlebar style strings
-	* and injects it into the template
-	*/
-	public function mc_option_js_template() {
-		$mc_option = new Enp_quiz_MC_option(0);
-		foreach($mc_option as $key => $value) {
-			$mc_option->$key = '{{'.$key.'}}';
-		}
-		$template = '<script type="text/template" id="mc_option_template">';
-		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
-		$template .= ob_get_clean();
-		$template .= '</script>';
-
-		return $template;
-	}
 
 }

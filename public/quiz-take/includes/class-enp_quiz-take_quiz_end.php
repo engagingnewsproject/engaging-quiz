@@ -23,16 +23,16 @@
 class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
 	public $score,
 		   $dashoffset,
-		   $encouragement,
-		   $description;
+		   $quiz_end_title,
+		   $quiz_end_content;
 
 	/**
 	* This is a big constructor. We require our files, check for $_POST submission,
 	* set states, and all other details we're sure to need for our templating
 	*
 	*/
-	public function __construct($quiz_id = false) {
-
+	public function __construct($quiz) {
+		$this->quiz = $quiz;
 	}
 
 
@@ -76,10 +76,6 @@ class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
 		return $dashoffset;
 	}
 
-	public function get_current_score() {
-		return $this->current_score;
-	}
-
 
 	/**
 	* I can't think of a better way to do this right now, but I think this is OK
@@ -106,11 +102,16 @@ class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
 
 		$template = '<script type="text/template" id="quiz_end_template">';
 		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/quiz-results.php');
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/quiz-end.php');
 		$template .= ob_get_clean();
 		$template .= '</script>';
 
 		return $template;
+	}
+
+	public function set_current_question_number() {
+		// if we're at the end, the current question number is the total of the questions
+		$this->current_question_number = $this->total_questions;
 	}
 
 

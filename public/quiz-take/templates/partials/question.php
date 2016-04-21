@@ -1,17 +1,17 @@
 
-<input type="hidden" name="enp-question-id" value="<? echo $qt->question->get_question_id();?>"/>
-<input type="hidden" name="enp-question-type" value="<? echo $qt->question->get_question_type();?>"/>
+<input type="hidden" name="enp-question-id" value="<? echo $qt_question->question->get_question_id();?>"/>
+<input type="hidden" name="enp-question-type" value="<? echo $qt_question->question->get_question_type();?>"/>
 <fieldset class="enp-question__fieldset">
-    <legend class="enp-question__legend enp-question__question"><? echo $qt->question->get_question_title();?></legend>
+    <legend class="enp-question__legend enp-question__question"><? echo $qt_question->question->get_question_title();?></legend>
 
     <?php
-    if(!empty($qt->question->get_question_image())) {
+    if(!empty($qt_question->question->get_question_image())) {
         include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-image.php');
     }
 
-    if($qt->question->get_question_type() === 'mc') {?>
+    if($qt_question->question->get_question_type() === 'mc') {?>
         <p class="enp-question__helper">Select one option.</p>
-        <?foreach($qt->question->get_mc_options() as $mc_option_id) {
+        <?foreach($qt_question->question->get_mc_options() as $mc_option_id) {
             $mc_option = new Enp_quiz_MC_option($mc_option_id);
             include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
         }

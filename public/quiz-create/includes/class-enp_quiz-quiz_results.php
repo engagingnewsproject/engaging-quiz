@@ -32,7 +32,7 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
     }
 
     public function load_template() {
-        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-results.php' );
+        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-end.php' );
     }
 
     public function enqueue_styles() {

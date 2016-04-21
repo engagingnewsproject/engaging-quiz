@@ -13,6 +13,7 @@ if(isset($_GET['quiz_id'])) {
     require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
     // load up quiz_take class
     $qt = new Enp_quiz_Take($quiz_id);
+    $qt_question = new Enp_quiz_Take_Question($qt);
     $state = $qt->get_state();
 } else {
     echo 'No quiz requested';
@@ -29,6 +30,7 @@ if(isset($_GET['quiz_id'])) {
 <body id="enp-quiz">
 <?php //add in our SVG
     echo $qt->load_svg();
+
 ?>
 <section class="enp-quiz__container">
     <?php
@@ -50,9 +52,9 @@ if(isset($_GET['quiz_id'])) {
             if(!empty($state) && $state === 'question') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
             } elseif($state === 'question_explanation') {
-                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
+                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
             } elseif($state === 'quiz_end') {
-                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-results.php');
+                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-end.php');
             }?>
         </form>
 
@@ -65,9 +67,9 @@ if(isset($_GET['quiz_id'])) {
 
 
 <?php
-echo $qt->question_js_templates();
-echo $qt->question_explanation_js_template();
-echo $qt->mc_option_js_template();
+echo $qt_question->question_js_templates();
+echo $qt_question->question_explanation_js_template();
+echo $qt_question->mc_option_js_template();
 // load scripts
 $qt->scripts();
 ?>
