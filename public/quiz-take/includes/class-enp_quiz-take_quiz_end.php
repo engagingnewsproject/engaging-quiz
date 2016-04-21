@@ -79,6 +79,17 @@ class Enp_quiz_Take_Quiz_end {
 		return $dashoffset;
 	}
 
+	public function get_init_json() {
+		$quiz_end = clone $this;
+		// we already have the quiz
+		unset($quiz_end->quiz);
+		echo '<script type="text/javascript">';
+		// print this whole object as js global vars in json
+			echo 'var quiz_end_json = '.json_encode($quiz_end).';';
+		echo '</script>';
+		// remove the cloned object
+		unset($quiz_end);
+	}
 
 	/**
 	* I can't think of a better way to do this right now, but I think this is OK

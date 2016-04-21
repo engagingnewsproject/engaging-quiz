@@ -118,6 +118,17 @@ class Enp_quiz_Take_Question {
 		return $this->question_explanation_percentage;
 	}
 
+	public function get_init_json() {
+		$question = clone $this;
+		unset($question->qt);
+		echo '<script type="text/javascript">';
+		// print this whole object as js global vars in json
+			echo 'var question_json = '.json_encode($question).';';
+		echo '</script>';
+		// unset the cloned object
+		unset($question);
+	}
+
 	public function question_js_templates() {
 		// clone the object so we don't reset its own values
 		$qt_question = clone $this;

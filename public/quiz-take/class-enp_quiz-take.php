@@ -97,6 +97,23 @@ class Enp_quiz_Take {
 		}
 	}
 
+	public function get_init_json() {
+		$json = clone $this;
+		// just output the quiz level json
+		echo '<script type="text/javascript">';
+		// print this whole object as js global vars in json
+			echo 'var quiz_json = '.json_encode($json->quiz).';';
+		echo '</script>';
+		// remove quiz from the object so we don't print it again
+		unset($json->quiz);
+		echo '<script type="text/javascript">';
+		// print this whole object as js global vars in json
+			echo 'var qt_json = '.json_encode($json).';';
+		echo '</script>';
+		// unset the cloned object
+		unset($json);
+
+	}
 	/**
 	* Require all the files we'll need. This is loaded outside of WP, so we need
 	* to require everything we need on our own.
