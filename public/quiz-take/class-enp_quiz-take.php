@@ -26,8 +26,6 @@ class Enp_quiz_Take {
 		   $total_questions,
 		   $current_question_id,
 		   $current_question_number,
-		   $question_explanation_title,
-		   $question_explanation_percentage,
 		   $response = array();
 
 	/**
@@ -277,12 +275,31 @@ class Enp_quiz_Take {
 
 	public function set_current_question_number() {
 		// if we're at the end, the current question number is the total of the questions
+		$current_question_number = 0;
+		// check state
 		if($this->state === 'quiz_end') {
 			$this->current_question_number = $this->total_questions;
 		} else {
-			//
-			$this->current_question_number = 0;
+			// find it off of the quiz array
+			$question_ids = $this->quiz->get_questions();
+			// set counter at 1 because we want the first question to be 1 not 0
+			$i = 1;
+			// loop question ids
+			foreach($question_ids as $question_id) {
+				// if current question id matches the array question id, set the counter as the current question number
+				if((int)$question_id === (int)$this->current_question_id) {
+					$current_question_number = $i;
+					// we got it! break out
+					break;
+				} else {
+					// didn't find it yet, increase the counter
+					$i++;
+				}
+			}
+
 		}
+
+		$this->current_question_number = $current_question_number;
 	}
 
 	public function set_state() {

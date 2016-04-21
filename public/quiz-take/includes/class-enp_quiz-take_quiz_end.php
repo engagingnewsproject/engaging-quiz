@@ -20,8 +20,9 @@
  * @subpackage Enp_quiz/public
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
-	public $score,
+class Enp_quiz_Take_Quiz_end {
+	public $qt, // Enp_quiz_Take Object
+		   $score,
 		   $dashoffset,
 		   $quiz_end_title,
 		   $quiz_end_content;
@@ -31,8 +32,8 @@ class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
 	* set states, and all other details we're sure to need for our templating
 	*
 	*/
-	public function __construct($quiz) {
-		$this->quiz = $quiz;
+	public function __construct($qt) {
+		$this->qt = $qt;
 	}
 
 
@@ -42,8 +43,8 @@ class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
 	* @return score (int)
 	*/
 	public function set_current_score() {
-		$quiz_id = $this->quiz->get_quiz_id();
-		$question_ids = $this->quiz->get_questions();
+		$quiz_id = $this->qt->quiz->get_quiz_id();
+		$question_ids = $this->qt->quiz->get_questions();
 		$correct = 0;
 		// loop through all questions and see if there are cookies set
 		foreach($question_ids as $question_id) {
@@ -108,13 +109,5 @@ class Enp_quiz_Take_Quiz_end extends Enp_quiz_Take {
 
 		return $template;
 	}
-
-	public function set_current_question_number() {
-		// if we're at the end, the current question number is the total of the questions
-		$this->current_question_number = $this->total_questions;
-	}
-
-
-
 
 }

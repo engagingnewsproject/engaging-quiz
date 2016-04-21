@@ -20,23 +20,26 @@
  * @subpackage Enp_quiz/public
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Take_Question extends Enp_quiz_Take {
-	public $question;
+class Enp_quiz_Take_Question {
+	public 	$qt, // Enp_quiz_Take Object
+			$question,
+			$question_explanation_title,
+			$question_explanation_percentage;
 	/**
 	* This is a big constructor. We require our files, check for $_POST submission,
 	* set states, and all other details we're sure to need for our templating
 	*
 	*/
-	public function __construct($qt_parent) {
-		$this->parent = $qt_parent;
+	public function __construct($qt) {
+		$this->qt = $qt;
 		// set question
 		$this->set_question();
 		// save a question view if we're on a question
-		if($this->parent->state === 'question') {
+		if($this->qt->state === 'question') {
 			$this->save_question_view();
 		}
 		// set random vars if necessary
-		if($this->parent->state === 'question_explanation') {
+		if($this->qt->state === 'question_explanation') {
 			$this->set_question_explanation_vars();
 		}
 	}
@@ -51,8 +54,8 @@ class Enp_quiz_Take_Question extends Enp_quiz_Take {
 	*/
 	public function set_question() {
 		// if we have a question id, get the question data for it
-		if(!empty($this->parent->current_question_id)) {
-			$question = new Enp_quiz_Question($this->parent->current_question_id);
+		if(!empty($this->qt->current_question_id)) {
+			$question = new Enp_quiz_Question($this->qt->current_question_id);
 		}
 
 		$this->question = $question;
@@ -72,14 +75,14 @@ class Enp_quiz_Take_Question extends Enp_quiz_Take {
 
 	public function set_question_explanation_title() {
 		$title = 'incorrect';
-		if($this->parent->response->response_correct === '1') {
+		if($this->qt->response->response_correct === '1') {
 			$title = 'correct';
 		}
 		$this->question_explanation_title = $title;
 	}
 
 	public function set_question_explanation_percentage() {
-		if($this->parent->response->response_correct === '1') {
+		if($this->qt->response->response_correct === '1') {
 			$percentage = $this->question->get_question_responses_correct_percentage();
 		} else {
 			$percentage = $this->question->get_question_responses_incorrect_percentage();
