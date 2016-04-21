@@ -23,6 +23,7 @@
 class Enp_quiz_Take_Question {
 	public 	$qt, // Enp_quiz_Take Object
 			$question,
+			$question_response_correct,
 			$question_explanation_title,
 			$question_explanation_percentage;
 	/**
@@ -34,10 +35,12 @@ class Enp_quiz_Take_Question {
 		$this->qt = $qt;
 		// set question
 		$this->set_question();
-		// save a question view if we're on a question
+		// save a question view if we're on a question && it's not a reload
 		if($this->qt->state === 'question') {
 			$this->save_question_view();
 		}
+		// set if they got the question right or not
+		$this->set_question_response_correct();
 		// set random vars if necessary
 		if($this->qt->state === 'question_explanation') {
 			$this->set_question_explanation_vars();
@@ -68,21 +71,37 @@ class Enp_quiz_Take_Question {
 		$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->question->question_id);
 	}
 
+	public function set_question_response_correct() {
+		$title = 'incorrect';
+		// cookie name
+		$question_response_cookie_name = 'enp_take_quiz_'.$this->qt->quiz->quiz_id.'_'.$this->question->question_id;
+		// first, check for a response
+		if(isset($this->qt->response->response_correct) && !empty($this->qt->response->response_correct)) {
+			if($this->qt->response->response_correct === '1') {
+				$title = 'correct';
+			}
+		}
+		// check from cookies
+		elseif(isset($_COOKIE[$question_response_cookie_name])) {
+			if($_COOKIE[$question_response_cookie_name] === '1') {
+				$title = 'correct';
+			}
+		}
+
+		$this->question_response_correct = $title;
+	}
+
 	public function set_question_explanation_vars() {
 		$this->set_question_explanation_title();
 		$this->set_question_explanation_percentage();
 	}
 
 	public function set_question_explanation_title() {
-		$title = 'incorrect';
-		if($this->qt->response->response_correct === '1') {
-			$title = 'correct';
-		}
-		$this->question_explanation_title = $title;
+		$this->question_explanation_title = $this->question_response_correct;
 	}
 
 	public function set_question_explanation_percentage() {
-		if($this->qt->response->response_correct === '1') {
+		if($this->question_response_correct === 'correct') {
 			$percentage = $this->question->get_question_responses_correct_percentage();
 		} else {
 			$percentage = $this->question->get_question_responses_incorrect_percentage();

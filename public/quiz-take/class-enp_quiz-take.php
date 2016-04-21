@@ -26,6 +26,7 @@ class Enp_quiz_Take {
 		   $total_questions,
 		   $current_question_id,
 		   $current_question_number,
+		   $nonce,
 		   $response = array();
 
 	/**
@@ -36,6 +37,8 @@ class Enp_quiz_Take {
 	public function __construct($quiz_id = false) {
 		// require files
 		$this->load_files();
+		// set nonce
+		$this->set_nonce();
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
 			// sets $this->response;
@@ -99,6 +102,7 @@ class Enp_quiz_Take {
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-quiz.php';
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-question.php';
         require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-nonce.php';
 		// Quiz Take Classes
 		require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_quiz_end.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_question.php';
@@ -108,6 +112,13 @@ class Enp_quiz_Take {
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
+	}
+
+	public function set_nonce() {
+		//Start the session
+	   session_start();
+	   //Start the class
+	   $this->nonce = new Enp_quiz_Nonce();
 	}
 
 	/**
@@ -163,6 +174,22 @@ class Enp_quiz_Take {
 	public function save_quiz_take() {
 		$response = false;
 		$save_data = array();
+
+		// validate nonce
+		if(isset($_POST['enp_quiz_nonce'])) {
+			$posted_nonce = $_POST['enp_quiz_nonce'];
+		}
+
+	    //Is it a POST request?
+ 	    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+ 		   //Validate the form key
+ 		   if(!isset($posted_nonce) || !$this->nonce->validate($posted_nonce)) {
+ 			   // Form key is invalid,
+			   // return them to the page (they're probably refreshing the page)
+			   return false;
+ 		   }
+ 	    }
 		// get user action
 		if(isset($_POST['enp-question-submit'])) {
 			$save_data['user_action'] = $_POST['enp-question-submit'];
@@ -367,7 +394,7 @@ class Enp_quiz_Take {
 		}
 		// if we're on a question explanation, how'd they do for that question?
 		// next question
-		elseif($this->state === 'question_explanation') {
+		elseif($this->state === 'question_explanation' && !empty($this->response)) {
 			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week);
 		}
 
