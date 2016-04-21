@@ -86,7 +86,12 @@ class Enp_quiz_Take {
 	 * @since    0.0.1
 	 */
 	public function scripts() {
-		$scripts = array(ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/enp_quiz-take.js');
+		$scripts = array(
+						"https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/underscore.min.js',
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/backbone.min.js',
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.js'
+					);
 		foreach($scripts as $src) {
 			echo '<script src="'.$src.'"></script>';
 		}
@@ -397,7 +402,6 @@ class Enp_quiz_Take {
 		elseif($this->state === 'question_explanation' && !empty($this->response)) {
 			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week);
 		}
-
 	}
 
 	public function unset_cookies() {
