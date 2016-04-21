@@ -38,15 +38,19 @@ class Enp_quiz_Take {
 		$this->load_files();
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
-            $response = $this->save_quiz_take();
-            // parse the JSON response
-            $this->response = json_decode($response);
-			//var_dump($this->response);
+			// sets $this->response;
+            $this->save_quiz_take();
         }
+
 		// get our quiz
 		$this->quiz = new Enp_quiz_Quiz($quiz_id);
 		// make sure a quiz got loaded
 		$this->validate_quiz();
+
+		if(isset($_POST['enp-quiz-restart'])) {
+			// sets $this->response;
+            $this->quiz_restart();
+        }
 
 		// set our state
 		$this->set_state();
@@ -58,13 +62,6 @@ class Enp_quiz_Take {
 
 		// set cookies we'll need on reload or correct/incorrect amounts
 		$this->set_cookies();
-
-		// more random vars
-		// set the score if we're at the end
-		if($this->state === 'quiz_end') {
-			// figure out their score
-			$this->set_quiz_end();
-		}
 
 	}
 
@@ -186,8 +183,8 @@ class Enp_quiz_Take {
 		// save the response
 		$save_quiz_take = new Enp_quiz_Save_quiz_take();
 		$response = $save_quiz_take->save_quiz_take($save_data);
-
-		return $response;
+		// parse the JSON response
+		$this->response = json_decode($response);
 	}
 
 	public function build_response_data($response_array) {
@@ -239,6 +236,11 @@ class Enp_quiz_Take {
 		return $moving_on_data;
 	}
 
+	public function quiz_restart() {
+		// clear the cookies and send them back to the beginning of the quiz
+		$this->unset_cookies();
+	}
+
 	public function set_total_questions() {
 		$this->total_questions = count($this->quiz->get_questions());
 	}
@@ -258,6 +260,13 @@ class Enp_quiz_Take {
 			elseif($this->state === 'question') {
 				$question_id = $this->response->next_question->question_id;
 			}
+		}
+		// check if we're resetting the quiz
+		// restarting a quiz
+		elseif(isset($_POST['enp-quiz-restart'])) {
+			$question_ids = $this->quiz->get_questions();
+			// set the first question off of the question_ids from the quiz
+			$question_id = $question_ids[0];
 		}
 		// check for cookies to see if we're on a page reload or something
 		elseif(isset($_COOKIE[$question_id_cookie_name])) {
@@ -305,8 +314,13 @@ class Enp_quiz_Take {
 	public function set_state() {
 		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
 		// set state off response, if it's there
+
 		if(isset($this->response) && !empty($this->response)) {
 			$this->state = $this->response->state;
+		}
+		// restarting a quiz
+		elseif(isset($_POST['enp-quiz-restart'])) {
+			$this->state = 'question';
 		}
 		// try to set the state from the cookie
 		elseif(isset($_COOKIE[$quiz_state_cookie_name])) {
@@ -357,6 +371,18 @@ class Enp_quiz_Take {
 			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week);
 		}
 
+	}
+
+	public function unset_cookies() {
+		$quiz_id = $this->quiz->get_quiz_id();
+		$question_ids = $this->quiz->get_questions();
+
+		// loop through all questions and unset their cookie
+		foreach($question_ids as $question_id) {
+			// build cookie name
+			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
+			setcookie($cookie_name, '', time() - 3600);
+		}
 
 	}
 

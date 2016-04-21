@@ -99,6 +99,8 @@ class Enp_quiz_Save_quiz_take {
                 // we have a question to display! Set it to the question state
                 $state = 'question';
             }
+        } elseif($data['user_action'] === 'enp-quiz-restart') {
+            $state = 'question';
         } else {
             // TODO: Error
             $state = false;
@@ -117,6 +119,9 @@ class Enp_quiz_Save_quiz_take {
         if(self::$return['state'] === 'question') {
             self::$return['next_state'] = 'question_explanation';
         }
+        elseif(self::$return['state'] === 'quiz_end') {
+            self::$return['next_state'] = 'question';
+        }
         elseif(!empty(self::$next_question)) {
             // we have another question!
             // get the JSON
@@ -126,7 +131,9 @@ class Enp_quiz_Save_quiz_take {
             // no question next, so we're at the end
             // build the final page with their data
             self::$return['next_state'] = 'quiz_end';
-            self::$return['quiz_end'] = array('some data');
+            // build the quiz end object
+            $quiz_end = new Enp_quiz_Take_Quiz_end(self::$quiz);
+            self::$return['quiz_end'] = (array) $quiz_end;
         }
 
     }

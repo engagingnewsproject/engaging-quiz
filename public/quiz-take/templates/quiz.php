@@ -13,7 +13,10 @@ if(isset($_GET['quiz_id'])) {
     require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
     // load up quiz_take class
     $qt = new Enp_quiz_Take($quiz_id);
-    $qt_question = new Enp_quiz_Take_Question($qt);
+    if($qt->state !== 'quiz_end') {
+        $qt_question = new Enp_quiz_Take_Question($qt);
+    }
+    $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
     $state = $qt->get_state();
 } else {
     echo 'No quiz requested';
@@ -67,9 +70,12 @@ if(isset($_GET['quiz_id'])) {
 
 
 <?php
-echo $qt_question->question_js_templates();
-echo $qt_question->question_explanation_js_template();
-echo $qt_question->mc_option_js_template();
+if(isset($qt_question) && is_object($qt_question)) {
+    echo $qt_question->question_js_templates();
+    echo $qt_question->question_explanation_js_template();
+    echo $qt_question->mc_option_js_template();
+}
+
 // load scripts
 $qt->scripts();
 ?>

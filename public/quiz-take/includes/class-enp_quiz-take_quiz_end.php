@@ -21,9 +21,8 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Take_Quiz_end {
-	public $qt, // Enp_quiz_Take Object
+	public $quiz, // Enp_quiz_Quiz Object
 		   $score,
-		   $dashoffset,
 		   $quiz_end_title,
 		   $quiz_end_content;
 
@@ -32,8 +31,10 @@ class Enp_quiz_Take_Quiz_end {
 	* set states, and all other details we're sure to need for our templating
 	*
 	*/
-	public function __construct($qt) {
-		$this->qt = $qt;
+	public function __construct($quiz) {
+		$this->quiz = $quiz;
+
+		$this->set_score();
 	}
 
 
@@ -42,10 +43,11 @@ class Enp_quiz_Take_Quiz_end {
 	* @param cookies
 	* @return score (int)
 	*/
-	public function set_current_score() {
-		$quiz_id = $this->qt->quiz->get_quiz_id();
-		$question_ids = $this->qt->quiz->get_questions();
+	public function set_score() {
+		$quiz_id = $this->quiz->quiz_id;
+		$question_ids = $this->quiz->questions;
 		$correct = 0;
+		$total_questions = count($question_ids);
 		// loop through all questions and see if there are cookies set
 		foreach($question_ids as $question_id) {
 			// build cookie name
@@ -58,21 +60,21 @@ class Enp_quiz_Take_Quiz_end {
 		}
 
 		// calculate the score
-		$this->current_score = ($correct / $this->total_questions) * 100;
+		$this->score = ($correct / $total_questions) * 100;
 
 	}
 
-	public function get_current_score() {
-		return $this->current_score;
+	public function get_score() {
+		return $this->score;
 	}
 
 	public function get_score_circle_dashoffset() {
 		$dashoffset = 0;
-		if(!empty($this->current_score)) {
+		if(!empty($this->score)) {
 			// calculate the score dashoffset
             $r = 90;
             $c = M_PI*($r*2);
-            $dashoffset = ((100-$this->get_current_score())/100)*$c;
+            $dashoffset = ((100-$this->get_score())/100)*$c;
 		}
 		return $dashoffset;
 	}
