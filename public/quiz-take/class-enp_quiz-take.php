@@ -25,6 +25,7 @@ class Enp_quiz_Take {
 		   $state = '',
 		   $total_questions,
 		   $current_question_id,
+		   $next_question_id,
 		   $current_question_number,
 		   $nonce,
 		   $response = array();

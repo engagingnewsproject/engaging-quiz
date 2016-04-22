@@ -72,9 +72,9 @@ if(isset($_GET['quiz_id'])) {
 
 <?php
 echo $qt->get_init_json();
-echo $qt_question->get_init_json();
 echo $qt_end->get_init_json();
 if(isset($qt_question) && is_object($qt_question)) {
+    echo $qt_question->get_init_json();
     echo $qt_question->question_js_templates();
     echo $qt_question->question_explanation_js_template();
     echo $qt_question->mc_option_js_template();
