@@ -52,7 +52,8 @@
         overflow: hidden;
         color: $font;
         padding-top: 2rem;
-        
+        padding-bottom: 2.6rem;
+
         @include breakpoint(medium) {
             padding: 2.6rem 3rem;
         }

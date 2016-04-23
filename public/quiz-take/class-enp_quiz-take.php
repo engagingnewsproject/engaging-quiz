@@ -67,6 +67,17 @@ class Enp_quiz_Take {
 		// set cookies we'll need on reload or correct/incorrect amounts
 		$this->set_cookies();
 
+		// if we're doing AJAX, echo the response back to the server
+		// this is echo-ed after everything else is done so we don't get "header already sent" errors from PHP
+		if(isset($_POST['doing_ajax'])) {
+			header('Content-type: application/json');
+			echo json_encode($this->response);
+			// don't produce anymore HTML or render anything else
+			// otherwise the server keeps going and sends us all
+			// the HTML of the page too, but we just want the JSON data
+			die();
+		}
+
 	}
 
 	/**
@@ -88,9 +99,9 @@ class Enp_quiz_Take {
 	 */
 	public function scripts() {
 		$scripts = array(
-						"https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+						//"https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/underscore.min.js',
-						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/backbone.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.js'
 					);
 		foreach($scripts as $src) {
@@ -233,6 +244,7 @@ class Enp_quiz_Take {
 		// save the response
 		$save_quiz_take = new Enp_quiz_Save_quiz_take();
 		$response = $save_quiz_take->save_quiz_take($save_data);
+
 		// parse the JSON response
 		$this->response = json_decode($response);
 	}

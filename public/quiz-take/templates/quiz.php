@@ -49,7 +49,7 @@ if(isset($_GET['quiz_id'])) {
     </header>
 
     <section class="enp-question__container enp-question__container--unanswered">
-        <form class="enp-question__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_URL).$qt->quiz->quiz_id; ?>">
+        <form id="quiz" class="enp-question__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_URL).$qt->quiz->quiz_id; ?>">
             <?php $qt->nonce->outputKey();?>
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
             <?php
