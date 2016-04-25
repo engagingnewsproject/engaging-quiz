@@ -1,7 +1,7 @@
-
-<input id="enp-question-id" type="hidden" name="enp-question-id" value="<? echo $qt_question->question->get_question_id();?>"/>
-<input id="enp-question-type" type="hidden" name="enp-question-type" value="<? echo $qt_question->question->get_question_type();?>"/>
 <fieldset id="question_<? echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset">
+    <input id="enp-question-id" type="hidden" name="enp-question-id" value="<? echo $qt_question->question->get_question_id();?>"/>
+    <input id="enp-question-type" type="hidden" name="enp-question-type" value="<? echo $qt_question->question->get_question_type();?>"/>
+    
     <legend class="enp-question__legend enp-question__question"><? echo $qt_question->question->get_question_title();?></legend>
 
     <?php

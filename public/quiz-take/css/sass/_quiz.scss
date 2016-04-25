@@ -273,6 +273,28 @@
     }
 
 
+    //
+    // Next Question
+    //
+
+
+    .enp-question--on-deck {
+        transform: translateX(200px);
+        opacity: 0;
+        z-index: -1;
+        top: 0;
+        position: absolute;
+    }
+
+    .enp-question--show {
+        animation: showNextQuestion .5s ease-in-out forwards;
+    }
+
+    .enp-question--remove {
+        position: absolute;
+        animation: removeQuestion .15s ease-out forwards;
+    }
+
       // ----------------------//
      //      Quiz Results     //
     // ----------------------//
