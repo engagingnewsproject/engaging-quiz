@@ -27,52 +27,68 @@ var questionExplanationTemplate = _.template($('#question_explanation_template')
 
 
 /**
-* On click of a selection,
+* Submit question when you click question input label
+*
+* Process: On click of a selection,
 * 1. Show the right one
 * 2. Slide out incorrect ones (other than the one clicked)
 * 3. Show the explanation
+* 4. Trigger click on the question submit button
 */
 $(document).on('click', '.enp-option__label', function(e){
-
+    // get the input related to the label
     var thisMCInput = $(this).prev('.enp-option__input');
-    var correct = thisMCInput.data('correct');
-    // set-up the question container class, remove unanswered class
-    $('.enp-question__container').addClass('enp-question__container--explanation').removeClass('enp-question__container--unanswered');
-    // check if it's correct or not
-    if(correct === '1') {
-        correct_string = 'correct';
-        // it's right!
-        thisMCInput.addClass('enp-option__input--correct-clicked');
-        showCorrectMCOption(thisMCInput);
-    } else {
-        correct_string = 'incorrect';
-        // it's wrong :( :( :(
-        thisMCInput.addClass('enp-option__input--incorrect-clicked');
-        // show the correct one
-        correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
+    // See if the DOM has updated to select the corresponding input yet or not.
+    // if it hasn't select it, then submit the form
+    if ( !thisMCInput.prop( "checked" ) ) {
+        thisMCInput.prop("checked", true);
     }
-    // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
-    locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
 
-    var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
-    console.log(questionJSON);
-    // show the explanation
-    var qeTemplate = generateQuestionExplanation(questionJSON, correct_string);
-    $('.enp-question__submit').before(qeTemplate);
-
-});
-
-// 4. Click the submit button on input change
-// submit the form on change
-$('.enp-option__input').change(function() {
-    console.log('changed');
+    // just trigger a click on the submit button
     $('.enp-question__submit').trigger('click');
 });
+
 
 // 5. save the quiz on click
 // AJAX save
 $(document).on('click', '.enp-question__submit', function(e){
     e.preventDefault();
+    // set-up the current question container class state, remove unanswered class
+    $('.enp-question__container').addClass('enp-question__container--explanation').removeClass('enp-question__container--unanswered');
+
+    // find the selected mc option input
+    var selectedMCInput = $('.enp-option__input:checked');
+    // see if the input is correct or incorrect
+    var correct = selectedMCInput.data('correct');
+
+    // check if it's correct or not
+    if(correct === '1') {
+        correct_string = 'correct';
+        // it's right! add the correct class to the input
+        selectedMCInput.addClass('enp-option__input--correct-clicked');
+        // add the class thta highlights the correct option
+        showCorrectMCOption(selectedMCInput);
+    } else {
+        // it's wrong :( :( :(
+        correct_string = 'incorrect';
+        // add incorrect clicked class so it remains in view, but is highlighted as the one they clicked
+        selectedMCInput.addClass('enp-option__input--incorrect-clicked');
+        // highlight the correct option
+        correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
+    }
+    // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
+    locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
+
+    // get the JSON data for this question
+    var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
+    // show the explanation by generating the question explanation template
+    var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
+    // add the Question Explanation Template into the DOM
+    $('.enp-question__submit').before(qExplanationTemplate);
+
+
+
+    // submit the question
     url = $('.enp-question__form').attr('action');
     // add button value and name to the data since jQuery doesn't submit button value
     userAction = $(this).attr("name") + "=" + $(this).val();
@@ -161,7 +177,7 @@ function generateQuestion(questionJSON) {
         }
 
         // append the data to the mc options
-        attach_mc_option_data(questionJSON);
+        bindMCOptionData(questionJSON);
 
     } else if(questionJSON.question_type === 'slider') {
 
@@ -225,11 +241,6 @@ function quizSaveNextStepSuccess( response, textStatus, jqXHR ) {
 
 }
 
-/*
-* MC OPTION
-*/
-
-
 /**
 * Find all the mc options in a container and tell us which is the correct one
 * @param container (obj) wrapper for the inputs to search
@@ -270,17 +281,29 @@ function locateIncorrectMCOptions(container, callback) {
     return incorrect;
 }
 
+/**
+* Remove the MC Option from view by adding a class
+* @param obj (jQuery object)
+*/
 function removeMCOption(obj) {
     if(!obj.hasClass('enp-option__input--incorrect-clicked')) {
         obj.addClass('enp-option__input--slide-hide');
     }
 }
 
+/**
+* Highlight the correct MC Option by adding a class
+* @param obj (jQuery object)
+*/
 function showCorrectMCOption(obj) {
     obj.addClass('enp-option__input--correct');
 }
 
-// attach data to mc options
+/**
+* Attach data to the MC Options that lets us know if the
+* mc option is correct or incorrect
+* @param questionJSON (JSON String) Question level JSON
+*/
 function bindMCOptionData(questionJSON) {
     if(questionJSON.question_type === 'mc') {
         for(var prop in questionJSON.mc_option) {
@@ -294,5 +317,6 @@ function bindMCOptionData(questionJSON) {
 
 // on load, bind the initial question_json to the question id
 bindQuestionData(init_question_json);
+// on load, bind the initial question_json to the mc options, if it's an mc option question
 bindMCOptionData(init_question_json);
 });

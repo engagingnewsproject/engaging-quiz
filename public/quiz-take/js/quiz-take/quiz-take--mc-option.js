@@ -1,8 +1,3 @@
-/*
-* MC OPTION
-*/
-
-
 /**
 * Find all the mc options in a container and tell us which is the correct one
 * @param container (obj) wrapper for the inputs to search
@@ -43,17 +38,29 @@ function locateIncorrectMCOptions(container, callback) {
     return incorrect;
 }
 
+/**
+* Remove the MC Option from view by adding a class
+* @param obj (jQuery object)
+*/
 function removeMCOption(obj) {
     if(!obj.hasClass('enp-option__input--incorrect-clicked')) {
         obj.addClass('enp-option__input--slide-hide');
     }
 }
 
+/**
+* Highlight the correct MC Option by adding a class
+* @param obj (jQuery object)
+*/
 function showCorrectMCOption(obj) {
     obj.addClass('enp-option__input--correct');
 }
 
-// attach data to mc options
+/**
+* Attach data to the MC Options that lets us know if the
+* mc option is correct or incorrect
+* @param questionJSON (JSON String) Question level JSON
+*/
 function bindMCOptionData(questionJSON) {
     if(questionJSON.question_type === 'mc') {
         for(var prop in questionJSON.mc_option) {
