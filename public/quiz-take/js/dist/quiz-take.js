@@ -124,6 +124,7 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
         generateQuestion(responseJSON.next_question);
     } else {
         // we're at the quiz end, so generate that template
+        console.log(responseJSON);
     }
 
 }

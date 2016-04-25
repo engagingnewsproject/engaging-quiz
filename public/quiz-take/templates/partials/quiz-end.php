@@ -6,8 +6,8 @@
           <circle id="enp-results__score__circle__path" r="90" cx="100" cy="100" fill="transparent" stroke-dasharray="565.48" stroke-dashoffset="<?php echo $qt_end->get_score_circle_dashoffset();?>"></circle>
         </svg>
     </div>
-    <p class="enp-results__encouragement">Not bad!</p>
-    <p class="enp-results__description">You did better than <strong>90%</strong> of people. That quiz was kind of a hard, eh?</p>
+    <p class="enp-results__encouragement"><?php echo $qt_end->get_quiz_end_title();?></p>
+    <p class="enp-results__description"><?php echo $qt_end->get_quiz_end_content();?></p>
     <h3 class="enp-results__share-title">Share Your Results</h3>
     <ul class="enp-results__share">
         <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--facebook" href="#facebook">

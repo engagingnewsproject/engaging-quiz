@@ -33,8 +33,12 @@ class Enp_quiz_Take_Quiz_end {
 	*/
 	public function __construct($quiz) {
 		$this->quiz = $quiz;
-
+		// set the score
 		$this->set_score();
+		// set the title based on the score
+		$this->set_quiz_end_title();
+		// set the content based on the score
+		$this->set_quiz_end_content();
 	}
 
 
@@ -62,6 +66,59 @@ class Enp_quiz_Take_Quiz_end {
 		// calculate the score
 		$this->score = ($correct / $total_questions) * 100;
 
+	}
+
+	/**
+	* Give them a title based on how well they did
+	* @param score
+	*/
+	public function set_quiz_end_title() {
+
+		if(intval($this->score) < 50) {
+			$title = "Ouch!";
+		} elseif(intval($this->score) < 70) {
+			$title = "Not Bad!";
+		} elseif (intval($this->score) < 85) {
+			$title = "Nice Job!";
+		}
+		elseif (intval($this->score) < 100) {
+			$title = "Fantastic!";
+		}
+		elseif (intval($this->score) === 100) {
+			$title = "Perfect!";
+		}
+		$this->quiz_end_title = $title;
+	}
+
+	public function get_quiz_end_title() {
+		return $this->quiz_end_title;
+	}
+
+	/**
+	* Give them a title based on how well they did
+	* @param score
+	*/
+	public function set_quiz_end_content() {
+		// Not so good. Default.
+
+		$content = "We bet you could do better. Why don't you try taking the quiz again?";
+		if(intval($this->score) < 70) {
+			$content = "We bet you could do better. Why don't you try taking the quiz again?";
+		}
+		elseif (intval($this->score) < 85) {
+			$content = "You did pretty well! Take the quiz again and see if you can get a perfect score this time.";
+		}
+		elseif (intval($this->score) < 100) {
+			$content = "Fantastic!";
+		}
+		elseif (intval($this->score) === 100) {
+			$content = "Can't do any better than that! Go ahead, share this quiz and brag about it.";
+		}
+		$this->quiz_end_content = $content;
+	}
+
+	public function get_quiz_end_content() {
+		return $this->quiz_end_content;
 	}
 
 	public function get_score() {
