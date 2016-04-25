@@ -87,7 +87,16 @@ gulp.task('quizTakeJS', function(callback) {
 });
 
 gulp.task('concatQuizTakeJS', function() {
-    src = "../enp-quiz/public/quiz-take/js/quiz-take/*.js";
+    rootPath = "../enp-quiz/public/quiz-create/js/quiz-take/";
+    src = [rootPath+"quiz-take--utilities.js",
+           rootPath+"quiz-take--templates.js",
+           rootPath+"quiz-take--ux.js",
+           rootPath+"quiz-take--question.js",
+           rootPath+"quiz-take--question-explanation.js",
+           rootPath+"quiz-take--mc-option.js",
+           rootPath+"quiz-take--quiz-end.js",
+           rootPath+"quiz-take--init.js",
+        ];
     filename = 'quiz-take';
     dist = '../enp-quiz/public/quiz-take/js/dist/';
     return concatjQuery(src, filename, dist);
