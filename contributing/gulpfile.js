@@ -87,7 +87,7 @@ gulp.task('quizTakeJS', function(callback) {
 });
 
 gulp.task('concatQuizTakeJS', function() {
-    rootPath = "../enp-quiz/public/quiz-create/js/quiz-take/";
+    rootPath = "../enp-quiz/public/quiz-take/js/quiz-take/";
     src = [rootPath+"quiz-take--utilities.js",
            rootPath+"quiz-take--templates.js",
            rootPath+"quiz-take--ux.js",

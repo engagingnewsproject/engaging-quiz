@@ -54,7 +54,7 @@ function showCorrectMCOption(obj) {
 }
 
 // attach data to mc options
-function attach_mc_option_data(questionJSON) {
+function bindMCOptionData(questionJSON) {
     if(questionJSON.question_type === 'mc') {
         for(var prop in questionJSON.mc_option) {
             mc_option_id = questionJSON.mc_option[prop].mc_option_id;

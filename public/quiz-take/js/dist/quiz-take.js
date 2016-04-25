@@ -1,133 +1,30 @@
-jQuery( document ).ready( function( $ ) {// on load, bind the initial question_json to the question id
-bindQuestionData(init_question_json);
-
-/*
-* MC OPTION INIT
-*/
-// set-up
-attach_mc_option_data(init_question_json);
-
-/*
-* MC OPTION
-*/
-
-
+jQuery( document ).ready( function( $ ) {// UTILITY
 /**
-* Find all the mc options in a container and tell us which is the correct one
-* @param container (obj) wrapper for the inputs to search
-* @param callback (function) Something to do with the correct one found
-* @return input object that is correct
+* get a string or decimal integer and return a formatted decimal number
+* @param places (int) how many decimal places you want to leave in Defaults to 0.
 */
-function locateCorrectMCOption(container, callback) {
-    var correct;
-    $('.enp-option__input', container).each(function(e, obj) {
-        if($(this).data('correct') === '1') {
-            correct =  $(this);
-            if(typeof(callback) == "function") {
-                callback($(this));
-            }
-            return false;
-        }
-    });
-    return correct;
-}
-
-
-/**
-* Find all the mc options in a container and tell us which are incorrect
-* @param container (obj) wrapper for the inputs to search
-* @param callback (function) Something to do with the incorrect one found
-* @return array of MC Input objects that are incorrect
-*/
-function locateIncorrectMCOptions(container, callback) {
-    var incorrect;
-    $('.enp-option__input', container).each(function(e, obj) {
-        if($(this).data('correct') === '0') {
-            incorrect =  $(this);
-            if(typeof(callback) == "function") {
-                callback($(this));
-            }
-        }
-    });
-    return incorrect;
-}
-
-function removeMCOption(obj) {
-    if(!obj.hasClass('enp-option__input--incorrect-clicked')) {
-        obj.addClass('enp-option__input--slide-hide');
+_.reformat_number = function(number, multiplier, places) {
+    if(multiplier === "") {
+        multiplier = 1;
     }
-}
-
-function showCorrectMCOption(obj) {
-    obj.addClass('enp-option__input--correct');
-}
-
-// attach data to mc options
-function attach_mc_option_data(questionJSON) {
-    if(questionJSON.question_type === 'mc') {
-        for(var prop in questionJSON.mc_option) {
-            mc_option_id = questionJSON.mc_option[prop].mc_option_id;
-            mc_option_correct = questionJSON.mc_option[prop].mc_option_correct;
-            $('#enp-option__'+mc_option_id).data('correct', mc_option_correct);
-        }
+    if(places === "") {
+        places = 0;
     }
-}
+    number = number * multiplier;
+    number = number.toFixed(places);
+    return number;
+};
 
-// load expanation template
-function generateQuestionExplanation(questionJSON, correct, callback) {
-    var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
-    question_response_percentage = _.reformat_number(question_response_percentage, 100);
-    explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage });
-    if(typeof(callback) == "function") {
-        callback(explanation);
-    }
-    return explanationTemplate;
-}
+// turn on mustache/handlebars style templating
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g
+};
+// Templates
+var mcOptionTemplate = _.template($('#mc_option_template').html());
+var questionTemplate = _.template($('#question_template').html());
+var questionImageTemplate = _.template($('#question_image_template').html());
+var questionExplanationTemplate = _.template($('#question_explanation_template').html());
 
-/**
-* Click on Next Question / Quiz End button
-*/
-$(document).on('click', '.enp-next-step', function(e){
-    e.preventDefault();
-    url = $('.enp-question__form').attr('action');
-    // add button value and name to the data since jQuery doesn't submit button value
-    userAction = $(this).attr("name") + "=" + $(this).val();
-    // add in a little data to let the server know the data is coming from an ajax call
-    doing_ajax = 'doing_ajax=doing_ajax';
-    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
-
-    // bring in the next question/quiz end
-    $('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
-    $(this).closest('.enp-question__fieldset').addClass('enp-question--remove');
-    $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
-
-    $.ajax( {
-        type: 'POST',
-        url  : url,
-        data : data,
-        dataType : 'json',
-    } )
-    // success
-    .done( quizSaveNextStepSuccess )
-    .fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
-    } )
-    .then( function( errorThrown, textStatus, jqXHR ) {
-        console.log( 'AJAX after finished' );
-        $('.enp-question__fieldset:first').remove();
-    } )
-    .always(function() {
-
-    });
-});
-
-function quizSaveNextStepSuccess( response, textStatus, jqXHR ) {
-    var responseJSON = $.parseJSON(jqXHR.responseText);
-    // see if there's a next question
-    console.log(responseJSON);
-
-
-}
 
 /**
 * On click of a selection,
@@ -272,32 +169,130 @@ function generateQuestion(questionJSON) {
     }
 }
 
+// load expanation template
+function generateQuestionExplanation(questionJSON, correct, callback) {
+    var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
+    question_response_percentage = _.reformat_number(question_response_percentage, 100);
+    explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage });
+    if(typeof(callback) == "function") {
+        callback(explanation);
+    }
+    return explanationTemplate;
+}
 
-
-// turn on mustache/handlebars style templating
-_.templateSettings = {
-  interpolate: /\{\{(.+?)\}\}/g
-};
-// Templates
-var mcOptionTemplate = _.template($('#mc_option_template').html());
-var questionTemplate = _.template($('#question_template').html());
-var questionImageTemplate = _.template($('#question_image_template').html());
-var questionExplanationTemplate = _.template($('#question_explanation_template').html());
-
-// UTILITY
 /**
-* get a string or decimal integer and return a formatted decimal number
-* @param places (int) how many decimal places you want to leave in Defaults to 0.
+* Click on Next Question / Quiz End button
 */
-_.reformat_number = function(number, multiplier, places) {
-    if(multiplier === "") {
-        multiplier = 1;
+$(document).on('click', '.enp-next-step', function(e){
+    e.preventDefault();
+    url = $('.enp-question__form').attr('action');
+    // add button value and name to the data since jQuery doesn't submit button value
+    userAction = $(this).attr("name") + "=" + $(this).val();
+    // add in a little data to let the server know the data is coming from an ajax call
+    doing_ajax = 'doing_ajax=doing_ajax';
+    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+
+    // bring in the next question/quiz end
+    $('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
+    $(this).closest('.enp-question__fieldset').addClass('enp-question--remove');
+    $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
+
+    $.ajax( {
+        type: 'POST',
+        url  : url,
+        data : data,
+        dataType : 'json',
+    } )
+    // success
+    .done( quizSaveNextStepSuccess )
+    .fail( function( jqXHR, textStatus, errorThrown ) {
+        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+    } )
+    .then( function( errorThrown, textStatus, jqXHR ) {
+        console.log( 'AJAX after finished' );
+        $('.enp-question__fieldset:first').remove();
+    } )
+    .always(function() {
+
+    });
+});
+
+function quizSaveNextStepSuccess( response, textStatus, jqXHR ) {
+    var responseJSON = $.parseJSON(jqXHR.responseText);
+    // see if there's a next question
+    console.log(responseJSON);
+
+
+}
+
+/*
+* MC OPTION
+*/
+
+
+/**
+* Find all the mc options in a container and tell us which is the correct one
+* @param container (obj) wrapper for the inputs to search
+* @param callback (function) Something to do with the correct one found
+* @return input object that is correct
+*/
+function locateCorrectMCOption(container, callback) {
+    var correct;
+    $('.enp-option__input', container).each(function(e, obj) {
+        if($(this).data('correct') === '1') {
+            correct =  $(this);
+            if(typeof(callback) == "function") {
+                callback($(this));
+            }
+            return false;
+        }
+    });
+    return correct;
+}
+
+
+/**
+* Find all the mc options in a container and tell us which are incorrect
+* @param container (obj) wrapper for the inputs to search
+* @param callback (function) Something to do with the incorrect one found
+* @return array of MC Input objects that are incorrect
+*/
+function locateIncorrectMCOptions(container, callback) {
+    var incorrect;
+    $('.enp-option__input', container).each(function(e, obj) {
+        if($(this).data('correct') === '0') {
+            incorrect =  $(this);
+            if(typeof(callback) == "function") {
+                callback($(this));
+            }
+        }
+    });
+    return incorrect;
+}
+
+function removeMCOption(obj) {
+    if(!obj.hasClass('enp-option__input--incorrect-clicked')) {
+        obj.addClass('enp-option__input--slide-hide');
     }
-    if(places === "") {
-        places = 0;
+}
+
+function showCorrectMCOption(obj) {
+    obj.addClass('enp-option__input--correct');
+}
+
+// attach data to mc options
+function bindMCOptionData(questionJSON) {
+    if(questionJSON.question_type === 'mc') {
+        for(var prop in questionJSON.mc_option) {
+            mc_option_id = questionJSON.mc_option[prop].mc_option_id;
+            mc_option_correct = questionJSON.mc_option[prop].mc_option_correct;
+            $('#enp-option__'+mc_option_id).data('correct', mc_option_correct);
+        }
     }
-    number = number * multiplier;
-    number = number.toFixed(places);
-    return number;
-};
+}
+
+
+// on load, bind the initial question_json to the question id
+bindQuestionData(init_question_json);
+bindMCOptionData(init_question_json);
 });
