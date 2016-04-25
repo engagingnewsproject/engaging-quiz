@@ -152,7 +152,7 @@ class Enp_quiz_Take {
 		//Start the session
 	   session_start();
 	   //Start the class
-	   $this->nonce = new Enp_quiz_Nonce();
+	   $this->nonce = new Enp_quiz_Nonce('enp_quiz_take_nonce');
 	}
 
 	/**
@@ -210,8 +210,8 @@ class Enp_quiz_Take {
 		$save_data = array();
 
 		// validate nonce
-		if(isset($_POST['enp_quiz_nonce'])) {
-			$posted_nonce = $_POST['enp_quiz_nonce'];
+		if(isset($_POST['enp_quiz_take_nonce'])) {
+			$posted_nonce = $_POST['enp_quiz_take_nonce'];
 		}
 
 	    //Is it a POST request?

@@ -8,13 +8,24 @@ class Enp_quiz_Nonce {
     //Here we store the old form key (more info at step 4)
     private $old_nonce;
 
-    //The constructor stores the form key (if one excists) in our class variable
-    function __construct()
+    // session name, if necessary, so we can differentiate multiple
+    // forms from the same user
+    private $session_name;
+
+    //The constructor stores the form key (if one exists) in our class variable
+    function __construct($session_name = '')
     {
+        if($session_name === '') {
+            // if it's empty, set one for the nonce
+            $this->session_name = 'enp_quiz_nonce';
+        } else {
+            $this->session_name = $session_name;
+        }
+        
         //We need the previous key so we store it
-        if(isset($_SESSION['enp_quiz_nonce']))
+        if(isset($_SESSION[$this->session_name]))
         {
-            $this->old_nonce = $_SESSION['enp_quiz_nonce'];
+            $this->old_nonce = $_SESSION[$this->session_name];
         }
     }
 
@@ -40,10 +51,10 @@ class Enp_quiz_Nonce {
         //Generate the key and store it inside the class
         $this->nonce = $this->generateKey();
         //Store the form key in the session
-        $_SESSION['enp_quiz_nonce'] = $this->nonce;
+        $_SESSION[$this->session_name] = $this->nonce;
 
         //Output the form key
-        echo "<input type='hidden' name='enp_quiz_nonce' id='enp_quiz_nonce' value='".$this->nonce."' />";
+        echo "<input type='hidden' name='".$this->session_name."' id='".$this->session_name."' value='".$this->nonce."' />";
     }
 
 
