@@ -95,7 +95,8 @@ $(document).on('click', '.enp-question__submit', function(e){
     // add in a little data to let the server know the data is coming from an ajax call
     doing_ajax = 'doing_ajax=doing_ajax';
     data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
-    console.log(data);
+
+    // AJAX Submit form
     $.ajax( {
         type: 'POST',
         url  : url,
@@ -103,7 +104,7 @@ $(document).on('click', '.enp-question__submit', function(e){
         dataType : 'json',
     } )
     // success
-    .done( quizSaveSuccess )
+    .done( questionSaveSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -115,7 +116,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     });
 });
 
-function quizSaveSuccess( response, textStatus, jqXHR ) {
+function questionSaveSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
     if(responseJSON.next_question !== undefined) {
@@ -127,10 +128,31 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
 
 }
 
+/**
+* Binds JSON data to the main question element in the DOM so we always have
+* access to it. Accessible via
+* $('#question_'+questionJSON.question_id).data('questionJSON');
+*/
 function bindQuestionData(questionJSON) {
     $('#question_'+questionJSON.question_id).data('questionJSON', questionJSON);
 }
 
+/**
+* Shortcut function for getting JSON data from the question wrapper element.
+* Not super necessary, but if we ever want to filter/change the data before
+* sending the data back, this would be handy.
+* @param questionID (int/string) question Id of the
+*        question in the DOM you want data for
+* @return JSON data for the question
+*/
+function getQuestionData(questionID) {
+    return $('#question_'+questionID).data('questionJSON', questionJSON);
+}
+
+/**
+* Generates a new Question off of Question JSON data and the Question Template(s)
+* and inserts it into the page as an "on-deck" question
+*/
 function generateQuestion(questionJSON) {
 
     var questionData = {
@@ -185,7 +207,13 @@ function generateQuestion(questionJSON) {
     }
 }
 
-// load expanation template
+/**
+* Generate the Question Explanation off of JSON Data and the Underscore Template
+* @param questionJSON
+* @param correct (string) 'incorrect' or 'correct'
+* @param callback (function) to run if you want to
+* @return HTML of the explanation template with all data inserted
+*/
 function generateQuestionExplanation(questionJSON, correct, callback) {
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
@@ -198,6 +226,9 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
 
 /**
 * Click on Next Question / Quiz End button
+* 1. Prep the form values
+* 2. Show the next question or quiz end template
+* 3. Submit the form (so we can register a new page view/change the state of the quiz, etc)
 */
 $(document).on('click', '.enp-next-step', function(e){
     e.preventDefault();
@@ -213,6 +244,7 @@ $(document).on('click', '.enp-next-step', function(e){
     $(this).closest('.enp-question__fieldset').addClass('enp-question--remove');
     $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
+    // submit the form
     $.ajax( {
         type: 'POST',
         url  : url,
@@ -220,7 +252,7 @@ $(document).on('click', '.enp-next-step', function(e){
         dataType : 'json',
     } )
     // success
-    .done( quizSaveNextStepSuccess )
+    .done( questionExplanationSubmitSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -233,7 +265,12 @@ $(document).on('click', '.enp-next-step', function(e){
     });
 });
 
-function quizSaveNextStepSuccess( response, textStatus, jqXHR ) {
+/**
+* On successful AJAX submit, either set-up the Next, Next question,
+* or set-up the Quiz End state.
+*
+*/
+function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
     console.log(responseJSON);

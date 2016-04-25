@@ -1,4 +1,10 @@
-// load expanation template
+/**
+* Generate the Question Explanation off of JSON Data and the Underscore Template
+* @param questionJSON
+* @param correct (string) 'incorrect' or 'correct'
+* @param callback (function) to run if you want to
+* @return HTML of the explanation template with all data inserted
+*/
 function generateQuestionExplanation(questionJSON, correct, callback) {
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
@@ -11,6 +17,9 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
 
 /**
 * Click on Next Question / Quiz End button
+* 1. Prep the form values
+* 2. Show the next question or quiz end template
+* 3. Submit the form (so we can register a new page view/change the state of the quiz, etc)
 */
 $(document).on('click', '.enp-next-step', function(e){
     e.preventDefault();
@@ -26,6 +35,7 @@ $(document).on('click', '.enp-next-step', function(e){
     $(this).closest('.enp-question__fieldset').addClass('enp-question--remove');
     $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
+    // submit the form
     $.ajax( {
         type: 'POST',
         url  : url,
@@ -33,7 +43,7 @@ $(document).on('click', '.enp-next-step', function(e){
         dataType : 'json',
     } )
     // success
-    .done( quizSaveNextStepSuccess )
+    .done( questionExplanationSubmitSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -46,7 +56,12 @@ $(document).on('click', '.enp-next-step', function(e){
     });
 });
 
-function quizSaveNextStepSuccess( response, textStatus, jqXHR ) {
+/**
+* On successful AJAX submit, either set-up the Next, Next question,
+* or set-up the Quiz End state.
+*
+*/
+function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
     console.log(responseJSON);

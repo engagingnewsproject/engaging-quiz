@@ -67,7 +67,8 @@ $(document).on('click', '.enp-question__submit', function(e){
     // add in a little data to let the server know the data is coming from an ajax call
     doing_ajax = 'doing_ajax=doing_ajax';
     data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
-    console.log(data);
+
+    // AJAX Submit form
     $.ajax( {
         type: 'POST',
         url  : url,
@@ -75,7 +76,7 @@ $(document).on('click', '.enp-question__submit', function(e){
         dataType : 'json',
     } )
     // success
-    .done( quizSaveSuccess )
+    .done( questionSaveSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -87,7 +88,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     });
 });
 
-function quizSaveSuccess( response, textStatus, jqXHR ) {
+function questionSaveSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
     if(responseJSON.next_question !== undefined) {
@@ -99,10 +100,31 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
 
 }
 
+/**
+* Binds JSON data to the main question element in the DOM so we always have
+* access to it. Accessible via
+* $('#question_'+questionJSON.question_id).data('questionJSON');
+*/
 function bindQuestionData(questionJSON) {
     $('#question_'+questionJSON.question_id).data('questionJSON', questionJSON);
 }
 
+/**
+* Shortcut function for getting JSON data from the question wrapper element.
+* Not super necessary, but if we ever want to filter/change the data before
+* sending the data back, this would be handy.
+* @param questionID (int/string) question Id of the
+*        question in the DOM you want data for
+* @return JSON data for the question
+*/
+function getQuestionData(questionID) {
+    return $('#question_'+questionID).data('questionJSON', questionJSON);
+}
+
+/**
+* Generates a new Question off of Question JSON data and the Question Template(s)
+* and inserts it into the page as an "on-deck" question
+*/
 function generateQuestion(questionJSON) {
 
     var questionData = {
