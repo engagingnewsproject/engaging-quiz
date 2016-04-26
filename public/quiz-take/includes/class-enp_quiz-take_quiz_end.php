@@ -23,6 +23,7 @@
 class Enp_quiz_Take_Quiz_end {
 	public $quiz, // Enp_quiz_Quiz Object
 		   $score,
+		   $score_circle_dashoffset,
 		   $quiz_end_title,
 		   $quiz_end_content;
 
@@ -39,6 +40,8 @@ class Enp_quiz_Take_Quiz_end {
 		$this->set_quiz_end_title();
 		// set the content based on the score
 		$this->set_quiz_end_content();
+		// set score circle dashoffset for SVG animation
+		$this->set_score_circle_dashoffset();
 	}
 
 
@@ -125,7 +128,7 @@ class Enp_quiz_Take_Quiz_end {
 		return $this->score;
 	}
 
-	public function get_score_circle_dashoffset() {
+	public function set_score_circle_dashoffset() {
 		$dashoffset = 0;
 		if(!empty($this->score)) {
 			// calculate the score dashoffset
@@ -133,7 +136,11 @@ class Enp_quiz_Take_Quiz_end {
             $c = M_PI*($r*2);
             $dashoffset = ((100-$this->get_score())/100)*$c;
 		}
-		return $dashoffset;
+		$this->score_circle_dashoffset = $dashoffset;
+	}
+
+	public function get_score_circle_dashoffset() {
+		return $this->score_circle_dashoffset;
 	}
 
 	public function get_init_json() {
@@ -153,22 +160,13 @@ class Enp_quiz_Take_Quiz_end {
 	* It loops all keys in the object and sets the values as handlebar style strings
 	* and injects it into the template
 	*/
-	public function quiz_results_template() {
+	public function quiz_end_template() {
 		// clone the object so we don't reset its own values
-		$qt = clone $this;
+		$qt_end = clone $this;
 
-		foreach($qt->question as $key => $value) {
-			if($key === 'question_image') {
-				// set it to a bogus image value that matches at least
-			}
-			$qt->question->$key = '{{'.$key.'}}';
-		}
-
-		foreach($qt as $key => $value) {
+		foreach($qt_end as $key => $value) {
 			// we don't want to unset our question object
-			if($key !== 'question') {
-				$qt->$key = '{{'.$key.'}}';
-			}
+			$qt_end->$key = '{{'.$key.'}}';
 		}
 
 		$template = '<script type="text/template" id="quiz_end_template">';

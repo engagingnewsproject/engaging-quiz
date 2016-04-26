@@ -77,7 +77,6 @@ class Enp_quiz_Take {
 			// the HTML of the page too, but we just want the JSON data
 			die();
 		}
-
 	}
 
 	/**
@@ -318,7 +317,7 @@ class Enp_quiz_Take {
 				// we'll still need this question so we can get the explanation
 				$question_id = $this->response->question_id;
 			}
-			// if a state is set(meaning, we have a response) & the state is 'question', that means we're moving on, so get the next_question response
+			// if a state is set (meaning, we have a response) & the state is 'question', that means we're moving on, so get the next_question response
 			elseif($this->state === 'question') {
 				$question_id = $this->response->next_question->question_id;
 			}

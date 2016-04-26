@@ -53,6 +53,7 @@ $(document).on('click', '.enp-question__submit', function(e){
 
     // get the JSON data for this question
     var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
+    $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
     // show the explanation by generating the question explanation template
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
     // add the Question Explanation Template into the DOM
@@ -91,12 +92,13 @@ $(document).on('click', '.enp-question__submit', function(e){
 function questionSaveSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
-    if(responseJSON.next_question !== undefined) {
+    if(responseJSON.next_state === 'question') {
         // we have a next question, so generate it
         generateQuestion(responseJSON.next_question);
     } else {
-        // we're at the quiz end, so generate that template
-        console.log(responseJSON);
+        // we're at the quiz end, in the future, we might get some data
+        // ready so we can populate quiz end instantly. Let's just do it based on a response from the server instead for now so we don't have to set localStorage and have duplicate copy for all the quiz end states
+
     }
 
 }
@@ -135,7 +137,7 @@ function generateQuestion(questionJSON) {
     };
 
     new_questionTemplate = questionTemplate(questionData);
-    $('.enp-question__fieldset').after(new_questionTemplate);
+    $('.enp-question__fieldset').before(new_questionTemplate);
     // find it and add the classes we need
     $('#question_'+questionJSON.question_id).addClass('enp-question--on-deck');
     // add the data to the new question

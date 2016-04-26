@@ -32,7 +32,7 @@ $(document).on('click', '.enp-next-step', function(e){
 
     // bring in the next question/quiz end
     $('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
-    $(this).closest('.enp-question__fieldset').addClass('enp-question--remove');
+    $('.enp-question__answered').addClass('enp-question--remove');
     $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
     // submit the form
@@ -49,7 +49,7 @@ $(document).on('click', '.enp-next-step', function(e){
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
         console.log( 'AJAX after finished' );
-        $('.enp-question__fieldset:first').remove();
+        $('.enp-question__answered').remove();
     } )
     .always(function() {
 
@@ -63,8 +63,16 @@ $(document).on('click', '.enp-next-step', function(e){
 */
 function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
-    // see if there's a next question
     console.log(responseJSON);
+    if(responseJSON.state === 'quiz_end') {
+        // remove the current explanation
+
+        // see if there's a next question
+        qEndTemplate = generateQuizEnd(responseJSON.quiz_end);
+        $('.enp-question__form').append(qEndTemplate);
+        $('.enp-results').addClass('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
+    }
+
 
 
 }

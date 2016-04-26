@@ -19,7 +19,8 @@ class Enp_quiz_Save_quiz_take {
     public static $return = array('error'=>array()),
                   $quiz,
                   $next_question = array(),
-                  $quiz_end = array();
+                  $quiz_end = array(),
+                  $last_question_flag = false;
 
     public function __construct() {
 
@@ -53,6 +54,12 @@ class Enp_quiz_Save_quiz_take {
         $this->build_state($data);
         // build what to do next (for JS to pre-load) (AFTER this state)
         $this->build_next_state(self::$return);
+
+        // if either state is quiz_end, generate the quiz_end data
+        if(self::$return['state'] === 'quiz_end' || self::$return['next_state'] === 'quiz_end') {
+            $this->set_quiz_end();
+        }
+
         // convert to JSON and return it
         self::$return = json_encode(self::$return);
         return self::$return;
@@ -92,7 +99,8 @@ class Enp_quiz_Save_quiz_take {
             $state = 'question_explanation';
         } elseif($data['user_action'] === 'enp-next-question') {
             // Might be next question, might be the end of the quiz
-            if(empty(self::$next_question)) {
+            if(self::$last_question_flag === true && intval($data['question_id']) === intval(self::$next_question->question_id)) {
+                // see if we're on the last question or not
                 // we're at the quiz end if the next question array is empty
                 $state = 'quiz_end';
             } else {
@@ -122,18 +130,15 @@ class Enp_quiz_Save_quiz_take {
         elseif(self::$return['state'] === 'quiz_end') {
             self::$return['next_state'] = 'question';
         }
-        elseif(!empty(self::$next_question)) {
-            // we have another question!
-            // get the JSON
-            self::$return['next_state'] = 'question';
-        }
-        else {
+        elseif(self::$return['state'] === 'question_explanation' && self::$last_question_flag === true) {
             // no question next, so we're at the end
             // build the final page with their data
             self::$return['next_state'] = 'quiz_end';
-            // build the quiz end object
-            $quiz_end = new Enp_quiz_Take_Quiz_end(self::$quiz);
-            self::$return['quiz_end'] = (array) $quiz_end;
+        }
+        else {
+            // we have another question!
+            // get the JSON
+            self::$return['next_state'] = 'question';
         }
 
     }
@@ -146,7 +151,7 @@ class Enp_quiz_Save_quiz_take {
     protected function set_next_question($current_question_id) {
         // get the questions for this quiz
         $question_ids = self::$quiz->get_questions();
-
+        $question_count = count($question_ids);
         // see where we're at in the question cycle
         if(!empty($question_ids)) {
             $i = 0;
@@ -162,12 +167,27 @@ class Enp_quiz_Save_quiz_take {
                         self::$return['next_question'] = self::$next_question->get_take_question_array();
                         // no need to loop anymore
                         break;
+                    } elseif($question_count === $i) {
+                        self::$last_question_flag = true;
+                        $i = $i - 1;
+                        self::$next_question = new Enp_quiz_Question($question_ids[$i]);
+                        self::$return['next_question'] = self::$next_question->get_take_question_array();
+                        // no need to loop anymore
+                        break;
                     }
                 }
                 $i++;
             }
         }
 
+    }
+
+    /**
+    * Set the quiz_end data when the state or next_state is quiz_end
+    */
+    protected function set_quiz_end() {
+        $quiz_end = new Enp_quiz_Take_Quiz_end(self::$quiz);
+        self::$return['quiz_end'] = (array) $quiz_end;
     }
 }
 ?>

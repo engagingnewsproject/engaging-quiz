@@ -24,6 +24,7 @@ var mcOptionTemplate = _.template($('#mc_option_template').html());
 var questionTemplate = _.template($('#question_template').html());
 var questionImageTemplate = _.template($('#question_image_template').html());
 var questionExplanationTemplate = _.template($('#question_explanation_template').html());
+var quizEndTemplate = _.template($('#quiz_end_template').html());
 
 
 /**
@@ -81,6 +82,7 @@ $(document).on('click', '.enp-question__submit', function(e){
 
     // get the JSON data for this question
     var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
+    $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
     // show the explanation by generating the question explanation template
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
     // add the Question Explanation Template into the DOM
@@ -119,12 +121,13 @@ $(document).on('click', '.enp-question__submit', function(e){
 function questionSaveSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
-    if(responseJSON.next_question !== undefined) {
+    if(responseJSON.next_state === 'question') {
         // we have a next question, so generate it
         generateQuestion(responseJSON.next_question);
     } else {
-        // we're at the quiz end, so generate that template
-        console.log(responseJSON);
+        // we're at the quiz end, in the future, we might get some data
+        // ready so we can populate quiz end instantly. Let's just do it based on a response from the server instead for now so we don't have to set localStorage and have duplicate copy for all the quiz end states
+
     }
 
 }
@@ -163,7 +166,7 @@ function generateQuestion(questionJSON) {
     };
 
     new_questionTemplate = questionTemplate(questionData);
-    $('.enp-question__fieldset').after(new_questionTemplate);
+    $('.enp-question__fieldset').before(new_questionTemplate);
     // find it and add the classes we need
     $('#question_'+questionJSON.question_id).addClass('enp-question--on-deck');
     // add the data to the new question
@@ -242,7 +245,7 @@ $(document).on('click', '.enp-next-step', function(e){
 
     // bring in the next question/quiz end
     $('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
-    $(this).closest('.enp-question__fieldset').addClass('enp-question--remove');
+    $('.enp-question__answered').addClass('enp-question--remove');
     $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
     // submit the form
@@ -259,7 +262,7 @@ $(document).on('click', '.enp-next-step', function(e){
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
         console.log( 'AJAX after finished' );
-        $('.enp-question__fieldset:first').remove();
+        $('.enp-question__answered').remove();
     } )
     .always(function() {
 
@@ -273,8 +276,16 @@ $(document).on('click', '.enp-next-step', function(e){
 */
 function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
-    // see if there's a next question
     console.log(responseJSON);
+    if(responseJSON.state === 'quiz_end') {
+        // remove the current explanation
+
+        // see if there's a next question
+        qEndTemplate = generateQuizEnd(responseJSON.quiz_end);
+        $('.enp-question__form').append(qEndTemplate);
+        $('.enp-results').addClass('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
+    }
+
 
 
 }
@@ -352,6 +363,25 @@ function bindMCOptionData(questionJSON) {
     }
 }
 
+/**
+* Generate the Quiz End Template off of returned JSON Data and the Underscore Template
+* @param quizEndJSON (JSON) data for the quiz end
+* @param callback (function) to run if you want to
+* @return HTML of the quiz end template with all data inserted
+*/
+function generateQuizEnd(quizEndJSON, callback) {
+    quizEndData = {
+                    score: quizEndJSON.score,
+                    score_circle_dashoffset: quizEndJSON.score_circle_dashoffset,
+                    quiz_end_title: quizEndJSON.quiz_end_title,
+                    quiz_end_content: quizEndJSON.quiz_end_content,
+    };
+    qEndTemplate = quizEndTemplate(quizEndData);
+    if(typeof(callback) == "function") {
+        callback(explanation);
+    }
+    return qEndTemplate;
+}
 
 // on load, bind the initial question_json to the question id
 bindQuestionData(init_question_json);

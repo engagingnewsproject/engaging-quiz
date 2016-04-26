@@ -61,7 +61,7 @@
     }
 
     .enp-question__form {
-        transition: all .3s ease-in-out;
+        //transition: all .3s ease-in-out;
     }
 
     .enp-question__question {
@@ -102,7 +102,7 @@
         border-bottom: 1px solid rgba(0,0,0,.1);
         background: none;
         color: $title;
-        transition: all .2s ease-in-out;
+        transition: color .2s ease-in-out, background .2s ease-in-out;
 
         &:before {
             content: '';
@@ -199,7 +199,6 @@
         background: #fff;
         padding: 1.6rem 1.6rem 1.5rem;
         //@include _(hidden--accessible);
-        transition: all .1s;
     }
 
     .enp-explanation--show {
