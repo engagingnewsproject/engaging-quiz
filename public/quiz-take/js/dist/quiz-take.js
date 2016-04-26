@@ -248,6 +248,23 @@ $(document).on('click', '.enp-next-step', function(e){
     $('.enp-question__answered').addClass('enp-question--remove');
     $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
+    // increase the question number and css
+    questionShowJSON = $('.enp-question--show').data('questionJSON');
+    questionNumber = questionShowJSON.question_order;
+    questionNumber = parseInt(questionNumber) + 1;
+    totalQuestions = $('.enp-quiz__progress__bar__question-count__total-questions').text();
+    totalQuestions = parseInt(totalQuestions);
+    progressBarWidth = (questionNumber/totalQuestions) * 100;
+    console.log(questionNumber);
+    if(progressBarWidth === 100) {
+        progressBarWidth = 95;
+    }
+    progressBarWidth = progressBarWidth + '%';
+
+    // BEM Taken WAAAAAAY too far...
+    $('.enp-quiz__progress__bar__question-count__current-number').text(questionNumber);
+    $('.enp-quiz__progress__bar').css('width', progressBarWidth);
+
     // submit the form
     $.ajax( {
         type: 'POST',
@@ -284,6 +301,8 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
         qEndTemplate = generateQuizEnd(responseJSON.quiz_end);
         $('.enp-question__form').append(qEndTemplate);
         $('.enp-results').addClass('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
+        // make progress bar the full width
+        $('.enp-quiz__progress__bar').css('width', '100%');
     }
 
 
