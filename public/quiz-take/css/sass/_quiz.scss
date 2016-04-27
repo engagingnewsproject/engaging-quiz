@@ -376,4 +376,8 @@
     }
 
     @include share_icons(enp-results__share);
+
+    .enp-quiz-restart__container {
+        text-align: center;
+    }
 }

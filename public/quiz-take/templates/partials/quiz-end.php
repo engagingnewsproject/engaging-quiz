@@ -26,6 +26,7 @@
             </svg>
         </a></li>
     </ul>
-
-    <button type="submit" class="enp-btn enp-quiz-restart" name="enp-quiz-restart" value="enp-quiz-restart">Restart Quiz</button>
+    <div class="enp-quiz-restart__container">
+        <button type="submit" class="enp-btn enp-quiz-restart" name="enp-quiz-restart" value="enp-quiz-restart">Restart Quiz</button>
+    </div>
 </section>
