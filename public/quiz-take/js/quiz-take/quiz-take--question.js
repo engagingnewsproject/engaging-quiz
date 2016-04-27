@@ -8,6 +8,10 @@
 * 4. Trigger click on the question submit button
 */
 $(document).on('click', '.enp-option__label', function(e){
+    // make sure the question hasn't already been answered
+    if(!$('.enp-question__container--unanswered').length) {
+        return false;
+    }
     // get the input related to the label
     var thisMCInput = $(this).prev('.enp-option__input');
     // See if the DOM has updated to select the corresponding input yet or not.
@@ -83,6 +87,9 @@ $(document).on('click', '.enp-question__submit', function(e){
 });
 
 function questionSaveSuccess( response, textStatus, jqXHR ) {
+    // real quick, remove the submit button so it can't get submitted again
+    $('.enp-question__submit').remove();
+    // get the response
     var responseJSON = $.parseJSON(jqXHR.responseText);
     // see if there's a next question
     if(responseJSON.next_state === 'question') {
