@@ -303,6 +303,11 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
         $('.enp-results').addClass('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
         // make progress bar the full width
         $('.enp-quiz__progress__bar').css('width', '100%');
+
+        // Append the text "Correct" to the number correct/incorrect
+        $('.enp-quiz__progress__bar__question-count__total-questions').append(' Correct');
+        // Change the first number to the amount they got correct
+        $('.enp-quiz__progress__bar__question-count__current-number').text(responseJSON.quiz_end.score_total_correct);
     }
 
 

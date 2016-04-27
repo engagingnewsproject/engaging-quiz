@@ -23,6 +23,7 @@
 class Enp_quiz_Take_Quiz_end {
 	public $quiz, // Enp_quiz_Quiz Object
 		   $score,
+		   $score_total_correct,
 		   $score_circle_dashoffset,
 		   $quiz_end_title,
 		   $quiz_end_content;
@@ -34,6 +35,8 @@ class Enp_quiz_Take_Quiz_end {
 	*/
 	public function __construct($quiz) {
 		$this->quiz = $quiz;
+		// set the score
+		$this->set_score_total_correct();
 		// set the score
 		$this->set_score();
 		// set the title based on the score
@@ -50,11 +53,10 @@ class Enp_quiz_Take_Quiz_end {
 	* @param cookies
 	* @return score (int)
 	*/
-	public function set_score() {
+	public function set_score_total_correct() {
 		$quiz_id = $this->quiz->quiz_id;
 		$question_ids = $this->quiz->questions;
 		$correct = 0;
-		$total_questions = count($question_ids);
 		// loop through all questions and see if there are cookies set
 		foreach($question_ids as $question_id) {
 			// build cookie name
@@ -65,10 +67,14 @@ class Enp_quiz_Take_Quiz_end {
 				}
 			}
 		}
+		$this->score_total_correct = $correct;
+	}
 
+	public function set_score() {
+		$question_ids = $this->quiz->questions;
+		$total_questions = count($question_ids);
 		// calculate the score
-		$this->score = ($correct / $total_questions) * 100;
-
+		$this->score = ($this->score_total_correct / $total_questions) * 100;
 	}
 
 	/**
