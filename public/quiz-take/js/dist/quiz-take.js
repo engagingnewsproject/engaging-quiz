@@ -87,16 +87,9 @@ $(document).on('click', '.enp-question__submit', function(e){
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
-
-
-
     // submit the question
+    data = prepareQuestionFormData($(this));
     url = $('.enp-question__form').attr('action');
-    // add button value and name to the data since jQuery doesn't submit button value
-    userAction = $(this).attr("name") + "=" + $(this).val();
-    // add in a little data to let the server know the data is coming from an ajax call
-    doing_ajax = 'doing_ajax=doing_ajax';
-    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
 
     // AJAX Submit form
     $.ajax( {
@@ -162,7 +155,7 @@ function generateQuestion(questionJSON) {
     var questionData = {
                         'question_id': questionJSON.question_id,
                         'question_type': questionJSON.question_type,
-                        'question_title': questionJSON.question_title
+                        'question_title': questionJSON.question_title,
     };
 
     new_questionTemplate = questionTemplate(questionData);
@@ -206,9 +199,58 @@ function generateQuestion(questionJSON) {
         bindMCOptionData(questionJSON);
 
     } else if(questionJSON.question_type === 'slider') {
-
         // generate slider template
+
     }
+}
+
+/**
+* Increase the current question number on the progress bar
+* and the width of the progress bar
+* @param questionOrder = the question_order of the next question
+*/
+function increaseQuestionProgress(questionOrder) {
+    questionNumber = parseInt(questionOrder) + 1;
+    // increase the question number and css if we have another one
+    totalQuestions = $('.enp-quiz__progress__bar__question-count__total-questions').text();
+    totalQuestions = parseInt(totalQuestions);
+    progressBarWidth = (questionNumber/totalQuestions) * 100;
+    if(progressBarWidth === 100) {
+        progressBarWidth = 95;
+    }
+    progressBarWidth = progressBarWidth + '%';
+
+    // BEM Taken WAAAAAAY too far...
+    $('.enp-quiz__progress__bar__question-count__current-number').text(questionNumber);
+    $('.enp-quiz__progress__bar').css('width', progressBarWidth);
+}
+
+
+/**
+* Add/Remove classes to bring in the next question
+*/
+function showNextQuestion(obj) {
+    obj.addClass('enp-question--show').removeClass('enp-question--on-deck');
+    // get the data from it
+    questionShowJSON = obj.data('questionJSON');
+    questionOrder = questionShowJSON.question_order;
+    // increase the number and the width of the progress bar
+    increaseQuestionProgress(questionOrder);
+}
+
+
+/**
+* Prepare the form data for submitting via AJAX
+*
+*/
+function prepareQuestionFormData(clickedButton) {
+    // add button value and name to the data since jQuery doesn't submit button value
+    userAction = clickedButton.attr("name") + "=" + clickedButton.val();
+    // add in a little data to let the server know the data is coming from an ajax call
+    doing_ajax = 'doing_ajax=doing_ajax';
+    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+
+    return data;
 }
 
 /**
@@ -219,6 +261,8 @@ function generateQuestion(questionJSON) {
 * @return HTML of the explanation template with all data inserted
 */
 function generateQuestionExplanation(questionJSON, correct, callback) {
+    console.log('generating explanation');
+
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
     explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage });
@@ -237,33 +281,19 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
 $(document).on('click', '.enp-next-step', function(e){
     e.preventDefault();
     url = $('.enp-question__form').attr('action');
-    // add button value and name to the data since jQuery doesn't submit button value
-    userAction = $(this).attr("name") + "=" + $(this).val();
-    // add in a little data to let the server know the data is coming from an ajax call
-    doing_ajax = 'doing_ajax=doing_ajax';
-    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+    // prepare the data to submit
+    data = prepareQuestionFormData($(this));
 
-    // bring in the next question/quiz end
-    $('.enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
     $('.enp-question__answered').addClass('enp-question--remove');
     $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
-    // increase the question number and css
-    questionShowJSON = $('.enp-question--show').data('questionJSON');
-    questionNumber = questionShowJSON.question_order;
-    questionNumber = parseInt(questionNumber) + 1;
-    totalQuestions = $('.enp-quiz__progress__bar__question-count__total-questions').text();
-    totalQuestions = parseInt(totalQuestions);
-    progressBarWidth = (questionNumber/totalQuestions) * 100;
-    console.log(questionNumber);
-    if(progressBarWidth === 100) {
-        progressBarWidth = 95;
+    // bring in the next question/quiz end, it it's there
+    if($('.enp-question--on-deck').length) {
+        nextQuestion = $('.enp-question--on-deck');
+        // add the classes for the next question
+        showNextQuestion(nextQuestion);
     }
-    progressBarWidth = progressBarWidth + '%';
 
-    // BEM Taken WAAAAAAY too far...
-    $('.enp-quiz__progress__bar__question-count__current-number').text(questionNumber);
-    $('.enp-quiz__progress__bar').css('width', progressBarWidth);
 
     // submit the form
     $.ajax( {
@@ -279,7 +309,6 @@ $(document).on('click', '.enp-next-step', function(e){
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
         console.log( 'AJAX after finished' );
-        $('.enp-question__answered').remove();
     } )
     .always(function() {
 
@@ -294,8 +323,8 @@ $(document).on('click', '.enp-next-step', function(e){
 function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     console.log(responseJSON);
+
     if(responseJSON.state === 'quiz_end') {
-        // remove the current explanation
 
         // see if there's a next question
         qEndTemplate = generateQuizEnd(responseJSON.quiz_end);
@@ -308,10 +337,23 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
         $('.enp-quiz__progress__bar__question-count__total-questions').append(' Correct');
         // Change the first number to the amount they got correct
         $('.enp-quiz__progress__bar__question-count__current-number').text(responseJSON.quiz_end.score_total_correct);
+    } else if(responseJSON.state === 'question') {
+        // check if we already have a question to show
+        if(!$('.enp-question--show').length) {
+            // if we don't, then we're in a state where the quiz
+            // was reloaded when on the question explanation state, so we don't
+            // have an on deck question. we need to generate it and insert it now
+            generateQuestion(responseJSON.next_question);
+            // get the question we just inserted
+            nextQuestion = $('.enp-question--on-deck');
+            // add the classes for the next question
+            showNextQuestion(nextQuestion);
+        }
     }
 
 
-
+    // remove the question that was answered
+    $('.enp-question__answered').remove();
 }
 
 /**

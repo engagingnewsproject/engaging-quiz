@@ -33,7 +33,6 @@ if(isset($_GET['quiz_id'])) {
 <body id="enp-quiz">
 <?php //add in our SVG
     echo $qt->load_svg();
-
 ?>
 <section class="enp-quiz__container">
     <?php
@@ -48,15 +47,13 @@ if(isset($_GET['quiz_id'])) {
         </div>
     </header>
 
-    <section class="enp-question__container enp-question__container--unanswered">
+    <section class="enp-question__container <?php echo $qt->get_question_container_class();?>">
         <form id="quiz" class="enp-question__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_URL).$qt->quiz->quiz_id; ?>">
             <?php $qt->nonce->outputKey();?>
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
             <?php
-            if(!empty($state) && $state === 'question') {
+            if($state === 'question' || $state === 'question_explanation') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
-            } elseif($state === 'question_explanation') {
-                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
             } elseif($state === 'quiz_end') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/quiz-end.php');
             }?>

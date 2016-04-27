@@ -407,6 +407,18 @@ class Enp_quiz_Take {
 		return $this->current_question_number;
 	}
 
+	public function get_question_container_class() {
+		$class = '';
+		if($this->state === 'question') {
+			$class = 'enp-question__container--unanswered';
+		} elseif($this->state === 'question_explanation') {
+			$class = 'enp-question__container--explanation';
+		} elseif($this->state === 'quiz_end') {
+			$class = 'enp-quiz-end';
+		}
+		return $class;
+	}
+
 	/**
 	* We need cookies for quiz state and how they're doing score wise
 	* On each page load we'll save cookies as a snapshot of the current state

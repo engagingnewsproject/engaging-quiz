@@ -118,6 +118,17 @@ class Enp_quiz_Take_Question {
 		return $this->question_explanation_percentage;
 	}
 
+	public function get_question_classes() {
+		$classes = '';
+		if($this->qt->state === 'question') {
+
+		} elseif($this->qt->state === 'question_explanation') {
+			$classes = 'enp-question__answered';
+		}
+
+		return $classes;
+	}
+
 	public function get_init_json() {
 		$question = clone $this;
 		unset($question->qt);
@@ -143,7 +154,8 @@ class Enp_quiz_Take_Question {
 				$qt_question->question->$key = '{{'.$key.'}}';
 			}
 		}
-
+		// force the state to 'question'
+		$qt_question->qt->state = 'question';
 		// image template
 		$template = '<script type="text/template" id="question_image_template">';
 		ob_start();
