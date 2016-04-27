@@ -262,10 +262,17 @@
     @include btn--icon--hover-circle(enp-next-step);
     .enp-next-step {
         @include _(btn--ghost);
+        padding-top: 1em;
+        padding-bottom: 0.95em;
         width: 100%;
+        position: relative;
 
         .enp-next-step__icon {
             fill: $blue;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
         }
 
         &:hover .enp-next-step__icon {
