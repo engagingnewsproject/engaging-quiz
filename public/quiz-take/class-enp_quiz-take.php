@@ -187,16 +187,26 @@ class Enp_quiz_Take {
 		$progress_bar_width = number_format( $progress_bar_width * 100, 2 ) . '%';
 
 		return '<style tyle="text/css">
-#enp-quiz .enp-quiz__container {
+#enp-quiz .enp-quiz__container,
+#enp-quiz .enp-option__label,
+#enp-quiz .enp-explanation {
     background-color: '.$this->quiz->get_quiz_bg_color().';
     color: '.$this->quiz->get_quiz_text_color().';
 }
 #enp-quiz .enp-quiz__title,
 #enp-quiz .enp-question__question,
 #enp-quiz .enp-option__label,
-#enp-quiz .enp-question__helper {
+#enp-quiz .enp-question__helper,
+#enp-quiz .enp-results__score__title,
+#enp-quiz .enp-results__encouragement,
+#enp-quiz .enp-results__description,
+#enp-quiz .enp-results__share-title,
+#enp-quiz .enp-explanation__title,
+#enp-quiz .enp-explanation__explanation,
+#enp-quiz .enp-explanation__percentage {
     color: '.$this->quiz->get_quiz_text_color().';
 }
+
 #enp-quiz .enp-quiz__progress__bar {
 	width: '.$progress_bar_width.';
 }
