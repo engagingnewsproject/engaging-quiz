@@ -48,6 +48,11 @@
     }
 
     .enp-question__container {
+
+    }
+
+    .enp-question__form {
+        //transition: all .3s ease-in-out;
         @include _(container);
         overflow: hidden;
         color: $font;
@@ -57,11 +62,6 @@
         @include breakpoint(medium) {
             padding: 2.6rem 3rem;
         }
-
-    }
-
-    .enp-question__form {
-        //transition: all .3s ease-in-out;
     }
 
     .enp-question__question {
@@ -69,6 +69,10 @@
         font-weight: bold;
         line-height: 1.2;
         margin-bottom: 0.2rem;
+    }
+
+    .enp-question-image {
+        margin-bottom: 0.4rem;
     }
 
     .enp-question__helper {
