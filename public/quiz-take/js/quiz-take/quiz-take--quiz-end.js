@@ -17,3 +17,8 @@ function generateQuizEnd(quizEndJSON, callback) {
     }
     return qEndTemplate;
 }
+
+// function for our timeout to animate the svg percentage correct
+function animateScore() {
+    $('#enp-results__score__circle__path').attr('class', 'enp-results__score__circle__setOffset');
+}

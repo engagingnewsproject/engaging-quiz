@@ -365,11 +365,11 @@
       stroke: $green;
     }
 
-    .enp-results__score__cirlce__setOffset {
+    .enp-results__score__circle__setOffset {
         transition: stroke-dashoffset 1.2s ease-in-out;
     }
 
-    .enp-results__score__cirlce__resetOffset {
+    .enp-results__score__circle__resetOffset {
         stroke-dashoffset: 565.48;
     }
 

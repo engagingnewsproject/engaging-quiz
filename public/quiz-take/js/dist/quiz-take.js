@@ -344,6 +344,11 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
         $('.enp-quiz__progress__bar__question-count__total-questions').append(' Correct');
         // Change the first number to the amount they got correct
         $('.enp-quiz__progress__bar__question-count__current-number').text(responseJSON.quiz_end.score_total_correct);
+        // add the resetOffset to take it to 0%
+        $('#enp-results__score__circle__path').attr('class', 'enp-results__score__circle__resetOffset');
+        // add the animateScore after a slight delay so the animation comes in
+        animateScoreID = window.setTimeout(animateScore, 250);
+
     } else if(responseJSON.state === 'question') {
         // check if we already have a question to show
         if(!$('.enp-question--show').length) {
@@ -454,6 +459,11 @@ function generateQuizEnd(quizEndJSON, callback) {
         callback(explanation);
     }
     return qEndTemplate;
+}
+
+// function for our timeout to animate the svg percentage correct
+function animateScore() {
+    $('#enp-results__score__circle__path').attr('class', 'enp-results__score__circle__setOffset');
 }
 
 // on load, bind the initial question_json to the question id
