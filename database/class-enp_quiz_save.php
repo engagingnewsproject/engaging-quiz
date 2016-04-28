@@ -49,7 +49,7 @@ class Enp_quiz_Save {
     public function process_int($posted_int, $default) {
         $int = $default;
         if(isset($_POST[$posted_int])) {
-            $posted_int = intval($_POST[$posted_int]);
+            $posted_int = (int) $_POST[$posted_int];
             // if the $posted_int is greater than 0,
             // then it's a potentially valid quiz_id
             if( 0 < $posted_int ) {

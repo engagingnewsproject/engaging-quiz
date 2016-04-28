@@ -26,7 +26,7 @@ class Enp_quiz_Save_quiz_take_Question_view extends Enp_quiz_Save_quiz_take {
             return self::$return;
         }
         // everything looks good! update a quiz view
-        self::$return = $this->update_quiz_view($question_id);
+        self::$return = $this->update_question_view($question_id);
     }
 
 
@@ -48,7 +48,7 @@ class Enp_quiz_Save_quiz_take_Question_view extends Enp_quiz_Save_quiz_take {
     * @param $response (array) data we'll be saving to the response table
     * @return builds and returns a response message
     */
-    protected function update_quiz_view($question_id) {
+    protected function update_question_view($question_id) {
 
         // connect to PDO
         $pdo = new enp_quiz_Db();

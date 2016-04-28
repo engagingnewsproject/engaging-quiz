@@ -82,18 +82,18 @@ class Enp_quiz_Take_Quiz_end {
 	* @param score
 	*/
 	public function set_quiz_end_title() {
-
-		if(intval($this->score) < 50) {
+		$score = (int) $this->score;
+		if($score < 50) {
 			$title = "Ouch!";
-		} elseif(intval($this->score) < 70) {
+		} elseif($score < 70) {
 			$title = "Not Bad!";
-		} elseif (intval($this->score) < 85) {
+		} elseif ($score < 85) {
 			$title = "Nice Job!";
 		}
-		elseif (intval($this->score) < 100) {
+		elseif ($score < 100) {
 			$title = "Fantastic!";
 		}
-		elseif (intval($this->score) === 100) {
+		elseif ($score === 100) {
 			$title = "Perfect!";
 		}
 		$this->quiz_end_title = $title;

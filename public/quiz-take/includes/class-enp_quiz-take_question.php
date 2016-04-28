@@ -35,10 +35,7 @@ class Enp_quiz_Take_Question {
 		$this->qt = $qt;
 		// set question
 		$this->set_question();
-		// save a question view if we're on a question && it's not a reload
-		if($this->qt->state === 'question') {
-			$this->save_question_view();
-		}
+
 		// set if they got the question right or not
 		$this->set_question_response_correct();
 		// set random vars if necessary
@@ -62,13 +59,6 @@ class Enp_quiz_Take_Question {
 		}
 
 		$this->question = $question;
-	}
-
-	/**
-	* Everytime a quiz take is loaded, save a view to the DB
-	*/
-	public function save_question_view() {
-		$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->question->question_id);
 	}
 
 	public function set_question_response_correct() {

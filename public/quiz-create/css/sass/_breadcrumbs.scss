@@ -11,6 +11,7 @@
         background: #fff;
         border-bottom: 1px solid #ddd;
         padding: 10px;
+        z-index: 999999;
     }
 
     .enp-quiz-breadcrumbs__list {
@@ -47,7 +48,6 @@
     .enp-quiz-breadcrumbs--fixed {
         top: 0;
         position: fixed;
-        z-index: 9999;
         animation: navSlideIn .25s;
     }
 }

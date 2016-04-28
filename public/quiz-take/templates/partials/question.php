@@ -5,15 +5,16 @@
     <legend class="enp-question__legend enp-question__question"><? echo $qt_question->question->get_question_title();?></legend>
 
     <?php
-    if(!empty($qt_question->question->get_question_image())) {
+    $question_image = $qt_question->question->get_question_image();
+    if(!empty($question_image)) {
         include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-image.php');
     }
-
-    if($qt_question->qt->get_state() === 'question_explanation') {
+    $question_state = $qt_question->qt->get_state();
+    if($question_state === 'question_explanation') {
         include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question-explanation.php');
     }
-
-    if($qt_question->question->get_question_type() === 'mc' && $qt_question->qt->get_state() === 'question') {?>
+    $question_type = $qt_question->question->get_question_type();
+    if($question_type === 'mc' && $question_state === 'question') {?>
         <p class="enp-question__helper">Select one option.</p>
         <?php foreach($qt_question->question->get_mc_options() as $mc_option_id) {
             $mc_option = new Enp_quiz_MC_option($mc_option_id);

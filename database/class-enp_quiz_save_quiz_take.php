@@ -60,6 +60,10 @@ class Enp_quiz_Save_quiz_take {
             $this->set_quiz_end();
         }
 
+        // update quiz/question data
+        $this->update_quiz_data($data);
+        $this->update_question_data();
+
         // convert to JSON and return it
         self::$return = json_encode(self::$return);
         return self::$return;
@@ -99,7 +103,7 @@ class Enp_quiz_Save_quiz_take {
             $state = 'question_explanation';
         } elseif($data['user_action'] === 'enp-next-question') {
             // Might be next question, might be the end of the quiz
-            if(self::$last_question_flag === true && intval($data['question_id']) === intval(self::$next_question->question_id)) {
+            if(self::$last_question_flag === true && (int) $data['question_id'] === (int) self::$next_question->question_id) {
                 // see if we're on the last question or not
                 // we're at the quiz end if the next question array is empty
                 $state = 'quiz_end';
@@ -156,7 +160,7 @@ class Enp_quiz_Save_quiz_take {
         if(!empty($question_ids)) {
             $i = 0;
             foreach($question_ids as $question_id) {
-                if($question_id === intval($current_question_id)) {
+                if($question_id === (int) $current_question_id) {
                     // this is the current one, so we need the NEXT one, if there is one
                     $i++;
                     if(isset($question_ids[$i]) && is_int($question_ids[$i])) {
@@ -188,6 +192,31 @@ class Enp_quiz_Save_quiz_take {
     protected function set_quiz_end() {
         $quiz_end = new Enp_quiz_Take_Quiz_end(self::$quiz);
         self::$return['quiz_end'] = (array) $quiz_end;
+    }
+
+    protected function update_quiz_data($data) {
+        // if it doesn't match one of the states we need, go ahead and exit
+        if(self::$return['state'] !== 'question_explanation' && self::$return['state'] !== 'quiz_end') {
+            return false;
+        }
+
+		$quiz_data = new Enp_quiz_Save_quiz_take_Quiz_data(self::$quiz);
+        $question_ids = self::$quiz->get_questions();
+        // if the new returned state is question_explanation and the submitted question_id was the first question of the quiz, then someone Started the quiz.
+        if(self::$return['state'] === 'question_explanation' && (int) $data['question_id'] === (int) $question_ids[0]) {
+			$quiz_data->update_quiz_starts();
+		} elseif (self::$return['state'] === 'quiz_end') {
+            // if the new returnd state is quiz_end, then they finished the quiz
+		    $quiz_data->update_quiz_finishes();
+		}
+
+    }
+
+    protected function update_question_data() {
+        // if we're on a question, update the question view for the next question
+		if(self::$return['state'] === 'question') {
+			$save_question_view = new Enp_quiz_Save_quiz_take_Question_view(self::$next_question->question_id);
+		}
     }
 }
 ?>

@@ -67,6 +67,10 @@ class Enp_quiz_Take {
 		// set cookies we'll need on reload or correct/incorrect amounts
 		$this->set_cookies();
 
+		// if it's the first question, we need to save the initial quiz view
+		// and question view
+		$this->save_initial_view_data();
+
 		// if we're doing AJAX, echo the response back to the server
 		// this is echo-ed after everything else is done so we don't get "header already sent" errors from PHP
 		if(isset($_POST['doing_ajax'])) {
@@ -145,6 +149,8 @@ class Enp_quiz_Take {
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
+
 	}
 
 	public function set_nonce() {
@@ -158,7 +164,8 @@ class Enp_quiz_Take {
 	* Quick check to see if we have a valid quiz before moving on
 	*/
 	public function validate_quiz() {
-		if(empty($this->quiz->get_quiz_id())) {
+		$quiz_id = $this->quiz->get_quiz_id();
+		if(empty($quiz_id)) {
             echo 'Quiz not found';
             exit;
         } else {
@@ -468,5 +475,26 @@ class Enp_quiz_Take {
 
 	}
 
+	/**
+	* if it's the first question, we need to save the initial quiz view
+	* and question view. All other quiz and question view data is handled
+	* by the response class
+	* @param quiz object
+	* @param question_id (to see if we're on the first question)
+	*/
+	protected function save_initial_view_data() {
+		if($this->state === 'question') {
+			// we're on a question. It might be the first one, let's find out!
+			$question_ids = $this->quiz->get_questions();
+			if((int) $this->current_question_id === (int) $question_ids[0]) {
+				// we're on the first question of the first quiz in the question state, so we can update the quiz views and first question view
+				// save quiz view
+				$quiz_data = new Enp_quiz_Save_quiz_take_Quiz_data($this->quiz);
+				$quiz_data->update_quiz_views();
+				// save question view
+				$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->current_question_id);
+			}
+		}
+	}
 
 }
