@@ -6,7 +6,7 @@
 */
 function generateQuizEnd(quizEndJSON, callback) {
     quizEndData = {
-                    score: quizEndJSON.score,
+                    score_percentage: quizEndJSON.score_percentage,
                     score_circle_dashoffset: quizEndJSON.score_circle_dashoffset,
                     quiz_end_title: quizEndJSON.quiz_end_title,
                     quiz_end_content: quizEndJSON.quiz_end_content,

@@ -126,16 +126,20 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
     * @param $response (array) data we'll be saving to the response table
     * @return builds and returns a response message
     */
-    public function update_quiz_finishes() {
+    public function update_quiz_finishes($new_score) {
 
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
-        $params = array(':quiz_id' => self::$quiz->get_quiz_id());
+        $params = array(
+                        ':quiz_id' => self::$quiz->get_quiz_id(),
+                        ':new_score' => $new_score,
+                    );
         // write our SQL statement
         // write our SQL statement
         $sql = "UPDATE ".$pdo->quiz_table."
-                   SET  quiz_finishes = quiz_finishes + 1
+                   SET  quiz_score_average = (quiz_finishes * quiz_score_average + :new_score) / (quiz_finishes + 1),
+                        quiz_finishes = quiz_finishes + 1
                  WHERE  quiz_id = :quiz_id";
         // update the question finishes the database
         $stmt = $pdo->query($sql, $params);
@@ -160,4 +164,5 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
         // return response
         return self::$return;
     }
+
 }

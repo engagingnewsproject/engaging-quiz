@@ -23,6 +23,7 @@
 class Enp_quiz_Take_Quiz_end {
 	public $quiz, // Enp_quiz_Quiz Object
 		   $score,
+		   $score_percentage,
 		   $score_total_correct,
 		   $score_circle_dashoffset,
 		   $quiz_end_title,
@@ -39,6 +40,8 @@ class Enp_quiz_Take_Quiz_end {
 		$this->set_score_total_correct();
 		// set the score
 		$this->set_score();
+		// set score percentage
+		$this->set_score_percentage();
 		// set the title based on the score
 		$this->set_quiz_end_title();
 		// set the content based on the score
@@ -74,7 +77,11 @@ class Enp_quiz_Take_Quiz_end {
 		$question_ids = $this->quiz->questions;
 		$total_questions = count($question_ids);
 		// calculate the score
-		$this->score = round( ($this->score_total_correct / $total_questions) * 100 );
+		$this->score = $this->score_total_correct / $total_questions;
+	}
+
+	public function set_score_percentage() {
+		$this->score_percentage = round($this->score * 100);
 	}
 
 	/**
@@ -82,7 +89,7 @@ class Enp_quiz_Take_Quiz_end {
 	* @param score
 	*/
 	public function set_quiz_end_title() {
-		$score = (int) $this->score;
+		$score = (int) $this->score_percentage;
 		if($score < 50) {
 			$title = "Ouch!";
 		} elseif($score < 70) {
@@ -109,18 +116,18 @@ class Enp_quiz_Take_Quiz_end {
 	*/
 	public function set_quiz_end_content() {
 		// Not so good. Default.
-
+		$score = $this->score_percentage;
 		$content = "We bet you could do better. Why don't you try taking the quiz again?";
-		if(intval($this->score) < 70) {
+		if($score < 70) {
 			$content = "We bet you could do better. Why don't you try taking the quiz again?";
 		}
-		elseif (intval($this->score) < 85) {
+		elseif ($score < 85) {
 			$content = "You did pretty well! Take the quiz again and see if you can get a perfect score this time.";
 		}
-		elseif (intval($this->score) < 100) {
+		elseif ($score < 100) {
 			$content = "Fantastic!";
 		}
-		elseif (intval($this->score) === 100) {
+		elseif ($score === 100) {
 			$content = "Can't do any better than that! Go ahead, share this quiz and brag about it.";
 		}
 		$this->quiz_end_content = $content;
@@ -134,13 +141,17 @@ class Enp_quiz_Take_Quiz_end {
 		return $this->score;
 	}
 
+	public function get_score_percentage() {
+		return $this->score_percentage;
+	}
+
 	public function set_score_circle_dashoffset() {
 		$dashoffset = 0;
 		if(!empty($this->score)) {
 			// calculate the score dashoffset
             $r = 90;
             $c = M_PI*($r*2);
-            $dashoffset = ((100-$this->get_score())/100)*$c;
+            $dashoffset = ((100-$this->get_score()*100)/100)*$c;
 		}
 		$this->score_circle_dashoffset = $dashoffset;
 	}

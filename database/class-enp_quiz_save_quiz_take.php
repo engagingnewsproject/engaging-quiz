@@ -207,7 +207,8 @@ class Enp_quiz_Save_quiz_take {
 			$quiz_data->update_quiz_starts();
 		} elseif (self::$return['state'] === 'quiz_end') {
             // if the new returnd state is quiz_end, then they finished the quiz
-		    $quiz_data->update_quiz_finishes();
+            // get their score
+		    $quiz_data->update_quiz_finishes(self::$return['quiz_end']['score']);
 		}
 
     }
