@@ -7,10 +7,14 @@
 */
 function generateQuestionExplanation(questionJSON, correct, callback) {
     console.log('generating explanation');
-
+    if(_.is_last_question(questionJSON) === true) {
+        question_next_step_text = 'View Results';
+    } else {
+        question_next_step_text = 'Next Question';
+    }
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
-    explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage });
+    explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage, question_next_step_text: question_next_step_text });
     if(typeof(callback) == "function") {
         callback(explanation);
     }

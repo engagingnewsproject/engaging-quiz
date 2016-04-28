@@ -8,7 +8,7 @@
     </header>
     <p class="enp-explanation__explanation"><?php echo $qt_question->question->get_question_explanation();?></p>
 
-    <button class="enp-btn enp-next-step" name="enp-question-submit" value="enp-next-question"><span class="enp-next-step__text">Next Question</span> <svg class="enp-icon enp-icon--chevron-right enp-next-step__icon">
+    <button class="enp-btn enp-next-step" name="enp-question-submit" value="enp-next-question"><span class="enp-next-step__text"><?php echo $qt_question->get_question_next_step_text();?></span> <svg class="enp-icon enp-icon--chevron-right enp-next-step__icon">
       <use xlink:href="#icon-chevron-right" />
     </svg></button>
 </section>

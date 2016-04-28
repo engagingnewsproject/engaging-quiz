@@ -25,7 +25,8 @@ class Enp_quiz_Take_Question {
 			$question,
 			$question_response_correct,
 			$question_explanation_title,
-			$question_explanation_percentage;
+			$question_explanation_percentage,
+			$question_next_step_text;
 	/**
 	* This is a big constructor. We require our files, check for $_POST submission,
 	* set states, and all other details we're sure to need for our templating
@@ -84,6 +85,7 @@ class Enp_quiz_Take_Question {
 	public function set_question_explanation_vars() {
 		$this->set_question_explanation_title();
 		$this->set_question_explanation_percentage();
+		$this->set_question_next_step_text();
 	}
 
 	public function set_question_explanation_title() {
@@ -99,6 +101,23 @@ class Enp_quiz_Take_Question {
 		$this->question_explanation_percentage = $percentage;
 	}
 
+	public function set_question_next_step_text() {
+		// find out if it's the last question or not
+		$qustion_ids = $this->qt->quiz->get_questions();
+		// get the last question ID
+		$last_question_id = end($qustion_ids);
+		$current_question_id = $this->question->get_question_id();
+
+		if((int) $last_question_id === (int) $current_question_id) {
+			// we're on the last question!
+			$next_step_text = 'View Results';
+		} else {
+			// we're not on the last question yet
+			$next_step_text = 'Next Question';
+		}
+		$this->question_next_step_text = $next_step_text;
+	}
+
 	public function get_question_explanation_title() {
 		return $this->question_explanation_title;
 	}
@@ -106,6 +125,11 @@ class Enp_quiz_Take_Question {
 	public function get_question_explanation_percentage() {
 		// build this off the response
 		return $this->question_explanation_percentage;
+	}
+
+	public function get_question_next_step_text() {
+		// build this off the response
+		return $this->question_next_step_text;
 	}
 
 	public function get_question_classes() {

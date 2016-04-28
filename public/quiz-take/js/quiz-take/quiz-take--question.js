@@ -190,8 +190,7 @@ function generateQuestion(questionJSON) {
 function increaseQuestionProgress(questionOrder) {
     questionNumber = parseInt(questionOrder) + 1;
     // increase the question number and css if we have another one
-    totalQuestions = $('.enp-quiz__progress__bar__question-count__total-questions').text();
-    totalQuestions = parseInt(totalQuestions);
+    totalQuestions = _.get_total_questions();
     progressBarWidth = (questionNumber/totalQuestions) * 100;
     if(progressBarWidth === 100) {
         progressBarWidth = 95;

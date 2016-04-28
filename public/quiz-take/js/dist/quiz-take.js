@@ -15,6 +15,26 @@ _.reformat_number = function(number, multiplier, places) {
     return number;
 };
 
+/**
+* Determine if we're on the last question or not
+*/
+_.is_last_question = function(questionJSON) {
+    questionNumber = parseInt(questionJSON.question_order) + 1;
+    totalQuestions = _.get_total_questions();
+    console.log(questionNumber);
+    console.log(totalQuestions);
+    if(questionNumber === totalQuestions) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+_.get_total_questions = function() {
+    quizJSON = $('#quiz').data('quizJSON');
+    return quizJSON.questions.length;
+};
+
 // turn on mustache/handlebars style templating
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
@@ -219,8 +239,7 @@ function generateQuestion(questionJSON) {
 function increaseQuestionProgress(questionOrder) {
     questionNumber = parseInt(questionOrder) + 1;
     // increase the question number and css if we have another one
-    totalQuestions = $('.enp-quiz__progress__bar__question-count__total-questions').text();
-    totalQuestions = parseInt(totalQuestions);
+    totalQuestions = _.get_total_questions();
     progressBarWidth = (questionNumber/totalQuestions) * 100;
     if(progressBarWidth === 100) {
         progressBarWidth = 95;
@@ -269,10 +288,14 @@ function prepareQuestionFormData(clickedButton) {
 */
 function generateQuestionExplanation(questionJSON, correct, callback) {
     console.log('generating explanation');
-
+    if(_.is_last_question(questionJSON) === true) {
+        question_next_step_text = 'View Results';
+    } else {
+        question_next_step_text = 'Next Question';
+    }
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
-    explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage });
+    explanationTemplate = questionExplanationTemplate({question_id: questionJSON.question_id, question_explanation: questionJSON.question_explanation, question_explanation_title: correct, question_explanation_percentage: question_response_percentage, question_next_step_text: question_next_step_text });
     if(typeof(callback) == "function") {
         callback(explanation);
     }
@@ -470,4 +493,15 @@ function animateScore() {
 bindQuestionData(init_question_json);
 // on load, bind the initial question_json to the mc options, if it's an mc option question
 bindMCOptionData(init_question_json);
+// on load, bind the quiz data to the quiz DOM
+bindQuizData(quiz_json);
+
+/**
+* Binds JSON data to the quiz form element in the DOM so we always have
+* access to it. Accessible via
+* $('#quiz').data('quizJSON');
+*/
+function bindQuizData(quizJSON) {
+    $('#quiz').data('quizJSON', quizJSON);
+}
 });
