@@ -579,4 +579,29 @@ class Enp_quiz_Create {
 		}
 	}
 
+
+	/**
+	* Utility function for returning a percentage
+	* @param $part (int) The number you want to see what it's a percentage of
+	* @param $whole (int) The whole you want a percentage of
+	* @param $decimals (int) How many decimal places you want returned. Defaults to no modification.
+	*/
+	public function percentagize($part, $whole, $decimals = false) {
+		$part = (int) $part;
+		$whole = (int) $whole;
+		// check to make sure it's valid
+		if($whole === 0) {
+			return false;
+		}
+		// percentage function
+		$percentage = ($part / $whole) * 100;
+		// if they want some decimals, round it to that amount of decimals
+		if($decimals !== false) {
+			$percentage = round($percentage, $decimals);
+		}
+		// return the percentage
+		return $percentage;
+	}
+
+
 }

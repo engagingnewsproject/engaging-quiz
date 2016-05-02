@@ -21,7 +21,10 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Quiz_results extends Enp_quiz_Create {
+    public $quiz;
     public function __construct() {
+        // load the quiz
+        $this->quiz = $this->load_quiz();
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_template' ));
@@ -32,7 +35,14 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
     }
 
     public function load_template() {
-        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-end.php' );
+        ob_start();
+        //Start the class
+        $quiz = $this->quiz;
+        include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'quiz-results.php' );
+        $content = ob_get_contents();
+        if (ob_get_length()) ob_end_clean();
+
+        return $content;
     }
 
     public function enqueue_styles() {
@@ -45,14 +55,31 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 	 * @since    0.0.1
 	 */
 	public function enqueue_scripts() {
-
-        wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-charts' );
-
-		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.min.js', array( 'jquery', $this->plugin_name.'-charts' ), $this->version, true );
+        // charts
+        /*wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-charts' );*/
+        // accordion
+        wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-accordion' );
+        // general scripts
+		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.js', array( 'jquery', $this->plugin_name.'-accordion' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-quiz-results' );
 
 	}
+
+    public function mc_option_correct_icon($correct) {
+        if($correct === '1') {
+            $svg = '<svg class="enp-icon enp-icon--close enp-results-question__option__icon enp-results-question__option__icon--correct">
+                <use xlink:href="#icon-check" />
+            </svg>';
+        } else {
+            $svg = '<svg class="enp-icon enp-icon--close enp-results-question__option__icon enp-results-question__option__icon--incorrect">
+                <use xlink:href="#icon-close" />
+            </svg>';
+        }
+
+        return $svg;
+    }
 
 
 }

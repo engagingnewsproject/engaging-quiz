@@ -588,5 +588,4 @@ class Enp_quiz_Quiz {
         return $value;
     }
 
-
 }

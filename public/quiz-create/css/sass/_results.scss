@@ -105,7 +105,7 @@
             background: lighten($green, 35);
     }
 
-    .enp-results-flow__item--quiz-completions {
+    .enp-results-flow__item--quiz-finishes {
             width: 35%;
             height: 35%;
             position: absolute;
@@ -273,7 +273,7 @@
         position: relative;
     }
 
-    .enp-results-question__deep-stat__number--completions,
+    .enp-results-question__deep-stat__number--finishes,
     .enp-results-question__deep-stat__number--correct {
         @include _(dark-green);
     }
@@ -284,7 +284,7 @@
 
     .enp-results-question__deep-stat__number--correct,
     .enp-results-question__deep-stat__number--incorrect,
-    .enp-results-question__deep-stat__number--completions {
+    .enp-results-question__deep-stat__number--finishes {
         &:after {
             content: '%';
             font-size: .9rem;
