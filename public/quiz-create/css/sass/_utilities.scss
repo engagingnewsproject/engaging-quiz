@@ -194,13 +194,12 @@ $placeholders: ();
 
 @include placeholder('accordion') {
     background: #fff;
-    box-shadow: inset 1px 1px 0 #ccc, inset -1px -1px 0 #ccc;
     width: 100%;
 }
 
 @include placeholder('accordion__header') {
     @include _('accordion');
-    background: #fff;
+    box-shadow: inset 1px 1px 0 #ccc, inset -1px -1px 0 #ccc;
     color: $font;
     font-family: $fontTitle;
     font-size: .9rem;
@@ -220,6 +219,7 @@ $placeholders: ();
 
 @include placeholder('accordion__content') {
     @include _('accordion');
+    box-shadow: inset 1px -1px 0 #ccc, inset -1px -1px 0 #ccc;
     display: block;
     position: relative;
     height: auto;
