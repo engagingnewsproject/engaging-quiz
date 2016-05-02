@@ -164,7 +164,7 @@
     border-bottom-color: #ddd;
 
     @include breakpoint(medium) {
-        flex-basis: 48%;
+        flex-basis: 49%;
         margin: 0 2% 0.8rem 0;
 
         &:nth-child(2n) {
@@ -192,7 +192,7 @@
 }
 
 #enp-quiz {
-    
+
     .enp-container {
         @include _(container);
     }

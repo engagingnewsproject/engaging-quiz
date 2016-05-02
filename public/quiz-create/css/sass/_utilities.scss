@@ -388,3 +388,9 @@ $placeholders: ();
     outline-style: auto;
     outline-width: 5px;
 }
+
+.enp-breadcrumb-link {
+    @include _(small-uppercase);
+    position: absolute;
+    top: -1.6rem;
+}

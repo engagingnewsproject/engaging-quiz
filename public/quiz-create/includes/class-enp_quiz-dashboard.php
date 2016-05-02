@@ -61,5 +61,62 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
 
 	}
 
+    public function get_quiz_dashboard_item_title($quiz) {
+        if(!is_object($quiz)) {
+            return false;
+        }
+        $quiz_status = $quiz->get_quiz_status();
+        if($quiz_status === 'published') {
+            $quiz_title = '<a href="'.ENP_QUIZ_RESULTS_URL.$quiz->get_quiz_id().'">'.$quiz->get_quiz_title().'</a>';
+        } elseif($quiz_status === 'draft') {
+            // if you want to add back in the edit pencil icons
+            //$quiz_title .= ' <svg class="enp-icon enp-dash-item__title__icon"><use xlink:href="#icon-edit" /></svg>';
+            $quiz_title = '<a href="'.ENP_QUIZ_CREATE_URL.$quiz->get_quiz_id().'"><span class="enp-screen-reader-text">Edit </span>'.$quiz->get_quiz_title().'</a>';
+        }
+        return $quiz_title;
+    }
+
+    public function get_quiz_actions($quiz) {
+        if(!is_object($quiz)) {
+            return false;
+        }
+        // set blank array
+        $quiz_actions = array();
+
+        $quiz_status = $quiz->get_quiz_status();
+        $quiz_id = $quiz->get_quiz_id();
+        if($quiz_status === 'published') {
+            $quiz_actions[] = array(
+                                    'title'=>'Results',
+                                    'url' => ENP_QUIZ_RESULTS_URL.$quiz_id,
+                            );
+            $quiz_actions[] = array(
+                                    'title'=>'Settings',
+                                    'url' => ENP_QUIZ_PREVIEW_URL.$quiz_id,
+                            );
+            $quiz_actions[] = array(
+                                    'title'=>'Embed',
+                                    'url' => ENP_QUIZ_PUBLISH_URL.$quiz_id,
+                            );
+        } elseif($quiz_status === 'draft') {
+            $quiz_actions[] = array(
+                                    'title'=>'Edit',
+                                    'url' => ENP_QUIZ_CREATE_URL.$quiz_id,
+                            );
+
+            // see if the quiz is valid. If it is, allow a preview for it
+            $response = new Enp_quiz_Save_quiz_Response();
+            $validate = $response->validate_quiz_and_questions($quiz);
+            if($validate === 'valid') {
+                $quiz_actions[] = array(
+                                        'title'=>'Preview',
+                                        'url' => ENP_QUIZ_PREVIEW_URL.$quiz_id,
+                                );
+            }
+        }
+
+
+        return $quiz_actions;
+    }
 
 }

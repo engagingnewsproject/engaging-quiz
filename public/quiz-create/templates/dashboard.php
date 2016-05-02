@@ -18,10 +18,10 @@
     <header class="enp-dash__section-header">
         <h2 class="enp-dash__section-title">Quizzes</h2>
         <div class="enp-quiz-list__view">
-            <select class="enp-sort-by">
+            <!--<select class="enp-sort-by">
                 <option>Date Created</option>
                 <option>Most Results</option>
-            </select>
+            </select>-->
         </div>
     </header>
     <ul class="enp-dash-list enp-dash-list--quiz">
@@ -50,10 +50,10 @@
         <h2 class="enp-dash__section-title">A/B Test</h2>
         <div class="enp-quiz-list__view">
 
-            <select class="enp-sort-by">
+            <!--<select class="enp-sort-by">
                 <option>Date Created</option>
                 <option>Most Results</option>
-            </select>
+            </select>-->
         </div>
     </header>
     <ul class="enp-dash-list enp-dash-list--ab">

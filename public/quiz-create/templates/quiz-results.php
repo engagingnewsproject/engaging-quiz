@@ -6,7 +6,7 @@
  * @package           Enp_quiz
  */
 ?>
-
+<a class="enp-breadcrumb-link" href="<?php echo ENP_QUIZ_DASHBOARD_URL;?>/user">Dashboard</a>
 <h1 class="enp-page-title enp-results-title"><?php echo $quiz->get_quiz_title();?></h1>
 <section class="enp-container enp-results__container">
 
