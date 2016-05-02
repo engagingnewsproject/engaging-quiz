@@ -9,6 +9,7 @@ class Enp_quiz_MC_option {
             $mc_option_content,
             $mc_option_correct,
             $mc_option_order,
+            $mc_option_responses,
             $mc_option_is_deleted;
 
     protected static $mc_option;
@@ -63,6 +64,7 @@ class Enp_quiz_MC_option {
         $this->mc_option_content = $this->set_mc_option_content();
         $this->mc_option_correct = $this->set_mc_option_correct();
         $this->mc_option_order = $this->set_mc_option_order();
+        $this->mc_option_responses = $this->set_mc_option_responses();
         $this->mc_option_is_deleted = $this->set_mc_option_is_deleted();
     }
 
@@ -104,6 +106,16 @@ class Enp_quiz_MC_option {
     protected function set_mc_option_order() {
         $mc_option_order = self::$mc_option['mc_option_order'];
         return $mc_option_order;
+    }
+
+    /**
+    * Set the mc_option_responses for our Quiz Object
+    * @param $mc_option = mc_option row from mc_option database table
+    * @return mc_option_responses field from the database
+    */
+    protected function set_mc_option_responses() {
+        $mc_option_responses = self::$mc_option['mc_option_responses'];
+        return $mc_option_responses;
     }
 
     /**
@@ -154,6 +166,16 @@ class Enp_quiz_MC_option {
     public function get_mc_option_order() {
         $mc_option_order = $this->mc_option_order;
         return $mc_option_order;
+    }
+
+    /**
+    * Get the mc_option_responses for our Quiz Object
+    * @param $mc_option = mc_option object
+    * @return mc_option_responses from the object
+    */
+    public function get_mc_option_responses() {
+        $mc_option_responses = $this->mc_option_responses;
+        return $mc_option_responses;
     }
 
 

@@ -65,5 +65,46 @@ class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Respon
             return false;
         }
     }
+
+    /**
+    * Connects to DB and inserts the user response.
+    * @param $response (array) data we'll be saving to the response table
+    * @return builds and returns a response message
+    */
+    protected function increase_mc_option_responses($mc_option_id) {
+
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(':mc_option_id' => $mc_option_id,
+                    );
+        // write our SQL statement
+        // write our SQL statement
+        $sql = "UPDATE ".$pdo->question_mc_option_table."
+                   SET  mc_option_responses = mc_option_responses + 1
+                 WHERE  mc_option_id = :mc_option_id";
+        // update the question view the database
+        $stmt = $pdo->query($sql, $params);
+
+        // success!
+        if($stmt !== false) {
+
+            // set-up our response array
+            $return = array(
+                                        'mc_option_id' => $mc_option_id,
+                                        'status'       => 'success',
+                                        'action'       => 'increase_mc_option_responses'
+                                );
+
+            // merge the response arrays
+            self::$return = array_merge($return, self::$return);
+            // see what type of question we're working on and save that response
+        } else {
+            // handle errors
+            self::$return['error'][] = 'Increase MC Option Responses failed.';
+        }
+        // return response
+        return self::$return;
+    }
 }
 ?>

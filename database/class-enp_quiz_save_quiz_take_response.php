@@ -114,6 +114,8 @@ class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
                 // save the mc option response
                 $response_mc = new Enp_quiz_Save_quiz_take_Response_MC();
                 $return_mc_response = $response_mc->insert_response_mc($response);
+                // increase the count on the mc option responses
+                $response_mc->increase_mc_option_responses($response['question_response']);
                 // merge the response arrays
                 $return = array_merge($return, $return_mc_response);
             } elseif($response['question_type'] === 'slider') {

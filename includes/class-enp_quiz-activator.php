@@ -165,6 +165,7 @@ class Enp_quiz_Activator {
 					mc_option_content VARCHAR(255) NOT NULL,
 					mc_option_correct BOOLEAN NOT NULL,
 					mc_option_order BIGINT(3) NOT NULL,
+					mc_option_responses BIGINT(20) NOT NULL,
 					mc_option_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (mc_option_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
