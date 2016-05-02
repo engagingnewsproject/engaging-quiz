@@ -443,6 +443,10 @@ class Enp_quiz_Create {
 		}
 		// if they want to move on to the quiz-publish page and there are no errors, let them
 		elseif(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'publish' && empty(self::$message['error'])) {
+			// unset the cookies for the current quiz
+			$published_quiz = new Enp_quiz_Quiz($quiz_id);
+			$this->unset_quiz_take_cookies($published_quiz);
+			// redirect to the quiz publish page
 			$this->redirect_to_quiz_publish($quiz_id);
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page
@@ -601,6 +605,29 @@ class Enp_quiz_Create {
 		}
 		// return the percentage
 		return $percentage;
+	}
+
+	/**
+	* Duplicate of unset_cookies from class-enp_quiz-take.php
+	* probably shouldn't do that, but was running into issues requiring that file for its code
+	* and calling the quiz take class
+	*/
+	public function unset_quiz_take_cookies($quiz) {
+		$quiz_id = $quiz->get_quiz_id();
+		$question_ids = $quiz->get_questions();
+		$week = time() + (86400 * 7);
+
+		setcookie('enp_take_quiz_'.$quiz_id.'_state', 'question', $week, '/');
+		setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $question_ids[0], $week, '/');
+
+		// loop through all questions and unset their cookie
+		foreach($question_ids as $question_id) {
+			// build cookie name
+			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
+			setcookie($cookie_name, '', time() - 3600, '/');
+		}
+
+
 	}
 
 

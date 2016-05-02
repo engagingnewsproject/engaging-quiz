@@ -446,19 +446,19 @@ class Enp_quiz_Take {
 
 		// quiz state
 		if(!empty($this->state)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $week);
+			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $week, '/');
 		} else {
 			return false;
 		}
 
 		// question number
 		if($this->state === 'question') {
-			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $week);
+			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $week, '/');
 		}
 		// if we're on a question explanation, how'd they do for that question?
 		// next question
 		elseif($this->state === 'question_explanation' && !empty($this->response)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week);
+			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week, '/');
 		}
 	}
 
@@ -470,7 +470,7 @@ class Enp_quiz_Take {
 		foreach($question_ids as $question_id) {
 			// build cookie name
 			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
-			setcookie($cookie_name, '', time() - 3600);
+			setcookie($cookie_name, '', time() - 3600, '/');
 		}
 
 	}
