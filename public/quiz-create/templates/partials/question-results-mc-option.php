@@ -12,6 +12,6 @@
         <?php echo $mc_option->get_mc_option_content();?>
     </div>
     <div class="enp-results-question__option__number-selected">
-        156&nbsp;/&nbsp;<span class="enp-results-question__option__percentage enp-results-question__option__percentage--incorrect">25%</span>
+        <?php echo $mc_option->get_mc_option_responses();?>&nbsp;/&nbsp;<span class="enp-results-question__option__percentage enp-results-question__option__percentage--<?php echo $correct_string;?>"><?php echo $this->percentagize( $mc_option->get_mc_option_responses(), $question->get_question_responses(), 1);?>%</span>
     </div>
 </li>
