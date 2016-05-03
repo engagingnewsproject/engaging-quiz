@@ -21,7 +21,7 @@ class Enp_quiz_Nonce {
         } else {
             $this->session_name = $session_name;
         }
-        
+
         //We need the previous key so we store it
         if(isset($_SESSION[$this->session_name]))
         {

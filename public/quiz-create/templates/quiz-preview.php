@@ -66,9 +66,7 @@
             <h2 class="enp-quiz-preview__title">Quiz Preview</h2>
             <iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id();?>" class="enp-quiz-iframe" src="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
 
-            <iframe id="enp-quiz-iframe-59" class="enp-quiz-iframe" src="http://dev/quiz/quiz-embed/59" style="width: 100%; height: 500px;"></iframe>
-            
-            <script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>public/quiz-take/js/dist/cross-domain-messaging.js"></script>
+            <script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>public/quiz-take/js/dist/iframe-parent.js"></script>
         </section>
     </div>
 </div>

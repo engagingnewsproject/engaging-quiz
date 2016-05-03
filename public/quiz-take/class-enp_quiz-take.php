@@ -39,7 +39,7 @@ class Enp_quiz_Take {
 		// require files
 		$this->load_files();
 		// set nonce
-		$this->set_nonce();
+		$this->set_nonce($quiz_id);
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
 			// sets $this->response;
@@ -153,11 +153,11 @@ class Enp_quiz_Take {
 
 	}
 
-	public function set_nonce() {
+	public function set_nonce($quiz_id) {
 		//Start the session
 	   session_start();
 	   //Start the class
-	   $this->nonce = new Enp_quiz_Nonce('enp_quiz_take_nonce');
+	   $this->nonce = new Enp_quiz_Nonce('enp_quiz_take_'.$quiz_id.'_nonce');
 	}
 
 	/**
@@ -225,9 +225,14 @@ class Enp_quiz_Take {
 		$response = false;
 		$save_data = array();
 
+		// get the posted id
+		if(isset($_POST['enp-quiz-id'])) {
+			$save_data['quiz_id'] = $_POST['enp-quiz-id'];
+		}
 		// validate nonce
-		if(isset($_POST['enp_quiz_take_nonce'])) {
-			$posted_nonce = $_POST['enp_quiz_take_nonce'];
+		$nonce_name = 'enp_quiz_take_'.$save_data['quiz_id'].'_nonce';
+		if(isset($_POST[$nonce_name])) {
+			$posted_nonce = $_POST[$nonce_name];
 		}
 
 	    //Is it a POST request?
@@ -240,13 +245,10 @@ class Enp_quiz_Take {
 			   return false;
  		   }
  	    }
+		// get the posted data
 		// get user action
 		if(isset($_POST['enp-question-submit'])) {
 			$save_data['user_action'] = $_POST['enp-question-submit'];
-		}
-		// get the posted data
-		if(isset($_POST['enp-quiz-id'])) {
-			$save_data['quiz_id'] = $_POST['enp-quiz-id'];
 		}
 
 		if($save_data['user_action'] === 'enp-question-submit') {
