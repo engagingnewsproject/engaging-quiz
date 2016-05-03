@@ -4,14 +4,17 @@ function receiveEnpIframeMessage(event) {
         return false;
     }
 
+    console.log(event.data);
     // make sure we got a string as our message
     if(typeof event.data !== 'string') {
+        pollEnpQuizzes();
         return false;
     }
 
     // parse the JSON data
     data = JSON.parse(event.data);
 
+    console.log('the data height is '+data.height);
     // set the style on the height and store to localStorage
     if(/([0-9])px/.test(data.height)) {
         // get the quiz based on ID
@@ -20,6 +23,7 @@ function receiveEnpIframeMessage(event) {
         sessionStorage.setItem('enp-quiz-iframe-'+data.quiz_id+'-height', data.height);
         // set the height on the style
         quiz.style.height= data.height;
+        console.log('height received');
     }
 }
 
@@ -29,6 +33,11 @@ window.addEventListener('message', receiveEnpIframeMessage, false);
 function onLoadEnpIframe() {
     // write our styles that apply to ALL quizzes
     addEnpIframeStyles();
+    // call each quiz and get its height
+    pollEnpQuizzes();
+}
+
+function pollEnpQuizzes() {
     // check to see if we have valid height from our PostMessage
     var quizzes = document.getElementsByClassName('enp-quiz-iframe');
 
@@ -38,13 +47,16 @@ function onLoadEnpIframe() {
         // get the stored iframeheight
         quiz = quizzes[i];
         iframeHeight = sessionStorage.getItem(quiz.id+'-height');
+        console.log(iframeHeight);
         if(!/([0-9])px/.test(iframeHeight)) {
+            console.log('sending request');
             // send a postMessage to get the correct height
             quiz.contentWindow.postMessage('Parent page loaded.', '*');
+        } else {
+            // set the height on the style
+            quiz.style.height= iframeHeight;
         }
     }
-
-
 }
 
 function addEnpIframeStyles() {
