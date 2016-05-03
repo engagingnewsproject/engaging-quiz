@@ -18,5 +18,10 @@ function bindQuizData(quizJSON) {
     $('#quiz').data('quizJSON', quizJSON);
 }
 
+function getQuizID() {
+    json = $('#quiz').data('quizJSON');
+    return json.quiz_id;
+}
+
 // send body height on init
 sendBodyHeight();

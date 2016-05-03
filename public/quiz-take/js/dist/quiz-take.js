@@ -66,7 +66,8 @@ function sendBodyHeight() {
     height = calculateBodyHeight();
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    parent.postMessage(height, "*");
+    json = '{"quiz_id":"'+getQuizID()+'","height":"'+height+'"}';
+    parent.postMessage(json, "*");
 }
 /**
 * Function for caluting the container height of the iframe
@@ -93,8 +94,13 @@ function calculateBodyHeight() {
 window.addEventListener('message', receiveMessage, false);
 
 function receiveMessage(event) {
+    // check to make sure we received a string
+    if(typeof event.data !== 'string') {
+        return false;
+    }
     // If our request isn't our height, send a request for a valid height
-    if(!/([0-9]px)/.test(event.data)) {
+    data = JSON.parse(event.data);
+    if(!/([0-9]px)/.test(data.height)) {
         sendBodyHeight();
     }
 
@@ -566,6 +572,11 @@ bindQuizData(quiz_json);
 */
 function bindQuizData(quizJSON) {
     $('#quiz').data('quizJSON', quizJSON);
+}
+
+function getQuizID() {
+    json = $('#quiz').data('quizJSON');
+    return json.quiz_id;
 }
 
 // send body height on init

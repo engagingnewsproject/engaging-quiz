@@ -1,27 +1,67 @@
+// What to do when we receive a postMessage
 function receiveEnpIframeMessage(event) {
     if(!/dev/.test(event.origin) && !/engagingnewsproject/.test(event.origin)) {
         return false;
     }
-    var quiz = document.getElementById('enp-quiz-iframe');
-    quiz.style.height= event.data;
 
-    sessionStorage.setItem('enp-quiz-iframe-height', event.data);
+    // make sure we got a string as our message
+    if(typeof event.data !== 'string') {
+        return false;
+    }
+
+    // parse the JSON data
+    data = JSON.parse(event.data);
+
+    // set the style on the height and store to localStorage
+    if(/([0-9])px/.test(data.height)) {
+        // get the quiz based on ID
+        var quiz = document.getElementById('enp-quiz-iframe-'+data.quiz_id);
+        // set localStorage
+        sessionStorage.setItem('enp-quiz-iframe-'+data.quiz_id+'-height', data.height);
+        // set the height on the style
+        quiz.style.height= data.height;
+    }
 }
 
 window.addEventListener('message', receiveEnpIframeMessage, false);
 
+// what to do on load of an iframe
 function onLoadEnpIframe() {
-    // add styles to the iframe
-    var quiz = document.getElementById('enp-quiz-iframe');
-    quiz.style.transition = 'all .4s ease-in-out';
+    // write our styles that apply to ALL quizzes
+    addEnpIframeStyles();
     // check to see if we have valid height from our PostMessage
-    iframeHeight = sessionStorage.getItem('enp-quiz-iframe-height');
-    if(!/([0-9])px/.test(iframeHeight)) {
-        // send a postMessage to get the correct height
-        quiz.contentWindow.postMessage('Parent page loaded.', '*');
+    var quizzes = document.getElementsByClassName('enp-quiz-iframe');
+
+    // for each quiz, check if we have a height for it. If we don't, send a
+    // message to that iframe so we can get its height
+    for (i = 0; i < quizzes.length; ++i) {
+        // get the stored iframeheight
+        quiz = quizzes[i];
+        iframeHeight = sessionStorage.getItem(quiz.id+'-height');
+        if(!/([0-9])px/.test(iframeHeight)) {
+            // send a postMessage to get the correct height
+            quiz.contentWindow.postMessage('Parent page loaded.', '*');
+        }
     }
+
+
 }
 
+function addEnpIframeStyles() {
+    // set our styles
+    var css = '.enp-quiz-iframe { -webkit-transition: all .4s ease-in-out;transition: all .4s ease-in-out; }',
+    head = document.head || document.getElementsByTagName('head')[0],
+    style = document.createElement('style');
+
+    style.type = 'text/css';
+    if (style.styleSheet){
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    head.appendChild(style);
+}
 
 // On Load with fallbacks
 var alreadyrunflag=0; //flag to indicate whether target function has already been run

@@ -64,8 +64,8 @@
 
         <section class="enp-container enp-quiz-preview-container">
             <h2 class="enp-quiz-preview__title">Quiz Preview</h2>
-            <iframe id="enp-quiz-iframe" src="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
-            <script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>/public/quiz-take/js/dist/cross-domain-messaging.js"></script>
+            <iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id();?>" class="enp-quiz-iframe" src="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
+            <script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>public/quiz-take/js/dist/cross-domain-messaging.js"></script>
         </section>
     </div>
 </div>
