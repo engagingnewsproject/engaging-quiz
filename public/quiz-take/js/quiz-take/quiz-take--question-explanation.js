@@ -103,9 +103,12 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
             // add the classes for the next question
             showNextQuestion(nextQuestion);
         }
-    }
 
+    }
 
     // remove the question that was answered
     $('.enp-question__answered').remove();
+
+    // send the height of the new view
+    sendBodyHeight();
 }

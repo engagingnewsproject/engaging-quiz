@@ -196,6 +196,7 @@
 
     .enp-option__input--slide-hide + .enp-option__label{
         margin: 0;
+        height: 0;
         animation: removeAnswers .5s ease-in-out forwards;
     }
 

@@ -101,6 +101,9 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
 
     }
 
+    // send the height of the new view
+    sendBodyHeight();
+
 }
 
 /**

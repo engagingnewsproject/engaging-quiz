@@ -34,7 +34,7 @@ if(isset($_GET['quiz_id'])) {
 <?php //add in our SVG
     echo $qt->load_svg();
 ?>
-<section class="enp-quiz__container">
+<section id="enp-quiz-container" class="enp-quiz__container">
     <?php
     // echo styles
     echo $qt->load_quiz_styles();?>

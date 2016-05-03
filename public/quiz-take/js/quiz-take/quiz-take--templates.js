@@ -3,8 +3,14 @@ _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
 // Templates
-var mcOptionTemplate = _.template($('#mc_option_template').html());
-var questionTemplate = _.template($('#question_template').html());
-var questionImageTemplate = _.template($('#question_image_template').html());
-var questionExplanationTemplate = _.template($('#question_explanation_template').html());
-var quizEndTemplate = _.template($('#quiz_end_template').html());
+if($('#question_template').length) {
+    var questionTemplate = _.template($('#question_template').html());
+    var mcOptionTemplate = _.template($('#mc_option_template').html());
+    var questionImageTemplate = _.template($('#question_image_template').html());
+}
+if($('#question_explanation_template').length) {
+    var questionExplanationTemplate = _.template($('#question_explanation_template').html());
+}
+if($('#quiz_end_template').length) {
+    var quizEndTemplate = _.template($('#quiz_end_template').html());
+}

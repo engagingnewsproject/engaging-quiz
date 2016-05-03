@@ -40,12 +40,62 @@ _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
 // Templates
-var mcOptionTemplate = _.template($('#mc_option_template').html());
-var questionTemplate = _.template($('#question_template').html());
-var questionImageTemplate = _.template($('#question_image_template').html());
-var questionExplanationTemplate = _.template($('#question_explanation_template').html());
-var quizEndTemplate = _.template($('#quiz_end_template').html());
+if($('#question_template').length) {
+    var questionTemplate = _.template($('#question_template').html());
+    var mcOptionTemplate = _.template($('#mc_option_template').html());
+    var questionImageTemplate = _.template($('#question_image_template').html());
+}
+if($('#question_explanation_template').length) {
+    var questionExplanationTemplate = _.template($('#question_explanation_template').html());
+}
+if($('#quiz_end_template').length) {
+    var quizEndTemplate = _.template($('#quiz_end_template').html());
+}
 
+
+/**
+* postMessage communication with parent of the iframe
+*/
+
+/**
+* Sends a postMessage to the parent container of the iframe
+*/
+function sendBodyHeight() {
+    console.log('sending body height');
+    // calculate the height
+    height = calculateBodyHeight();
+    // allow all domains to access this info (*)
+    // and send the message to the parent of the iframe
+    parent.postMessage(height, "*");
+}
+/**
+* Function for caluting the container height of the iframe
+* @return (int)
+*/
+function calculateBodyHeight() {
+    var height = document.getElementById('enp-quiz-container').offsetHeight;
+
+    // calculate the height of the slide-hide mc elements, if there
+    if($('.enp-option__input--slide-hide').length) {
+        var removedMC = 0;
+        $('.enp-option__input--slide-hide').each(function(){
+            var label = $(this).next('.enp-option__label');
+            removedMC = removedMC + label.outerHeight(true);
+        });
+        // subtract the height of the removedMC options from the total height
+        height = height - removedMC;
+    }
+
+    // return the height
+    return height;
+}
+
+window.addEventListener('message', receiveMessage, false);
+
+function receiveMessage(event) {
+    console.log(event.data);
+    sendBodyHeight()
+}
 
 /**
 * Submit question when you click question input label
@@ -149,6 +199,9 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
         // ready so we can populate quiz end instantly. Let's just do it based on a response from the server instead for now so we don't have to set localStorage and have duplicate copy for all the quiz end states
 
     }
+
+    // send the height of the new view
+    sendBodyHeight();
 
 }
 
@@ -384,11 +437,14 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
             // add the classes for the next question
             showNextQuestion(nextQuestion);
         }
-    }
 
+    }
 
     // remove the question that was answered
     $('.enp-question__answered').remove();
+
+    // send the height of the new view
+    sendBodyHeight();
 }
 
 /**
@@ -490,9 +546,13 @@ function animateScore() {
 }
 
 // on load, bind the initial question_json to the question id
-bindQuestionData(init_question_json);
-// on load, bind the initial question_json to the mc options, if it's an mc option question
-bindMCOptionData(init_question_json);
+// check if the init_question_json variable exists
+if(typeof init_question_json !== 'undefined') {
+    bindQuestionData(init_question_json);
+    // on load, bind the initial question_json to the mc options, if it's an mc option question
+    bindMCOptionData(init_question_json);
+}
+
 // on load, bind the quiz data to the quiz DOM
 bindQuizData(quiz_json);
 
@@ -504,4 +564,7 @@ bindQuizData(quiz_json);
 function bindQuizData(quizJSON) {
     $('#quiz').data('quizJSON', quizJSON);
 }
+
+// send body height on init
+sendBodyHeight();
 });
