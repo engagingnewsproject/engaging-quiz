@@ -3,9 +3,9 @@ function receiveEnpIframeMessage(event) {
         return false;
     }
     var quiz = document.getElementById('enp-quiz-iframe');
-    quiz.style.height= event.data+"px";
+    quiz.style.height= event.data;
 
-    sessionStorage.setItem('enp-quiz-iframe-height', event.data+"px");
+    sessionStorage.setItem('enp-quiz-iframe-height', event.data);
 }
 
 window.addEventListener('message', receiveEnpIframeMessage, false);

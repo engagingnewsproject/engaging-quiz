@@ -32,12 +32,15 @@ function calculateBodyHeight() {
     }
 
     // return the height
-    return height;
+    return height + "px";
 }
 
 window.addEventListener('message', receiveMessage, false);
 
 function receiveMessage(event) {
-    console.log(event.data);
-    sendBodyHeight();
+    // If our request isn't our height, send a request for a valid height
+    if(!/([0-9]px)/.test(event.data)) {
+        sendBodyHeight();
+    }
+
 }
