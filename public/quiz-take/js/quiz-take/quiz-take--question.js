@@ -91,6 +91,7 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
     $('.enp-question__submit').remove();
     // get the response
     var responseJSON = $.parseJSON(jqXHR.responseText);
+    console.log(responseJSON);
     // see if there's a next question
     if(responseJSON.next_state === 'question') {
         // we have a next question, so generate it

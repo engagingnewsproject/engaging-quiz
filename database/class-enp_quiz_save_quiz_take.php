@@ -33,15 +33,21 @@ class Enp_quiz_Save_quiz_take {
         if($valid === false) {
             return self::$return;
         }
+        // set our initial return as the data object (this is necessary for returning states and stuff when we're on a Preview so we can move through the quiz without actually saving data)
+        self::$return = array_merge($data, self::$return);
+
         self::$quiz = new Enp_quiz_Quiz($data['quiz_id']);
 
         // decide what we're saving based on the user_action
-        if($data['user_action'] === 'enp-question-submit') {
-            $save_response = new Enp_quiz_Save_quiz_take_Response();
-            $save_response = $save_response->save_response($data);
+        $quiz_published_status = self::$quiz->get_quiz_status();
+        // create our save response class
+        $save_response = new Enp_quiz_Save_quiz_take_Response();
+
+        if($data['user_action'] === 'enp-question-submit' && $quiz_published_status === 'published') {
+            $save_response_response = $save_response->save_response($data);
             // check to make sure whatever we saved returned a response
-            if(!empty($save_response)) {
-                self::$return = array_merge(self::$return, $save_response);
+            if(!empty($save_response_response)) {
+                self::$return = array_merge(self::$return, $save_response_response);
             }
         }
         // get current question & build next question
@@ -60,9 +66,14 @@ class Enp_quiz_Save_quiz_take {
             $this->set_quiz_end();
         }
 
-        // update quiz/question data
-        $this->update_quiz_data($data);
-        $this->update_question_data();
+        if($quiz_published_status === 'published') {
+            // update quiz/question data
+            $this->update_quiz_data($data);
+            $this->update_question_data();
+        } elseif(self::$return['state'] === 'question_explanation') {
+            // we're on a preview. If we're a MC Question, we still have to check if the answer was right or not for the response
+            self::$return = $save_response->validate_response_data(self::$return);
+        }
 
         // convert to JSON and return it
         self::$return = json_encode(self::$return);

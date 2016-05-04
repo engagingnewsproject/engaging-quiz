@@ -67,9 +67,13 @@ class Enp_quiz_Take {
 		// set cookies we'll need on reload or correct/incorrect amounts
 		$this->set_cookies();
 
-		// if it's the first question, we need to save the initial quiz view
-		// and question view
-		$this->save_initial_view_data();
+		// see if the quiz is published or not
+		$quiz_status = $this->quiz->get_quiz_status();
+		if($quiz_status === 'published') {
+			// if it's the first question, we need to save the initial quiz view
+			// and question view
+			$this->save_initial_view_data();
+		}
 
 		// if we're doing AJAX, echo the response back to the server
 		// this is echo-ed after everything else is done so we don't get "header already sent" errors from PHP
@@ -411,7 +415,6 @@ class Enp_quiz_Take {
 			$this->state = 'question';
 		}
 	}
-
 
 	// getters
 	public function get_state() {

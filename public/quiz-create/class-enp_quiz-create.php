@@ -627,7 +627,6 @@ class Enp_quiz_Create {
 			setcookie($cookie_name, '', time() - 3600, '/');
 		}
 
-
 	}
 
 
