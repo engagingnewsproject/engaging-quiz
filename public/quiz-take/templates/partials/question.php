@@ -16,7 +16,12 @@
     $question_type = $qt_question->question->get_question_type();
     if($question_type === 'mc' && $question_state === 'question') {?>
         <p class="enp-question__helper">Select one option.</p>
-        <?php foreach($qt_question->question->get_mc_options() as $mc_option_id) {
+        <?php
+        $mc_option_ids = $qt_question->question->get_mc_options();
+        // randomize the order
+        shuffle($mc_option_ids);
+        // loop through mc option ids and output them
+        foreach($mc_option_ids as $mc_option_id) {
             $mc_option = new Enp_quiz_MC_option($mc_option_id);
             include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
         }

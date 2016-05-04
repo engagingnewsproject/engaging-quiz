@@ -286,6 +286,9 @@ function generateQuestion(questionJSON) {
 
     if(questionJSON.question_type === 'mc') {
         // generate mc option templates
+        console.log(questionJSON.mc_option);
+        questionJSON.mc_option = _.shuffle(questionJSON.mc_option);
+        console.log(questionJSON.mc_option);
         for(var prop in questionJSON.mc_option) {
             mc_option_id = questionJSON.mc_option[prop].mc_option_id;
             mc_option_content = questionJSON.mc_option[prop].mc_option_content;
