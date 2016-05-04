@@ -34,3 +34,12 @@ _.get_total_questions = function() {
     quizJSON = $('#quiz').data('quizJSON');
     return quizJSON.questions.length;
 };
+
+_.is_json_string = function(str) {
+    try {
+        json = JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return json;
+};

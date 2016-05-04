@@ -35,6 +35,15 @@ _.get_total_questions = function() {
     return quizJSON.questions.length;
 };
 
+_.is_json_string = function(str) {
+    try {
+        json = JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return json;
+};
+
 // turn on mustache/handlebars style templating
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
@@ -61,9 +70,9 @@ if($('#quiz_end_template').length) {
 * Sends a postMessage to the parent container of the iframe
 */
 function sendBodyHeight() {
-    console.log('sending body height');
     // calculate the height
     height = calculateBodyHeight();
+    console.log('sending body height of '+height);
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
     json = '{"quiz_id":"'+getQuizID()+'","height":"'+height+'"}';
@@ -98,9 +107,11 @@ function receiveMessage(event) {
     if(typeof event.data !== 'string') {
         return false;
     }
-    // If our request isn't our height, send a request for a valid height
-    data = JSON.parse(event.data);
-    if(!/([0-9]px)/.test(data.height)) {
+    // check if valid JSON
+    data = _.is_json_string(event.data);
+    // see if it was valid or if the data.height value is not set and is a valid px value
+    if(data === false || data.height === 'undefined' || !/([0-9]px)/.test(data.height)) {
+        // if all these checks fail, the data isn't set right, so send another post request
         sendBodyHeight();
     }
 
@@ -581,4 +592,10 @@ function getQuizID() {
 
 // send body height on init
 sendBodyHeight();
+
+// after images are loaded, send the height again
+/*$('.enp-question-image').load(function() {
+    console.log('image loaded');
+    sendBodyHeight();
+});*/
 });

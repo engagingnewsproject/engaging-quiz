@@ -1,10 +1,12 @@
+window.addEventListener('message', receiveEnpIframeMessage, false);
+
 // What to do when we receive a postMessage
 function receiveEnpIframeMessage(event) {
     if(!/dev/.test(event.origin) && !/engagingnewsproject/.test(event.origin)) {
         return false;
     }
 
-    console.log(event.data);
+    console.log('data received:' + event.data);
     // make sure we got a string as our message
     if(typeof event.data !== 'string') {
         pollEnpQuizzes();
@@ -27,8 +29,6 @@ function receiveEnpIframeMessage(event) {
     }
 }
 
-window.addEventListener('message', receiveEnpIframeMessage, false);
-
 // what to do on load of an iframe
 function onLoadEnpIframe() {
     // write our styles that apply to ALL quizzes
@@ -46,6 +46,8 @@ function pollEnpQuizzes() {
     for (i = 0; i < quizzes.length; ++i) {
         // get the stored iframeheight
         quiz = quizzes[i];
+        // SESSION STORAGE PERSISTS ACROSS RELOADS
+        // We need to unset session storage on load
         iframeHeight = sessionStorage.getItem(quiz.id+'-height');
         console.log(iframeHeight);
         if(!/([0-9])px/.test(iframeHeight)) {

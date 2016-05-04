@@ -6,9 +6,9 @@
 * Sends a postMessage to the parent container of the iframe
 */
 function sendBodyHeight() {
-    console.log('sending body height');
     // calculate the height
     height = calculateBodyHeight();
+    console.log('sending body height of '+height);
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
     json = '{"quiz_id":"'+getQuizID()+'","height":"'+height+'"}';
@@ -43,9 +43,11 @@ function receiveMessage(event) {
     if(typeof event.data !== 'string') {
         return false;
     }
-    // If our request isn't our height, send a request for a valid height
-    data = JSON.parse(event.data);
-    if(!/([0-9]px)/.test(data.height)) {
+    // check if valid JSON
+    data = _.is_json_string(event.data);
+    // see if it was valid or if the data.height value is not set and is a valid px value
+    if(data === false || data.height === 'undefined' || !/([0-9]px)/.test(data.height)) {
+        // if all these checks fail, the data isn't set right, so send another post request
         sendBodyHeight();
     }
 

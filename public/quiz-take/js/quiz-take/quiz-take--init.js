@@ -25,3 +25,9 @@ function getQuizID() {
 
 // send body height on init
 sendBodyHeight();
+
+// after images are loaded, send the height again
+/*$('.enp-question-image').load(function() {
+    console.log('image loaded');
+    sendBodyHeight();
+});*/
