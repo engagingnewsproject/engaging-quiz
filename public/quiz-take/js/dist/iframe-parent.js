@@ -1,3 +1,9 @@
+/**
+* Handle postMessage to set height of iframe
+* 1. When the DOM is loaded, send a request to the quiz iframes to send the iframe height
+* 2. Receive the message. If the request isn't what it expected, try again.
+* 3. Repeat x10(?) Until get a correct response.
+*/
 window.addEventListener('message', receiveEnpIframeMessage, false);
 
 // What to do when we receive a postMessage
@@ -6,27 +12,26 @@ function receiveEnpIframeMessage(event) {
         return false;
     }
 
-    console.log('data received:' + event.data);
     // make sure we got a string as our message
     if(typeof event.data !== 'string') {
-        pollEnpQuizzes();
         return false;
     }
 
     // parse the JSON data
     data = JSON.parse(event.data);
-
+    // see what the data is
     console.log('the data height is '+data.height);
     // set the style on the height and store to localStorage
     if(/([0-9])px/.test(data.height)) {
         // get the quiz based on ID
         var quiz = document.getElementById('enp-quiz-iframe-'+data.quiz_id);
-        // set localStorage
-        sessionStorage.setItem('enp-quiz-iframe-'+data.quiz_id+'-height', data.height);
         // set the height on the style
         quiz.style.height= data.height;
-        console.log('height received');
+        console.log('height set on quiz '+data.quiz_id);
     }
+
+    // send a response sayin, yea, we got it!
+    // event.source.postMessage("success!", event.origin);
 }
 
 // what to do on load of an iframe
@@ -34,30 +39,20 @@ function onLoadEnpIframe() {
     // write our styles that apply to ALL quizzes
     addEnpIframeStyles();
     // call each quiz and get its height
-    pollEnpQuizzes();
+    getEnpQuizHeights();
 }
 
-function pollEnpQuizzes() {
+function getEnpQuizHeights() {
     // check to see if we have valid height from our PostMessage
     var quizzes = document.getElementsByClassName('enp-quiz-iframe');
 
-    // for each quiz, check if we have a height for it. If we don't, send a
-    // message to that iframe so we can get its height
+    // for each quiz, send a message to that iframe so we can get its height
     for (i = 0; i < quizzes.length; ++i) {
         // get the stored iframeheight
         quiz = quizzes[i];
-        // SESSION STORAGE PERSISTS ACROSS RELOADS
-        // We need to unset session storage on load
-        iframeHeight = sessionStorage.getItem(quiz.id+'-height');
-        console.log(iframeHeight);
-        if(!/([0-9])px/.test(iframeHeight)) {
-            console.log('sending request');
-            // send a postMessage to get the correct height
-            quiz.contentWindow.postMessage('Parent page loaded.', '*');
-        } else {
-            // set the height on the style
-            quiz.style.height= iframeHeight;
-        }
+        // send a postMessage to get the correct height
+        request = '{"status":"request","action":"sendBodyHeight"}';
+        quiz.contentWindow.postMessage(request, quiz.src);
     }
 }
 

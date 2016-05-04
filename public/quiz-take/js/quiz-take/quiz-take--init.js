@@ -23,11 +23,15 @@ function getQuizID() {
     return json.quiz_id;
 }
 
-// send body height on init
+// send the Body Height, even if they're not ready for it.
+// The parent page will request the body height once its loaded.
+// This should cover either scenario.
 sendBodyHeight();
-
-// after images are loaded, send the height again
-/*$('.enp-question-image').load(function() {
+// after images are loaded, send the height again,
+// regardless if it's been sent or not so we know for sure that
+// the height is correct
+$('.enp-question-image').load(function() {
+    // image loaded
     console.log('image loaded');
     sendBodyHeight();
-});*/
+});

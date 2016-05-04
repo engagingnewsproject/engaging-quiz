@@ -1,6 +1,8 @@
 /**
 * postMessage communication with parent of the iframe
 */
+// add an event listener for receiving postMessages
+window.addEventListener('message', receiveMessage, false);
 
 /**
 * Sends a postMessage to the parent container of the iframe
@@ -36,8 +38,6 @@ function calculateBodyHeight() {
     return height + "px";
 }
 
-window.addEventListener('message', receiveMessage, false);
-
 function receiveMessage(event) {
     // check to make sure we received a string
     if(typeof event.data !== 'string') {
@@ -45,10 +45,14 @@ function receiveMessage(event) {
     }
     // check if valid JSON
     data = _.is_json_string(event.data);
-    // see if it was valid or if the data.height value is not set and is a valid px value
-    if(data === false || data.height === 'undefined' || !/([0-9]px)/.test(data.height)) {
-        // if all these checks fail, the data isn't set right, so send another post request
-        sendBodyHeight();
+
+    // see what they want to do
+    if(data.status === 'request') {
+        // they want us to send something... what do they want to send?
+        // if they want the bodyHeight, then send the bodyHeight!
+        if(data.action === 'sendBodyHeight') {
+            sendBodyHeight();
+        }
     }
 
 }
