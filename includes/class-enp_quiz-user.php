@@ -9,6 +9,8 @@ class Enp_quiz_User {
     public $user_id,
            // array of quiz_ids
            $quizzes = array(),
+           // array of quiz_ids
+           $published_quizzes = array(),
            // array of ab_test ids
            $ab_tests = array();
     public static $user;
@@ -25,6 +27,7 @@ class Enp_quiz_User {
     */
     protected function set_user_object_values() {
         $this->quizzes = $this->set_quizzes();
+        $this->published_quizzes = $this->set_published_quizzes();
         $this->ab_tests = $this->set_ab_tests();
     }
 
@@ -41,6 +44,31 @@ class Enp_quiz_User {
         );
         $sql = "SELECT quiz_id from ".$pdo->quiz_table." WHERE
                 quiz_owner = :user_id
+                AND quiz_is_deleted = 0";
+        $stmt = $pdo->query($sql, $params);
+        $quiz_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $quizzes = array();
+        foreach($quiz_rows as $row => $quiz) {
+            $quizzes[] = (int) $quiz['quiz_id'];
+        }
+        return $quizzes;
+    }
+
+    /**
+    * Set the published quizzes for our User Object
+    * @param $user_id
+    * @return quizzes array of ids array(3,4,5) from the database
+    */
+    protected function set_published_quizzes() {
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":user_id" => $this->user_id
+        );
+        $sql = "SELECT quiz_id from ".$pdo->quiz_table." WHERE
+                quiz_owner = :user_id
+                AND quiz_status = 'published'
                 AND quiz_is_deleted = 0";
         $stmt = $pdo->query($sql, $params);
         $quiz_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -85,6 +113,16 @@ class Enp_quiz_User {
     public function get_quizzes() {
         $quizzes = $this->quizzes;
         return $quizzes;
+    }
+
+    /**
+    * Get the quizzes for our User Object
+    * @param $user = user object
+    * @return array of quizzes id's as integers
+    */
+    public function get_published_quizzes() {
+        $published_quizzes = $this->published_quizzes;
+        return $published_quizzes;
     }
 
     /**

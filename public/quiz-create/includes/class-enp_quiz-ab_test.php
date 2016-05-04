@@ -32,7 +32,16 @@ class Enp_quiz_AB_test extends Enp_quiz_Create {
     }
 
     public function load_template() {
+        ob_start();
+        //Start the class
+        $user = new Enp_quiz_User(get_current_user_id());
+        $quizzes = $user->get_published_quizzes();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/ab-test.php' );
+        $content = ob_get_contents();
+        if (ob_get_length()) ob_end_clean();
+
+        return $content;
+
     }
 
     public function enqueue_styles() {
@@ -46,7 +55,7 @@ class Enp_quiz_AB_test extends Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
 
-		wp_register_script( $this->plugin_name.'-ab-test', plugin_dir_url( __FILE__ ) . '../js/ab-test.min.js', array( 'jquery' ), $this->version, true );
+		wp_register_script( $this->plugin_name.'-ab-test', plugin_dir_url( __FILE__ ) . '../js/ab-test.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-ab-test' );
 
 	}
