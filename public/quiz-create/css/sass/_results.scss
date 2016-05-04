@@ -102,7 +102,7 @@
             position: absolute;
             padding-top: 8%;
             bottom: 2.5%;
-            background: lighten($green, 35);
+            background: lighten($green, 48);
     }
 
     .enp-results-flow__item--quiz-finishes {
@@ -110,7 +110,7 @@
             height: 35%;
             position: absolute;
             bottom: 5%;
-            background: lighten($green, 25);
+            background: lighten($green, 35);
     }
 
     .enp-results-flow__title {
@@ -236,10 +236,6 @@
     .enp-results-questions__key,
     .enp-results-question__stats {
         font-weight: 300;
-    }
-    .enp-results-questions__completion,
-    .enp-results-question__completion-rate {
-        color: $dark_green;
     }
 
     .enp-results-question__content {
