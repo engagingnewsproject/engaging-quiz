@@ -30,7 +30,7 @@ class Enp_quiz_AB_test {
     *   @return quiz object, false if not found
     **/
     public function get_ab_test_by_id($ab_test_id) {
-        $ab_test = $this->select_ab_test_by_id($quiz_id);
+        $ab_test = $this->select_ab_test_by_id($ab_test_id);
         if($ab_test !== false) {
             $this->set_ab_test_object_values($ab_test);
         }
@@ -117,6 +117,15 @@ class Enp_quiz_AB_test {
     * @param $ab_test = ab_test row from ab_test database table
     * @return created_by field from the database
     */
+    protected function set_ab_test_owner($ab_test) {
+        return $ab_test['ab_test_owner'];
+    }
+
+    /**
+    * Set the created_by for our Quiz Object
+    * @param $ab_test = ab_test row from ab_test database table
+    * @return created_by field from the database
+    */
     protected function set_ab_test_created_by($ab_test) {
         return $ab_test['ab_test_created_by'];
     }
@@ -187,6 +196,14 @@ class Enp_quiz_AB_test {
     */
     public function get_quiz_id_b() {
         return $this->quiz_id_b;
+    }
+
+    /**
+    * Get the owner for our AB Test Object
+    * @return ab_test_owner from the object
+    */
+    public function get_ab_test_owner() {
+        return $this->ab_test_owner;
     }
 
     /**

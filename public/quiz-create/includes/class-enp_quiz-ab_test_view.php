@@ -22,6 +22,7 @@
  */
 class Enp_quiz_AB_test_view extends Enp_quiz_Create {
     public function __construct() {
+        $this->ab_test = $this->load_ab_test_object();
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_template' ));
@@ -36,6 +37,7 @@ class Enp_quiz_AB_test_view extends Enp_quiz_Create {
         //Start the class
         $user = new Enp_quiz_User(get_current_user_id());
         $enp_quiz_nonce = parent::$nonce;
+        $ab_test = $this->ab_test;
         $quizzes = $user->get_published_quizzes();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/ab-test.php' );
         $content = ob_get_contents();
