@@ -92,4 +92,44 @@ class Enp_quiz_Save {
         }
         return $valid_CSS;
     }
+
+    /**
+    * Utility function to compare two numbers and return the lower one
+    * @param $a (int)
+    * @param $b (int)
+    * @return (int) Lowest of the numbers, or, if equal, $a
+    */
+    public function set_low_value($a, $b) {
+        $a = (int) $a;
+        $b = (int) $b;
+        // set $a as the default for low
+        $low = $a;
+        // see if b is actually lower
+        if($b < $a) {
+            // if b is lower, set $b as low
+            $low = $b;
+        }
+        // return $low
+        return $low;
+    }
+
+    /**
+    * Utility function to compare two numbers and return the higher one
+    * @param $a (int)
+    * @param $b (int)
+    * @return (int) Highest of the numbers, or, if equal, $a
+    */
+    public function set_high_value($a, $b) {
+        $a = (int) $a;
+        $b = (int) $b;
+        // set $a as the default for high
+        $high = $a;
+        // see if b is actually higher
+        if($a < $b) {
+            // if b is higher, set $b as high
+            $high = $b;
+        }
+        // return $high
+        return $high;
+    }
 }
