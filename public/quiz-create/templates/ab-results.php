@@ -51,7 +51,7 @@
     <h2 class="enp-ab-scores__title">Quiz Scores</h2>
     <canvas id="enp-ab-scores__canvas" height="200" width="480"></canvas>
 </section>-->
-<section class="enp-ab-embed-code__section">
+<section id="enp-ab-embed-code" class="enp-ab-embed-code__section">
     <div class="enp-container enp-ab-embed-code">
         <h3 class="enp-ab-embed-code__title">Embed Code</h3>
         <textarea class="enp-embed-code enp-embed-code__textarea">Embed Code will go here.</textarea>

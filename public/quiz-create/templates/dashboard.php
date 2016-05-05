@@ -66,8 +66,8 @@
         $ab_tests = $user->get_ab_tests();
         if(!empty($ab_tests)) {
             foreach($ab_tests as $ab_test) {
-                //$ab_test = new Enp_quiz_AB_test($ab_test);
-                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-ab-item.php');
+                $ab_test = new Enp_quiz_AB_test($ab_test);
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/dashboard-ab-item.php');
             }
         } ?>
     </ul>

@@ -83,6 +83,17 @@
         color: #888;
     }
 
+    .enp-dash-item__title--ab-test {
+        padding-bottom: 0;
+    }
+
+    .enp-dash-item__ab-quizzes {
+        @include _(ul-no-style);
+        font-size: 0.85rem;
+        color: $dark_gray;
+        margin-bottom: 0.8rem;
+    }
+
     .enp-dash-item__nav {
         @include _(flex-inline);
         margin: 0;
