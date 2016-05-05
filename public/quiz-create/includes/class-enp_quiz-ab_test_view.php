@@ -20,7 +20,7 @@
  * @subpackage Enp_quiz/public/AB_test
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_AB_test extends Enp_quiz_Create {
+class Enp_quiz_AB_test_view extends Enp_quiz_Create {
     public function __construct() {
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
@@ -35,6 +35,7 @@ class Enp_quiz_AB_test extends Enp_quiz_Create {
         ob_start();
         //Start the class
         $user = new Enp_quiz_User(get_current_user_id());
+        $enp_quiz_nonce = parent::$nonce;
         $quizzes = $user->get_published_quizzes();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/ab-test.php' );
         $content = ob_get_contents();

@@ -75,7 +75,9 @@ class Enp_quiz_Create {
         // save the quiz. Be nice, try to save the quiz.
         if(isset($_POST['enp-quiz-submit'])) {
             add_action('template_redirect', array($this, 'save_quiz'), 1);
-        }
+        } elseif(isset($_POST['enp-ab-test-submit'])) {
+			add_action('template_redirect', array($this, 'save_ab_test'), 1);
+		}
 		// custom action hook for displaying messages
         add_action( 'enp_quiz_display_messages', array($this, 'display_messages' ));
 
@@ -299,8 +301,8 @@ class Enp_quiz_Create {
 	}
 
 	public function load_ab_test() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-ab_test.php');
-		new Enp_quiz_AB_test();
+		include_once(dirname(__FILE__).'/includes/class-enp_quiz-ab_test_view.php');
+		new Enp_quiz_AB_test_view();
 	}
 
 	public function load_ab_results() {
@@ -434,6 +436,7 @@ class Enp_quiz_Create {
 			$json_response = $response;
 			$json_response = json_encode($json_response);
 			wp_send_json($json_response);
+			// always end ajax with exit()
 			exit();
 		}
 		// if they want to go to the preview page AND there are no errors,
@@ -461,8 +464,6 @@ class Enp_quiz_Create {
 			return false;
 		}
 
-	    // Always end with an exit on ajax
-	    exit();
 	}
 
 	protected function redirect_to_quiz_create($quiz_id) {
@@ -486,6 +487,37 @@ class Enp_quiz_Create {
 		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
 		wp_redirect( site_url( '/enp-quiz/quiz-publish/'.$quiz_id.'/?'.$url_query ) );
 		exit;
+	}
+
+
+	public function save_ab_test() {
+		// make sure they're logged in and own this quiz
+		// returns current_user_id if valid
+		$user_id = $this->validate_user();
+
+		if(isset($_POST['enp_quiz_nonce'])) {
+			$posted_nonce = $_POST['enp_quiz_nonce'];
+		}
+
+	   	//Is it a POST request?
+ 	   	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+ 		   //Validate the form key
+ 		   if(!isset($posted_nonce) || !self::$nonce->validate($posted_nonce)) {
+ 			   // Form key is invalid,
+			   // return them to the page (they're probably refreshing the page)
+			   self::$message['error'][] = 'AB Test was not saved';
+
+			   return false;
+ 		   }
+ 	   	}
+
+		$params = $_POST;
+		$params['ab_test_updated_by'] = $user_id;
+		$save_ab_test = new Enp_quiz_Save_ab_test();
+		$response = $save_ab_test->save($params);
+		self::$message = $response['messages'];
+
 	}
 
 	/**
