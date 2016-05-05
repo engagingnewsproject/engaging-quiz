@@ -361,8 +361,8 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
                 // add mc_options if mc question type
                 $this->validate_question_mc_options($question);
             } elseif($question['question_type'] === 'slider') {
-                // TODO: create sliders...
-                $this->add_error('Question '.($question['question_order']+1).' does not have a complete slider because that functionality does not exist yet.');
+                // validate slider
+                $this->validate_question_slider($question);
             } else {
                 // should never happen...
                 $this->add_error('Question '.($question['question_order']+1).' does not have a question type (multiple choice, slider, etc).');
@@ -444,6 +444,64 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
             if($mc_option_has_correct !== true ) {
                 $this->add_error('Question '.($question['question_order']+1).' needs a correct Multiple Choce Option answer to be selected.');
             }
+        }
+
+        return $return_message;
+    }
+
+    public function validate_question_slider($question) {
+        $return_message = 'valid';
+        if(!array_key_exists('slider', $question)) {
+            $return_message = 'key_does_not_exist';
+            return $return_message;
+        } else {
+            $slider = $question['slider'];
+        }
+
+        if(empty($slider)) {
+            $this->add_error('Question '.($question['question_order']+1).' Slider has no values.');
+            $return_message = 'no_slider_values';
+            return $return_message;
+        }
+
+        // check all the necessary fields for values
+        $required_fields = array(
+                            'slider_id',
+                            'slider_range_low',
+                            'slider_range_high',
+                            'slider_correct_low',
+                            'slider_correct_high',
+                            'slider_increment'
+                    );
+
+        $empty_fields = false;
+        foreach($required_fields as $required) {
+            if(empty($slider[$required])) {
+                $empty_fields = true;
+                $this->add_error('Question '.($question['question_order']+1).' Slider field '.$required.' is empty.');
+            }
+        }
+        // if we have empty fields, just finish the validation check now
+        if($empty_fields = true) {
+            $return_message = 'missing_required_slider_fields';
+            return $return_message;
+        }
+
+        if($slider['slider_range_high'] <= $slider['slider_range_low'] ) {
+            $return_message = 'invalid';
+            $this->add_error('Slider range for Question '.($question['question_order']+1).' needs to be changed.');
+        } elseif($slider['slider_correct_high'] <= $slider['slider_correct_low']) {
+            $return_message = 'invalid';
+            $this->add_error('Slider Correct Answer range for Question '.($question['question_order']+1).' needs to be changed.');
+        }
+
+        if($slider['slider_range_high'] < $slider['slider_correct_high']  ) {
+            $return_message = 'invalid';
+            $this->add_error('Question '.($question['question_order']+1).' Slider answer is higher than the slider range.');
+        }
+        if($slider['slider_correct_low'] < $slider['slider_correct_low']  ) {
+            $return_message = 'invalid';
+            $this->add_error('Question '.($question['question_order']+1).' Slider answer is lower than the slider range.');
         }
 
         return $return_message;
