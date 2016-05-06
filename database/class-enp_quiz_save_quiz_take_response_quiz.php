@@ -173,7 +173,7 @@ class Enp_quiz_Save_quiz_take_Response_quiz extends Enp_quiz_Save_quiz_take {
     * @param $response (array) data we'll be saving to the response quiz table
     * @return builds and returns a response message
     */
-    protected function update_response_quiz_restarted($response) {
+    public function update_response_quiz_restarted($response) {
 
         // connect to PDO
         $pdo = new enp_quiz_Db();
@@ -185,7 +185,7 @@ class Enp_quiz_Save_quiz_take_Response_quiz extends Enp_quiz_Save_quiz_take {
                     );
         // write our SQL statement
         $sql = "UPDATE ".$pdo->response_quiz_table."
-                   SET  quiz_started = :quiz_started,
+                   SET  quiz_restarted = :quiz_restarted,
                         response_quiz_updated_at = :response_quiz_updated_at
                  WHERE  response_quiz_id = :response_quiz_id
                    AND  quiz_id = :quiz_id";

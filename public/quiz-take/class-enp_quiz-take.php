@@ -230,16 +230,9 @@ class Enp_quiz_Take {
 
 	}
 
-	public function save_quiz_take() {
-		$response = false;
-		$save_data = array();
-
-		// get the posted id
-		if(isset($_POST['enp-quiz-id'])) {
-			$save_data['quiz_id'] = $_POST['enp-quiz-id'];
-		}
+	public function validate_nonce($quiz_id) {
 		// validate nonce
-		$nonce_name = 'enp_quiz_take_'.$save_data['quiz_id'].'_nonce';
+		$nonce_name = 'enp_quiz_take_'.$quiz_id.'_nonce';
 		if(isset($_POST[$nonce_name])) {
 			$posted_nonce = $_POST[$nonce_name];
 		}
@@ -254,6 +247,25 @@ class Enp_quiz_Take {
 			   return false;
  		   }
  	    }
+
+		return true;
+	}
+
+	public function save_quiz_take() {
+		$response = false;
+		$save_data = array();
+
+		// get the posted id
+		if(isset($_POST['enp-quiz-id'])) {
+			$save_data['quiz_id'] = $_POST['enp-quiz-id'];
+		}
+
+		$validate_nonce = $this->validate_nonce($save_data['quiz_id']);
+
+		if($validate_nonce === false) {
+			return false;
+		}
+
 		// get the posted data
 		// get user action
 		if(isset($_POST['enp-question-submit'])) {
@@ -330,8 +342,19 @@ class Enp_quiz_Take {
 	}
 
 	public function quiz_restart() {
+		$quiz_id = $this->quiz->get_quiz_id();
+		// validate the nonce
+		$validate_nonce = $this->validate_nonce($quiz_id);
+		if($validate_nonce === false) {
+			return false;
+		}
+		// update our quiz restarted field in the response_quiz table
+		$this->response_quiz_restarted();
+		// we're also going to set a new response_quiz_id since we've reloaded the quiz
+		$this->create_response_quiz_id($quiz_id);
 		// clear the cookies and send them back to the beginning of the quiz
 		$this->unset_cookies();
+
 	}
 
 	public function set_total_questions() {
@@ -501,6 +524,7 @@ class Enp_quiz_Take {
 			setcookie($cookie_name, '', time() - 3600, '/');
 		}
 
+
 	}
 
 	/**
@@ -521,6 +545,7 @@ class Enp_quiz_Take {
 				$quiz_data->update_quiz_views();
 				// save question view
 				$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->current_question_id);
+
 			}
 		}
 	}
@@ -533,22 +558,36 @@ class Enp_quiz_Take {
 		if(isset($_COOKIE[$response_quiz_id_cookie_name])) {
 			$this->response_quiz_id = $_COOKIE[$response_quiz_id_cookie_name];
 		} else {
-			// create and set the cookie
-			$response_quiz = new Enp_quiz_Save_quiz_take_Response_quiz();
-			$start_quiz_data = array(
-									'quiz_id' => $quiz_id,
-									'user_id' => $this->user_id,
-									'response_quiz_updated_at' => date("Y-m-d H:i:s")
-								);
-			$response_quiz = $response_quiz->insert_response_quiz($start_quiz_data);
-			$this->response_quiz_id = $response_quiz['response_quiz_id'];
-			// set our response_quiz_id cookie
-			$twentythirtyeight = 2147483647;
-			setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight, '/');
-
-
+			$this->create_response_quiz_id($quiz_id);
 		}
 
+	}
+
+	protected function create_response_quiz_id($quiz_id) {
+		// create and set the cookie
+		$response_quiz = new Enp_quiz_Save_quiz_take_Response_quiz();
+		$start_quiz_data = array(
+								'quiz_id' => $quiz_id,
+								'user_id' => $this->user_id,
+								'response_quiz_updated_at' => date("Y-m-d H:i:s")
+							);
+		$response_quiz = $response_quiz->insert_response_quiz($start_quiz_data);
+		$this->response_quiz_id = $response_quiz['response_quiz_id'];
+		// set our response_quiz_id cookie
+		$twentythirtyeight = 2147483647;
+		setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight, '/');
+	}
+
+	protected function response_quiz_restarted() {
+		$restart_data = array(
+								'response_quiz_id' => $this->response_quiz_id,
+								'user_id' => $this->user_id,
+								'quiz_id' => $this->quiz->get_quiz_id(),
+								'response_quiz_updated_at' => date("Y-m-d H:i:s")
+							);
+
+		$response_quiz = new Enp_quiz_Save_quiz_take_Response_quiz();
+		$response_quiz = $response_quiz->update_response_quiz_restarted($restart_data);
 	}
 
 }
