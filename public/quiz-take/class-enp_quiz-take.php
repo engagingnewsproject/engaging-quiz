@@ -22,6 +22,8 @@
  */
 class Enp_quiz_Take {
 	public $quiz,
+		   $user_id,
+		   $response_quiz_id,
 		   $state = '',
 		   $total_questions,
 		   $current_question_id,
@@ -40,6 +42,8 @@ class Enp_quiz_Take {
 		$this->load_files();
 		// set nonce
 		$this->set_nonce($quiz_id);
+		$this->set_user_id();
+		$this->set_response_quiz_id($quiz_id);
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
 			// sets $this->response;
@@ -151,7 +155,8 @@ class Enp_quiz_Take {
         require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_quiz.php';
+		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_question.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
 		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
 
@@ -255,6 +260,11 @@ class Enp_quiz_Take {
 			$save_data['user_action'] = $_POST['enp-question-submit'];
 		}
 
+		$save_data['user_id'] = $this->user_id;
+		$save_data['response_quiz_id'] = $this->response_quiz_id;
+		$save_data['response_quiz_updated_at'] = date("Y-m-d H:i:s");
+
+
 		if($save_data['user_action'] === 'enp-question-submit') {
 			// build the data array
 			$save_data = $this->build_response_data($save_data);
@@ -279,7 +289,6 @@ class Enp_quiz_Take {
 						'question_id' => '',
 						'question_type' => '',
 						'question_response' => '',
-						'response_created_at' => date("Y-m-d H:i:s"),
 						'user_action' => '',
 						);
 		// merge the passed values with our defaults
@@ -441,29 +450,43 @@ class Enp_quiz_Take {
 		return $class;
 	}
 
+	public function set_user_id() {
+		$twentythirtyeight = 2147483647;
+
+		// check on user_id cookie
+		if(!isset($_COOKIE['enp_quiz_user_id'])) {
+			$uuid = uniqid('enp_', true);
+			// set the eternal cookie
+			setcookie('enp_quiz_user_id', $uuid, $twentythirtyeight, '/');
+		} else {
+			$uuid = $_COOKIE['enp_quiz_user_id'];
+		}
+
+		$this->user_id = $uuid;
+	}
 	/**
 	* We need cookies for quiz state and how they're doing score wise
 	* On each page load we'll save cookies as a snapshot of the current state
 	*/
 	public function set_cookies() {
-		$week = time() + (86400 * 7);
+		$twentythirtyeight = 2147483647;
 		$quiz_id = $this->quiz->get_quiz_id();
 
 		// quiz state
 		if(!empty($this->state)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $week, '/');
+			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $twentythirtyeight, '/');
 		} else {
 			return false;
 		}
 
 		// question number
 		if($this->state === 'question') {
-			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $week, '/');
+			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $twentythirtyeight, '/');
 		}
 		// if we're on a question explanation, how'd they do for that question?
 		// next question
 		elseif($this->state === 'question_explanation' && !empty($this->response)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $week, '/');
+			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $twentythirtyeight, '/');
 		}
 	}
 
@@ -500,6 +523,32 @@ class Enp_quiz_Take {
 				$save_question_view = new Enp_quiz_Save_quiz_take_Question_view($this->current_question_id);
 			}
 		}
+	}
+
+
+	protected function set_response_quiz_id($quiz_id) {
+
+		$response_quiz_id_cookie_name = 'enp_response_id_quiz_'.$quiz_id;
+		// check if the cookie exists already
+		if(isset($_COOKIE[$response_quiz_id_cookie_name])) {
+			$this->response_quiz_id = $_COOKIE[$response_quiz_id_cookie_name];
+		} else {
+			// create and set the cookie
+			$response_quiz = new Enp_quiz_Save_quiz_take_Response_quiz();
+			$start_quiz_data = array(
+									'quiz_id' => $quiz_id,
+									'user_id' => $this->user_id,
+									'response_quiz_updated_at' => date("Y-m-d H:i:s")
+								);
+			$response_quiz = $response_quiz->insert_response_quiz($start_quiz_data);
+			$this->response_quiz_id = $response_quiz['response_quiz_id'];
+			// set our response_quiz_id cookie
+			$twentythirtyeight = 2147483647;
+			setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight, '/');
+
+
+		}
+
 	}
 
 }

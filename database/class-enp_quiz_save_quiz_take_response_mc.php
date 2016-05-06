@@ -15,7 +15,7 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 
-class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Response {
+class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Response_question {
 
     public function __construct() {
 
@@ -30,16 +30,16 @@ class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Respon
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
-        $params = array(':response_id'      => $response['response_id'],
+        $params = array(':response_question_id'      => $response['response_question_id'],
                         ':mc_option_id'=> $response['question_response']
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->response_mc_table." (
-                                            response_id,
+                                            response_question_id,
                                             mc_option_id
                                         )
                                         VALUES(
-                                            :response_id,
+                                            :response_question_id,
                                             :mc_option_id
                                         )";
         // insert the mc_option into the database
@@ -51,7 +51,7 @@ class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Respon
             $response['response_mc_id'] = $pdo->lastInsertId();
             // set-up our response array
             $response_response = array(
-                                        'response_mc_id' => $response['response_id'],
+                                        'response_mc_id' => $response['response_mc_id'],
                                         'status'       => 'success',
                                         'action'       => 'insert'
                                 );

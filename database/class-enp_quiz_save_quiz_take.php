@@ -18,6 +18,7 @@
 class Enp_quiz_Save_quiz_take {
     public static $return = array('error'=>array()),
                   $quiz,
+                  $save_reponse_quiz_obj,
                   $next_question = array(),
                   $quiz_end = array(),
                   $last_question_flag = false;
@@ -40,14 +41,22 @@ class Enp_quiz_Save_quiz_take {
 
         // decide what we're saving based on the user_action
         $quiz_published_status = self::$quiz->get_quiz_status();
+        // create our save quiz response class
+        self::$save_reponse_quiz_obj = new Enp_quiz_Save_quiz_take_Response_quiz();
         // create our save response class
-        $save_response = new Enp_quiz_Save_quiz_take_Response();
+        $save_response_question = new Enp_quiz_Save_quiz_take_Response_question();
 
         if($data['user_action'] === 'enp-question-submit' && $quiz_published_status === 'published') {
-            $save_response_response = $save_response->save_response($data);
+            $save_response_quiz_response = self::$save_reponse_quiz_obj->update_response_quiz_started(self::$return);
             // check to make sure whatever we saved returned a response
-            if(!empty($save_response_response)) {
-                self::$return = array_merge(self::$return, $save_response_response);
+            if(!empty($save_response_quiz_response)) {
+                self::$return = array_merge(self::$return, $save_response_quiz_response);
+            }
+
+            $save_response_question_response = $save_response_question->save_response_question(self::$return);
+            // check to make sure whatever we saved returned a response
+            if(!empty($save_response_question_response)) {
+                self::$return = array_merge(self::$return, $save_response_question_response);
             }
         }
         // get current question & build next question
@@ -72,7 +81,7 @@ class Enp_quiz_Save_quiz_take {
             $this->update_question_data();
         } elseif(self::$return['state'] === 'question_explanation') {
             // we're on a preview. If we're a MC Question, we still have to check if the answer was right or not for the response
-            self::$return = $save_response->validate_response_data(self::$return);
+            self::$return = $save_response_question->validate_response_data(self::$return);
         }
 
         // convert to JSON and return it
@@ -210,6 +219,15 @@ class Enp_quiz_Save_quiz_take {
         if(self::$return['state'] !== 'question_explanation' && self::$return['state'] !== 'quiz_end') {
             return false;
         }
+        // quiz started (question responded)
+        /*$return = $this->update_response_quiz_started($response);
+
+        // quiz completed
+        $return = $this->update_response_quiz_completed($response);
+
+        // quiz restarted
+        $return = $this->update_response_quiz_restarted($response);*/
+
 
 		$quiz_data = new Enp_quiz_Save_quiz_take_Quiz_data(self::$quiz);
         $question_ids = self::$quiz->get_questions();
@@ -217,10 +235,13 @@ class Enp_quiz_Save_quiz_take {
         if(self::$return['state'] === 'question_explanation' && (int) $data['question_id'] === (int) $question_ids[0]) {
 			$quiz_data->update_quiz_starts();
 		} elseif (self::$return['state'] === 'quiz_end') {
+            // update the response quiz table with the new score and state
+            self::$save_reponse_quiz_obj->update_response_quiz_completed(self::$return);
             // if the new returnd state is quiz_end, then they finished the quiz
             // get their score
 		    $quiz_data->update_quiz_finishes(self::$return['quiz_end']['score']);
-		}
+
+        }
 
     }
 

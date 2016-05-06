@@ -188,7 +188,7 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-		$this->response_quiz_table_name = $wpdb->prefix . 'enp_quiz_response';
+		$this->response_quiz_table_name = $wpdb->prefix . 'enp_response_quiz';
 		$response_quiz_table_name = $this->response_quiz_table_name;
 		$response_quiz_sql = "CREATE TABLE $response_quiz_table_name (
 					response_quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -208,7 +208,7 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)
 				) $charset_collate;";
 
-		$this->response_question_table_name = $wpdb->prefix . 'enp_question_response';
+		$this->response_question_table_name = $wpdb->prefix . 'enp_response_question';
 		$response_question_table_name = $this->response_question_table_name;
 		$response_question_sql = "CREATE TABLE $response_question_table_name (
 					response_question_id BIGINT(20) NOT NULL AUTO_INCREMENT,

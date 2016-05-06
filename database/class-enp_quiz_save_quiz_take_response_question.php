@@ -15,17 +15,17 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 
-class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
+class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take {
     public static $response;
 
     public function __construct() {
 
     }
 
-    public function save_response($response) {
+    public function save_response_question($response) {
         $response = $this->validate_response_data($response);
         // everything looks good! insert it and return the response
-        $return = $this->insert_response($response);
+        $return = $this->insert_response_question($response);
 
         return $return;
     }
@@ -73,22 +73,24 @@ class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
     * @param $response (array) data we'll be saving to the response table
     * @return builds and returns a response message
     */
-    protected function insert_response($response) {
-
+    protected function insert_response_question($response) {
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
-        $params = array(':question_id'      => $response['question_id'],
+        $params = array(':response_quiz_id'      => $response['response_quiz_id'],
+                        ':question_id'      => $response['question_id'],
                         ':response_correct'=> $response['response_correct'],
-                        ':response_question_created_at'=> $response['response_question_created_at'],
+                        ':response_question_created_at'=> $response['response_quiz_updated_at'],
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->response_question_table." (
+                                            response_quiz_id,
                                             question_id,
                                             response_correct,
                                             response_question_created_at
                                         )
                                         VALUES(
+                                            :response_quiz_id,
                                             :question_id,
                                             :response_correct,
                                             :response_question_created_at
