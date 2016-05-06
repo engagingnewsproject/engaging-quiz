@@ -87,28 +87,22 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
     protected function set_slider_range() {
         // If they entered a higher value in the slider_range_high value, don't throw an error trying to explain that they entered a higher value in the low one, just switch it for them
         // we're setting these as an agnostic range right now. We'll set the actual values later
-        $a = $this->set_slider_value('slider_range_low', '');
-        $b = $this->set_slider_value('slider_range_high', '');
+        $a = $this->set_slider_value('slider_range_low', 0);
+        $b = $this->set_slider_value('slider_range_high', 100);
         $a = (int) $a;
         $b = (int) $b;
 
-        // see if both are empty or not
-        if(empty($a) && empty($b)) {
-            // our work here is done
-            return;
-        }
         // see if they don't have a range_a value, set is as the range_b value
-        elseif(empty($a)) {
+        if(empty($a) && $a !== 0) {
             $a = $b - 1;
         }
         // see if they don't have a range_b value, set is as the range_a value
-        elseif(empty($b)) {
+        if(empty($b)) {
             $b = $a + 1;
         }
 
         self::$slider['slider_range_low'] = $this->set_low_value($a, $b);
         self::$slider['slider_range_high'] = $this->set_high_value($a, $b);
-
     }
 
     /**
@@ -119,23 +113,19 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
     protected function set_slider_correct() {
         // If they entered a higher value in the slider_correct_high value, don't throw an error trying to explain that they entered a higher value in the low one, just switch it for them
         // we're setting these as an agnostic range right now. We'll set the actual values later
-        $a = $this->set_slider_value('slider_correct_low', '');
-        $b = $this->set_slider_value('slider_correct_high', '');
+        $a = $this->set_slider_value('slider_correct_low', '50');
+        $b = $this->set_slider_value('slider_correct_high', '50');
         $a = (int) $a;
         $b = (int) $b;
 
 
-        // see if both are empty or not
-        if(empty($a) && empty($b)) {
-            // our work here is done
-            return;
-        }
+
         // see if they don't have a correct_a value, set is as the correct_b value
-        elseif(empty($a)) {
+        if(empty($a)) {
             $a = $b;
         }
         // see if they don't have a correct_b value, set is as the correct_a value
-        elseif(empty($b)) {
+        if(empty($b)) {
             $b = $a;
         }
 
@@ -275,7 +265,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
                                         'action'       => 'update'
                                 );
             // pass the response array to our response object
-            parent::$response_obj->set_slider_response($slider_response, parent::$question, self::$slider);
+            parent::$response_obj->set_slider_response($slider_response, parent::$question);
 
         } else {
             // add an error that we couldn't update the slider

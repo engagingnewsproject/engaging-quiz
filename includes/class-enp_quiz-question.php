@@ -24,7 +24,9 @@ class Enp_quiz_Question {
             $question_score_average,
             $question_time_spent,
             $question_time_spent_average,
-            $mc_options = array();
+            $mc_options = array(),
+            $slider = '';
+            // maybe set the mc_options or slider in the constructor so that they're not always set
 
     protected static $question;
 
@@ -98,8 +100,9 @@ class Enp_quiz_Question {
         $this->question_is_deleted = $this->set_question_is_deleted();
         if($this->question_type === 'mc') {
             $this->mc_options = $this->set_mc_options();
-        } else {
+        } elseif($this->question_type === 'slider') {
             // TODO: set_slider
+            $this->slider = $this->set_slider();
         }
     }
 
@@ -261,6 +264,28 @@ class Enp_quiz_Question {
             $mc_options[] = (int) $mc_option['mc_option_id'];
         }
         return $mc_options;
+    }
+
+    /**
+    * Set the slider for our Question Object
+    * @param $quiz_id
+    * @return slider id from the database
+    */
+    protected function set_slider() {
+        $question_id = self::$question['question_id'];
+
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":question_id" => $question_id
+        );
+        $sql = "SELECT slider_id from ".$pdo->question_slider_table." WHERE
+                question_id = :question_id
+                AND slider_is_deleted = 0";
+        $stmt = $pdo->query($sql, $params);
+        $slider_id = $stmt->fetch();
+
+        return $slider_id;
     }
 
     /**

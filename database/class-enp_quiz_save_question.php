@@ -76,8 +76,14 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             // we have a mc question, so prepare the values
             // and set it as the mc_option array
             self::$question['mc_option'] = $this->prepare_submitted_mc_options(self::$question['mc_option']);
+
+            // check if the user action is to add a question. If so, add a slider in too
+            // we only need to check here, because the default is MC option
+            if(parent::$user_action_action === 'add' && parent::$user_action_element === 'question') {
+                self::$question['slider'] = $this->prepare_submitted_slider(self::$question['slider']);
+            }
         } elseif(self::$question['question_type'] === 'slider') {
-            // TODO: Process sliders
+            self::$question['slider'] = $this->prepare_submitted_slider(self::$question['slider']);
         }
 
         return self::$question;
@@ -265,6 +271,26 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         }
         // Return our nicely prepared_mc_options array
         return $prepared_mc_options;
+    }
+
+    /**
+    * Reformat and set values for all submitted question slider
+    *
+    * @param $slider = array() in this format:
+    *        $slider = array(
+*                            'slider_id' => $question[$i]['slider']['slider_id'],
+*                            'slider_range_low' =>$question[$i]['slider']['slider_range_low'],
+*                            'slider_range_high' =>  $question[$i]['slider']['slider_range_high'],
+*                           ...
+    *                    );
+    * @return nicely formatted and value validated mc_option array ready for saving
+    */
+    protected function prepare_submitted_slider($slider) {
+
+        // create the object
+        $slider = new Enp_quiz_Save_slider();
+        // Return our nicely prepared slider array
+        return $slider->prepare_submitted_slider($slider);
     }
 
     /**
@@ -478,12 +504,11 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         if($question_type === 'mc') {
             // pass the mc_option array for saving
             $this->save_mc_options(self::$question['mc_option']);
-        } elseif($question_type === 'slider') {
+        }
+        // if it's a slider, or if we're adding a question, we need to save a slider too
+        if( $question_type === 'slider' || (parent::$user_action_action === 'add' && parent::$user_action_element === 'question') ) {
             //TODO: create slider save
-            //$this->save_slider_option(self::$question['slider']);
-        } else {
-            // hmm... what question type ARE you trying to save?
-
+            $this->save_slider(self::$question['slider']);
         }
     }
 
@@ -516,7 +541,11 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
      * @since    0.0.1
      */
     protected function save_slider($slider) {
-
+        // create a new object
+        $slider_obj = new Enp_quiz_Save_slider();
+        // pass to save_sliders so we can decide
+        // if we should insert or update the slider
+        $slider_obj->save_slider($slider);
     }
 
     /*

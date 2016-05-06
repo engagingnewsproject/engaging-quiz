@@ -119,6 +119,23 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
     }
 
     /**
+    * Loops through all passed responses from the save class and and assigns them
+    * to our response object
+    *
+    * @param $slider_response = array() of values like 'action', 'status', and 'mc_option_id'
+    * @param $question = the question array that was being saved
+    */
+    public function set_slider_response($slider_response, $question) {
+        $question_number = $question['question_order'];
+
+        // sets the key/value for each item passed in the response
+        foreach($slider_response as $key => $value) {
+            // set the question array with our response values
+            $this->question[$question_number]['slider'][$key] = $value;
+        }
+    }
+
+    /**
     * Sets a new error to our error response array
     * @param string = message you want to add
     * @return response object array
