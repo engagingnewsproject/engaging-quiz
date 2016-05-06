@@ -114,7 +114,7 @@ class Enp_quiz_Activator {
 					quiz_views BIGINT(20) NOT NULL DEFAULT '0',
 					quiz_starts BIGINT(20) NOT NULL DEFAULT '0',
 					quiz_finishes BIGINT(20) NOT NULL DEFAULT '0',
-					quiz_score_average DECIMAL(5,4) NOT NULL DEFAULT '0',
+					quiz_score_average DECIMAL(5,4) NULL DEFAULT NULL,
 					quiz_time_spent BIGINT(40) NOT NULL DEFAULT '0',
 					quiz_time_spent_average BIGINT(20) NOT NULL DEFAULT '0',
 					quiz_is_deleted BOOLEAN DEFAULT 0,
@@ -145,11 +145,11 @@ class Enp_quiz_Activator {
 					question_explanation VARCHAR(510) NOT NULL,
 					question_views BIGINT(20) NOT NULL DEFAULT '0',
 					question_responses BIGINT(20) NOT NULL DEFAULT '0',
-					question_responses_correct BIGINT(20) NOT NULL DEFAULT '0',
-					question_responses_incorrect BIGINT(20) NOT NULL DEFAULT '0',
-					question_responses_correct_percentage DECIMAL(5,4) NOT NULL DEFAULT '0',
-					question_responses_incorrect_percentage DECIMAL(5,4) NOT NULL DEFAULT '0',
-					question_score_average BIGINT(20) NOT NULL,
+					question_responses_correct BIGINT(20) NULL DEFAULT NULL,
+					question_responses_incorrect BIGINT(20) NULL DEFAULT NULL,
+					question_responses_correct_percentage DECIMAL(5,4) NULL DEFAULT NULL,
+					question_responses_incorrect_percentage DECIMAL(5,4) NULL DEFAULT NULL,
+					question_score_average DECIMAL(5,4) NULL DEFAULT NULL,
 					question_time_spent BIGINT(40) NOT NULL,
 					question_time_spent_average BIGINT(20) NOT NULL,
 					question_is_deleted BOOLEAN DEFAULT 0,
@@ -176,10 +176,10 @@ class Enp_quiz_Activator {
 		$slider_sql = "CREATE TABLE $slider_table_name (
 					slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					question_id BIGINT(20) NOT NULL,
-					slider_range_high BIGINT(20) NOT NULL,
 					slider_range_low BIGINT(20) NOT NULL,
-					slider_correct_high BIGINT(20) NOT NULL,
+					slider_range_high BIGINT(20) NOT NULL,
 					slider_correct_low BIGINT(20) NOT NULL,
+					slider_correct_high BIGINT(20) NOT NULL,
 					slider_increment BIGINT(20) NOT NULL,
 					slider_prefix VARCHAR(70) NOT NULL,
 					slider_suffix VARCHAR(70) NOT NULL,
@@ -188,15 +188,37 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
-		$this->response_table_name = $wpdb->prefix . 'enp_response';
-		$response_table_name = $this->response_table_name;
-		$response_sql = "CREATE TABLE $response_table_name (
-					response_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+		$this->response_quiz_table_name = $wpdb->prefix . 'enp_quiz_response';
+		$response_quiz_table_name = $this->response_quiz_table_name;
+		$response_quiz_sql = "CREATE TABLE $response_quiz_table_name (
+					response_quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					quiz_id BIGINT(20) NOT NULL,
+					user_ip VARBINARY(16) NOT NULL,
+					user_id CHAR(36) BINARY NOT NULL,
+					quiz_viewed BOOLEAN DEFAULT 0,
+					quiz_started BOOLEAN DEFAULT 0,
+					quiz_completed BOOLEAN DEFAULT 0,
+					quiz_restarted BOOLEAN DEFAULT 0,
+					quiz_score DECIMAL(5,4) NULL DEFAULT NULL,
+					response_quiz_created_at DATETIME NOT NULL,
+					response_quiz_viewed_at DATETIME NOT NULL,
+					response_quiz_updated_at DATETIME NOT NULL,
+					response_quiz_is_deleted BOOLEAN DEFAULT 0,
+					PRIMARY KEY  (response_quiz_id),
+					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)
+				) $charset_collate;";
+
+		$this->response_question_table_name = $wpdb->prefix . 'enp_question_response';
+		$response_question_table_name = $this->response_question_table_name;
+		$response_question_sql = "CREATE TABLE $response_question_table_name (
+					response_question_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					response_quiz_id BIGINT(20) NOT NULL,
 					question_id BIGINT(20) NOT NULL,
 					response_correct BOOLEAN NOT NULL,
-					response_created_at DATETIME NOT NULL,
-					response_is_deleted BOOLEAN DEFAULT 0,
-					PRIMARY KEY  (response_id),
+					response_question_created_at DATETIME NOT NULL,
+					response_question_is_deleted BOOLEAN DEFAULT 0,
+					PRIMARY KEY  (response_question_id),
+					FOREIGN KEY  (response_quiz_id) REFERENCES $response_quiz_table_name (response_quiz_id),
 					FOREIGN KEY  (question_id) REFERENCES $question_table_name (question_id)
 				) $charset_collate;";
 
@@ -204,10 +226,10 @@ class Enp_quiz_Activator {
 		$response_mc_table_name = $this->response_mc_table_name;
 		$response_mc_sql = "CREATE TABLE $response_mc_table_name (
 					response_mc_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-					response_id BIGINT(20) NOT NULL,
+					response_question_id BIGINT(20) NOT NULL,
 					mc_option_id BIGINT(20) NOT NULL,
 					PRIMARY KEY  (response_mc_id),
-					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id),
+					FOREIGN KEY  (response_question_id) REFERENCES $response_question_table_name (response_question_id),
 					FOREIGN KEY  (mc_option_id) REFERENCES $mc_option_table_name (mc_option_id)
 				) $charset_collate;";
 
@@ -215,10 +237,10 @@ class Enp_quiz_Activator {
 		$response_slider_table_name = $this->response_slider_table_name;
 		$response_slider_sql = "CREATE TABLE $response_slider_table_name (
 					response_slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-					response_id BIGINT(20) NOT NULL,
+					response_question_id BIGINT(20) NOT NULL,
 					response_slider BIGINT(20) NOT NULL,
 					PRIMARY KEY  (response_slider_id),
-					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id)
+					FOREIGN KEY  (response_question_id) REFERENCES $response_question_table_name (response_question_id)
 				) $charset_collate;";
 
 		$this->ab_test_table_name = $wpdb->prefix . 'enp_ab_test';
@@ -243,10 +265,10 @@ class Enp_quiz_Activator {
 		$ab_test_response_table_name = $this->ab_test_response_table_name;
 		$ab_test_response_sql = "CREATE TABLE $ab_test_response_table_name (
 					response_ab_test_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-					response_id BIGINT(20) NOT NULL,
+					response_quiz_id BIGINT(20) NOT NULL,
 					ab_test_id BIGINT(20) NOT NULL,
 					PRIMARY KEY  (response_ab_test_id),
-					FOREIGN KEY  (response_id) REFERENCES $response_table_name (response_id),
+					FOREIGN KEY  (response_quiz_id) REFERENCES $response_quiz_table_name (response_quiz_id),
 					FOREIGN KEY  (ab_test_id) REFERENCES $ab_test_table_name (ab_test_id)
 				) $charset_collate;";
 
@@ -274,8 +296,12 @@ class Enp_quiz_Activator {
 		 				'sql'=>$slider_sql
 					),
 					array(
-						'name'=>$this->response_table_name,
-		 				'sql'=>$response_sql
+						'name'=>$this->response_quiz_table_name,
+		 				'sql'=>$response_quiz_sql
+					),
+					array(
+						'name'=>$this->response_question_table_name,
+		 				'sql'=>$response_question_sql
 					),
 					array(
 						'name'=>$this->response_mc_table_name,
@@ -341,7 +367,8 @@ $enp_quiz_table_question = "'.$this->question_table_name.'";
 $enp_quiz_table_question_mc_option = "'.$this->mc_option_table_name.'";
 $enp_quiz_table_question_slider = "'.$this->slider_table_name.'";
 $enp_quiz_table_ab_test = "'.$this->ab_test_table_name.'";
-$enp_quiz_table_response = "'.$this->response_table_name.'";
+$enp_quiz_table_response_quiz = "'.$this->response_quiz_table_name.'";
+$enp_quiz_table_response_question = "'.$this->response_question_table_name.'";
 $enp_quiz_table_response_mc = "'.$this->response_mc_table_name.'";
 $enp_quiz_table_response_slider = "'.$this->response_slider_table_name.'";
 $enp_quiz_table_ab_test_response = "'.$this->ab_test_response_table_name.'";

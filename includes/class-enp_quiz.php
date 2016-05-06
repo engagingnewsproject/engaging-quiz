@@ -61,15 +61,14 @@ class Enp_quiz {
 		$this->version = '0.0.1';
 
 		// choose which Class(es) we need to load
-		if(is_admin()) {
+		if(defined('DOING_AJAX') && DOING_AJAX) {
+			$this->load_quiz_create();
+		} elseif(is_admin()) {
 			// Run the admin class
 			$this->load_admin();
+		} else {
+			$this->load_quiz_create();
 		}
-
-		// Run the quiz create class
-		// We HAVE to build this because it's not accesible to the AJAX calls otherwise
-		// We could pass it to if (defined('DOING_AJAX') && DOING_AJAX) { though
-		$this->load_quiz_create();
 
 	}
 

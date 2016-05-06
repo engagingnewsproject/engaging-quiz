@@ -80,18 +80,18 @@ class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
         // Get our Parameters ready
         $params = array(':question_id'      => $response['question_id'],
                         ':response_correct'=> $response['response_correct'],
-                        ':response_created_at'=> $response['response_created_at'],
+                        ':response_question_created_at'=> $response['response_question_created_at'],
                     );
         // write our SQL statement
-        $sql = "INSERT INTO ".$pdo->response_table." (
+        $sql = "INSERT INTO ".$pdo->response_question_table." (
                                             question_id,
                                             response_correct,
-                                            response_created_at
+                                            response_question_created_at
                                         )
                                         VALUES(
                                             :question_id,
                                             :response_correct,
-                                            :response_created_at
+                                            :response_question_created_at
                                         )";
         // insert the mc_option into the database
         $stmt = $pdo->query($sql, $params);
@@ -99,10 +99,10 @@ class Enp_quiz_Save_quiz_take_Response extends Enp_quiz_Save_quiz_take {
         // success!
         if($stmt !== false) {
             // add our response ID to the array we're working with
-            $response['response_id'] = $pdo->lastInsertId();
+            $response['response_question_id'] = $pdo->lastInsertId();
             // set-up our response array
             $return = array(
-                                        'response_id' => $response['response_id'],
+                                        'response_question_id' => $response['response_question_id'],
                                         'status'       => 'success',
                                         'action'       => 'insert'
                                 );
