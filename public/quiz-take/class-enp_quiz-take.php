@@ -22,6 +22,7 @@
  */
 class Enp_quiz_Take {
 	public $quiz,
+		   $ab_test_id = false,
 		   $user_id,
 		   $response_quiz_id,
 		   $state = '',
@@ -41,6 +42,10 @@ class Enp_quiz_Take {
 		// require files
 		$this->load_files();
 
+	}
+
+	public function set_ab_test_id($ab_test_id) {
+		$this->ab_test_id = $ab_test_id;
 	}
 
 	public function load_quiz($quiz_id = false) {
@@ -577,7 +582,6 @@ class Enp_quiz_Take {
 			$this->create_response_quiz_id($quiz_id);
 		}
 
-
 	}
 
 	protected function create_response_quiz_id($quiz_id) {
@@ -593,6 +597,12 @@ class Enp_quiz_Take {
 		// set our response_quiz_id cookie
 		$twentythirtyeight = 2147483647;
 		setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight, '/');
+
+		if($this->ab_test_id !== false) {
+			// we're on an AB Test, so link the response to it
+
+		}
+
 	}
 
 	protected function response_quiz_restarted() {
@@ -605,6 +615,22 @@ class Enp_quiz_Take {
 
 		$response_quiz = new Enp_quiz_Save_quiz_take_Response_quiz();
 		$response_quiz = $response_quiz->update_response_quiz_restarted($restart_data);
+	}
+
+	public function get_quiz_form_action() {
+		$form_action = '';
+		// check if we're on an AB Test or not
+		if($this->ab_test_id !== false) {
+	        $form_action = htmlentities(ENP_TAKE_AB_TEST_URL).$this->ab_test_id;
+	    } else {
+	        $form_action = htmlentities(ENP_QUIZ_URL).$this->quiz->get_quiz_id();
+	    }
+		return $form_action;
+	}
+
+	public function get_init_quiz_id() {
+		$quiz_id = $_GET['quiz_id'];
+		return $quiz_id;
 	}
 
 }

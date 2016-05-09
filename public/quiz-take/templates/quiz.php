@@ -6,34 +6,45 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-if(isset($_GET['quiz_id']) || isset($ab_test_quiz_id)) {
-    if(isset($ab_test_quiz_id)) {
-        $quiz_id = $ab_test_quiz_id;
-        $form_action = htmlentities(ENP_TAKE_AB_TEST_URL).$ab_test_id;
-    } else {
-        $quiz_id = $_GET['quiz_id'];
-        $form_action = htmlentities(ENP_QUIZ_URL).$quiz_id;
-    }
+// set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
+require_once '../../../../../enp-quiz-config.php';
+require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
 
-    // set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
-    require_once '../../../../../enp-quiz-config.php';
-    require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
+// create the new object if it hasn't already been created
+if(isset($qt) && is_object($qt)) {
+    // do nothing, we already got it!
+} else {
+    // we need the $qt instance, so let's load it up
     // load up quiz_take class (requires all the files)
     $qt = new Enp_quiz_Take();
-    // load the quiz
-    $qt->load_quiz($quiz_id);
-    // check the state
-    if($qt->state !== 'quiz_end') {
-        $qt_question = new Enp_quiz_Take_Question($qt);
-    }
-    $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
-    $state = $qt->get_state();
+}
+// get the quiz ID we need
+if(isset($quiz_id)) {
+    // do nothing, already set
 } else {
+    // set our quiz id
+    $quiz_id = $qt->get_init_quiz_id();
+}
+
+//check to make sure one was found
+if($quiz_id === false) {
     echo 'No quiz requested';
     exit;
 }
 
+// load the quiz
+$qt->load_quiz($quiz_id);
+// get the state
+$state = $qt->get_state();
+// check the state
+if($state !== 'quiz_end') {
+    $qt_question = new Enp_quiz_Take_Question($qt);
+}
+// create the quiz end object (so we have a template for it for the JS)
+$qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
+
 ?>
+
 <html lang="en-US">
 <head>
     <title><?php echo $qt->quiz->get_quiz_title();?></title>
@@ -58,13 +69,10 @@ if(isset($_GET['quiz_id']) || isset($ab_test_quiz_id)) {
     </header>
 
     <section class="enp-question__container <?php echo $qt->get_question_container_class();?>">
-        <form id="quiz" class="enp-question__form" method="post" action="<?php echo $form_action;?>">
+        <form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action();?>">
             <?php $qt->nonce->outputKey();?>
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
             <?php
-            // if we're on an AB Test, pass the ID
-            echo (isset($ab_test_id) ? '<input type="hidden" name="enp-ab-test-id" value="'.$ab_test_id.'"/>' : '');
-
             if($state === 'question' || $state === 'question_explanation') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
             } elseif($state === 'quiz_end') {
