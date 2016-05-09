@@ -415,6 +415,7 @@ define("ENP_QUIZ_RESULTS_URL", "'.$enp_create_url.'/quiz-results/");
 define("ENP_AB_TEST_URL", "'.$enp_create_url.'/ab-test/");
 define("ENP_AB_RESULTS_URL", "'.$enp_create_url.'/ab-results/");
 define("ENP_QUIZ_URL", "'.$enp_take_url.'/quiz-embed/");
+define("ENP_QUIZ_URL", "'.$enp_take_url.'/ab-embed/");
 define("ENP_QUIZ_IMAGE_DIR", "'.$image_dir["basedir"].'/enp-quiz/");
 define("ENP_QUIZ_IMAGE_URL", "'.$image_dir["baseurl"].'/enp-quiz/");
 define("ENP_QUIZ_PLUGIN_DIR", "'.ENP_QUIZ_ROOT.'");

@@ -6,13 +6,23 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-if(isset($_GET['quiz_id'])) {
-    $quiz_id = $_GET['quiz_id'];
+if(isset($_GET['quiz_id']) || isset($ab_test_quiz_id)) {
+    if(isset($ab_test_quiz_id)) {
+        $quiz_id = $ab_test_quiz_id;
+        $form_action = htmlentities(ENP_TAKE_AB_TEST_URL).$ab_test_id;
+    } else {
+        $quiz_id = $_GET['quiz_id'];
+        $form_action = htmlentities(ENP_QUIZ_URL).$quiz_id;
+    }
+
     // set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
-    require '../../../../../enp-quiz-config.php';
-    require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
-    // load up quiz_take class
-    $qt = new Enp_quiz_Take($quiz_id);
+    require_once '../../../../../enp-quiz-config.php';
+    require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/class-enp_quiz-take.php';
+    // load up quiz_take class (requires all the files)
+    $qt = new Enp_quiz_Take();
+    // load the quiz
+    $qt->load_quiz($quiz_id);
+    // check the state
     if($qt->state !== 'quiz_end') {
         $qt_question = new Enp_quiz_Take_Question($qt);
     }
@@ -48,10 +58,13 @@ if(isset($_GET['quiz_id'])) {
     </header>
 
     <section class="enp-question__container <?php echo $qt->get_question_container_class();?>">
-        <form id="quiz" class="enp-question__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_URL).$qt->quiz->quiz_id; ?>">
+        <form id="quiz" class="enp-question__form" method="post" action="<?php echo $form_action;?>">
             <?php $qt->nonce->outputKey();?>
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
             <?php
+            // if we're on an AB Test, pass the ID
+            echo (isset($ab_test_id) ? '<input type="hidden" name="enp-ab-test-id" value="'.$ab_test_id.'"/>' : '');
+
             if($state === 'question' || $state === 'question_explanation') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
             } elseif($state === 'quiz_end') {

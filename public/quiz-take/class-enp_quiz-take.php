@@ -37,9 +37,13 @@ class Enp_quiz_Take {
 	* set states, and all other details we're sure to need for our templating
 	*
 	*/
-	public function __construct($quiz_id = false) {
+	public function __construct() {
 		// require files
 		$this->load_files();
+
+	}
+
+	public function load_quiz($quiz_id = false) {
 		// set nonce
 		$this->set_nonce($quiz_id);
 		$this->set_user_id();
@@ -144,22 +148,23 @@ class Enp_quiz_Take {
 	*/
 	public function load_files() {
 		// require the necessary files
-        require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz.php';
-        require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-quiz.php';
-        require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-question.php';
-        require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-nonce.php';
+        require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz.php';
+        require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-quiz.php';
+        require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-question.php';
+        require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-ab_test.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-nonce.php';
 		// Quiz Take Classes
-		require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_quiz_end.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_question.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_quiz_end.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_question.php';
         // Database
-        require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_quiz.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_question.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
-		require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
+        require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_quiz.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_question.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
 
 	}
 
