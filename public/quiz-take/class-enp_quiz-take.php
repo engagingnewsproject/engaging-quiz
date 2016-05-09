@@ -167,6 +167,7 @@ class Enp_quiz_Take {
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_question_view.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_quiz.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_ab_test.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_question.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
@@ -599,8 +600,11 @@ class Enp_quiz_Take {
 		setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight, '/');
 
 		if($this->ab_test_id !== false) {
-			// we're on an AB Test, so link the response to it
-
+			// we're on an AB Test, so link the response to it.
+			// we only need to do this when we initially create the response,
+			// nor do we care what the response AB Test ID even is until we generate
+			// overall AB TEST results.
+			$results_ab_test = new Enp_quiz_Save_quiz_take_Response_ab_test($this->ab_test_id, $this->response_quiz_id);
 		}
 
 	}

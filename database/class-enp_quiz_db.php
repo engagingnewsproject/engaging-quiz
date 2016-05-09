@@ -26,7 +26,7 @@ class enp_quiz_Db extends PDO {
 			$this->response_question_table = $enp_quiz_table_response_question;
 			$this->response_mc_table = $enp_quiz_table_response_mc;
 			$this->response_slider_table = $enp_quiz_table_response_slider;
-			$this->ab_test_response_table = $enp_quiz_table_ab_test_response;
+			$this->response_ab_test_table = $enp_quiz_table_ab_test_response;
 			// set options for PDO connection
 			$options = array(
 				PDO::ATTR_PERSISTENT => true,

@@ -33,7 +33,7 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
             ":ab_test_id" => $ab_test_id,
             ":quiz_id" => $quiz_id
         );
-        $sql = "SELECT * from ".$pdo->ab_test_response_table." ab_response
+        $sql = "SELECT * from ".$pdo->response_ab_test_table." ab_response
                 INNER JOIN ".$pdo->response_quiz_table." quiz_response
                 WHERE ab_response.ab_test_id = :ab_test_id
                 AND   quiz_response.quiz_id = :quiz_id ";

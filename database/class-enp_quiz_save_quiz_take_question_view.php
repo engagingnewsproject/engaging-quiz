@@ -37,7 +37,7 @@ class Enp_quiz_Save_quiz_take_Question_view extends Enp_quiz_Save_quiz_take {
         if(empty($question_id)) {
             self::$return['error'][] = 'No Question ID set.';
         }
-        if(empty($return['error'])) {
+        if(empty(self::$return['error'])) {
             $valid = true;
         }
         return $valid;
