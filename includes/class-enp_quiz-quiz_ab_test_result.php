@@ -34,13 +34,14 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
             ":quiz_id" => $quiz_id
         );
         $sql = "SELECT * from ".$pdo->response_ab_test_table." ab_response
-                INNER JOIN ".$pdo->response_quiz_table." quiz_response
-                WHERE ab_response.ab_test_id = :ab_test_id
-                AND   quiz_response.quiz_id = :quiz_id ";
+            INNER JOIN ".$pdo->response_quiz_table." quiz_response
+                    ON ab_response.response_quiz_id = quiz_response.response_quiz_id
+                 WHERE ab_response.ab_test_id = :ab_test_id
+                   AND quiz_response.quiz_id = :quiz_id ";
         $stmt = $pdo->query($sql, $params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // return the found quiz row
+        // return the found results
         return $results;
     }
 
@@ -56,7 +57,7 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
 
     public function set_quiz_starts() {
         $starts = 0;
-        if(!empty($results)) {
+        if(!empty(self::$results)) {
             foreach(self::$results as $result) {
                 if($result['quiz_started'] === '1') {
                     $starts++;
@@ -68,9 +69,9 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
 
     public function set_quiz_finishes() {
         $finishes = 0;
-        if(!empty($results)) {
+        if(!empty(self::$results)) {
             foreach(self::$results as $result) {
-                if($result['quiz_finished'] === '1') {
+                if($result['quiz_completed'] === '1') {
                     $finishes++;
                 }
             }
