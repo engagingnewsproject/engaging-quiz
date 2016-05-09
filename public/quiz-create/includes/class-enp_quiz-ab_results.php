@@ -38,8 +38,8 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
         ob_start();
         //Start the class
         $ab_test = $this->ab_test;
-        $quiz_a = new Enp_quiz_Quiz($ab_test->get_quiz_id_a());
-        $quiz_b = new Enp_quiz_Quiz($ab_test->get_quiz_id_b());
+        $quiz_a = new Enp_quiz_Quiz_AB_test_result($ab_test->get_quiz_id_a(), $ab_test->get_ab_test_id());
+        $quiz_b = new Enp_quiz_Quiz_AB_test_result($ab_test->get_quiz_id_b(), $ab_test->get_ab_test_id());
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/ab-results.php' );
         $content = ob_get_contents();
         if (ob_get_length()) ob_end_clean();

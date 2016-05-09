@@ -670,7 +670,7 @@ class Enp_quiz_Create {
 		$whole = (int) $whole;
 		// check to make sure it's valid
 		if($whole === 0) {
-			return false;
+			return 0;
 		}
 		// percentage function
 		$percentage = ($part / $whole) * 100;

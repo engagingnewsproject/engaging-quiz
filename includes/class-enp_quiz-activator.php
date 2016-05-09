@@ -203,6 +203,7 @@ class Enp_quiz_Activator {
 					response_quiz_created_at DATETIME NOT NULL,
 					response_quiz_viewed_at DATETIME NOT NULL,
 					response_quiz_updated_at DATETIME NOT NULL,
+					response_quiz_is_ab_test BOOLEAN DEFAULT 0,
 					response_quiz_is_deleted BOOLEAN DEFAULT 0,
 					PRIMARY KEY  (response_quiz_id),
 					FOREIGN KEY  (quiz_id) REFERENCES $quiz_table_name (quiz_id)

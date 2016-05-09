@@ -37,11 +37,11 @@
         }
 
         .enp-results-flow__item--quiz-starts {
-                background: lighten($red, 40);
+                background: lighten($red, 42);
         }
 
-        .enp-results-flow__item--quiz-completions {
-                background: lighten($red, 30);
+        .enp-results-flow__item--quiz-finishes {
+                background: lighten($red, 34);
         }
     }
 

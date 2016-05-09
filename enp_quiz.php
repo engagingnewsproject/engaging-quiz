@@ -67,6 +67,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-slider.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-user.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-nonce.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-ab_test.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-quiz_ab_test_result.php';
 // Database
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_db.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save.php';
