@@ -585,6 +585,15 @@ class Enp_quiz_Take {
 
 	}
 
+	protected function set_response_question_id($question_id) {
+		// if the quiz isn't published, then don't send a response
+		$quiz_status = $this->quiz->get_quiz_status();
+		if($quiz_status !== 'published') {
+			return false;
+		}
+
+	}
+
 	protected function create_response_quiz_id($quiz_id) {
 		// create and set the cookie
 		$response_quiz = new Enp_quiz_Save_quiz_take_Response_quiz();
@@ -607,6 +616,17 @@ class Enp_quiz_Take {
 			$results_ab_test = new Enp_quiz_Save_quiz_take_Response_ab_test($this->ab_test_id, $this->response_quiz_id);
 		}
 
+		// create an initial question response too
+		$this->create_response_question($start_quiz_data);
+
+	}
+
+	protected function create_response_question($data) {
+		$data['question_id'] = $this->quiz->questions[0];
+		$data['response_quiz_id'] = $this->response_quiz_id;
+		// create a new question response entry
+		$question_response = new Enp_quiz_Save_quiz_take_Response_question();
+		$question_response->insert_response_question($data);
 	}
 
 	protected function response_quiz_restarted() {

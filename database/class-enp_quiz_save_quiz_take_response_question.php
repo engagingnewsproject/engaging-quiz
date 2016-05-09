@@ -22,13 +22,6 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
 
     }
 
-    public function save_response_question($response) {
-        $response = $this->validate_response_data($response);
-        // everything looks good! insert it and return the response
-        $return = $this->insert_response_question($response);
-
-        return $return;
-    }
 
     protected function validate_response_data($response) {
         // find out if their response is correct or not
@@ -73,27 +66,30 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
     * @param $response (array) data we'll be saving to the response table
     * @return builds and returns a response message
     */
-    protected function insert_response_question($response) {
+    public function insert_response_question($response) {
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
         $params = array(':response_quiz_id'      => $response['response_quiz_id'],
                         ':question_id'      => $response['question_id'],
-                        ':response_correct'=> $response['response_correct'],
+                        ':question_viewed'      => 1,
                         ':response_question_created_at'=> $response['response_quiz_updated_at'],
+                        ':response_question_updated_at'=> $response['response_quiz_updated_at'],
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->response_question_table." (
                                             response_quiz_id,
                                             question_id,
-                                            response_correct,
-                                            response_question_created_at
+                                            question_viewed,
+                                            response_question_created_at,
+                                            response_question_updated_at
                                         )
                                         VALUES(
                                             :response_quiz_id,
                                             :question_id,
-                                            :response_correct,
-                                            :response_question_created_at
+                                            :question_viewed,
+                                            :response_question_created_at,
+                                            :response_question_updated_at
                                         )";
         // insert the mc_option into the database
         $stmt = $pdo->query($sql, $params);
@@ -111,11 +107,56 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
 
             // merge the response arrays
             $return = array_merge($response, $return);
+
+        } else {
+            // handle errors
+            $return['error'] = 'Save response failed.';
+        }
+        // return response
+        return $return;
+    }
+
+
+    public function update_response_question($response) {
+        $response = $this->validate_response_data($response);
+        // Select the response we need to update
+        $response_question_id = $this->get_response_question_id($response);
+
+        // Get our Parameters ready
+        $params = array(':response_question_id'=> $response_question_id,
+                        ':question_responded'=> '1',
+                        ':response_correct'  => $response['response_correct'],
+                        ':response_question_updated_at'=> $response['response_quiz_updated_at'],
+                    );
+
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+
+        // write our SQL statement
+        $sql = "UPDATE ".$pdo->response_question_table."
+                   SET  question_responded = :question_responded,
+                        response_correct = :response_correct,
+                        response_question_updated_at = :response_question_updated_at
+                 WHERE  response_question_id = :response_question_id";
+        // insert the mc_option into the database
+        $stmt = $pdo->query($sql, $params);
+
+        // success!
+        if($stmt !== false) {
+            // set-up our response array
+            $return = array(
+                                        'response_question_id' =>$response_question_id,
+                                        'status'       => 'success',
+                                        'action'       => 'update'
+                                );
+
+            // merge the response arrays
+            $return = array_merge($response, $return);
             // see what type of question we're working on and save that response
             if($response['question_type'] === 'mc') {
                 // save the mc option response
                 $response_mc = new Enp_quiz_Save_quiz_take_Response_MC();
-                $return_mc_response = $response_mc->insert_response_mc($response);
+                $return_mc_response = $response_mc->insert_response_mc($return);
                 // increase the count on the mc option responses
                 $response_mc->increase_mc_option_responses($response['question_response']);
                 // merge the response arrays
@@ -185,5 +226,21 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
 
     protected function update_question_response_data_percentages($response) {
 
+    }
+
+    protected function get_response_question_id($response) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(':response_quiz_id' => $response['response_quiz_id'],
+                        ':question_id'       => $response['question_id']
+                    );
+
+        $sql = "SELECT response_question_id from ".$pdo->response_question_table." WHERE
+                response_quiz_id = :response_quiz_id
+                AND question_id = :question_id";
+        $stmt = $pdo->query($sql, $params);
+        $result = $stmt->fetch();
+        return $result['response_question_id'];
     }
 }

@@ -30,7 +30,7 @@ class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Respon
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
-        $params = array(':response_question_id'      => $response['response_question_id'],
+        $params = array(':response_question_id' => $response['response_question_id'],
                         ':mc_option_id'=> $response['question_response']
                     );
         // write our SQL statement
