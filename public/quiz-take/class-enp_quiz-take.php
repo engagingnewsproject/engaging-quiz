@@ -132,8 +132,13 @@ class Enp_quiz_Take {
 
 	public function get_init_json() {
 		$json = clone $this;
-		// just output the quiz level json
+		if($json->ab_test_id === false) {
+			$json->ab_test_id = 0;
+		}
+
+		// output the quiz level json and ab test id
 		echo '<script type="text/javascript">';
+			echo 'var ab_test_id_json = {"ab_test_id":"'.$json->ab_test_id.'"};';
 		// print this whole object as js global vars in json
 			echo 'var quiz_json = '.json_encode($json->quiz).';';
 		echo '</script>';

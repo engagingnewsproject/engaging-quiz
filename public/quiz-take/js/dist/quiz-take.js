@@ -44,6 +44,15 @@ _.is_json_string = function(str) {
     return json;
 };
 
+_.get_quiz_id = function() {
+    json = $('#quiz').data('quizJSON');
+    return json.quiz_id;
+}
+
+_.get_ab_test_id = function() {
+    return ab_test_id_json.ab_test_id;
+};
+
 // turn on mustache/handlebars style templating
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
@@ -77,7 +86,7 @@ function sendBodyHeight() {
     console.log('sending body height of '+height);
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+getQuizID()+'","height":"'+height+'"}';
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","height":"'+height+'"}';
     parent.postMessage(json, "*");
 }
 /**
@@ -589,11 +598,6 @@ bindQuizData(quiz_json);
 */
 function bindQuizData(quizJSON) {
     $('#quiz').data('quizJSON', quizJSON);
-}
-
-function getQuizID() {
-    json = $('#quiz').data('quizJSON');
-    return json.quiz_id;
 }
 
 // send the Body Height, even if they're not ready for it.

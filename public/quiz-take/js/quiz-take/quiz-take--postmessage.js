@@ -13,7 +13,7 @@ function sendBodyHeight() {
     console.log('sending body height of '+height);
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+getQuizID()+'","height":"'+height+'"}';
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","height":"'+height+'"}';
     parent.postMessage(json, "*");
 }
 /**

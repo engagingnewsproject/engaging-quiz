@@ -8,6 +8,9 @@ window.addEventListener('message', receiveEnpIframeMessage, false);
 
 // What to do when we receive a postMessage
 function receiveEnpIframeMessage(event) {
+    var iframe,
+        iframe_id;
+
     if(!/dev/.test(event.origin) && !/engagingnewsproject/.test(event.origin)) {
         return false;
     }
@@ -23,11 +26,17 @@ function receiveEnpIframeMessage(event) {
     console.log('the data height is '+data.height);
     // set the style on the height and store to localStorage
     if(/([0-9])px/.test(data.height)) {
-        // get the quiz based on ID
-        var quiz = document.getElementById('enp-quiz-iframe-'+data.quiz_id);
+        // get the quiz or ab_test based on ID
+        // check if it's an ab test or not
+        if(data.ab_test_id === "0") {
+            iframe_id = 'enp-quiz-iframe-'+data.quiz_id;
+        } else {
+            iframe_id = 'enp-ab-test-iframe-'+data.ab_test_id;
+        }
+        iframe = document.getElementById(iframe_id);
         // set the height on the style
-        quiz.style.height= data.height;
-        console.log('height set on quiz '+data.quiz_id);
+        iframe.style.height= data.height;
+        console.log('height set on iframe '+iframe_id);
     }
 
     // send a response sayin, yea, we got it!

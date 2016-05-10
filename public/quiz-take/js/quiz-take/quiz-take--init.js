@@ -18,11 +18,6 @@ function bindQuizData(quizJSON) {
     $('#quiz').data('quizJSON', quizJSON);
 }
 
-function getQuizID() {
-    json = $('#quiz').data('quizJSON');
-    return json.quiz_id;
-}
-
 // send the Body Height, even if they're not ready for it.
 // The parent page will request the body height once its loaded.
 // This should cover either scenario.
