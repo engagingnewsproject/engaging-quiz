@@ -5,7 +5,7 @@
 * @param $question_id = the id of the question you want to get
 * @return question object
 */
-class Enp_question_Question_AB_test_result extends Enp_question_Question {
+class Enp_quiz_Question_AB_test_result extends Enp_quiz_Question {
     public static $results;
 
     public function __construct($question_id, $ab_test_id = false) {
@@ -27,7 +27,7 @@ class Enp_question_Question_AB_test_result extends Enp_question_Question {
     }
 
     public function select_ab_test_question_results($question_id, $ab_test_id) {
-        $pdo = new enp_question_Db();
+        $pdo = new enp_quiz_Db();
         // Do a select query to see if we get a returned row
         $params = array(
             ":ab_test_id" => $ab_test_id,
@@ -35,9 +35,9 @@ class Enp_question_Question_AB_test_result extends Enp_question_Question {
         );
         $sql = "SELECT * from ".$pdo->response_ab_test_table." ab_response
             INNER JOIN ".$pdo->response_question_table." question_response
-                    ON ab_response.response_question_id = question_response.response_quiz_id
+                    ON ab_response.response_quiz_id = question_response.response_quiz_id
                  WHERE ab_response.ab_test_id = :ab_test_id
-                   AND question_response.question_id = :question_id ";
+                   AND question_response.question_id = :question_id";
         $stmt = $pdo->query($sql, $params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -58,6 +58,7 @@ class Enp_question_Question_AB_test_result extends Enp_question_Question {
         $responses = 0;
         if(!empty(self::$results)) {
             foreach(self::$results as $result) {
+
                 if($result['question_responded'] === '1') {
                     $responses++;
                 }

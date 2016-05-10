@@ -231,9 +231,11 @@ class Enp_quiz_Activator {
 		$response_mc_table_name = $this->response_mc_table_name;
 		$response_mc_sql = "CREATE TABLE $response_mc_table_name (
 					response_mc_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					response_quiz_id BIGINT(20) NOT NULL,
 					response_question_id BIGINT(20) NOT NULL,
 					mc_option_id BIGINT(20) NOT NULL,
 					PRIMARY KEY  (response_mc_id),
+					FOREIGN KEY  (response_quiz_id) REFERENCES $response_quiz_table_name (response_quiz_id),
 					FOREIGN KEY  (response_question_id) REFERENCES $response_question_table_name (response_question_id),
 					FOREIGN KEY  (mc_option_id) REFERENCES $mc_option_table_name (mc_option_id)
 				) $charset_collate;";
@@ -242,10 +244,14 @@ class Enp_quiz_Activator {
 		$response_slider_table_name = $this->response_slider_table_name;
 		$response_slider_sql = "CREATE TABLE $response_slider_table_name (
 					response_slider_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					response_quiz_id BIGINT(20) NOT NULL,
 					response_question_id BIGINT(20) NOT NULL,
+					slider_id BIGINT(20) NOT NULL,
 					response_slider BIGINT(20) NOT NULL,
 					PRIMARY KEY  (response_slider_id),
-					FOREIGN KEY  (response_question_id) REFERENCES $response_question_table_name (response_question_id)
+					FOREIGN KEY  (response_quiz_id) REFERENCES $response_quiz_table_name (response_quiz_id),
+					FOREIGN KEY  (response_question_id) REFERENCES $response_question_table_name (response_question_id),
+					FOREIGN KEY  (slider_id) REFERENCES $slider_table_name (slider_id)
 				) $charset_collate;";
 
 		$this->ab_test_table_name = $wpdb->prefix . 'enp_ab_test';

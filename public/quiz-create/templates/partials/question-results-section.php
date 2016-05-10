@@ -10,7 +10,13 @@
             <?php
                 $question_ids = $quiz->get_questions();
                 foreach($question_ids as $question_id) {
-                    $question = new Enp_quiz_Question($question_id);
+                    // IF AB Test, we need to return AB Test Question data instead
+                    if(isset($ab_test) && !empty($ab_test->ab_test_id)) {
+                        $question = new Enp_quiz_Question_AB_test_result($question_id, $ab_test->get_ab_test_id());
+                    } else {
+                        $question = new Enp_quiz_Question($question_id);
+                    }
+
                     include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results.php');
                 }
 
