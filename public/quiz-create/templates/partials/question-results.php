@@ -30,7 +30,12 @@
                 if($question_type === 'mc') {
                     $mc_option_ids = $question->get_mc_options();
                     foreach($mc_option_ids as $mc_option_id) {
-                        $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                        // IF AB Test, we need to return AB Test MC Option data instead
+                        if(isset($ab_test) && !empty($ab_test->ab_test_id)) {
+                            $mc_option = new Enp_quiz_MC_option_AB_test_result($mc_option_id, $ab_test->get_ab_test_id());
+                        } else {
+                            $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                        }
                         include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-mc-option.php');
                     }
                 }

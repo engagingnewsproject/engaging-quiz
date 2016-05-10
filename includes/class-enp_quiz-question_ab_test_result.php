@@ -47,7 +47,7 @@ class Enp_quiz_Question_AB_test_result extends Enp_quiz_Question {
 
     public function set_ab_test_question_results() {
         $this->question_views = $this->set_question_views();
-        $this->question_starts = $this->set_question_responses();
+        $this->question_responses = $this->set_question_responses();
     }
 
     public function set_question_views() {

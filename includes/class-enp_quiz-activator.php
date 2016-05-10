@@ -92,6 +92,9 @@ class Enp_quiz_Activator {
 		// Quiz Take
 		add_rewrite_rule('quiz-embed/([0-9]+)?$', $enp_quiz_take_template_path.'quiz.php?quiz_id=$1','top');
 
+		// Take AB Test
+		add_rewrite_rule('ab-embed/([0-9]+)?$', $enp_quiz_take_template_path.'ab-test.php?ab_test_id=$1','top');
+
 
 	}
 
