@@ -692,14 +692,14 @@ class Enp_quiz_Create {
 		$question_ids = $quiz->get_questions();
 		$week = time() + (86400 * 7);
 
-		setcookie('enp_take_quiz_'.$quiz_id.'_state', 'question', $week, '/');
-		setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $question_ids[0], $week, '/');
+		setcookie('enp_take_quiz_'.$quiz_id.'_state', 'question', $week);
+		setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $question_ids[0], $week);
 
 		// loop through all questions and unset their cookie
 		foreach($question_ids as $question_id) {
 			// build cookie name
 			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
-			setcookie($cookie_name, '', time() - 3600, '/');
+			setcookie($cookie_name, '', time() - 3600);
 		}
 
 	}

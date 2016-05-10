@@ -29,7 +29,7 @@ if(isset($_GET['ab_test_id'])) {
         $quiz_id = $quizzes[$rand];
         // set a cookie that they've taken this AB Test
         $twentythirtyeight = 2147483647;
-        setcookie($ab_quiz_id_cookie_name, $quiz_id, $twentythirtyeight, '/');
+        setcookie($ab_quiz_id_cookie_name, $quiz_id, $twentythirtyeight);
     }
 
     $qt->set_ab_test_id($ab_test_id);

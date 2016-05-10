@@ -519,19 +519,19 @@ class Enp_quiz_Take {
 
 		// quiz state
 		if(!empty($this->state)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $twentythirtyeight, '/');
+			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $twentythirtyeight);
 		} else {
 			return false;
 		}
 
 		// question number
 		if($this->state === 'question') {
-			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $twentythirtyeight, '/');
+			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $twentythirtyeight);
 		}
 		// if we're on a question explanation, how'd they do for that question?
 		// next question
 		elseif($this->state === 'question_explanation' && !empty($this->response)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $twentythirtyeight, '/');
+			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $twentythirtyeight);
 		}
 	}
 
@@ -543,7 +543,7 @@ class Enp_quiz_Take {
 		foreach($question_ids as $question_id) {
 			// build cookie name
 			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
-			setcookie($cookie_name, '', time() - 3600, '/');
+			setcookie($cookie_name, '', time() - 3600);
 		}
 
 
@@ -611,7 +611,7 @@ class Enp_quiz_Take {
 		$this->response_quiz_id = $response_quiz['response_quiz_id'];
 		// set our response_quiz_id cookie
 		$twentythirtyeight = 2147483647;
-		setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight, '/');
+		setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight);
 
 		if($this->ab_test_id !== false) {
 			// we're on an AB Test, so link the response to it.
