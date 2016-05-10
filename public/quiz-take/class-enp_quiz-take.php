@@ -182,8 +182,15 @@ class Enp_quiz_Take {
 	public function set_nonce($quiz_id) {
 		//Start the session
 	   session_start();
+	   if($this->ab_test_id !== false) {
+		   // we're on an ab test
+		   $nonce_name = 'enp_quiz_take_ab_test_'.$this->ab_test_id.'_nonce';
+	   } else {
+		   $nonce_name = 'enp_quiz_take_'.$quiz_id.'_nonce';
+	   }
+
 	   //Start the class
-	   $this->nonce = new Enp_quiz_Nonce('enp_quiz_take_'.$quiz_id.'_nonce');
+	   $this->nonce = new Enp_quiz_Nonce($nonce_name);
 	}
 
 	/**
@@ -249,7 +256,14 @@ class Enp_quiz_Take {
 
 	public function validate_nonce($quiz_id) {
 		// validate nonce
-		$nonce_name = 'enp_quiz_take_'.$quiz_id.'_nonce';
+		if($this->ab_test_id !== false) {
+			// it's an ab test nonce
+			$nonce_name = 'enp_quiz_take_ab_test_'.$this->ab_test_id.'_nonce';
+		} else {
+			// it's a quiz nonce
+			$nonce_name = 'enp_quiz_take_'.$quiz_id.'_nonce';
+		}
+
 		if(isset($_POST[$nonce_name])) {
 			$posted_nonce = $_POST[$nonce_name];
 		}
