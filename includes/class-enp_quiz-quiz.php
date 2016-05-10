@@ -516,6 +516,26 @@ class Enp_quiz_Quiz {
         return $quiz_time_spent_average;
     }
 
+    /**
+    * Get the individual score data on each take of this quiz
+    * @param $quiz = quiz object
+    * @return array of all the scores
+    */
+    public function get_quiz_scores() {
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":quiz_id" => $this->get_quiz_id()
+        );
+        $sql = "SELECT quiz_score from ".$pdo->response_quiz_table."
+                 WHERE quiz_completed = 1
+                   AND quiz_id = :quiz_id";
+        $stmt = $pdo->query($sql, $params);
+        $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // return the found quiz row
+        return $scores;
+    }
+
 
     /**
     * Create an entire quiz json object with all question and mc option data

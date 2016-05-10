@@ -12,6 +12,7 @@
     <section class="enp-container enp-results-flow__container">
         <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-results-flow.php');?>
     </section>
+
     <!--<section class="enp-container enp-quiz-scores__container">
         <div class="enp-quiz-scores">
             <canvas id="enp-quiz-scores__canvas" height="300" width="480">

@@ -45,7 +45,6 @@
 </section>
 
 
-
 <!-- SECTION FOR CHART AFTER WE HAVE PLOT OF SCORES
 <section class="enp-container enp-ab-scores">
     <h2 class="enp-ab-scores__title">Quiz Scores</h2>

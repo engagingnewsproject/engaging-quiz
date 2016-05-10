@@ -6,6 +6,7 @@
 * @return quiz object
 */
 class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
+    public $quiz_scores;
     public static $results;
 
     public function __construct($quiz_id, $ab_test_id = false) {
@@ -33,7 +34,12 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
             ":ab_test_id" => $ab_test_id,
             ":quiz_id" => $quiz_id
         );
-        $sql = "SELECT * from ".$pdo->response_ab_test_table." ab_response
+        $sql = "SELECT quiz_viewed,
+                       quiz_started,
+                       quiz_completed,
+                       quiz_restarted,
+                       quiz_score
+                  FROM ".$pdo->response_ab_test_table." ab_response
             INNER JOIN ".$pdo->response_quiz_table." quiz_response
                     ON ab_response.response_quiz_id = quiz_response.response_quiz_id
                  WHERE ab_response.ab_test_id = :ab_test_id
@@ -49,6 +55,8 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
         $this->quiz_views = $this->set_quiz_views();
         $this->quiz_starts = $this->set_quiz_starts();
         $this->quiz_finishes = $this->set_quiz_finishes();
+        $this->quiz_scores = $this->set_quiz_scores();
+        $this->quiz_score_average = $this->set_quiz_score_average();
     }
 
     public function set_quiz_views() {
@@ -77,6 +85,36 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
             }
         }
         return $finishes;
+    }
+
+    public function set_quiz_scores() {
+        $scores = array();
+        if(!empty(self::$results)) {
+            foreach(self::$results as $result) {
+                if($result['quiz_completed'] === '1') {
+                    $scores[] = $result['quiz_score'];
+                }
+            }
+        }
+        return $scores;
+    }
+
+    public function set_quiz_score_average() {
+        $average = 0;
+        if(!empty($this->quiz_scores)) {
+            $average = array_sum($this->quiz_scores)/count($this->quiz_scores);
+        }
+
+        return $average;
+    }
+
+    /**
+    * Get the individual score data on each take of this quiz
+    * @param $quiz = quiz object
+    * @return array of all the scores
+    */
+    public function get_quiz_scores() {
+        return $this->quiz_scores;
     }
 
 
