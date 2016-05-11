@@ -23,9 +23,6 @@ jQuery( document ).ready( function( $ ) {
         yScaleMin = yScaleMinB;
     }
 
-    console.log(yScaleMax);
-    console.log(yScaleMin);
-
     // get the difference between them
     var yScaleLength = yScaleMax - yScaleMin;
     // pad by 10% of the length
@@ -38,15 +35,17 @@ jQuery( document ).ready( function( $ ) {
         yScaleMin = 0;
     }
 
-    console.log(ab_results_json.ab_results_labels);
-    console.log(ab_results_json.quiz_a_scores);
-    console.log(ab_results_json.quiz_b_scores);
-    new Chartist.Line('.enp-quiz-score__line-chart', {
+    // set the winner/loser classes
+    chart = new Chartist.Line('.enp-quiz-score__line-chart', {
       labels: ab_results_json.ab_results_labels,
-      series: [
-                ab_results_json.quiz_a_scores,
-                ab_results_json.quiz_b_scores
-            ]
+      series: [{
+          value: ab_results_json.quiz_a_scores,
+          className: ab_results_json.quiz_a_class,
+      },
+      {
+          value: ab_results_json.quiz_b_scores,
+          className: ab_results_json.quiz_b_class,
+      }]
     }, {
       high: yScaleMax,
       low: yScaleMin,
@@ -61,5 +60,6 @@ jQuery( document ).ready( function( $ ) {
           onlyInteger: true,
       }
     });
+
 
 });

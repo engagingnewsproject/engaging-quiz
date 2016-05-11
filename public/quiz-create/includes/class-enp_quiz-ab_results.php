@@ -87,10 +87,26 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
             }
         }
 
+        // decide if a or b is the winner
+        $winner = $this->get_ab_test_winner();
+        $quiz_a_id = $this->quiz_a->get_quiz_id();
+        if((int) $winner === (int) $quiz_a_id) {
+            $ab_test_winner = 'a';
+            $quiz_a_class = 'enp-test-winner';
+            $quiz_b_class = 'enp-test-loser';
+        } else {
+            $ab_test_winner = 'b';
+            $quiz_b_class = 'enp-test-winner';
+            $quiz_a_class = 'enp-test-loser';
+        }
+
         $ab_results = array(
             'ab_results_labels' => $ab_results_labels,
             'quiz_a_scores' => $quiz_a_series,
+            'quiz_a_class' => $quiz_a_class,
             'quiz_b_scores' => $quiz_b_series,
+            'quiz_b_class' => $quiz_b_class,
+            'ab_test_winner' => $ab_test_winner
         );
 
 
