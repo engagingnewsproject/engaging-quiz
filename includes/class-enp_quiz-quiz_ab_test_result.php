@@ -92,7 +92,8 @@ class Enp_quiz_Quiz_AB_test_result extends Enp_quiz_Quiz {
         if(!empty(self::$results)) {
             foreach(self::$results as $result) {
                 if($result['quiz_completed'] === '1') {
-                    $scores[] = $result['quiz_score'];
+                    $scores[] = (int) round($result['quiz_score'] * 100);
+
                 }
             }
         }

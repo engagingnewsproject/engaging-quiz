@@ -30,8 +30,12 @@ jQuery( document ).ready( function( $ ) {
     yScaleMax = yScaleMax + yScalePad;
     yScaleMin = yScaleMin - yScalePad;
 
+    // calculate how many ticks we'll allow
+    // if it's less than 11, it will show decimals, which, we don't want
+    // we only want to to display whole numbers
     var maxTicks = 11;
     if(yScaleLength < 11) {
+        // the maxTicks is the difference between the min and max number, plus our padding above and below, + 1 for the 0 axis line
         maxTicks = yScaleLength + (yScalePad * 2) + 1;
     }
 
