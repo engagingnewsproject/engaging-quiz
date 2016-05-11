@@ -46,7 +46,9 @@
 
 <section class="enp-container enp-ab-scores">
     <h2 class="enp-ab-scores__title">Quiz Scores</h2>
-    <canvas id="enp-ab-scores__canvas" height="200" width="480"></canvas>
+    <div class="enp-quiz-scores">
+        <div class="enp-quiz-score__line-chart"></div>
+    </div>
 </section>
 
 <section id="enp-ab-embed-code" class="enp-ab-embed-code__section">

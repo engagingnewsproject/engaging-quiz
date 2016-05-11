@@ -15,9 +15,7 @@
 
 <section class="enp-container enp-quiz-scores__container">
         <div class="enp-quiz-scores">
-            <canvas id="enp-quiz-scores__canvas" height="300" width="480">
-                <h1>Quiz Scores - Put Screen Reader Line Chart Data here</h1>
-            </canvas>
+            <div class="enp-quiz-score__line-chart"></div>
         </div>
     </section>
 </section>

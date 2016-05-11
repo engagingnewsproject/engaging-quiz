@@ -575,6 +575,28 @@ class Enp_quiz_Quiz {
         return $all_quiz_scores;
     }
 
+    /**
+    * Useful for line charts and tables of quiz score data
+    * @return array('quiz_scores'=>array(scores grouped by integer), 'quiz_scores_labels'=>array(score labels))
+    */
+    public function quiz_score_chart_data() {
+        $all_quiz_scores = $this->get_quiz_scores_group_count();
+        $quiz_scores_labels = array();
+        $quiz_scores = array();
+        foreach($all_quiz_scores as $key => $val) {
+            $quiz_scores_labels[] = $key.'%';
+            $quiz_scores[] = $val;
+        }
+
+        $quiz_results = array(
+            'quiz_scores' => $quiz_scores,
+            'quiz_scores_labels' => $quiz_scores_labels,
+        );
+
+        return $quiz_results;
+    }
+
+
 
     /**
     * Create an entire quiz json object with all question and mc option data

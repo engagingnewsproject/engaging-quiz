@@ -56,45 +56,55 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
     }
 
     public function quiz_results_json() {
-        $all_quiz_scores = $this->quiz_a->get_quiz_scores_group_count();
-        $quiz_scores_labels = array();
-        $quiz_scores = array();
-        foreach($all_quiz_scores as $key => $val) {
-            $quiz_scores_labels[] = $key.'%';
-            $quiz_scores[] = $val;
+
+        // get scores from a sorted by key (score % (int)) and value (number of people with that score)
+        $quiz_a_scores = $this->quiz_a->get_quiz_scores_group_count();
+        $quiz_b_scores = $this->quiz_b->get_quiz_scores_group_count();
+
+        // create a new array for the labels
+        $ab_labels = $quiz_a_scores + $quiz_b_scores;
+        // index high to low
+        ksort($ab_labels);
+        // loop through labels and insert null values if missing for new results arrays
+        $ab_results_labels = array();
+        $quiz_a_series = array();
+        $quiz_b_series = array();
+        foreach($ab_labels as $key => $val) {
+            // set the key for the labels
+            $ab_results_labels[] = $key;
+            // if the key doesn't exist in there, make it null
+            if(!array_key_exists($key, $quiz_a_scores)) {
+                $quiz_a_series[] = null;
+            } else {
+                $quiz_a_series[] = $quiz_a_scores[$key];
+            }
+
+            // if the key doesn't exist in there, make it null
+            if(!array_key_exists($key, $quiz_b_scores)) {
+                $quiz_b_series[] = null;
+            } else {
+                $quiz_b_series[] = $quiz_b_scores[$key];
+            }
         }
 
-        $quiz_results = array(
-            'quiz_scores' => $quiz_scores,
-            'quiz_scores_labels' => $quiz_scores_labels,
+        $ab_results = array(
+            'ab_results_labels' => $ab_results_labels,
+            'quiz_a_scores' => $quiz_a_series,
+            'quiz_b_scores' => $quiz_b_series,
         );
+
+
 
         echo '<script type="text/javascript">';
 		    // print this whole object as js global vars in json
-			echo 'var quiz_a_results_json = '.json_encode($quiz_results).';';
+			echo 'var ab_results_json = '.json_encode($ab_results).';';
 		echo '</script>';
 
-        $all_quiz_scores = $this->quiz_b->get_quiz_scores_group_count();
-        $quiz_scores_labels = array();
-        $quiz_scores = array();
-        foreach($all_quiz_scores as $key => $val) {
-            $quiz_scores_labels[] = $key.'%';
-            $quiz_scores[] = $val;
-        }
-
-        $quiz_results = array(
-            'quiz_scores' => $quiz_scores,
-            'quiz_scores_labels' => $quiz_scores_labels,
-        );
-
-        echo '<script type="text/javascript">';
-		    // print this whole object as js global vars in json
-			echo 'var quiz_b_results_json = '.json_encode($quiz_results).';';
-		echo '</script>';
     }
 
     public function enqueue_styles() {
-
+        wp_register_style( $this->plugin_name.'-chartist', plugin_dir_url( __FILE__ ) . '../css/chartist.min.css', array(), $this->version );
+ 	  	wp_enqueue_style( $this->plugin_name.'-chartist' );
 	}
 
 	/**
@@ -103,7 +113,7 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
 	 * @since    0.0.1
 	 */
 	public function enqueue_scripts() {
-        wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/chartist.min.js', $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-charts' );
 
         wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );

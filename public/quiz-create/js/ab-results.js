@@ -5,35 +5,61 @@ jQuery( document ).ready( function( $ ) {
         enp_accordion__setup(accordion);
     });
 
-    var lineChartData = {
-        labels : ["0%","10%","20%","30%","40%","50%","60%", "70%", "80%", "90%", "100%"],
-        datasets : [
-            {
-                label: "A",
-                borderColor: '#f14021',
-                borderWidth: 2,
-                backgroundColor: "rgba(255,255,255,0)",
-                data : [1,null,2,2,4,10,25,38,32,17,2]
-            },
-            {
-                label: "B",
-                borderColor: '#58C88F',
-                borderWidth: 2,
-                backgroundColor: "rgba(255,255,255,0)",
-                data : [0,0,0,2,5,null,27,null,38,22,6]
-            }
-        ]
+    var yScaleMaxA = _.max(ab_results_json.quiz_a_scores);
+    var yScaleMaxB = _.max(ab_results_json.quiz_b_scores);
+    var yScaleMinA = _.min(ab_results_json.quiz_a_scores);
+    var yScaleMinB = _.min(ab_results_json.quiz_b_scores);
 
-    };
+    // see what our real max/min should be
+    if(yScaleMaxA <= yScaleMaxB) {
+        yScaleMax = yScaleMaxB;
+    } else {
+        yScaleMax = yScaleMaxA;
+    }
+    // set the min
+    if(yScaleMinA <= yScaleMinB) {
+        yScaleMin = yScaleMinA;
+    } else {
+        yScaleMin = yScaleMinB;
+    }
 
-    window.onload = function(){
-    var ctx = document.getElementById("enp-ab-scores__canvas").getContext("2d");
-    window.myLine = new Chart(ctx, {
-        type: 'line',
-        data: lineChartData,
-        options: {
-            responsive: true,
-        }
+    console.log(yScaleMax);
+    console.log(yScaleMin);
+
+    // get the difference between them
+    var yScaleLength = yScaleMax - yScaleMin;
+    // pad by 10% of the length
+    var yScalePad = Math.ceil(yScaleLength * 0.1);
+    // pad the max number by 10% of the length
+    yScaleMax = yScaleMax + yScalePad;
+    yScaleMin = yScaleMin - yScalePad;
+
+    if(yScaleMin < 0) {
+        yScaleMin = 0;
+    }
+
+    console.log(ab_results_json.ab_results_labels);
+    console.log(ab_results_json.quiz_a_scores);
+    console.log(ab_results_json.quiz_b_scores);
+    new Chartist.Line('.enp-quiz-score__line-chart', {
+      labels: ab_results_json.ab_results_labels,
+      series: [
+                ab_results_json.quiz_a_scores,
+                ab_results_json.quiz_b_scores
+            ]
+    }, {
+      high: yScaleMax,
+      low: yScaleMin,
+      fullWidth: true,
+      chartPadding: {
+        right: 38
+      },
+      lineSmooth: Chartist.Interpolation.cardinal({
+          fillHoles: true,
+      }),
+      axisY: {
+          onlyInteger: true,
+      }
     });
-    };
+
 });

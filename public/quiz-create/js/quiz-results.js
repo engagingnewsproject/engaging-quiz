@@ -6,20 +6,6 @@ jQuery( document ).ready( function( $ ) {
         enp_accordion__setup(accordion);
     });
 
-
-    var lineChartData = {
-        labels : quiz_results_json.quiz_scores_labels,
-        datasets : [
-            {
-                label: "Quiz Scores",
-                borderColor: '#58C88F',
-                borderWidth: 2,
-                backgroundColor: "rgba(255,255,255,0)",
-                data : quiz_results_json.quiz_scores
-            }
-        ]
-    };
-    // find the lowest and highest number in the array to set as the min/max number for the line chart scale
     var yScaleMax = _.max(quiz_results_json.quiz_scores);
     var yScaleMin = _.min(quiz_results_json.quiz_scores);
     // get the difference between them
@@ -30,38 +16,26 @@ jQuery( document ).ready( function( $ ) {
     yScaleMax = yScaleMax + yScalePad;
     yScaleMin = yScaleMin - yScalePad;
 
-    // calculate how many ticks we'll allow
-    // if it's less than 11, it will show decimals, which, we don't want
-    // we only want to to display whole numbers
-    var maxTicks = 11;
-    if(yScaleLength < 11) {
-        // the maxTicks is the difference between the min and max number, plus our padding above and below, + 1 for the 0 axis line
-        maxTicks = yScaleLength + (yScalePad * 2) + 1;
-    }
-
-    // don't let the min be below 0
     if(yScaleMin < 0) {
         yScaleMin = 0;
     }
-
-    window.onload = function(){
-    var ctx = document.getElementById("enp-quiz-scores__canvas").getContext("2d");
-    window.myLine = new Chart(ctx, {
-        type: 'line',
-        data: lineChartData,
-        options: {
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min: yScaleMin,
-                        max: yScaleMax,
-                        tickMarkLength: 5,
-                        maxTicksLimit: maxTicks
-                    }
-                }]
-            }
-        }
+    console.log(quiz_results_json.quiz_scores);
+    new Chartist.Line('.enp-quiz-score__line-chart', {
+      labels: quiz_results_json.quiz_scores_labels,
+      series: [quiz_results_json.quiz_scores]
+    }, {
+      high: yScaleMax,
+      low: yScaleMin,
+      fullWidth: true,
+      chartPadding: {
+        right: 38
+      },
+      lineSmooth: Chartist.Interpolation.cardinal({
+          fillHoles: true,
+      }),
+      axisY: {
+          onlyInteger: true,
+      }
     });
-    };
+
 });

@@ -46,6 +46,31 @@
         margin-top: 5rem;
     }
 
+    .enp-quiz-score__line-chart {
+        height: 300px;
+
+        .ct-label {
+            color: $font;
+        }
+
+        .ct-grid {
+            stroke: #dadada;
+            stroke-dasharray: 0;
+        }
+
+        .ct-line {
+            stroke: $green;
+            stroke-width: 2px;
+        }
+
+        .ct-point {
+            stroke: $green;
+            stroke-width: 8px;
+        }
+    }
+
+
+
     .enp-results-flow {
         position: relative;
         margin: 2rem auto;

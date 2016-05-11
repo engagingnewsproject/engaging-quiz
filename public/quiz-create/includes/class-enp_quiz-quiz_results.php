@@ -48,22 +48,13 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
     }
 
     public function enqueue_styles() {
-
+        wp_register_style( $this->plugin_name.'-chartist', plugin_dir_url( __FILE__ ) . '../css/chartist.min.css', array(), $this->version );
+ 	  	wp_enqueue_style( $this->plugin_name.'-chartist' );
 	}
 
     public function quiz_results_json() {
-        $all_quiz_scores = $this->quiz->get_quiz_scores_group_count();
-        $quiz_scores_labels = array();
-        $quiz_scores = array();
-        foreach($all_quiz_scores as $key => $val) {
-            $quiz_scores_labels[] = $key.'%';
-            $quiz_scores[] = $val;
-        }
 
-        $quiz_results = array(
-            'quiz_scores' => $quiz_scores,
-            'quiz_scores_labels' => $quiz_scores_labels,
-        );
+        $quiz_results = $this->quiz->quiz_score_chart_data();
 
         echo '<script type="text/javascript">';
 		    // print this whole object as js global vars in json
@@ -78,7 +69,7 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 	 */
 	public function enqueue_scripts() {
         // charts
-        wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/chartist.min.js', $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-charts' );
         // accordion
         wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
