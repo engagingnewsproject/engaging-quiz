@@ -9,7 +9,7 @@
 
 <h1 class="enp-page-title enp-results-title enp-results-title--ab"><?php echo $ab_test->get_ab_test_title();?></h1>
 <section class="enp-container enp-results__container enp-results__container--ab">
-    <section class="enp-results enp-results--ab enp-results--a enp-results--loser">
+    <section class="enp-results enp-results--ab enp-results--a <?php echo  $this->ab_test_winner_loser_class($quiz_a->get_quiz_id());?>">
         <h2 class="enp-results-title enp-results-title--ab enp-results-title--a">
             <?php echo $quiz_a->get_quiz_title();?>
         </h2>
@@ -25,7 +25,7 @@
         </section>
 
     </section>
-    <section class="enp-results enp-results--ab enp-results--b enp-results--winner">
+    <section class="enp-results enp-results--ab enp-results--b <?php echo  $this->ab_test_winner_loser_class($quiz_b->get_quiz_id());?>">
         <h2 class="enp-results-title enp-results-title--ab enp-results-title--b">
             <?php echo $quiz_b->get_quiz_title();?>
         </h2>

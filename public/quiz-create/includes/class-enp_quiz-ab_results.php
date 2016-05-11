@@ -71,7 +71,7 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
         $quiz_b_series = array();
         foreach($ab_labels as $key => $val) {
             // set the key for the labels
-            $ab_results_labels[] = $key;
+            $ab_results_labels[] = $key.'%';
             // if the key doesn't exist in there, make it null
             if(!array_key_exists($key, $quiz_a_scores)) {
                 $quiz_a_series[] = null;
@@ -123,7 +123,29 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
 		wp_enqueue_script( $this->plugin_name.'-ab-results' );
 
 	}
+    /**
+    * Decide who is the winner based on which one has a higher % of finishes
+    * @return quiz id of winner
+    */
+    public function get_ab_test_winner() {
+        // get the % of finshes from each
+        $quiz_a_finishes = $this->percentagize($this->quiz_a->get_quiz_finishes(), $this->quiz_a->get_quiz_views(), 2);
+        $quiz_b_finishes = $this->percentagize($this->quiz_b->get_quiz_finishes(), $this->quiz_b->get_quiz_views(), 2);
 
+        if($quiz_a_finishes <= $quiz_b_finishes) {
+            $winner = $this->quiz_b->get_quiz_id();
+        } else {
+            $winner = $this->quiz_b->get_quiz_id();
+        }
+        return $winner;
+    }
 
-
+    public function ab_test_winner_loser_class($quiz_id) {
+        $winner = $this->get_ab_test_winner();
+        if((int) $quiz_id === (int) $winner) {
+            return 'enp-results--winner';
+        } else {
+            return 'enp-results--loser';
+        }
+    }
 }
