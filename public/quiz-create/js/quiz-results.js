@@ -5,16 +5,17 @@ jQuery( document ).ready( function( $ ) {
         var accordion = {header: $('.enp-results-question__header', this), content: $('.enp-results-question__content', this)};
         enp_accordion__setup(accordion);
     });
-    /*
+    console.log(quiz_results.quiz_scores_labels);
+    console.log(quiz_results.quiz_scores);
     var lineChartData = {
-        labels : ["0%","10%","20%","30%","40%","50%","60%", "70%", "80%", "90%", "100%"],
+        labels : quiz_results.quiz_scores_labels,
         datasets : [
             {
                 label: "Quiz Scores",
                 borderColor: '#58C88F',
                 borderWidth: 2,
                 backgroundColor: "rgba(255,255,255,0)",
-                data : [0,0,0,2,4,10,27,42,32,17,2]
+                data : quiz_results.quiz_scores
             }
         ]
 
@@ -29,5 +30,5 @@ jQuery( document ).ready( function( $ ) {
             responsive: true,
         }
     });
-    };*/
+    };
 });

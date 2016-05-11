@@ -55,14 +55,32 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 	 * @since    0.0.1
 	 */
 	public function enqueue_scripts() {
+        // Register the script
+        wp_register_script('quiz_results', '/');
+        $all_quiz_scores = $this->quiz->get_quiz_scores_group_count();
+        $quiz_scores_labels = array();
+        $quiz_scores = array();
+        foreach($all_quiz_scores as $key => $val) {
+            $quiz_scores_labels[] = $key.'%';
+            $quiz_scores[] = $val;
+        }
+
+        $quiz_results = array(
+            'quiz_scores' => $quiz_scores,
+            'quiz_scores_labels' => $quiz_scores_labels,
+        );
+        wp_localize_script( 'quiz_results', 'quiz_results', $quiz_results );
+        var_dump($quiz_results);
+        // Enqueued script with localized data.
+        wp_enqueue_script( 'quiz_results' );
         // charts
-        /*wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
-		wp_enqueue_script( $this->plugin_name.'-charts' );*/
+        wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_name.'-charts' );
         // accordion
         wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-accordion' );
         // general scripts
-		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.js', array( 'jquery', $this->plugin_name.'-accordion' ), $this->version, true );
+		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.js', array( 'jquery', $this->plugin_name.'-accordion', $this->plugin_name.'-charts' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-quiz-results' );
 
 	}

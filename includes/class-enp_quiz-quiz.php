@@ -529,11 +529,50 @@ class Enp_quiz_Quiz {
         );
         $sql = "SELECT quiz_score from ".$pdo->response_quiz_table."
                  WHERE quiz_completed = 1
-                   AND quiz_id = :quiz_id";
+                   AND quiz_id = :quiz_id
+              ORDER BY quiz_score ASC";
         $stmt = $pdo->query($sql, $params);
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $quiz_scores = array();
+        foreach($scores as $score) {
+            $quiz_scores[] = (int) round($score['quiz_score'] * 100);
+        }
+
         // return the found quiz row
-        return $scores;
+        return $quiz_scores;
+    }
+
+    /**
+    * Outputs an array that returns the count of each possible score
+    * @return array($score => $how_many_people_got_this_score, 100'=>'12', '50'=>12, '0'=>4);
+    */
+    public function get_quiz_scores_group_count() {
+        $all_quiz_scores = $this->get_quiz_scores();
+        $all_quiz_scores = array_count_values($all_quiz_scores);
+        // merge the array with a default of possible scores array
+        // so we have all values, even if they don't have a set score yet
+        $default_scores = array();
+        $total_questions = count($this->questions);
+        // return 0 if there are no questions
+        if($total_questions === 0) {
+            return $all_quiz_scores;
+        }
+
+        $i = 0;
+        while($i <= $total_questions) {
+            $key = (int) round($i/$total_questions * 100);
+            $default_scores[$key] = 0;
+            $i++;
+        }
+
+
+        // merge the arrays while preserving keys
+        $all_quiz_scores = $all_quiz_scores + $default_scores;
+        // sort by key, low to high
+        ksort($all_quiz_scores);
+
+        return $all_quiz_scores;
     }
 
 

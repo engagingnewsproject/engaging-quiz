@@ -13,13 +13,13 @@
         <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-results-flow.php');?>
     </section>
 
-    <!--<section class="enp-container enp-quiz-scores__container">
+<section class="enp-container enp-quiz-scores__container">
         <div class="enp-quiz-scores">
             <canvas id="enp-quiz-scores__canvas" height="300" width="480">
                 <h1>Quiz Scores - Put Screen Reader Line Chart Data here</h1>
             </canvas>
         </div>
-    </section>-->
+    </section>
 </section>
 
 <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>
