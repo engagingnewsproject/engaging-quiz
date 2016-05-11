@@ -32,6 +32,8 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        // add in json data for scores
+        add_action('wp_footer', array($this, 'quiz_results_json'));
     }
 
     public function load_template() {
@@ -49,14 +51,7 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 
 	}
 
-	/**
-	 * Register and enqueue the JavaScript for quiz create.
-	 *
-	 * @since    0.0.1
-	 */
-	public function enqueue_scripts() {
-        // Register the script
-        wp_register_script('quiz_results', '/');
+    public function quiz_results_json() {
         $all_quiz_scores = $this->quiz->get_quiz_scores_group_count();
         $quiz_scores_labels = array();
         $quiz_scores = array();
@@ -69,18 +64,28 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
             'quiz_scores' => $quiz_scores,
             'quiz_scores_labels' => $quiz_scores_labels,
         );
-        wp_localize_script( 'quiz_results', 'quiz_results', $quiz_results );
-        var_dump($quiz_results);
-        // Enqueued script with localized data.
-        wp_enqueue_script( 'quiz_results' );
+
+        echo '<script type="text/javascript">';
+		    // print this whole object as js global vars in json
+			echo 'var quiz_results_json = '.json_encode($quiz_results).';';
+		echo '</script>';
+    }
+
+	/**
+	 * Register and enqueue the JavaScript for quiz create.
+	 *
+	 * @since    0.0.1
+	 */
+	public function enqueue_scripts() {
         // charts
         wp_register_script( $this->plugin_name.'-charts', plugin_dir_url( __FILE__ ) . '../js/utilities/Chart.min.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-charts' );
         // accordion
         wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-accordion' );
+
         // general scripts
-		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.js', array( 'jquery', $this->plugin_name.'-accordion', $this->plugin_name.'-charts' ), $this->version, true );
+		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.js', array( 'jquery', 'underscore', $this->plugin_name.'-accordion', $this->plugin_name.'-charts' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-quiz-results' );
 
 	}
