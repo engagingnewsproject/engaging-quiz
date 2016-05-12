@@ -252,6 +252,12 @@ body {
     padding: 0.4em 1em;
 }
 
+@include placeholder('btn--wide') {
+    width: 100%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
 @include placeholder('btn--icon') {
     @include _(btn);
     padding: .75em 0.8em .7em 1.4em;

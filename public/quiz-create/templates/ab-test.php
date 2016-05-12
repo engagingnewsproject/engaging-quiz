@@ -8,15 +8,15 @@
 ?>
 
 <div class="enp-container enp-ab-create__container">
-    <h1 class="enp-page-title enp-ab-create__page-title">Create A/B Test</h1>
     <?php do_action('enp_quiz_display_messages'); ?>
     <?php
     if(count($quizzes) < 2):
         echo "You need at least two quizzes to split test a quiz. <a href='".ENP_QUIZ_CREATE_URL."new'>Create a new quiz.</a>";
     else: ?>
 
-
         <form class="enp-form enp-ab-create__form" method="post" action="<?php echo htmlentities(ENP_AB_TEST_URL); ?>new">
+            <h1 class="enp-page-title enp-ab-create__page-title">Create A/B Test</h1>
+
             <?php $enp_quiz_nonce->outputKey();?>
             <fieldset class="enp-fieldset enp-ab-create-title">
                 <label class="enp-label enp-ab-create__label enp-ab-create-title__label" for="enp-ab-test-title">

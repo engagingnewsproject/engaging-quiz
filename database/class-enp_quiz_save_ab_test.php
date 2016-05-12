@@ -161,6 +161,7 @@ class Enp_quiz_Save_ab_test extends Enp_quiz_Save {
             // set the ab test id
             $this->ab_test['ab_test_id'] = $pdo->lastInsertId();
             // build our response stuff
+            $this->response['ab_test_id'] = $this->ab_test['ab_test_id'];
             $this->response['status'] = 'success';
             $this->response['action'] = 'insert';
             $this->add_success('AB Test created.');

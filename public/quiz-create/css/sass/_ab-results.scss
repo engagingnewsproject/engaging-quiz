@@ -135,6 +135,18 @@
 
     }
 
+    .enp-ab-new-embed-code__section {
+        @include _(container--thin);
+        max-width: 540px;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+
+        .enp-ab-embed-code {
+            padding: 0;
+            margin: 0;
+        }
+    }
+
     .enp-ab-embed-code__section {
         @include _(section--alt);
         padding-top: 5rem;

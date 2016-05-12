@@ -532,6 +532,16 @@ class Enp_quiz_Create {
 		$response = $save_ab_test->save($params);
 		self::$message = $response['messages'];
 
+
+		if(empty(self::$message['error']) && $response['status'] === 'success' && $response['action'] === 'insert' && isset($response['ab_test_id'])) {
+			// successful insert, so redirect them to the embed code section of the results page
+			// set a messages array to pass to url on redirect
+			$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => 'ab_test_created'));
+			// they just created a new page (quiz) so we need to redirect them to it and post our messages
+			wp_redirect( site_url( '/enp-quiz/ab-results/'.$response['ab_test_id'].'/?'.$url_query ) );
+			exit;
+		}
+
 	}
 
 	/**

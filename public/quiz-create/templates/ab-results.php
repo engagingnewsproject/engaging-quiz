@@ -8,6 +8,14 @@
 ?>
 
 <h1 class="enp-page-title enp-results-title enp-results-title--ab"><?php echo $ab_test->get_ab_test_title();?></h1>
+<?php do_action('enp_quiz_display_messages');
+// see if we just created the ab test or not
+if(isset($_GET['enp_user_action']) && $_GET['enp_user_action'] === 'ab_test_created') {?>
+    <section class="enp-ab-new-embed-code__section">
+        <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/ab-test-embed-code.php');?>
+    </section>
+<?php } ?>
+
 <section class="enp-container enp-results__container enp-results__container--ab">
     <section class="enp-results enp-results--ab enp-results--a <?php echo  $this->ab_test_winner_loser_class($quiz_a->get_quiz_id());?>">
         <h2 class="enp-results-title enp-results-title--ab enp-results-title--a">
@@ -79,12 +87,5 @@
 </section>
 
 <section id="enp-ab-embed-code" class="enp-ab-embed-code__section">
-    <div class="enp-container enp-ab-embed-code">
-        <h3 class="enp-ab-embed-code__title">Embed Code</h3>
-        <textarea class="enp-embed-code enp-embed-code__textarea" rows="7"><script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>public/quiz-take/js/dist/iframe-parent.js"></script>
-<iframe id="enp-ab-test-iframe-<?php echo $ab_test->get_ab_test_id();?>" class="enp-quiz-iframe enp-ab-test-iframe" src="<?php echo ENP_TAKE_AB_TEST_URL.$ab_test->get_ab_test_id();?>" style="width: <?php echo $quiz_a->get_quiz_width();?>; height: 500px;"></iframe></textarea>
-        <div class="enp-embed-code__instructions">
-            <p>Here's some instructions on how to use the embed code</p>
-        </div>
-    </div>
+    <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/ab-test-embed-code.php');?>
 </section>

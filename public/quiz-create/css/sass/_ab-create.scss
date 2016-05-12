@@ -1,7 +1,14 @@
 #enp-quiz {
     .enp-ab-create__container {
-        @include _(container--thin);
+        @include _(container--wide);
+        width: 100%;
+        background: $really_light_gray;
         padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .enp-ab-create__form {
+        @include _(container--thin);
     }
 
     .enp-ab-create__label {
@@ -10,9 +17,16 @@
 
     .enp-ab-create-title__textarea {
         @include _(input--xl);
+        width: 100%;
     }
 
     .enp-ab-create__select {
         @include _(select--wide--chevron);
+    }
+
+    .enp-ab-create__submit {
+        width: 100%;
+        padding-top: 1em;
+        padding-bottom: 1em;
     }
 }
