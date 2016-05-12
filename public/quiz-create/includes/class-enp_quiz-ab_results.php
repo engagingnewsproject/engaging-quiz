@@ -47,6 +47,8 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
         $ab_test = $this->ab_test;
         $quiz_a = $this->quiz_a;
         $quiz_b = $this->quiz_b;
+        $quiz_a->quiz_score_chart_data = $quiz_a->get_quiz_score_chart_data();
+        $quiz_b->quiz_score_chart_data = $quiz_b->get_quiz_score_chart_data();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/ab-results.php' );
         $content = ob_get_contents();
         if (ob_get_length()) ob_end_clean();

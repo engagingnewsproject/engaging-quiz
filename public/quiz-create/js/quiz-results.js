@@ -19,8 +19,8 @@ jQuery( document ).ready( function( $ ) {
     if(yScaleMin < 0) {
         yScaleMin = 0;
     }
-    console.log(quiz_results_json.quiz_scores);
-    new Chartist.Line('.enp-quiz-score__line-chart', {
+
+    var chart = new Chartist.Line('.enp-quiz-score__line-chart', {
       labels: quiz_results_json.quiz_scores_labels,
       series: [quiz_results_json.quiz_scores]
     }, {
@@ -38,4 +38,17 @@ jQuery( document ).ready( function( $ ) {
       }
     });
 
+    chart.on('draw', function(data) {
+      if(data.type === 'line' || data.type === 'area') {
+        data.element.animate({
+          d: {
+            begin: 1400 * data.index,
+            dur: 1400,
+            from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+            to: data.path.clone().stringify(),
+            easing: Chartist.Svg.Easing.easeOutQuint
+          }
+        });
+      }
+    });
 });

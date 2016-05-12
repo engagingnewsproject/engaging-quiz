@@ -13,11 +13,28 @@
         <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-results-flow.php');?>
     </section>
 
-<section class="enp-container enp-quiz-scores__container">
+    <section class="enp-container enp-quiz-scores__container">
         <div class="enp-quiz-scores">
             <div class="enp-quiz-score__line-chart"></div>
         </div>
+
+        <table class="enp-quiz-scores-chart">
+            <tr>
+                <th class="enp-quiz-scores-chart__label">Score</th>
+                <th class="enp-quiz-scores-chart__score"># of People</th>
+            </tr>
+            <?php foreach($quiz->quiz_score_chart_data['quiz_scores'] as $key => $val) {?>
+                <tr>
+                    <td class="enp-quiz-scores-chart__label"><?php echo $quiz->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
+                    <td class="enp-quiz-scores-chart__score"><?php echo $val;?></td>
+                </tr>
+            <?php } ?>
+
+        </table>
     </section>
+
+
+
 </section>
 
 <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>

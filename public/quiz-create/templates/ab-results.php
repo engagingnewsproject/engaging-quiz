@@ -49,6 +49,30 @@
     <div class="enp-quiz-scores">
         <div class="enp-quiz-score__line-chart"></div>
     </div>
+    <table class="enp-quiz-scores-chart <?php echo  $this->ab_test_winner_loser_class($quiz_a->get_quiz_id());?>">
+        <tr>
+            <th class="enp-quiz-scores-chart__label"><?php echo $quiz_a->get_quiz_title();?> Score</th>
+            <th class="enp-quiz-scores-chart__score"># of People</th>
+        </tr>
+        <?php foreach($quiz_a->quiz_score_chart_data['quiz_scores'] as $key => $val) {?>
+            <tr>
+                <td class="enp-quiz-scores-chart__label"><?php echo  $quiz_a->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
+                <td class="enp-quiz-scores-chart__score"><?php echo $val;?></td>
+            </tr>
+        <?php } ?>
+    </table>
+    <table class="enp-quiz-scores-chart <?php echo  $this->ab_test_winner_loser_class($quiz_b->get_quiz_id());?>">
+        <tr>
+            <th class="enp-quiz-scores-chart__label"><?php echo $quiz_b->get_quiz_title();?> Score</th>
+            <th class="enp-quiz-scores-chart__score"># of People</th>
+        </tr>
+        <?php foreach($quiz_b->quiz_score_chart_data['quiz_scores'] as $key => $val) {?>
+            <tr>
+                <td class="enp-quiz-scores-chart__label"><?php echo $quiz_b->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
+                <td class="enp-quiz-scores-chart__score"><?php echo $val;?></td>
+            </tr>
+        <?php } ?>
+    </table>
 </section>
 
 <section id="enp-ab-embed-code" class="enp-ab-embed-code__section">

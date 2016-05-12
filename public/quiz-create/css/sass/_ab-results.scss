@@ -41,6 +41,24 @@
         .enp-results-flow__item--quiz-finishes {
                 background: lighten($red, 34);
         }
+
+        th {
+            color: $dark_red;
+        }
+
+        tr:nth-child(even) td {
+            background: lighten($red, 44);
+        }
+    }
+
+    .enp-results--winner {
+        th {
+            color: $dark_green;
+        }
+
+        tr:nth-child(even) td {
+            background: lighten($green, 48);
+        }
     }
 
     .enp-results-title--a,
@@ -56,18 +74,30 @@
         @include _(screen-reader-text);
     }
 
-    .enp-ab-embed-code__section {
-        @include _(section--alt);
-        padding-top: 5rem;
-        margin-top: 5rem;
-    }
-
     .enp-quiz-score__line-chart .enp-test-loser {
 
         .ct-line,
         .ct-point {
             stroke: $red;
         }
+    }
+
+    .enp-quiz-scores-chart {
+        @include breakpoint(large) {
+            float: left;
+            max-width: 48%;
+            margin: 0;
+
+            &:first-of-type {
+                margin-right: 2%;
+            }
+        }
+    }
+
+    .enp-ab-embed-code__section {
+        @include _(section--alt);
+        padding-top: 5rem;
+        margin-top: 5rem;
     }
 
     .enp-ab-embed-code {

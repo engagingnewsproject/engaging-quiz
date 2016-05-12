@@ -106,6 +106,33 @@ body #enp-quiz {
         font: .7em Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
     }
 
+    table {
+        border: none;
+
+        th {
+            font-family: $fontTitle;
+            font-size: .8rem;
+            text-transform: uppercase;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        td {
+            font-family: $fontBody;
+            font-size: 1rem;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:nth-child(even) td {
+            background: $really_light_gray;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    }
+
     figure {
         margin: 0;
     }

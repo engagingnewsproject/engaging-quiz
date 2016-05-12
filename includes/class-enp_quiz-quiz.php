@@ -579,7 +579,7 @@ class Enp_quiz_Quiz {
     * Useful for line charts and tables of quiz score data
     * @return array('quiz_scores'=>array(scores grouped by integer), 'quiz_scores_labels'=>array(score labels))
     */
-    public function quiz_score_chart_data() {
+    public function get_quiz_score_chart_data() {
         $all_quiz_scores = $this->get_quiz_scores_group_count();
         $quiz_scores_labels = array();
         $quiz_scores = array();

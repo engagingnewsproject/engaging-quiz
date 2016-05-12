@@ -29,7 +29,7 @@
     .enp-quiz-scores__container,
     .enp-results-flow__container {
         @include media(max-medium) {
-            padding: 0;
+            padding: 8px;
         }
     }
 
@@ -43,11 +43,12 @@
     }
 
     .enp-quiz-scores {
-        margin-top: 5rem;
+        margin-top: 2.6rem;
     }
 
     .enp-quiz-score__line-chart {
         height: 300px;
+        margin-bottom: 1rem;
 
         .ct-label {
             color: $font;
@@ -69,7 +70,19 @@
         }
     }
 
+    .enp-quiz-scores-chart {
+        max-width: 500px;
+        margin: 0 auto;
+    }
 
+    .enp-quiz-scores-chart__label {
+        padding-left: 5%;
+    }
+
+    .enp-quiz-scores-chart__score {
+        text-align: right;
+        padding-right: 5%;
+    }
 
     .enp-results-flow {
         position: relative;

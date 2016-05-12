@@ -25,6 +25,7 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
     public function __construct() {
         // load the quiz
         $this->quiz = $this->load_quiz();
+        $this->quiz->quiz_score_chart_data = $this->quiz->get_quiz_score_chart_data();
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_template' ));
@@ -54,12 +55,13 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 
     public function quiz_results_json() {
 
-        $quiz_results = $this->quiz->quiz_score_chart_data();
+        $quiz_results = $this->quiz->quiz_score_chart_data;
 
         echo '<script type="text/javascript">';
 		    // print this whole object as js global vars in json
 			echo 'var quiz_results_json = '.json_encode($quiz_results).';';
 		echo '</script>';
+
     }
 
 	/**
