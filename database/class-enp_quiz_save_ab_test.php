@@ -52,7 +52,7 @@ class Enp_quiz_Save_ab_test extends Enp_quiz_Save {
         if(isset($post['enp-ab-test-title']) && !empty($post['enp-ab-test-title'])) {
             $this->ab_test['ab_test_title'] = $post['enp-ab-test-title'];
         } else {
-            $this->add_error('Please enter a Title for your AB Test');
+            $this->add_error('Please enter a Title for your AB Test.');
         }
 
         if(isset($post['enp-ab-test-quiz-a']) && !empty($post['enp-ab-test-quiz-a'])) {
@@ -87,13 +87,27 @@ class Enp_quiz_Save_ab_test extends Enp_quiz_Save {
 
         $quiz_a_owner = $quiz_a->get_quiz_owner();
         $quiz_b_owner = $quiz_b->get_quiz_owner();
+        $owner = false;
+
+        $quiz_a_id = $quiz_a->get_quiz_id();
+        $quiz_b_id = $quiz_b->get_quiz_id();
+        $different_quizzes = false;
 
         if((int) $quiz_a_owner === (int) $quiz_b_owner && (int) $quiz_a_owner === (int) $ab_test['ab_test_updated_by']) {
-            $valid = true;
+            $owner = true;
+        } else {
+            $this->add_error('You are not the owner of one or more of the quizzes.');
         }
 
-        if($valid === false) {
-            $this->add_error('Please Select two different Quizzes from the dropdown to set-up your AB Test.');
+        if((int) $quiz_a_id === (int) $quiz_b_id) {
+
+            $this->add_error('Please Select two different Quizzes from the quiz dropdowns.');
+        } else {
+            $different_quizzes = true;
+        }
+
+        if($owner === true && $different_quizzes === true) {
+            $valid = true;
         }
 
         return $valid;
