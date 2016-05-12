@@ -18,15 +18,15 @@
             <div class="enp-quiz-score__line-chart"></div>
         </div>
 
-        <table class="enp-quiz-scores-chart">
+        <table class="enp-quiz-scores-table">
             <tr>
-                <th class="enp-quiz-scores-chart__label">Score</th>
-                <th class="enp-quiz-scores-chart__score"># of People</th>
+                <th class="enp-quiz-scores-table__label">Score</th>
+                <th class="enp-quiz-scores-table__score"># of People</th>
             </tr>
             <?php foreach($quiz->quiz_score_chart_data['quiz_scores'] as $key => $val) {?>
                 <tr>
-                    <td class="enp-quiz-scores-chart__label"><?php echo $quiz->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
-                    <td class="enp-quiz-scores-chart__score"><?php echo $val;?></td>
+                    <td class="enp-quiz-scores-table__label"><?php echo $quiz->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
+                    <td class="enp-quiz-scores-table__score"><?php echo $val;?></td>
                 </tr>
             <?php } ?>
 

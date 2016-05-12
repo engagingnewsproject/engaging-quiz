@@ -19,11 +19,6 @@
             include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-results-flow.php');?>
         </section>
 
-        <section class="enp-question-results enp--question-results__container">
-            <?php
-            $quiz = $quiz_a; include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>
-        </section>
-
     </section>
     <section class="enp-results enp-results--ab enp-results--b <?php echo  $this->ab_test_winner_loser_class($quiz_b->get_quiz_id());?>">
         <h2 class="enp-results-title enp-results-title--ab enp-results-title--b">
@@ -35,11 +30,6 @@
             include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-results-flow.php');?>
         </section>
 
-        <section class="enp-question-results enp--question-results__container">
-            <?php
-            $quiz = $quiz_b; include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>
-        </section>
-
     </section>
 
 </section>
@@ -49,30 +39,43 @@
     <div class="enp-quiz-scores">
         <div class="enp-quiz-score__line-chart"></div>
     </div>
-    <table class="enp-quiz-scores-chart <?php echo  $this->ab_test_winner_loser_class($quiz_a->get_quiz_id());?>">
+    <table class="enp-quiz-scores-table <?php echo  $this->ab_test_winner_loser_class($quiz_a->get_quiz_id());?>">
         <tr>
-            <th class="enp-quiz-scores-chart__label"><?php echo $quiz_a->get_quiz_title();?> Score</th>
-            <th class="enp-quiz-scores-chart__score"># of People</th>
+            <th class="enp-quiz-scores-table__label"><?php echo $quiz_a->get_quiz_title();?> Score</th>
+            <th class="enp-quiz-scores-table__score"># of People</th>
         </tr>
         <?php foreach($quiz_a->quiz_score_chart_data['quiz_scores'] as $key => $val) {?>
             <tr>
-                <td class="enp-quiz-scores-chart__label"><?php echo  $quiz_a->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
-                <td class="enp-quiz-scores-chart__score"><?php echo $val;?></td>
+                <td class="enp-quiz-scores-table__label"><?php echo  $quiz_a->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
+                <td class="enp-quiz-scores-table__score"><?php echo $val;?></td>
             </tr>
         <?php } ?>
     </table>
-    <table class="enp-quiz-scores-chart <?php echo  $this->ab_test_winner_loser_class($quiz_b->get_quiz_id());?>">
+    <table class="enp-quiz-scores-table <?php echo  $this->ab_test_winner_loser_class($quiz_b->get_quiz_id());?>">
         <tr>
-            <th class="enp-quiz-scores-chart__label"><?php echo $quiz_b->get_quiz_title();?> Score</th>
-            <th class="enp-quiz-scores-chart__score"># of People</th>
+            <th class="enp-quiz-scores-table__label"><?php echo $quiz_b->get_quiz_title();?> Score</th>
+            <th class="enp-quiz-scores-table__score"># of People</th>
         </tr>
         <?php foreach($quiz_b->quiz_score_chart_data['quiz_scores'] as $key => $val) {?>
             <tr>
-                <td class="enp-quiz-scores-chart__label"><?php echo $quiz_b->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
-                <td class="enp-quiz-scores-chart__score"><?php echo $val;?></td>
+                <td class="enp-quiz-scores-table__label"><?php echo $quiz_b->quiz_score_chart_data['quiz_scores_labels'][$key];?></td>
+                <td class="enp-quiz-scores-table__score"><?php echo $val;?></td>
             </tr>
         <?php } ?>
     </table>
+</section>
+
+
+<section class="enp-container enp-question-results__container enp-question-results__container--ab">
+    <section class="enp-question-results enp--question-results__container enp-question-results--ab enp-question-results--a <?php echo  $this->ab_test_winner_loser_class($quiz_a->get_quiz_id());?>">
+        <?php
+        $quiz = $quiz_a; include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>
+    </section>
+
+    <section class="enp-question-results enp--question-results__container enp-question-results--ab enp-question-results--b <?php echo  $this->ab_test_winner_loser_class($quiz_b->get_quiz_id());?>">
+        <?php
+        $quiz = $quiz_b; include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>
+    </section>
 </section>
 
 <section id="enp-ab-embed-code" class="enp-ab-embed-code__section">

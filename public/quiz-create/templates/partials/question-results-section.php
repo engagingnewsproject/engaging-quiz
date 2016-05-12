@@ -1,7 +1,7 @@
 <section class="enp-results-questions__section">
     <div class="enp-container enp-results-questions__container">
         <header class="enp-results-questions__header">
-            <h2 class="enp-results-questions__title">Question Results</h2>
+            <h2 class="enp-results-questions__title"><span class="enp-results-questions__title__quiz-title"><?php echo $quiz->get_quiz_title();?> </span>Question Results</h2>
             <div class="enp-results-questions__key">
                 <span class="enp-results-questions__views">Views</span>&nbsp;/&nbsp;<span class="enp-results-questions__completion">Completion&nbsp;%</span>
             </div>

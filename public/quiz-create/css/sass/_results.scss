@@ -70,16 +70,16 @@
         }
     }
 
-    .enp-quiz-scores-chart {
+    .enp-quiz-scores-table {
         max-width: 500px;
         margin: 0 auto;
     }
 
-    .enp-quiz-scores-chart__label {
+    .enp-quiz-scores-table__label {
         padding-left: 5%;
     }
 
-    .enp-quiz-scores-chart__score {
+    .enp-quiz-scores-table__score {
         text-align: right;
         padding-right: 5%;
     }
@@ -413,4 +413,8 @@
             right: 0.8rem;
         }
     }
+}
+
+.enp-quiz-results .enp-results-questions__title__quiz-title {
+    @include _(screen-reader-text);
 }

@@ -5,6 +5,9 @@
         margin-bottom: 3rem;
 
         @include breakpoint(large) {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-end;
             width: 50%;
             padding: 10px;
         }
@@ -42,23 +45,28 @@
                 background: lighten($red, 34);
         }
 
-        th {
+        th,
+        .enp-results-questions__title {
             color: $dark_red;
         }
 
-        tr:nth-child(even) td {
+        tr:nth-child(even) td,
+        .enp-results-question__header {
             background: lighten($red, 44);
         }
     }
 
     .enp-results--winner {
-        th {
+        th,
+        .enp-results-questions__title {
             color: $dark_green;
         }
 
-        tr:nth-child(even) td {
+        tr:nth-child(even) td,
+        .enp-results-question__header {
             background: lighten($green, 48);
         }
+
     }
 
     .enp-results-title--a,
@@ -68,10 +76,17 @@
 
     .enp-ab-scores {
         @include _(container--wide);
+
+        th.enp-quiz-scores-table__label,
+        th.enp-quiz-scores-table__score {
+            padding-left: 0;
+            padding-right: 0;
+        }
     }
 
     .enp-ab-scores__title {
-        @include _(screen-reader-text);
+        padding-left: 50px;
+        @include _(small-uppercase);
     }
 
     .enp-quiz-score__line-chart .enp-test-loser {
@@ -82,16 +97,42 @@
         }
     }
 
-    .enp-quiz-scores-chart {
+    .enp-quiz-scores {
+        margin-top: 0;
+    }
+
+    .enp-question-results,
+    .enp-quiz-scores-table {
+        margin-bottom: 1.6rem;
+
         @include breakpoint(large) {
             float: left;
-            max-width: 48%;
+            width: 48%;
             margin: 0;
 
             &:first-of-type {
                 margin-right: 2%;
             }
         }
+    }
+
+    .enp-question-results__container {
+        @include _(container--wide);
+    }
+
+    .enp-question-results--ab {
+
+        .enp-results-questions__section {
+            background: #fff;
+            border: none;
+            padding: 1.6rem 0;
+            margin: 1.6rem auto;
+        }
+
+        .enp-results-questions__container {
+            padding: 0;
+        }
+
     }
 
     .enp-ab-embed-code__section {
