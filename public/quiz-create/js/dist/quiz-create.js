@@ -272,6 +272,9 @@ function temp_addQuestion() {
     // add a temp MC option
     temp_addMCOption('newQuestionTemplateID');
 
+    // add a temp Slider
+    temp_addSlider('newQuestionTemplateID');
+
     // set-up accordion
     // set-up question_content var
     setUpAccordion($('#enp-question--newQuestionTemplateID'));
@@ -291,7 +294,7 @@ function unset_tempAddQuestion() {
 }
 
 // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
-function addQuestion(questionID, mcOptionID) {
+function addQuestion(questionID, mcOptionID, sliderID) {
 
     // find/replace all attributes and values on this question
     findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID'), /newQuestionTemplateID/, questionID);
@@ -303,6 +306,9 @@ function addQuestion(questionID, mcOptionID) {
 
     // change the default MCOptionIDs
     addMCOption(mcOptionID, questionID);
+
+    // change the default sliderIds
+    addSlider(sliderID, questionID);
 }
 
 
@@ -507,6 +513,36 @@ function addMCOption(new_mcOptionID, questionID) {
     findReplaceDomAttributes(new_mcOption_el, /newMCOptionID/, new_mcOptionID);
 }
 
+function temp_addSlider(questionID) {
+    // clone the template
+    temp_slider = sliderTemplate({
+            question_id: questionID,
+            question_position: 'newQuestionPosition',
+            slider_id: 'newSliderID',
+            slider_range_low: '0',
+            slider_range_high: '100',
+            slider_correct_low: '50',
+            slider_correct_high: '50',
+            slider_increment: '1',
+            slider_prefix: '',
+            slider_suffix: ''
+        });
+
+    // insert it
+    $(temp_slider).appendTo('#enp-question--'+questionID+' .enp-question');
+}
+
+// add MC option ID, question ID, question index, and mc option index
+function addSlider(new_sliderID, questionID) {
+
+    new_slider_el = document.querySelector('#enp-question--'+questionID+' .enp-slider-options');
+
+    // find/replace all index attributes (just in the name, but it'll search all attributes)
+    findReplaceDomAttributes(new_slider_el, /newQuestionPosition/, getQuestionIndex(questionID));
+
+    findReplaceDomAttributes(new_slider_el, /newSliderID/, new_sliderID);
+}
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
@@ -615,7 +651,8 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             // we have a new question!
             new_questionID = newQuestionResponse.question_id;
             new_mcOption = getNewMCOption(new_questionID, response.question);
-            addQuestion(new_questionID, new_mcOption.mc_option_id);
+            new_sliderID = newQuestionResponse.slider.slider_id;
+            addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
         } else {
             unset_tempAddQuestion();
         }

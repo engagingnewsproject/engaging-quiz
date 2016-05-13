@@ -20,6 +20,9 @@ function temp_addQuestion() {
     // add a temp MC option
     temp_addMCOption('newQuestionTemplateID');
 
+    // add a temp Slider
+    temp_addSlider('newQuestionTemplateID');
+
     // set-up accordion
     // set-up question_content var
     setUpAccordion($('#enp-question--newQuestionTemplateID'));
@@ -39,7 +42,7 @@ function unset_tempAddQuestion() {
 }
 
 // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
-function addQuestion(questionID, mcOptionID) {
+function addQuestion(questionID, mcOptionID, sliderID) {
 
     // find/replace all attributes and values on this question
     findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID'), /newQuestionTemplateID/, questionID);
@@ -51,6 +54,9 @@ function addQuestion(questionID, mcOptionID) {
 
     // change the default MCOptionIDs
     addMCOption(mcOptionID, questionID);
+
+    // change the default sliderIds
+    addSlider(sliderID, questionID);
 }
 
 

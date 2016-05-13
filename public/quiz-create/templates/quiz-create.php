@@ -111,13 +111,21 @@ $quiz_id = $quiz->get_quiz_id();
             // end our template
             echo '</script>';
 
-            $slider_id = '{{slider_id}}';
+            // clone the object so we don't reset its own values
+            $original_slider = $slider;
+    		$slider = clone $slider;
+            // foreach key, set it as a js template var
+    		foreach($slider as $key => $value) {
+    			// we don't want to unset our question object
+    			$slider->$key = '{{'.$key.'}}';
+    		}
             // set-up our template
             echo '<script type="text/template" id="slider_template">';
                 include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
             // end our template
             echo '</script>';
-
+            // reset back to slider var
+            $slider = $original_slider;
 
         ?>
 

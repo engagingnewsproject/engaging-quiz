@@ -52,7 +52,11 @@
 
         $slider_id = $question->get_slider();
         $slider = new Enp_quiz_Slider($slider_id);
-        include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
+        // don't add slider in for our js question_template
+        if($slider_id !== '') {
+            include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
+        }
+
         ?>
     </div>
 

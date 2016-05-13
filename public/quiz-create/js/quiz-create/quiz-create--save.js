@@ -106,7 +106,8 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             // we have a new question!
             new_questionID = newQuestionResponse.question_id;
             new_mcOption = getNewMCOption(new_questionID, response.question);
-            addQuestion(new_questionID, new_mcOption.mc_option_id);
+            new_sliderID = newQuestionResponse.slider.slider_id;
+            addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
         } else {
             unset_tempAddQuestion();
         }
