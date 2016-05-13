@@ -12,4 +12,5 @@ var questionImageUploadButtonTemplate = _.template($('#question_image_upload_but
 var questionImageUploadTemplate = _.template($('#question_image_upload_template').html());
 var mcOptionTemplate = _.template($('#mc_option_template').html());
 var sliderTemplate = _.template($('#slider_template').html());
+var sliderTakeTemplate = _.template($('#slider_take_template').html());
 //$('#enp-quiz').prepend(questionTemplate({question_id: '999', question_position: '53'}));

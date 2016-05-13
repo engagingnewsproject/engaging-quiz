@@ -10,9 +10,11 @@ class Enp_quiz_Slider {
             $slider_range_high,
             $slider_correct_low,
             $slider_correct_high,
+            $slider_start,
             $slider_increment,
             $slider_prefix,
             $slider_suffix,
+            $slider_input_size,
             $slider_responses,
             $slider_is_deleted;
 
@@ -66,9 +68,11 @@ class Enp_quiz_Slider {
         $this->slider_range_high = $this->set_slider_range_high($slider);
         $this->slider_correct_low = $this->set_slider_correct_low($slider);
         $this->slider_correct_high = $this->set_slider_correct_high($slider);
+        $this->slider_start = $this->set_slider_start();
         $this->slider_increment = $this->set_slider_increment($slider);
         $this->slider_prefix = $this->set_slider_prefix($slider);
         $this->slider_suffix = $this->set_slider_suffix($slider);
+        $this->slider_input_size = $this->set_slider_input_size();
         $this->slider_responses = $this->set_slider_responses($slider);
         $this->slider_is_deleted = $this->set_slider_is_deleted($slider);
     }
@@ -123,6 +127,16 @@ class Enp_quiz_Slider {
     }
 
     /**
+    * Set the slider_correct_high for our Slider Object
+    * @param $slider = slider row from slider database table
+    * @return slider_correct_high field from the database
+    */
+    protected function set_slider_start() {
+        $slider_start = ($this->slider_correct_high - $this->slider_correct_low)/2;
+        return $slider_start;
+    }
+
+    /**
     * Set the slider_increment for our Slider Object
     * @param $slider = slider row from slider database table
     * @return slider_increment field from the database
@@ -148,6 +162,15 @@ class Enp_quiz_Slider {
     */
     protected function set_slider_suffix($slider) {
         return $slider['slider_suffix'];
+    }
+
+    /**
+    * Set the slider_input_size for our Slider Object
+    * @param $slider = slider row from slider database table
+    * @return slider_input_size field from length of range high
+    */
+    protected function set_slider_input_size() {
+        return strlen($this->slider_range_high);
     }
 
     /**
@@ -238,6 +261,24 @@ class Enp_quiz_Slider {
     */
     public function get_slider_suffix() {
         return $this->slider_suffix;
+    }
+
+    /**
+    * Get the slider_input_size for our Slider Object
+    * @param $slider = slider object
+    * @return slider_input_size from the object
+    */
+    public function get_slider_input_size() {
+        return $this->slider_input_size;
+    }
+
+    /**
+    * Get the slider_start for our Slider Object
+    * @param $slider = slider object
+    * @return slider_start from the object
+    */
+    public function get_slider_start() {
+        return $this->slider_start;
     }
 
     /**

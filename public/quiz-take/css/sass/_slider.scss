@@ -1,0 +1,30 @@
+body #enp-quiz {
+    .enp-slider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 1rem auto;
+    }
+
+    .enp-slider__label {
+        @include _(label);
+    }
+
+    .enp-slider__prefix,
+    .enp-slider__suffix {
+        font-size: 1rem;
+    }
+
+    .enp-slider__prefix {
+        margin-right: .2rem;
+    }
+
+    .enp-slider__suffix {
+        margin-left: .2rem;
+    }
+
+    .enp-slider__input {
+        background: #fff;
+        width: auto;
+    }
+}

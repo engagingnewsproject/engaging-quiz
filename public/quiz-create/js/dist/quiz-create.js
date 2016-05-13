@@ -190,6 +190,7 @@ var questionImageUploadButtonTemplate = _.template($('#question_image_upload_but
 var questionImageUploadTemplate = _.template($('#question_image_upload_template').html());
 var mcOptionTemplate = _.template($('#mc_option_template').html());
 var sliderTemplate = _.template($('#slider_template').html());
+var sliderTakeTemplate = _.template($('#slider_take_template').html());
 //$('#enp-quiz').prepend(questionTemplate({question_id: '999', question_position: '53'}));
 
 /*
@@ -211,6 +212,30 @@ $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-i
 
 // set-up our ajax response container for messages to get added to
 $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></section>');
+
+// add our sliders into the templates
+$('.enp-slider-options').each(function() {
+    // scrape the input values and create the template
+    sliderRangeLow = $('.enp-slider-range-low__input', this).val();
+    sliderRangeHigh = $('.enp-slider-range-high__input', this).val();
+    sliderStart = (sliderRangeHigh - sliderRangeLow)/2;
+
+    slider = sliderTakeTemplate({
+            slider_id: $('.enp-slider-id', this).val(),
+            slider_range_low: sliderRangeLow,
+            slider_range_high: sliderRangeHigh,
+            slider_start: sliderStart,
+            slider_increment: $('.enp-slider-increment__input', this).val(),
+            slider_prefix: $('.enp-slider-prefix__input', this).val(),
+            slider_suffix: $('.enp-slider-suffix__input', this).val(),
+            slider_input_size: $('.enp-slider-range-high__input', this).val().length
+        });
+
+    // insert it
+    $(slider).prependTo(this);
+    $('.enp-slider__label', this).text('Example Slider');
+
+});
 
 /*
 * General UX interactions to make a better user experience
