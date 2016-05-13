@@ -84,7 +84,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         wp_enqueue_script( $this->plugin_name.'-quiz-create' );
 
         // jQuery slider
-        wp_register_script( $this->plugin_name.'-jquery-ui', plugin_dir_url( __FILE__ ) . '../js/utilities/jquery-ui.min.js', array( 'jquery' ), $this->version, true );
+        wp_register_script( $this->plugin_name.'-jquery-ui', plugin_dir_url( __FILE__ ) .'../../quiz-take/js/dist/jquery-ui.min.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-jquery-ui' );
 
 

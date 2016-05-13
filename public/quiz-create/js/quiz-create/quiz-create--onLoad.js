@@ -40,4 +40,6 @@ $('.enp-slider-options').each(function() {
     $(slider).prependTo(this);
     $('.enp-slider__label', this).text('Example Slider');
 
+    // add in the jQuery slider
+    $( ".jquery-slider", this ).slider();
 });
