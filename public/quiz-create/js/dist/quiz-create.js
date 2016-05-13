@@ -189,6 +189,7 @@ var questionImageTemplate = _.template($('#question_image_template').html());
 var questionImageUploadButtonTemplate = _.template($('#question_image_upload_button_template').html());
 var questionImageUploadTemplate = _.template($('#question_image_upload_template').html());
 var mcOptionTemplate = _.template($('#mc_option_template').html());
+var sliderTemplate = _.template($('#slider_template').html());
 //$('#enp-quiz').prepend(questionTemplate({question_id: '999', question_position: '53'}));
 
 /*

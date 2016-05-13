@@ -50,6 +50,8 @@
 
         include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc.php');
 
+        $slider_id = $question->get_slider();
+        $slider = new Enp_quiz_Slider($slider_id);
         include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
         ?>
     </div>

@@ -111,6 +111,13 @@ $quiz_id = $quiz->get_quiz_id();
             // end our template
             echo '</script>';
 
+            $slider_id = '{{slider_id}}';
+            // set-up our template
+            echo '<script type="text/template" id="slider_template">';
+                include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
+            // end our template
+            echo '</script>';
+
 
         ?>
 
