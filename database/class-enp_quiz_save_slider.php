@@ -202,6 +202,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
                                         'status'       => 'success',
                                         'action'       => 'insert'
                                 );
+            $slider_response = array_merge(self::$slider, $slider_response);
             // pass the response array to our response object
             parent::$response_obj->set_slider_response($slider_response, parent::$question, self::$slider);
 
@@ -257,6 +258,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
                                         'status'       => 'success',
                                         'action'       => 'update'
                                 );
+            $slider_response = array_merge(self::$slider, $slider_response);
             // pass the response array to our response object
             parent::$response_obj->set_slider_response($slider_response, parent::$question);
 
