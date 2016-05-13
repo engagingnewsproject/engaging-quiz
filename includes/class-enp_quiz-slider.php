@@ -156,7 +156,7 @@ class Enp_quiz_Slider {
     * @return slider_responses field from the database
     */
     protected function set_slider_responses($slider) {
-        return $slider['slider_responses'];
+        //return $slider['slider_responses'];
     }
 
     /**

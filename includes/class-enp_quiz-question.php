@@ -26,7 +26,6 @@ class Enp_quiz_Question {
             $question_time_spent_average,
             $mc_options = array(),
             $slider = '';
-            // maybe set the mc_options or slider in the constructor so that they're not always set
 
     protected static $question;
 
@@ -98,12 +97,11 @@ class Enp_quiz_Question {
         $this->question_time_spent_average = $this->set_question_time_spent_average();
 
         $this->question_is_deleted = $this->set_question_is_deleted();
-        if($this->question_type === 'mc') {
-            $this->mc_options = $this->set_mc_options();
-        } elseif($this->question_type === 'slider') {
-            // TODO: set_slider
-            $this->slider = $this->set_slider();
-        }
+        // we need to know both mc option ids and slider ids
+        // when creating a quiz. We could limit this by adding a "published"
+        // check on the question or quiz
+        $this->mc_options = $this->set_mc_options();
+        $this->slider = $this->set_slider();
     }
 
     /**
@@ -284,8 +282,7 @@ class Enp_quiz_Question {
                 AND slider_is_deleted = 0";
         $stmt = $pdo->query($sql, $params);
         $slider_id = $stmt->fetch();
-
-        return $slider_id;
+        return $slider_id['slider_id'];
     }
 
     /**
@@ -506,6 +503,16 @@ class Enp_quiz_Question {
     public function get_mc_options() {
         $mc_options = $this->mc_options;
         return $mc_options;
+    }
+
+    /**
+    * Get the slider_id for our Question Object
+    * @param $question = question object
+    * @return slider_id
+    */
+    public function get_slider() {
+        $slider = $this->slider;
+        return $slider;
     }
 
     /**

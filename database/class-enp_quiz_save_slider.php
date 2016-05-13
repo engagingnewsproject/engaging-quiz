@@ -40,18 +40,11 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
     protected function prepare_submitted_slider($slider) {
         self::$slider = $slider;
         // set the defaults/get the submitted values
-        $slider_id = $this->set_slider_value('slider_id', 0);
-        $slider_increment = $this->set_slider_value('slider_increment', 1);
-        $slider_prefix = $this->set_slider_value('slider_prefix', '');
-        $slider_suffix = $this->set_slider_value('slider_suffix', '');
+        self::$slider['slider_id'] = $this->set_slider_value('slider_id', 0);
+        self::$slider['slider_increment'] = $this->set_slider_value('slider_increment', 1);
+        self::$slider['slider_prefix'] = $this->set_slider_value('slider_prefix', '');
+        self::$slider['slider_suffix'] = $this->set_slider_value('slider_suffix', '');
 
-        // set our slider array
-        self::$slider = array(
-                                'slider_id' => $slider_id,
-                                'slider_increment' => $slider_increment,
-                                'slider_prefix' => $slider_prefix,
-                                'slider_suffix' => $slider_suffix,
-                            );
         // add in the low and high range.
         $this->set_slider_range();
         // add in the correct low and high range.

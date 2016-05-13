@@ -286,11 +286,10 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     * @return nicely formatted and value validated mc_option array ready for saving
     */
     protected function prepare_submitted_slider($slider) {
-
         // create the object
-        $slider = new Enp_quiz_Save_slider();
+        $slider_obj = new Enp_quiz_Save_slider();
         // Return our nicely prepared slider array
-        return $slider->prepare_submitted_slider($slider);
+        return $slider_obj->prepare_submitted_slider($slider);
     }
 
     /**
