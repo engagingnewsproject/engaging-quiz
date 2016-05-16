@@ -215,8 +215,8 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
-    console.log('createSliderTemplates');
     var sliderData;
+
     // scrape the input values and create the template
     sliderRangeLow = $('.enp-slider-range-low__input', this).val();
     sliderRangeHigh = $('.enp-slider-range-high__input', this).val();
@@ -234,9 +234,9 @@ $('.enp-slider-options').each(function() {
 
     // create slider template
     slider = sliderTakeTemplate(sliderData);
-
+    sliderExample = $('<div class="enp-slider-example"></div>').html(slider);
     // insert it
-    $(slider).prependTo(this);
+    $(sliderExample).prependTo(this);
     $('.enp-slider__label', this).text('Example Slider');
 
     // create the jQuery slider
@@ -856,17 +856,10 @@ function createSlider(sliderInput, sliderData) {
     $(sliderInput).parent().after(slider);
 }
 
-// update slider on change
+// update slider on value change
 $(document).on('input', '.enp-slider-input__input', function(){
     var slider,
         sliderID;
-
-    // if the element does not have focus, then don't change the value of the input
-    // this is a slightly hacky check to see if the value was changed by the user
-    // or the slider
-    if(!$(this).is(":focus")) {
-        return false;
-    }
 
     sliderID = $(this).data('sliderID');
     // find the slider with the slider ID that matches
@@ -875,7 +868,6 @@ $(document).on('input', '.enp-slider-input__input', function(){
         if($(this).data('sliderID') === sliderID) {
             // if it equals, then set the slider var and break out of the each loop
             slider = $(this);
-            console.log(slider);
             return false;
         }
     });

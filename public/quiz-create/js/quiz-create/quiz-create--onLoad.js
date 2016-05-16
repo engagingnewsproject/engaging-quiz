@@ -20,8 +20,8 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
-    console.log('createSliderTemplates');
     var sliderData;
+
     // scrape the input values and create the template
     sliderRangeLow = $('.enp-slider-range-low__input', this).val();
     sliderRangeHigh = $('.enp-slider-range-high__input', this).val();
@@ -39,9 +39,9 @@ $('.enp-slider-options').each(function() {
 
     // create slider template
     slider = sliderTakeTemplate(sliderData);
-
+    sliderExample = $('<div class="enp-slider-example"></div>').html(slider);
     // insert it
-    $(slider).prependTo(this);
+    $(sliderExample).prependTo(this);
     $('.enp-slider__label', this).text('Example Slider');
 
     // create the jQuery slider

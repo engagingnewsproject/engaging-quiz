@@ -30,7 +30,7 @@ function createSlider(sliderInput, sliderData) {
     $(sliderInput).parent().after(slider);
 }
 
-// update slider on change
+// update slider on value change
 $(document).on('input', '.enp-slider-input__input', function(){
     var slider,
         sliderID;
@@ -42,7 +42,6 @@ $(document).on('input', '.enp-slider-input__input', function(){
         if($(this).data('sliderID') === sliderID) {
             // if it equals, then set the slider var and break out of the each loop
             slider = $(this);
-            console.log(slider);
             return false;
         }
     });

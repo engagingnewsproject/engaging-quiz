@@ -220,6 +220,22 @@
         }
     }
 
+    .enp-slider-example {
+        background: $really_light_gray;
+        margin-top: 0.2rem;
+        margin-bottom: 1.6rem;
+        padding: 1.6rem;
+        position: relative;
+
+        .enp-slider__label {
+            position: absolute;
+            width: 100%;
+            top: 0.2rem;
+            left: 0.4rem;
+            font-size: 0.8rem;
+        }
+    }
+
     .enp-answer-explanation {
         background: $light_blue;
         padding-top: 2rem;
