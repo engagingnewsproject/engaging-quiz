@@ -50,6 +50,15 @@
     }
 }
 
+@keyframes flashRedShadow {
+    0% {
+        background: $red;
+    }
+    100% {
+        background: #fff;
+    }
+}
+
 .spinner {
   margin: 0 auto;
   width: 70px;

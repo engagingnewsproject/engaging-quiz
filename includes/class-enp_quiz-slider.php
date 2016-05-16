@@ -68,8 +68,8 @@ class Enp_quiz_Slider {
         $this->slider_range_high = $this->set_slider_range_high($slider);
         $this->slider_correct_low = $this->set_slider_correct_low($slider);
         $this->slider_correct_high = $this->set_slider_correct_high($slider);
-        $this->slider_start = $this->set_slider_start();
         $this->slider_increment = $this->set_slider_increment($slider);
+        $this->slider_start = $this->set_slider_start();
         $this->slider_prefix = $this->set_slider_prefix($slider);
         $this->slider_suffix = $this->set_slider_suffix($slider);
         $this->slider_input_size = $this->set_slider_input_size();
@@ -127,12 +127,18 @@ class Enp_quiz_Slider {
     }
 
     /**
-    * Set the slider_correct_high for our Slider Object
-    * @param $slider = slider row from slider database table
-    * @return slider_correct_high field from the database
+    * Set the slider_start for our Slider Object
+    * @param $slider object
+    * @return slider_start value
     */
     protected function set_slider_start() {
-        $slider_start = ($this->slider_correct_high - $this->slider_correct_low)/2;
+        $low = (float) $this->slider_range_low;
+        $high = (float) $this->slider_range_high;
+        $interval = (float) $this->slider_increment;
+        $total_intervals = $high - $low / $interval;
+        $middle_interval = (($total_intervals/2)*$interval) + $low;
+        $remainder = $middle_interval % $interval;
+        $slider_start = $middle_interval - $remainder;
         return $slider_start;
     }
 

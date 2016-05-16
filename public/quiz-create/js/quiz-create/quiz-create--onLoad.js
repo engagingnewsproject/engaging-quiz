@@ -20,30 +20,6 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
-    var sliderData;
-
-    // scrape the input values and create the template
-    sliderRangeLow = $('.enp-slider-range-low__input', this).val();
-    sliderRangeHigh = $('.enp-slider-range-high__input', this).val();
-
-    sliderData = {
-        'slider_id': $('.enp-slider-id', this).val(),
-        'slider_range_low': sliderRangeLow,
-        'slider_range_high': sliderRangeHigh,
-        'slider_start': (sliderRangeHigh - sliderRangeLow)/2,
-        'slider_increment': $('.enp-slider-increment__input', this).val(),
-        'slider_prefix': $('.enp-slider-prefix__input', this).val(),
-        'slider_suffix': $('.enp-slider-suffix__input', this).val(),
-        'slider_input_size': $('.enp-slider-range-high__input', this).val().length
-    };
-
-    // create slider template
-    slider = sliderTakeTemplate(sliderData);
-    sliderExample = $('<div class="enp-slider-example"></div>').html(slider);
-    // insert it
-    $(sliderExample).prependTo(this);
-    $('.enp-slider__label', this).text('Example Slider');
-
-    // create the jQuery slider
-    createSlider($('.enp-slider-input__input', this), sliderData);
+    createSliderTemplate($(this));
+    
 });

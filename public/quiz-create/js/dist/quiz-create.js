@@ -171,10 +171,14 @@ function replaceAttributes(el, pattern, replace) {
             } else {
                 el.setAttribute(att.nodeName, newAttrVal);
             }
-            console.log('Replaced '+att.nodeName+' '+att.nodeValue);
+            // console.log('Replaced '+att.nodeName+' '+att.nodeValue);
         }
     }
 }
+
+_.middleNumber = function(a, b) {
+    return (a + b)/2;
+};
 
 /*
 * Set-up Underscore Templates
@@ -215,32 +219,8 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
-    var sliderData;
-
-    // scrape the input values and create the template
-    sliderRangeLow = $('.enp-slider-range-low__input', this).val();
-    sliderRangeHigh = $('.enp-slider-range-high__input', this).val();
-
-    sliderData = {
-        'slider_id': $('.enp-slider-id', this).val(),
-        'slider_range_low': sliderRangeLow,
-        'slider_range_high': sliderRangeHigh,
-        'slider_start': (sliderRangeHigh - sliderRangeLow)/2,
-        'slider_increment': $('.enp-slider-increment__input', this).val(),
-        'slider_prefix': $('.enp-slider-prefix__input', this).val(),
-        'slider_suffix': $('.enp-slider-suffix__input', this).val(),
-        'slider_input_size': $('.enp-slider-range-high__input', this).val().length
-    };
-
-    // create slider template
-    slider = sliderTakeTemplate(sliderData);
-    sliderExample = $('<div class="enp-slider-example"></div>').html(slider);
-    // insert it
-    $(sliderExample).prependTo(this);
-    $('.enp-slider__label', this).text('Example Slider');
-
-    // create the jQuery slider
-    createSlider($('.enp-slider-input__input', this), sliderData);
+    createSliderTemplate($(this));
+    
 });
 
 /*
@@ -574,6 +554,98 @@ function addSlider(new_sliderID, questionID) {
     findReplaceDomAttributes(new_slider_el, /newSliderID/, new_sliderID);
 }
 
+
+
+function createSliderTemplate(obj) {
+    var sliderData;
+    // scrape the input values and create the template
+    sliderRangeLow = parseFloat($('.enp-slider-range-low__input', obj).val());
+    sliderRangeHigh = parseFloat($('.enp-slider-range-high__input', obj).val());
+    sliderIncrement = parseFloat($('.enp-slider-increment__input', obj).val());
+    sliderStart = getSliderStart(sliderRangeLow, sliderRangeHigh, sliderIncrement);
+
+    sliderData = {
+        'slider_id': $('.enp-slider-id', obj).val(),
+        'slider_range_low': sliderRangeLow,
+        'slider_range_high': sliderRangeHigh,
+        'slider_start': sliderStart,
+        'slider_increment': sliderIncrement,
+        'slider_prefix': $('.enp-slider-prefix__input', obj).val(),
+        'slider_suffix': $('.enp-slider-suffix__input', obj).val(),
+        'slider_input_size': $('.enp-slider-range-high__input', obj).val().length
+    };
+
+    // create slider template
+    slider = sliderTakeTemplate(sliderData);
+    sliderExample = $('<div class="enp-slider-example"></div>').html(slider);
+
+    // insert it
+    $(sliderExample).prependTo(obj);
+    $('.enp-slider__label', obj).text('Example Slider');
+    // create the jQuery slider
+    createSlider($('.enp-slider-input__input', obj), sliderData);
+}
+
+// on change slider values
+$(document).on('blur', '.enp-slider-range-low__input', function() {
+    sliderID = $(this).siblings('.enp-slider-id').val();
+    slider = getSlider(sliderID);
+    sliderRangeLow = parseFloat($(this).val());
+    slider.slider('option', 'min',  sliderRangeLow);
+    sliderInput = $("#enp-slider-input__"+sliderID);
+    sliderInput.attr('min', sliderRangeLow);
+    // set midpoint
+    setSliderStart(slider, sliderInput);
+});
+
+// update high range and max value
+$(document).on('blur', '.enp-slider-range-high__input', function() {
+    sliderID = $(this).siblings('.enp-slider-id').val();
+    slider = getSlider(sliderID);
+    sliderRangeHigh = parseFloat($(this).val());
+    slider.slider('option', 'max',  sliderRangeHigh);
+    sliderInput = $("#enp-slider-input__"+sliderID);
+    sliderInput.attr('max', sliderRangeHigh);
+    // set midpoint
+    setSliderStart(slider, sliderInput);
+});
+
+// update high range and max value
+$(document).on('blur', '.enp-slider-increment__input', function() {
+    sliderID = $(this).siblings('.enp-slider-id').val();
+    slider = getSlider(sliderID);
+    sliderIncrement = parseFloat($(this).val());
+    slider.slider('option', 'step',  sliderIncrement);
+    sliderInput = $("#enp-slider-input__"+sliderID);
+    sliderInput.attr('step', sliderIncrement);
+
+    // set midpoint
+    setSliderStart(slider, sliderInput);
+});
+
+function setSliderStart(slider, sliderInput) {
+    low = slider.slider('option', 'min');
+    high = slider.slider('option', 'max');
+    interval = slider.slider('option', 'step');
+    sliderValue = getSliderStart(low, high, interval);
+    // set it
+    slider.slider("value", sliderValue);
+    sliderInput.val(sliderValue);
+}
+
+function getSliderStart(low, high, interval) {
+    low = parseFloat(low);
+    high = parseFloat(high);
+    interval = parseFloat(interval);
+
+    totalIntervals = (high - low)/interval;
+    middleInterval = ((totalIntervals/2)*interval) + low;
+    remainder = middleInterval % interval;
+    middleInterval = middleInterval - remainder;
+
+    return middleInterval;
+}
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
@@ -859,20 +931,75 @@ function createSlider(sliderInput, sliderData) {
 // update slider on value change
 $(document).on('input', '.enp-slider-input__input', function(){
     var slider,
-        sliderID;
+        sliderID,
+        inputVal;
 
+    // get the ID
     sliderID = $(this).data('sliderID');
+    // get the Slider
+    slider = getSlider(sliderID);
+    // get the input value
+    inputVal = $(this).val();
+    // update the slider value
+    slider.slider("value", inputVal);
+    // check to see if the slider value matches the input value
+    // the slider will not allow a min/max value outside the allowed slider min/max
+    sliderVal = slider.slider("value");
+});
+
+// when leaving focus of the input, check to see if it's a valid entry
+// and change it if it isn't
+$(document).on('blur', '.enp-slider-input__input', function(){
+    var slider,
+        sliderID,
+        inputVal,
+        sliderVal;
+
+    // input
+    input = $(this);
+    // get the ID
+    sliderID = $(this).data('sliderID');
+    // get the Slider
+    slider = getSlider(sliderID);
+    // get the input value
+    inputVal = input.val();
+    // get the slider value
+    sliderVal = slider.slider("value");
+    // compare the slider and input values
+    if(parseInt(sliderVal) !== parseInt(inputVal)) {
+        // if they don't match, then then input value is invalid
+        // because the jQuery slider won't set the slider value to be outside the
+        // accepted min/max range
+        // Set the input to the slider value
+        input.val(sliderVal);
+        // flash red animation to show that we changed it
+        input.addClass('enp-slider-input__input--invalid-animation');
+        // remove the invalid class after half of a second
+        setTimeout(
+            function() {
+                input.removeClass('enp-slider-input__input--invalid-animation');
+            },
+            500
+        );
+
+    }
+});
+
+
+function getSlider(sliderID, callback) {
+    var slider;
     // find the slider with the slider ID that matches
     $('.enp-slider').each(function() {
         // check it's sliderID
         if($(this).data('sliderID') === sliderID) {
             // if it equals, then set the slider var and break out of the each loop
             slider = $(this);
+            if(typeof(callback) == "function") {
+                callback($(this));
+            }
             return false;
         }
     });
-
-    // update the slider value
-    slider.slider("value", $(this).val());
-});
+    return slider;
+}
 });

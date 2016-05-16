@@ -171,7 +171,11 @@ function replaceAttributes(el, pattern, replace) {
             } else {
                 el.setAttribute(att.nodeName, newAttrVal);
             }
-            console.log('Replaced '+att.nodeName+' '+att.nodeValue);
+            // console.log('Replaced '+att.nodeName+' '+att.nodeValue);
         }
     }
 }
+
+_.middleNumber = function(a, b) {
+    return (a + b)/2;
+};

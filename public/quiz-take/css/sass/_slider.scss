@@ -28,5 +28,10 @@ body #enp-quiz {
     .enp-slider-input__input {
         background: #fff;
         width: auto;
+        transition: all .25s ease-out;
+    }
+
+    .enp-slider-input__input--invalid-animation {
+        box-shadow: 0 0 2px 1px $fade_red;
     }
 }
