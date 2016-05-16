@@ -140,6 +140,20 @@
         @include _(legend--bold);
     }
 
+    .enp-mc-option__add,
+    .enp-mc-option__button--correct,
+    .enp-mc-option__button--delete {
+        display: none;
+    }
+
+    .enp-question-type__input--mc:checked ~ .enp-mc-options {
+        .enp-mc-option__add,
+        .enp-mc-option__button--correct,
+        .enp-mc-option__button--delete {
+            display: block;
+        }
+    }
+
     .enp-button__question-image-delete,
     .enp-mc-option__button--delete {
         @include _(btn--reset);
