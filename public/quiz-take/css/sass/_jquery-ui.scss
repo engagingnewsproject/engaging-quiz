@@ -85,27 +85,32 @@ body #enp-quiz {
 	.ui-slider {
 		position: relative;
 		text-align: left;
-		background: #eee;
+		background: #ddd;
 
 		.ui-slider-handle {
-			background: #ddd;
-			border-radius: 3px;
-			border: 1px solid #ccc;
+			background: #fff;
+			border-radius: 50%;
+			border: 1px solid #aaa;
 			position: absolute;
 			z-index: 2;
-			width: 1.2em;
-			height: 1.2em;
+			width: 1.2rem;
+			height: 1.2rem;
 			cursor: default;
 			-ms-touch-action: none;
 			touch-action: none;
 		}
+
 		.ui-slider-range {
 			position: absolute;
 			z-index: 1;
-			font-size: .7em;
+			font-size: .7rem;
 			display: block;
 			border: 0;
 			background-position: 0 0;
+		}
+
+		.ui-slider-range-min {
+			background: $green;
 		}
 
 		/* support: IE8 - See #6727 */
@@ -116,11 +121,11 @@ body #enp-quiz {
 	}
 
 	.ui-slider-horizontal {
-		height: .3em;
+		height: .3rem;
 
 		.ui-slider-handle {
-			top: -.3em;
-			margin-left: -.6em;
+			top: -.4rem;
+			margin-left: -.6rem;
 		}
 		.ui-slider-range {
 			top: 0;
@@ -135,13 +140,13 @@ body #enp-quiz {
 	}
 
 	.ui-slider-vertical {
-		width: .8em;
+		width: .8rem;
 		height: 100px;
 
 		.ui-slider-handle {
-			left: -.3em;
+			left: -.3rem;
 			margin-left: 0;
-			margin-bottom: -.6em;
+			margin-bottom: -.6rem;
 		}
 		.ui-slider-range {
 			left: 0;
@@ -154,4 +159,6 @@ body #enp-quiz {
 			top: 0;
 		}
 	}
+
+
 }
