@@ -20,26 +20,30 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
+    console.log('createSliderTemplates');
+    var sliderData;
     // scrape the input values and create the template
     sliderRangeLow = $('.enp-slider-range-low__input', this).val();
     sliderRangeHigh = $('.enp-slider-range-high__input', this).val();
-    sliderStart = (sliderRangeHigh - sliderRangeLow)/2;
 
-    slider = sliderTakeTemplate({
-            slider_id: $('.enp-slider-id', this).val(),
-            slider_range_low: sliderRangeLow,
-            slider_range_high: sliderRangeHigh,
-            slider_start: sliderStart,
-            slider_increment: $('.enp-slider-increment__input', this).val(),
-            slider_prefix: $('.enp-slider-prefix__input', this).val(),
-            slider_suffix: $('.enp-slider-suffix__input', this).val(),
-            slider_input_size: $('.enp-slider-range-high__input', this).val().length
-        });
+    sliderData = {
+        'slider_id': $('.enp-slider-id', this).val(),
+        'slider_range_low': sliderRangeLow,
+        'slider_range_high': sliderRangeHigh,
+        'slider_start': (sliderRangeHigh - sliderRangeLow)/2,
+        'slider_increment': $('.enp-slider-increment__input', this).val(),
+        'slider_prefix': $('.enp-slider-prefix__input', this).val(),
+        'slider_suffix': $('.enp-slider-suffix__input', this).val(),
+        'slider_input_size': $('.enp-slider-range-high__input', this).val().length
+    };
+
+    // create slider template
+    slider = sliderTakeTemplate(sliderData);
 
     // insert it
     $(slider).prependTo(this);
     $('.enp-slider__label', this).text('Example Slider');
 
-    // add in the jQuery slider
-    $( ".jquery-slider", this ).slider();
+    // create the jQuery slider
+    createSlider($('.enp-slider-input__input', this), sliderData);
 });

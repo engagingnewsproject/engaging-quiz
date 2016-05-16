@@ -1,31 +1,31 @@
 @import 'jquery-ui';
 
 body #enp-quiz {
-    .enp-slider {
+    .enp-slider-input {
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 1rem auto;
     }
 
-    .enp-slider__label {
+    .enp-slider-input__label {
         @include _(label);
     }
 
-    .enp-slider__prefix,
-    .enp-slider__suffix {
+    .enp-slider-input__prefix,
+    .enp-slider-input__suffix {
         font-size: 1rem;
     }
 
-    .enp-slider__prefix {
+    .enp-slider-input__prefix {
         margin-right: .2rem;
     }
 
-    .enp-slider__suffix {
+    .enp-slider-input__suffix {
         margin-left: .2rem;
     }
 
-    .enp-slider__input {
+    .enp-slider-input__input {
         background: #fff;
         width: auto;
     }
