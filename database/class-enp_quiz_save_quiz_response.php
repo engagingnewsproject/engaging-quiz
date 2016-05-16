@@ -324,7 +324,7 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
                                 $question_array['mc_option'][] = $mc_option_array;
                             }
                         }
-                    } elseif($question['question_type'] === 'slider') {
+                    } elseif($question_obj->get_question_type() === 'slider') {
 
                     }
 
