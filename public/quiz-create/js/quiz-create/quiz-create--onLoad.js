@@ -21,5 +21,11 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
     createSliderTemplate($(this));
+
+    sliderID = $('.enp-slider-id', this).val();
+    // add the sliderID to all the inputs
+    $('input', this).each(function() {
+        $(this).data('sliderID', sliderID);
+    });
     
 });

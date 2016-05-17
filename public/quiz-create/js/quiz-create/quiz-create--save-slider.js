@@ -62,35 +62,39 @@ function createSliderTemplate(obj) {
 
 // on change slider values
 $(document).on('blur', '.enp-slider-range-low__input', function() {
-    sliderID = $(this).siblings('.enp-slider-id').val();
+    sliderID = $(this).data('sliderID');
     slider = getSlider(sliderID);
     sliderRangeLow = parseFloat($(this).val());
     slider.slider('option', 'min',  sliderRangeLow);
     sliderInput = $("#enp-slider-input__"+sliderID);
     sliderInput.attr('min', sliderRangeLow);
+
     // set midpoint
     setSliderStart(slider, sliderInput);
 });
 
 // on change slider values
-$(document).on('keyup', '.enp-slider-range-low__input', function() {
+$(document).on('input', '.enp-slider-range-low__input', function() {
     var low;
     // get input value
     low = $(this).val();
-    $('.enp-slider_input__range-helper__number--low').text(low);
+    exampleSlider = getExampleSliderElement($(this), '.enp-slider_input__range-helper__number--low');
+    exampleSlider.text(low);
+
 });
 
 // on change slider values
-$(document).on('keyup', '.enp-slider-range-high__input', function() {
+$(document).on('input', '.enp-slider-range-high__input', function() {
     var high;
     // get input value
     high = $(this).val();
-    $('.enp-slider_input__range-helper__number--high').text(high);
+    exampleSlider = getExampleSliderElement($(this), '.enp-slider_input__range-helper__number--high');
+    exampleSlider.text(high);
 });
 
 // update high range and max value
 $(document).on('blur', '.enp-slider-range-high__input', function() {
-    sliderID = $(this).siblings('.enp-slider-id').val();
+    sliderID = $(this).data('sliderID');
     slider = getSlider(sliderID);
     sliderRangeHigh = parseFloat($(this).val());
     slider.slider('option', 'max',  sliderRangeHigh);
@@ -102,7 +106,7 @@ $(document).on('blur', '.enp-slider-range-high__input', function() {
 
 // update high range and max value
 $(document).on('blur', '.enp-slider-increment__input', function() {
-    sliderID = $(this).siblings('.enp-slider-id').val();
+    sliderID = $(this).data('sliderID');
     slider = getSlider(sliderID);
     sliderIncrement = parseFloat($(this).val());
     slider.slider('option', 'step',  sliderIncrement);
@@ -118,7 +122,8 @@ $(document).on('keyup', '.enp-slider-prefix__input', function() {
     var prefix;
     // get input value
     prefix = $(this).val();
-    $('.enp-slider-input__prefix').text(prefix);
+    exampleSlider = getExampleSliderElement($(this), '.enp-slider-input__prefix');
+    exampleSlider.text(prefix);
 });
 
 // update the slider suffix on keydown
@@ -126,7 +131,8 @@ $(document).on('keyup', '.enp-slider-suffix__input', function() {
     var suffix;
     // get input value
     suffix = $(this).val();
-    $('.enp-slider-input__suffix').text(suffix);
+    exampleSlider = getExampleSliderElement($(this), '.enp-slider-input__suffix');
+    exampleSlider.text(suffix);
 });
 
 // set the slider to the middle point
@@ -152,4 +158,8 @@ function getSliderStart(low, high, interval) {
     middleInterval = middleInterval - remainder;
 
     return middleInterval;
+}
+
+function getExampleSliderElement(obj, element) {
+    return obj.closest('.enp-slider-options').find(element);
 }
