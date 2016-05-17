@@ -6,6 +6,7 @@ body #enp-quiz {
         align-items: center;
         justify-content: center;
         margin: 1rem auto 1.4rem;
+        position: relative;
     }
 
     .enp-slider-input__label {
@@ -29,11 +30,39 @@ body #enp-quiz {
 
     .enp-slider-input__input {
         background: #fff;
+        color: $font;
         width: auto;
         transition: all .25s ease-out;
     }
 
     .enp-slider-input__input--invalid-animation {
         box-shadow: 0 0 2px 1px $fade_red;
+    }
+
+    .enp-slider_input__range-helper {
+        position: absolute;
+        bottom: -1rem;
+        font-size: 0.8rem;
+    }
+
+    .enp-slider_input__range-helper--min {
+        left: 0;
+    }
+
+    .enp-slider_input__range-helper--max {
+        right: 0;
+    }
+
+    .enp-slider-input__range-helper__number {
+        position: relative;
+        color: $dark_gray;
+    }
+
+    .enp-slider_input__range-helper__number--min {
+        left: -50%;
+    }
+
+    .enp-slider_input__range-helper__number--max {
+        right: -50%;
     }
 }

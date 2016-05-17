@@ -86,7 +86,6 @@ body #enp-quiz {
 		position: relative;
 		text-align: left;
 		background: #ddd;
-		border-radius: 8px;
 
 		.ui-slider-handle {
 			background: #fff;
@@ -110,7 +109,6 @@ body #enp-quiz {
 
 		.ui-slider-range {
 			position: absolute;
-			border-radius: 8px;
 			z-index: 1;
 			font-size: .7rem;
 			display: block;

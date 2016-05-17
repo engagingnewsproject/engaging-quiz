@@ -11,7 +11,7 @@
 function createSlider(sliderInput, sliderData) {
     console.log('createSlider');
     // create the div
-    slider = $('<div class="enp-slider"></div>');
+    slider = $('<div class="enp-slider" aria-hidden="true" role="presentation"></div>');
     // add data
     slider.data('sliderID', sliderData.slider_id);
     $(sliderInput).data('sliderID', sliderData.slider_id);
