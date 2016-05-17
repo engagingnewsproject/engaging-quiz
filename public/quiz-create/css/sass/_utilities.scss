@@ -211,7 +211,7 @@ $placeholders: ();
     border: none;
     border-radius: 0;
     min-height: 3.065rem;
-    padding: 1rem;
+    padding: 1rem 2rem 1rem 1rem;
     margin: 1.6rem 0 0;
     position: relative;
     z-index: 9;
@@ -301,17 +301,33 @@ $placeholders: ();
         &:first-of-type {
             margin-top: 0;
         }
+
+        .enp-accordion-header__icon {
+            position: absolute;
+            fill: $dark_gray;
+            right: 0.75rem;
+            bottom: 0.75rem;
+            transition: all .275s ease-out;
+        }
+    }
+
+    .enp-accordion-header--open {
+
+        .enp-accordion-header__icon {
+            transform: rotateX(180deg) translateY(2px);
+        }
+
     }
 
     .enp-accordion-content {
         @include _(accordion__content);
     }
 
-    .enp-accordion-content--closed{
+    .enp-accordion-content--closed {
         @include _(accordion__content--closed);
     }
 
-    .enp-accordion-content--open{
+    .enp-accordion-content--open {
         @include _(accordion__content--open);
     }
 
