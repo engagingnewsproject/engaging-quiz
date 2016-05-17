@@ -97,6 +97,23 @@ $(document).on('blur', '.enp-slider-increment__input', function() {
     setSliderStart(slider, sliderInput);
 });
 
+// update the slider prefix on keydown
+$(document).on('keyup', '.enp-slider-prefix__input', function() {
+    var prefix;
+    // get input value
+    prefix = $(this).val();
+    $('.enp-slider-input__prefix').text(prefix);
+});
+
+// update the slider suffix on keydown
+$(document).on('keyup', '.enp-slider-suffix__input', function() {
+    var suffix;
+    // get input value
+    suffix = $(this).val();
+    $('.enp-slider-input__suffix').text(suffix);
+});
+
+// set the slider to the middle point
 function setSliderStart(slider, sliderInput) {
     low = slider.slider('option', 'min');
     high = slider.slider('option', 'max');
@@ -107,6 +124,7 @@ function setSliderStart(slider, sliderInput) {
     sliderInput.val(sliderValue);
 }
 
+// calculate where the slider should start
 function getSliderStart(low, high, interval) {
     low = parseFloat(low);
     high = parseFloat(high);
