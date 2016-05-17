@@ -281,6 +281,20 @@
         }
     }
 
+    .enp-slider-options {
+        .enp-accordion-header {
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding: 0.675rem;
+        }
+
+        .enp-slider-advanced-options__content {
+            border: none;
+            box-shadow: none;
+            padding-top: 1rem;
+        }
+    }
+
     .enp-answer-explanation {
         background: $light_blue;
         padding-top: 2rem;

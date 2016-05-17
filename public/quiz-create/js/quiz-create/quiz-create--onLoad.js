@@ -27,5 +27,13 @@ $('.enp-slider-options').each(function() {
     $('input', this).each(function() {
         $(this).data('sliderID', sliderID);
     });
-    
+
+    // set-up accordion for advanced options
+    // create the title and content accordion object so our headings can get created
+    accordion = {title: 'Advanced Slider Options', content: $('.enp-slider-advanced-options__content', this), baseID: sliderID};
+    //returns an accordion object with the header object and content object
+    accordion = enp_accordion__create_headers(accordion);
+    // set-up all the accordion classes and start classes (so they're closed by default)
+    enp_accordion__setup(accordion);
+
 });

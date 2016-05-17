@@ -26,17 +26,14 @@
         </div>
     </div>
 
-    <fieldset class="enp-slider-advanced-options__container">
-        <legend class="enp-legend enp-slider__legend">Advanced Slider Options</legend>
-        <div class="enp-slider-advanced-options__content">
-            <label class="enp-label enp-slider-increment__label" for="enp-slider-increment__<?php echo $slider->get_slider_id();?>">Slider Increment</label>
-            <input id="enp-slider-increment__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-increment__input" type="number" min="-9999999999999999.9999" max="9999999999999999.9999" name="enp_question[<?php echo $question_i;?>][slider][slider_increment]" value="<?php echo $slider->get_slider_increment();?>" step="any">
+    <div class="enp-slider-advanced-options__content">
+        <label class="enp-label enp-slider-increment__label" for="enp-slider-increment__<?php echo $slider->get_slider_id();?>">Slider Increment</label>
+        <input id="enp-slider-increment__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-increment__input" type="number" min="-9999999999999999.9999" max="9999999999999999.9999" name="enp_question[<?php echo $question_i;?>][slider][slider_increment]" value="<?php echo $slider->get_slider_increment();?>" step="any">
 
-            <label class="enp-label enp-slider-prefix__label" for="enp-slider-prefix__<?php echo $slider->get_slider_id();?>">Slider Number Prefix</label>
-            <input id="enp-slider-prefix__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-prefix__input" type="text" maxlength="100" name="enp_question[<?php echo $question_i;?>][slider][slider_prefix]" value="<?php echo $slider->get_slider_prefix();?>">
+        <label class="enp-label enp-slider-prefix__label" for="enp-slider-prefix__<?php echo $slider->get_slider_id();?>">Slider Number Prefix</label>
+        <input id="enp-slider-prefix__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-prefix__input" type="text" maxlength="100" name="enp_question[<?php echo $question_i;?>][slider][slider_prefix]" value="<?php echo $slider->get_slider_prefix();?>">
 
-            <label class="enp-label enp-slider-suffix__label" for="enp-slider-suffix__<?php echo $slider->get_slider_id();?>">Slider Number Suffix</label>
-            <input id="enp-slider-suffix__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-suffix__input" type="text" maxlength="100" name="enp_question[<?php echo $question_i;?>][slider][slider_suffix]" value="<?php echo $slider->get_slider_suffix();?>">
-        </div>
-    </fieldset>
+        <label class="enp-label enp-slider-suffix__label" for="enp-slider-suffix__<?php echo $slider->get_slider_id();?>">Slider Number Suffix</label>
+        <input id="enp-slider-suffix__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-suffix__input" type="text" maxlength="100" name="enp_question[<?php echo $question_i;?>][slider][slider_suffix]" value="<?php echo $slider->get_slider_suffix();?>">
+    </div>
 </fieldset>
