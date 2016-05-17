@@ -45,11 +45,11 @@ body #enp-quiz {
         font-size: 0.8rem;
     }
 
-    .enp-slider_input__range-helper--min {
+    .enp-slider_input__range-helper--low {
         left: 0;
     }
 
-    .enp-slider_input__range-helper--max {
+    .enp-slider_input__range-helper--high {
         right: 0;
     }
 
@@ -58,11 +58,11 @@ body #enp-quiz {
         color: $dark_gray;
     }
 
-    .enp-slider_input__range-helper__number--min {
+    .enp-slider_input__range-helper__number--low {
         left: -50%;
     }
 
-    .enp-slider_input__range-helper__number--max {
+    .enp-slider_input__range-helper__number--high {
         right: -50%;
     }
 }

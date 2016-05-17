@@ -598,6 +598,22 @@ $(document).on('blur', '.enp-slider-range-low__input', function() {
     setSliderStart(slider, sliderInput);
 });
 
+// on change slider values
+$(document).on('keyup', '.enp-slider-range-low__input', function() {
+    var low;
+    // get input value
+    low = $(this).val();
+    $('.enp-slider_input__range-helper__number--low').text(low);
+});
+
+// on change slider values
+$(document).on('keyup', '.enp-slider-range-high__input', function() {
+    var high;
+    // get input value
+    high = $(this).val();
+    $('.enp-slider_input__range-helper__number--high').text(high);
+});
+
 // update high range and max value
 $(document).on('blur', '.enp-slider-range-high__input', function() {
     sliderID = $(this).siblings('.enp-slider-id').val();
@@ -927,7 +943,7 @@ function unsetWait() {
 function createSlider(sliderInput, sliderData) {
     console.log('createSlider');
     // create the div
-    slider = $('<div class="enp-slider"></div>');
+    slider = $('<div class="enp-slider" aria-hidden="true" role="presentation"></div>');
     // add data
     slider.data('sliderID', sliderData.slider_id);
     $(sliderInput).data('sliderID', sliderData.slider_id);

@@ -234,6 +234,10 @@
         }
     }
 
+    .enp-slider-options .enp-input {
+        max-width: 11.8rem;
+    }
+
     .enp-slider-example {
         border: 1px solid #ddd;
         margin-top: 0.2rem;
@@ -247,6 +251,32 @@
             top: 0.2rem;
             left: 0.4rem;
             font-size: 0.8rem;
+        }
+    }
+
+    .enp-slider-range__container,
+    .enp-slider-correct__container {
+        @include _(flex-spread);
+        align-items: center;
+    }
+
+    .enp-slider-range__helper,
+    .enp-slider-correct__helper {
+        color: #777;
+        font-size: 0.85rem;
+        background: #fff;
+        padding: 0 .3rem;
+        position: relative;
+
+        &:before {
+            content: '';
+            position: absolute;
+            top: 44%;
+            height: 4px;
+            background: #ddd;
+            width: 120px;
+            left: -60px;
+            z-index: -1;
         }
     }
 
