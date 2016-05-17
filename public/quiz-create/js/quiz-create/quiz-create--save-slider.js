@@ -51,11 +51,11 @@ function createSliderTemplate(obj) {
 
     // create slider template
     slider = sliderTakeTemplate(sliderData);
-    sliderExample = $('<div class="enp-slider-example"></div>').html(slider);
+    sliderExample = $('<div class="enp-slider-preview"></div>').html(slider);
 
     // insert it
     $(sliderExample).prependTo(obj);
-    $('.enp-slider__label', obj).text('Example Slider');
+    $('.enp-slider__label', obj).text('Slider Preview');
     // create the jQuery slider
     createSlider($('.enp-slider-input__input', obj), sliderData);
 }
@@ -78,8 +78,8 @@ $(document).on('input', '.enp-slider-range-low__input', function() {
     var low;
     // get input value
     low = $(this).val();
-    exampleSlider = getExampleSliderElement($(this), '.enp-slider_input__range-helper__number--low');
-    exampleSlider.text(low);
+    sliderPreview = getSliderPreviewElement($(this), '.enp-slider_input__range-helper__number--low');
+    sliderPreview.text(low);
 
 });
 
@@ -88,8 +88,8 @@ $(document).on('input', '.enp-slider-range-high__input', function() {
     var high;
     // get input value
     high = $(this).val();
-    exampleSlider = getExampleSliderElement($(this), '.enp-slider_input__range-helper__number--high');
-    exampleSlider.text(high);
+    sliderPreview = getSliderPreviewElement($(this), '.enp-slider_input__range-helper__number--high');
+    sliderPreview.text(high);
 });
 
 // update high range and max value
@@ -122,8 +122,8 @@ $(document).on('keyup', '.enp-slider-prefix__input', function() {
     var prefix;
     // get input value
     prefix = $(this).val();
-    exampleSlider = getExampleSliderElement($(this), '.enp-slider-input__prefix');
-    exampleSlider.text(prefix);
+    sliderPreview = getSliderPreviewElement($(this), '.enp-slider-input__prefix');
+    sliderPreview.text(prefix);
 });
 
 // update the slider suffix on keydown
@@ -131,8 +131,8 @@ $(document).on('keyup', '.enp-slider-suffix__input', function() {
     var suffix;
     // get input value
     suffix = $(this).val();
-    exampleSlider = getExampleSliderElement($(this), '.enp-slider-input__suffix');
-    exampleSlider.text(suffix);
+    sliderPreview = getSliderPreviewElement($(this), '.enp-slider-input__suffix');
+    sliderPreview.text(suffix);
 });
 
 // set the slider to the middle point
@@ -160,6 +160,6 @@ function getSliderStart(low, high, interval) {
     return middleInterval;
 }
 
-function getExampleSliderElement(obj, element) {
+function getSliderPreviewElement(obj, element) {
     return obj.closest('.enp-slider-options').find(element);
 }
