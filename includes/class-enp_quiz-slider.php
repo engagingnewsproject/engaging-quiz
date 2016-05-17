@@ -137,7 +137,6 @@ class Enp_quiz_Slider {
         $interval = $this->slider_increment;
         $total_intervals = $high - $low / $interval;
         $middle_interval = (($total_intervals/2)*$interval) + $low;
-        var_dump(fmod($middle_interval, $interval));
         $remainder = fmod($middle_interval, $interval); // floating point modulo
         $slider_start = $middle_interval - $remainder;
         return $slider_start;
