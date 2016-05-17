@@ -82,8 +82,8 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
         // we're setting these as an agnostic range right now. We'll set the actual values later
         $a = $this->set_slider_value('slider_range_low', 0);
         $b = $this->set_slider_value('slider_range_high', 100);
-        $a = (int) $a;
-        $b = (int) $b;
+        $a = (float) $a;
+        $b = (float) $b;
 
         // see if they don't have a range_a value, set is as the range_b value
         if(empty($a) && $a !== 0) {
@@ -93,6 +93,8 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
         if(empty($b)) {
             $b = $a + 1;
         }
+
+
 
         self::$slider['slider_range_low'] = $this->set_low_value($a, $b);
         self::$slider['slider_range_high'] = $this->set_high_value($a, $b);
@@ -108,8 +110,8 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
         // we're setting these as an agnostic range right now. We'll set the actual values later
         $a = $this->set_slider_value('slider_correct_low', '50');
         $b = $this->set_slider_value('slider_correct_high', '50');
-        $a = (int) $a;
-        $b = (int) $b;
+        $a = (float) $a;
+        $b = (float) $b;
 
 
 

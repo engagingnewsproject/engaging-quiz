@@ -92,7 +92,7 @@ class Enp_quiz_Slider {
     * @return slider_range_low field from the database
     */
     protected function set_slider_range_low($slider) {
-        $slider_range_low = (int) $slider['slider_range_low'];
+        $slider_range_low = (float) $slider['slider_range_low'];
         return $slider_range_low;
     }
 
@@ -102,7 +102,7 @@ class Enp_quiz_Slider {
     * @return slider_range_high field from the database
     */
     protected function set_slider_range_high($slider) {
-        $slider_range_high = (int) $slider['slider_range_high'];
+        $slider_range_high = (float) $slider['slider_range_high'];
         return $slider_range_high;
     }
 
@@ -112,7 +112,7 @@ class Enp_quiz_Slider {
     * @return slider_correct_low field from the database
     */
     protected function set_slider_correct_low($slider) {
-        $slider_correct_low = (int) $slider['slider_correct_low'];
+        $slider_correct_low = (float) $slider['slider_correct_low'];
         return $slider_correct_low;
     }
 
@@ -122,7 +122,7 @@ class Enp_quiz_Slider {
     * @return slider_correct_high field from the database
     */
     protected function set_slider_correct_high($slider) {
-        $slider_correct_high = (int) $slider['slider_correct_high'];
+        $slider_correct_high = (float) $slider['slider_correct_high'];
         return $slider_correct_high;
     }
 
@@ -132,12 +132,13 @@ class Enp_quiz_Slider {
     * @return slider_start value
     */
     protected function set_slider_start() {
-        $low = (float) $this->slider_range_low;
-        $high = (float) $this->slider_range_high;
-        $interval = (float) $this->slider_increment;
+        $low = $this->slider_range_low;
+        $high = $this->slider_range_high;
+        $interval = $this->slider_increment;
         $total_intervals = $high - $low / $interval;
         $middle_interval = (($total_intervals/2)*$interval) + $low;
-        $remainder = $middle_interval % $interval;
+        var_dump(fmod($middle_interval, $interval));
+        $remainder = fmod($middle_interval, $interval); // floating point modulo
         $slider_start = $middle_interval - $remainder;
         return $slider_start;
     }
@@ -148,7 +149,7 @@ class Enp_quiz_Slider {
     * @return slider_increment field from the database
     */
     protected function set_slider_increment($slider) {
-        $slider_increment = (int) $slider['slider_increment'];
+        $slider_increment = (float) $slider['slider_increment'];
         return $slider_increment;
     }
 

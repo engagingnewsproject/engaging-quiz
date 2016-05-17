@@ -100,8 +100,8 @@ class Enp_quiz_Save {
     * @return (int) Lowest of the numbers, or, if equal, $a
     */
     public function set_low_value($a, $b) {
-        $a = (int) $a;
-        $b = (int) $b;
+        $a = $this->set_int_type($a);
+        $b = $this->set_int_type($b);
         // set $a as the default for low
         $low = $a;
         // see if b is actually lower
@@ -120,8 +120,8 @@ class Enp_quiz_Save {
     * @return (int) Highest of the numbers, or, if equal, $a
     */
     public function set_high_value($a, $b) {
-        $a = (int) $a;
-        $b = (int) $b;
+        $a = $this->set_int_type($a);
+        $b = $this->set_int_type($b);
         // set $a as the default for high
         $high = $a;
         // see if b is actually higher
@@ -131,5 +131,15 @@ class Enp_quiz_Save {
         }
         // return $high
         return $high;
+    }
+
+    public function set_int_type($a) {
+        // check if it's already an int or float (double)
+        $type = gettype($a);
+        if($type !== "integer" && $type !== "double") {
+            // cast to int
+            $a = (int) $a;
+        }
+        return $a;
     }
 }
