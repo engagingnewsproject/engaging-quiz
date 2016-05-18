@@ -23,25 +23,21 @@ $('.enp-slider-options').each(function() {
     createSliderTemplate($(this));
 
     sliderID = $('.enp-slider-id', this).val();
+    // add data to slider options container
+    $(this).data('sliderID', sliderID);
+    // add in the correct answer range selector
+    $('.enp-slider-correct-high__container', this).append('<button class="enp-slider-correct-answer-range" type="button"></button>');
     // add the sliderID to all the inputs
-    $('input', this).each(function() {
+    $('input, button', this).each(function() {
         $(this).data('sliderID', sliderID);
     });
 
-    // add in the correct answer range selector
-    $('.enp-slider-correct-high__container', this).append('<button class="enp-slider-correct-answer-range"></button>');
+
     // See if we should hide the slider answer high and add in the option to add in a high value
-    if($('.enp-slider-correct-low__input', this).val() === $('.enp-slider-correct-high__input', this).val()) {
-        // hide the answer range high input and "to" thang
-        $('.enp-slider-correct__helper', this).hide();
-        $('.enp-slider-correct-high__input-container', this).hide();
-        $('.enp-slider-correct-low__label', this).text('Slider Answer');
-        $('.enp-slider-correct-answer-range', this).addClass('enp-slider-correct-answer-range--add-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-add" /></svg> Answer Range');
+    if(parseFloat( $('.enp-slider-correct-low__input', this).val() ) === parseFloat( $('.enp-slider-correct-high__input', this).val() ) ) {
+        removeSliderRange($(this));
     } else {
-        $('.enp-slider-correct-low__label', this).text('Slider Answer Low');
-        $('.enp-slider-correct__helper', this).show();
-        $('.enp-slider-correct-high__container', this).show();
-        $('.enp-slider-correct-answer-range', this).addClass('enp-slider-correct-answer-range--remove-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-close" /></svg>');
+        addSliderRange($(this));
     }
 
     // set-up accordion for advanced options

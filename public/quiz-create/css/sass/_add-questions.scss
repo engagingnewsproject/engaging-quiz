@@ -289,6 +289,7 @@
             width: 120px;
             left: -60px;
             z-index: -1;
+            transition: width 0.7s ease-out, background 1.6s ease-out;
         }
     }
 
@@ -314,6 +315,17 @@
         position: relative;
     }
 
+    .enp-slider-correct-high__input-container--hidden {
+        display: none;
+    }
+
+    .enp-slider-correct__helper--hidden {
+        &:before {
+            width: 0;
+            background: $green;
+        }
+    }
+
     .enp-slider-correct-answer-range--add-range {
         @include _(btn--dashed--light--alt-bg);
         margin-left: 0.8rem;
@@ -332,8 +344,6 @@
         .enp-slider-correct-answer-range__icon {
             @include _(btn--icon__icon--circle--small);
             @include _(icon--gray-bg);
-            width: 18px;
-            height: 18px;
             position: relative;
             left: -0.2rem;
         }
@@ -352,14 +362,15 @@
         box-shadow: none;
         padding: 0 0.1rem;
 
-        .enp-icon {
+        .enp-slider-correct-answer-range__icon {
             width: 1.2em;
             height: 1.2em;
             fill: $dark_gray;
         }
 
-        &:hover {
-            .enp-icon {
+        &:hover,
+        &:focus {
+            .enp-slider-correct-answer-range__icon {
                 fill: $red;
             }
         }

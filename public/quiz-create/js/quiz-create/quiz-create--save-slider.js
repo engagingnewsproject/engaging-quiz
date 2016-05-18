@@ -163,3 +163,60 @@ function getSliderStart(low, high, interval) {
 function getSliderPreviewElement(obj, element) {
     return obj.closest('.enp-slider-options').find(element);
 }
+
+$(document).on('click', '.enp-slider-correct-answer-range', function() {
+    sliderID = $(this).data('sliderID');
+    if($(this).hasClass('enp-slider-correct-answer-range--add-range')) {
+        addSliderRange(sliderID);
+    } else {
+        removeSliderRange(sliderID);
+    }
+});
+
+
+function removeSliderRange(sliderID) {
+    container = getSliderOptionsContainer(sliderID);
+    // hide the answer range high input and "to" thang
+    $('.enp-slider-correct__helper', container).addClass('enp-slider-correct__helper--hidden').text('');
+    // hide the input correct high container
+    $('.enp-slider-correct-high__input-container', container).addClass('enp-slider-correct-high__input-container--hidden');
+    // change the low correct label to Slider Answer (remove Low)
+    $('.enp-slider-correct-low__label', container).text('Slider Answer');
+    // Set the button content and classes
+    $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--remove-range').addClass('enp-slider-correct-answer-range--add-range').html('<span class="enp-screen-reader-text">Remove Answer Range</span><svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-add" /></svg> Answer Range');
+    // Make Correct High value equal the Low value
+    lowCorrectVal = $('.enp-slider-correct-low__input', container).val();
+    $('.enp-slider-correct-high__input', container).val(lowCorrectVal);
+}
+
+function addSliderRange(sliderID) {
+    container = getSliderOptionsContainer(sliderID);
+    $('.enp-slider-correct-low__label', container).text('Slider Answer Low');
+    $('.enp-slider-correct__helper', container).removeClass('enp-slider-correct__helper--hidden').text('to');
+    $('.enp-slider-correct-high__input-container', container).removeClass('enp-slider-correct-high__input-container--hidden');
+    $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--add-range').addClass('enp-slider-correct-answer-range--remove-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-close" /></svg>');
+    // Add one interval to the high value if it equals the low value
+    highCorrectVal = parseFloat( $('.enp-slider-correct-high__input', container).val() );
+    lowCorrectVal = parseFloat( $('.enp-slider-correct-low__input', container).val() );
+    increment = parseFloat( $('.enp-slider-increment__input', container).val() );
+    if(highCorrectVal <= lowCorrectVal) {
+        $('.enp-slider-correct-high__input', container).val(lowCorrectVal + increment);
+    }
+
+}
+
+function getSliderOptionsContainer(sliderID) {
+    var sliderOptions;
+    $('.enp-slider-options').each(function() {
+        // check it's sliderID
+        if($(this).data('sliderID') === sliderID) {
+            // if it equals, then set the slider var and break out of the each loop
+            sliderOptions = $(this);
+            if(typeof(callback) == "function") {
+                callback($(this));
+            }
+            return false;
+        }
+    });
+    return sliderOptions;
+}
