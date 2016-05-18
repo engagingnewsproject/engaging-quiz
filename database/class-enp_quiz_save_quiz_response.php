@@ -393,7 +393,6 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
             }
             $i++;
         }
-
         return $return_message;
     }
 
@@ -501,36 +500,73 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
         $empty_fields = false;
 
         foreach($required_fields as $required) {
-            if(empty($slider[$required])) {
+            // check if it's empty or not and that it doesn't match a 0 because
+            // 0 is a valid entry
+            if(empty($slider[$required]) && $slider[$required] !== (float) 0) {
                 $empty_fields = true;
                 $this->add_error('Question '.($question['question_order']+1).' Slider field '.$required.' is empty.');
             }
         }
+
         // if we have empty fields, just finish the validation check now
-        if($empty_fields = true) {
+        if($empty_fields === true) {
             $return_message = 'missing_required_slider_fields';
             return $return_message;
         }
-
         if($slider['slider_range_high'] <= $slider['slider_range_low'] ) {
             $return_message = 'invalid';
             $this->add_error('Slider range for Question '.($question['question_order']+1).' needs to be changed.');
-        } if($slider['slider_correct_high'] <= $slider['slider_correct_low']) {
+        }
+
+        if($slider['slider_correct_high'] < $slider['slider_correct_low']) {
             $return_message = 'invalid';
-            $this->add_error('Slider Correct Answer range for Question '.($question['question_order']+1).' needs to be changed.');
+            $this->add_error('Question '.($question['question_order']+1).' Slider Correct Answer High value is greater than the Correct Low value.');
         }
 
         if($slider['slider_range_high'] < $slider['slider_correct_high']  ) {
             $return_message = 'invalid';
-            $this->add_error('Question '.($question['question_order']+1).' Slider answer is higher than the slider range.');
+            $this->add_error('Question '.($question['question_order']+1).' Slider Correct Answer is higher than the slider range. Increase the Slider End value or decrease the Slider Correct value.');
         }
-        if($slider['slider_correct_low'] < $slider['slider_correct_low']  ) {
+
+        if($slider['slider_correct_low'] < $slider['slider_range_low']  ) {
             $return_message = 'invalid';
-            $this->add_error('Question '.($question['question_order']+1).' Slider answer is lower than the slider range.');
+            $this->add_error('Question '.($question['question_order']+1).' Slider Correct answer is lower than the slider range. Decrease the Slider Start value or increase the Slider Correct answer.');
         }
-        // check correct answer CAN be selected
+
         // get all increments into an array
-        //if()
+        if($slider['slider_increment'] === (float) 0) {
+            $return_message = 'invalid';
+            $this->add_error('Question '.($question['question_order']+1).' Slider increment cannot be 0.');
+        }
+        // check that we're less than 1001 intervals
+        elseif( 1000 < ($slider['slider_range_high'] - $slider['slider_range_low']) / $slider['slider_increment'] ) {
+            $return_message = 'invalid';
+            $this->add_error('Question '.($question['question_order']+1).' has '.($slider['slider_range_high'] - $slider['slider_range_low']) / $slider['slider_increment'].' intervals. It cannot have more than 1000 intervals. Decrease the Slider Low/High Range values or increase the Slider Increment value.');
+        } else {
+            // check to make sure the increment allows user to select the correct answer
+            // loop through the numbers to validate the increment
+            // stop at 1000, that's too many.
+            $start = $slider['slider_range_low'];
+            $end = $slider['slider_range_high'];
+            $current_number = $start;
+
+            while($current_number <= $end) {
+                // check if we're in the correct range
+                if($slider['slider_correct_low'] <= $current_number && $current_number < $slider['slider_correct_high'] ) {
+                    // we've got a correct answer!
+                    break;
+                }
+                // we're above the correct answer high, then break and return the error message. no reason to keep checking
+                elseif($slider['slider_correct_high'] < $current_number ) {
+                    $this->add_error('Question '.($question['question_order']+1).' Slider correct answer is impossible to select with a Slider Increment value of '.$slider['slider_increment'].'. Change the correct answer value or increment value.');
+                    break;
+                } else {
+                    // increase the interval and keep going
+                    $current_number = $current_number + $slider['slider_increment'];
+                }
+            }
+
+        }
 
         return $return_message;
     }
