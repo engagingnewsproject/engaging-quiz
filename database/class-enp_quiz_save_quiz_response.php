@@ -325,7 +325,9 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
                             }
                         }
                     } elseif($question_obj->get_question_type() === 'slider') {
-
+                        // check slider values
+                        // check if correct answer CAN be selected based on increment
+                        // and low/high range (ie - correct value must be within low/high range and must be at an increment from the low value that it's possible to select it)
                     }
 
                     // add it to our questions array

@@ -41,10 +41,11 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
         self::$slider = $slider;
         // set the defaults/get the submitted values
         self::$slider['slider_id'] = $this->set_slider_value('slider_id', 0);
-        self::$slider['slider_increment'] = $this->set_slider_value('slider_increment', 1);
         self::$slider['slider_prefix'] = $this->set_slider_value('slider_prefix', '');
         self::$slider['slider_suffix'] = $this->set_slider_value('slider_suffix', '');
 
+        // add in the increment
+        $this->set_slider_increment();
         // add in the low and high range.
         $this->set_slider_range();
         // add in the correct low and high range.
@@ -72,6 +73,25 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
         return $param_value;
     }
 
+    /**
+    * Set increment for the slider
+    *
+    * @param self::$slider
+    */
+    protected function set_slider_increment() {
+        $increment = (float) 1;
+        // slider increment can be anything other than 0
+        if(array_key_exists('slider_increment', self::$slider)) {
+            $increment = (float) self::$slider['slider_increment'];
+        }
+
+        if(empty($increment)) {
+            // empty should catch a (float) 0
+            $increment = (float) 1;
+        }
+
+        self::$slider['slider_increment'] = $increment;
+    }
     /**
     * Set correct_low and correct_high for the slider
     *
