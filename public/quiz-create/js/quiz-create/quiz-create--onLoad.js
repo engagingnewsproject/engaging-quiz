@@ -29,7 +29,7 @@ $('.enp-slider-options').each(function() {
     });
 
     // add in the correct answer range selector
-    $('.enp-slider-correct-high__container', this).append('<button class="enp-btn enp-slider-correct-answer-range"></button>');
+    $('.enp-slider-correct-high__container', this).append('<button class="enp-slider-correct-answer-range"></button>');
     // See if we should hide the slider answer high and add in the option to add in a high value
     if($('.enp-slider-correct-low__input', this).val() === $('.enp-slider-correct-high__input', this).val()) {
         // hide the answer range high input and "to" thang
