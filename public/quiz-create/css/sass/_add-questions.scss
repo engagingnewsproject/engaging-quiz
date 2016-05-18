@@ -239,6 +239,14 @@
         max-width: 11.8rem;
     }
 
+    .enp-slider-range__container .enp-input,
+    .enp-slider-correct__container .enp-input {
+        max-width: 6.8rem;
+        @include breakpoint('small') {
+            max-width: 11.8rem;
+        }
+    }
+
     .enp-slider-preview {
         border: 1px solid #ddd;
         margin-top: 0.2rem;
@@ -306,13 +314,25 @@
 
     .enp-slider-correct-answer-range--add-range {
         @include _(btn--dashed--light--alt-bg);
-        max-width: 11.8rem;
-        font-size: 0.8rem;
-        padding: .8rem 1.2rem .8rem 1.2rem;
+        margin-left: 0.8rem;
+        font-size: 0.7rem;
+        font-weight: 300;
+
+        @include breakpoint('small') {
+            font-size: 0.8rem;
+            padding: .75rem;
+        }
+
+        @include breakpoint('medium') {
+            padding: .8rem 1.2rem .8rem 1.2rem;
+            min-width: 11.4rem;
+        }
 
         .enp-slider-correct-answer-range__icon {
             @include _(btn--icon__icon--circle--small);
             @include _(icon--gray-bg);
+            width: 18px;
+            height: 18px;
             position: relative;
             left: -0.2rem;
         }
