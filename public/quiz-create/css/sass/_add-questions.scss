@@ -113,13 +113,15 @@
     .enp-slider-options,
     .enp-mc-options {
         margin-top: 0rem;
-        animation: slideOutTop .25s ease-out forwards, visibilityHidden 0s forwards;
+        display: none;
+        animation: slideOutTop .25s ease-out forwards;
         animation-delay: 0s, .05s;
     }
 
     .enp-question-type__input--slider:checked ~ .enp-slider-options,
     .enp-question-type__input--mc:checked ~ .enp-mc-options {
         visibility: visible;
+        display: block;
         animation: fadeIn .45s ease-out forwards;
     }
 
@@ -316,15 +318,14 @@
         @include _(btn--dashed--light--alt-bg);
         margin-left: 0.8rem;
         font-size: 0.7rem;
-        font-weight: 300;
 
         @include breakpoint('small') {
             font-size: 0.8rem;
-            padding: .75rem;
+            padding: .7rem;
         }
 
         @include breakpoint('medium') {
-            padding: .8rem 1.2rem .8rem 1.2rem;
+            padding: .7rem 1.2rem;
             min-width: 11.4rem;
         }
 
@@ -349,7 +350,7 @@
         background: none;
         border: none;
         box-shadow: none;
-        padding: 0.2rem;
+        padding: 0 0.1rem;
 
         .enp-icon {
             width: 1.2em;
