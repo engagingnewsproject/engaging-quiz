@@ -219,34 +219,7 @@ $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></sectio
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
-    createSliderTemplate($(this));
-
-    sliderID = $('.enp-slider-id', this).val();
-    // add data to slider options container
-    $(this).data('sliderID', sliderID);
-    // add in the correct answer range selector
-    $('.enp-slider-correct-high__container', this).append('<button class="enp-slider-correct-answer-range" type="button"></button>');
-    // add the sliderID to all the inputs
-    $('input, button', this).each(function() {
-        $(this).data('sliderID', sliderID);
-    });
-
-
-    // See if we should hide the slider answer high and add in the option to add in a high value
-    if(parseFloat( $('.enp-slider-correct-low__input', this).val() ) === parseFloat( $('.enp-slider-correct-high__input', this).val() ) ) {
-        removeSliderRange($(this));
-    } else {
-        addSliderRange($(this));
-    }
-
-    // set-up accordion for advanced options
-    // create the title and content accordion object so our headings can get created
-    accordion = {title: 'Advanced Slider Options', content: $('.enp-slider-advanced-options__content', this), baseID: sliderID};
-    //returns an accordion object with the header object and content object
-    accordion = enp_accordion__create_headers(accordion);
-    // set-up all the accordion classes and start classes (so they're closed by default)
-    enp_accordion__setup(accordion);
-
+    setUpSliderTemplate($(this));
 });
 
 /*
@@ -567,6 +540,7 @@ function temp_addSlider(questionID) {
 
     // insert it
     $(temp_slider).appendTo('#enp-question--'+questionID+' .enp-question');
+
 }
 
 // add MC option ID, question ID, question index, and mc option index
@@ -578,27 +552,28 @@ function addSlider(new_sliderID, questionID) {
     findReplaceDomAttributes(new_slider_el, /newQuestionPosition/, getQuestionIndex(questionID));
 
     findReplaceDomAttributes(new_slider_el, /newSliderID/, new_sliderID);
+
+    // set-up the UX (accordions, range buttons, etc) now that we have an ID
+    setUpSliderTemplate('#enp-question--'+questionID+' .enp-slider-options');
 }
 
-
-
-function createSliderTemplate(obj) {
+function createSliderTemplate(container) {
     var sliderData;
     // scrape the input values and create the template
-    sliderRangeLow = parseFloat($('.enp-slider-range-low__input', obj).val());
-    sliderRangeHigh = parseFloat($('.enp-slider-range-high__input', obj).val());
-    sliderIncrement = parseFloat($('.enp-slider-increment__input', obj).val());
+    sliderRangeLow = parseFloat($('.enp-slider-range-low__input', container).val());
+    sliderRangeHigh = parseFloat($('.enp-slider-range-high__input', container).val());
+    sliderIncrement = parseFloat($('.enp-slider-increment__input', container).val());
     sliderStart = getSliderStart(sliderRangeLow, sliderRangeHigh, sliderIncrement);
 
     sliderData = {
-        'slider_id': $('.enp-slider-id', obj).val(),
+        'slider_id': $('.enp-slider-id', container).val(),
         'slider_range_low': sliderRangeLow,
         'slider_range_high': sliderRangeHigh,
         'slider_start': sliderStart,
         'slider_increment': sliderIncrement,
-        'slider_prefix': $('.enp-slider-prefix__input', obj).val(),
-        'slider_suffix': $('.enp-slider-suffix__input', obj).val(),
-        'slider_input_size': $('.enp-slider-range-high__input', obj).val().length
+        'slider_prefix': $('.enp-slider-prefix__input', container).val(),
+        'slider_suffix': $('.enp-slider-suffix__input', container).val(),
+        'slider_input_size': $('.enp-slider-range-high__input', container).val().length
     };
 
     // create slider template
@@ -606,10 +581,10 @@ function createSliderTemplate(obj) {
     sliderExample = $('<div class="enp-slider-preview"></div>').html(slider);
 
     // insert it
-    $(sliderExample).prependTo(obj);
-    $('.enp-slider__label', obj).text('Slider Preview');
+    $(sliderExample).prependTo(container);
+    $('.enp-slider__label', container).text('Slider Preview');
     // create the jQuery slider
-    createSlider($('.enp-slider-input__input', obj), sliderData);
+    createSlider($('.enp-slider-input__input', container), sliderData);
 }
 
 // on change slider values
@@ -754,7 +729,6 @@ function addSliderRange(sliderID) {
     if(highCorrectVal <= lowCorrectVal) {
         $('.enp-slider-correct-high__input', container).val(lowCorrectVal + increment);
     }
-
 }
 
 function getSliderOptionsContainer(sliderID) {
@@ -771,6 +745,41 @@ function getSliderOptionsContainer(sliderID) {
         }
     });
     return sliderOptions;
+}
+
+
+function setUpSliderTemplate(sliderOptionsContainer) {
+
+    sliderID = $('.enp-slider-id', sliderOptionsContainer).val();
+    // add data to slider options container
+    $(sliderOptionsContainer).data('sliderID', sliderID);
+    createSliderTemplate(sliderOptionsContainer);
+    // add in the correct answer range selector
+    $('.enp-slider-correct-high__container', sliderOptionsContainer).append('<button class="enp-slider-correct-answer-range" type="button"></button>');
+    // add the sliderID to all the inputs
+    $('input, button', sliderOptionsContainer).each(function() {
+        $(this).data('sliderID', sliderID);
+    });
+
+
+    // See if we should hide the slider answer high and add in the option to add in a high value
+    correctLow = parseFloat( $('.enp-slider-correct-low__input', sliderOptionsContainer).val() );
+    correctHigh = parseFloat( $('.enp-slider-correct-high__input', sliderOptionsContainer).val() );
+    console.log(correctLow);
+    console.log(correctHigh);
+    if( correctLow === correctHigh ) {
+        removeSliderRange(sliderID);
+    } else {
+        addSliderRange(sliderID);
+    }
+
+    // set-up accordion for advanced options
+    // create the title and content accordion object so our headings can get created
+    accordion = {title: 'Advanced Slider Options', content: $('.enp-slider-advanced-options__content', sliderOptionsContainer), baseID: sliderID};
+    //returns an accordion object with the header object and content object
+    accordion = enp_accordion__create_headers(accordion);
+    // set-up all the accordion classes and start classes (so they're closed by default)
+    enp_accordion__setup(accordion);
 }
 
 // ajax submission
