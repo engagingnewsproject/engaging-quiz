@@ -204,6 +204,8 @@ function addSliderRange(sliderID) {
     if(highCorrectVal <= lowCorrectVal) {
         $('.enp-slider-correct-high__input', container).val(lowCorrectVal + increment);
     }
+    // focus the slider range high input
+    $('.enp-slider-correct-high__input').focus();
 }
 
 function getSliderOptionsContainer(sliderID) {
