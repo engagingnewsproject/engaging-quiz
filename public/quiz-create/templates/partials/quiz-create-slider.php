@@ -16,13 +16,15 @@
 
     <div class="enp-slider-correct__container">
         <div class="enp-slider-correct-low__container">
-            <label class="enp-label enp-slider-correct-low__label" for="enp-slider-correct-low__<?php echo $slider->get_slider_id();?>">Slider Correct Low</label>
+            <label class="enp-label enp-slider-correct-low__label" for="enp-slider-correct-low__<?php echo $slider->get_slider_id();?>">Slider Answer Low</label>
             <input id="enp-slider-correct-low__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-correct-low__input" type="number" min="-9999999999999999.9999" max="9999999999999999.9999" name="enp_question[<?php echo $question_i;?>][slider][slider_correct_low]" value="<?php echo $slider->get_slider_correct_low();?>" step="any">
         </div>
         <div class="enp-slider-correct__helper">to</div>
         <div class="enp-slider-correct-high__container">
-            <label class="enp-label enp-slider-correct-high__label" for="enp-slider-correct-high__<?php echo $slider->get_slider_id();?>">Slider Correct High</label>
-            <input id="enp-slider-correct-high__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-correct-high__input" type="number" min="-9999999999999999.9999" max="9999999999999999.9999" name="enp_question[<?php echo $question_i;?>][slider][slider_correct_high]" value="<?php echo $slider->get_slider_correct_high();?>" step="any">
+            <div class="enp-slider-correct-high__input-container">
+                <label class="enp-label enp-slider-correct-high__label" for="enp-slider-correct-high__<?php echo $slider->get_slider_id();?>">Slider Answer High</label>
+                <input id="enp-slider-correct-high__<?php echo $slider->get_slider_id();?>" class="enp-input enp-slider-correct-high__input" type="number" min="-9999999999999999.9999" max="9999999999999999.9999" name="enp_question[<?php echo $question_i;?>][slider][slider_correct_high]" value="<?php echo $slider->get_slider_correct_high();?>" step="any">
+            </div>
         </div>
     </div>
 

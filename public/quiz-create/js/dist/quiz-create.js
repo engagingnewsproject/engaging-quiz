@@ -227,6 +227,22 @@ $('.enp-slider-options').each(function() {
         $(this).data('sliderID', sliderID);
     });
 
+    // add in the correct answer range selector
+    $('.enp-slider-correct-high__container', this).append('<button class="enp-btn enp-slider-correct-answer-range"></button>');
+    // See if we should hide the slider answer high and add in the option to add in a high value
+    if($('.enp-slider-correct-low__input', this).val() === $('.enp-slider-correct-high__input', this).val()) {
+        // hide the answer range high input and "to" thang
+        $('.enp-slider-correct__helper', this).hide();
+        $('.enp-slider-correct-high__input-container', this).hide();
+        $('.enp-slider-correct-low__label', this).text('Slider Answer');
+        $('.enp-slider-correct-answer-range', this).addClass('enp-slider-correct-answer-range--add-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-add" /></svg> Answer Range');
+    } else {
+        $('.enp-slider-correct-low__label', this).text('Slider Answer Low');
+        $('.enp-slider-correct__helper', this).show();
+        $('.enp-slider-correct-high__container', this).show();
+        $('.enp-slider-correct-answer-range', this).addClass('enp-slider-correct-answer-range--remove-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-close" /></svg>');
+    }
+
     // set-up accordion for advanced options
     // create the title and content accordion object so our headings can get created
     accordion = {title: 'Advanced Slider Options', content: $('.enp-slider-advanced-options__content', this), baseID: sliderID};

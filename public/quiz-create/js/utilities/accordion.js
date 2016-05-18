@@ -19,7 +19,7 @@ jQuery( document ).ready( function( $ ) {
     window.enp_accordion__create_headers = function(accordion) {
         var new_accordion;
         // create the HTML for the header
-        accordion_header = '<button id="'+accordion.baseID+'__accordion-header" class="enp-accordion-header"><span class="enp-accordion-header__title">'+accordion.title+'</span><svg class=" enp-icon enp-accordion-header__icon"><use xlink:href="#icon-chevron-down" /></svg></button>';
+        accordion_header = '<button id="'+accordion.baseID+'__accordion-header" class="enp-accordion-header"><span class="enp-accordion-header__title">'+accordion.title+'</span><svg class="enp-icon enp-accordion-header__icon"><use xlink:href="#icon-chevron-down" /></svg></button>';
         // create the heading sections
         $(accordion.content).before(accordion_header);
         // set the accordion_header as the newly created object
