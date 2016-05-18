@@ -224,7 +224,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
                                 );
             $slider_response = array_merge(self::$slider, $slider_response);
             // pass the response array to our response object
-            parent::$response_obj->set_slider_response($slider_response, parent::$question, self::$slider);
+            parent::$response_obj->set_slider_response($slider_response, parent::$question);
 
             // see if we we're adding a slider in here...
             if(self::$user_action_action === 'add' && self::$user_action_element === 'slider') {

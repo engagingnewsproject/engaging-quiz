@@ -325,9 +325,14 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
                             }
                         }
                     } elseif($question_obj->get_question_type() === 'slider') {
-                        // check slider values
-                        // check if correct answer CAN be selected based on increment
-                        // and low/high range (ie - correct value must be within low/high range and must be at an increment from the low value that it's possible to select it)
+                        // get the slider ID
+                        $slider_id = $question_obj->get_slider();
+                        // get the slider object
+                        $slider_object = new Enp_quiz_Slider($slider_id);
+                        // cast it to an array
+                        $slider_array = (array) $slider_object;
+                        // add it to the question
+                        $question_array['slider'] = $slider_array;
                     }
 
                     // add it to our questions array
@@ -494,6 +499,7 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
                     );
 
         $empty_fields = false;
+
         foreach($required_fields as $required) {
             if(empty($slider[$required])) {
                 $empty_fields = true;
@@ -509,7 +515,7 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
         if($slider['slider_range_high'] <= $slider['slider_range_low'] ) {
             $return_message = 'invalid';
             $this->add_error('Slider range for Question '.($question['question_order']+1).' needs to be changed.');
-        } elseif($slider['slider_correct_high'] <= $slider['slider_correct_low']) {
+        } if($slider['slider_correct_high'] <= $slider['slider_correct_low']) {
             $return_message = 'invalid';
             $this->add_error('Slider Correct Answer range for Question '.($question['question_order']+1).' needs to be changed.');
         }
@@ -522,6 +528,9 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
             $return_message = 'invalid';
             $this->add_error('Question '.($question['question_order']+1).' Slider answer is lower than the slider range.');
         }
+        // check correct answer CAN be selected
+        // get all increments into an array
+        //if()
 
         return $return_message;
     }
