@@ -552,7 +552,7 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
 
             while($current_number <= $end) {
                 // check if we're in the correct range
-                if($slider['slider_correct_low'] <= $current_number && $current_number < $slider['slider_correct_high'] ) {
+                if($slider['slider_correct_low'] <= $current_number && $current_number <= $slider['slider_correct_high'] ) {
                     // we've got a correct answer!
                     break;
                 }
