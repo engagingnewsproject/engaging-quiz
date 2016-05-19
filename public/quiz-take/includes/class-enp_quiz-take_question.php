@@ -133,7 +133,7 @@ class Enp_quiz_Take_Question {
 	}
 
 	public function get_question_classes() {
-		$classes = 'enp-question__fieldest--'.$this->question->get_question_type().' ';
+		$classes = 'enp-question__fieldset--'.$this->question->get_question_type().' ';
 		if($this->qt->state === 'question') {
 
 		} elseif($this->qt->state === 'question_explanation') {

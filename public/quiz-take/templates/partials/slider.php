@@ -1,4 +1,4 @@
-<label for="enp-slider__<?php echo $slider->get_slider_id();?>" class="enp-slider__label">
+<label for="enp-slider__<?php echo $slider->get_slider_id();?>" class="enp-slider__label enp-question__helper">
     Enter a number between <?php echo $slider->get_slider_range_low();?> and <?php echo $slider->get_slider_range_high();?>
 </label>
 <div class="enp-slider-input__container">

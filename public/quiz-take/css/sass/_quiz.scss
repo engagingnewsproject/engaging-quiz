@@ -145,7 +145,7 @@
     // show the submit button (they can also hit enter to submit tho)
     @include btn--icon--hover-circle(enp-question__submit);
 
-    .enp-question__submit {
+    .enp-question__fieldset--mc .enp-question__submit {
         @include _(hidden--accessible);
     }
 
