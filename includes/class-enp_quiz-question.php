@@ -638,6 +638,10 @@ class Enp_quiz_Question {
                 $mc_option_array = $mc_option->get_take_mc_option_array();
                 $question_array['mc_option'][] = $mc_option_array;
             }
+        } elseif($question_type === 'slider') {
+            $slider_id = $this->get_slider();
+            $slider = new Enp_quiz_Slider($slider_id);
+            $question_array['slider'] = (array) $slider;
         }
         return $question_array;
     }

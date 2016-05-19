@@ -31,7 +31,7 @@
         include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider.php');
     }?>
 
-    <button type="submit" class="enp-btn enp-options__submit enp-question__submit" name="enp-question-submit" value="enp-question-submit">Submit Answer <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
+    <button type="submit" class="enp-btn enp-options__submit enp-question__submit" name="enp-question-submit" value="enp-question-submit"><span class="enp-question__submit__text">Submit Answer</span> <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
       <use xlink:href="#icon-chevron-right" />
     </svg></button>
 

@@ -1,6 +1,8 @@
 function bindSliderData(questionJSON) {
     // assigns data and creates the jQuery slider
-    console.log(questionJSON.slider);
+    question = $('#question_'+questionJSON.question_id);
+    sliderInput = $('.enp-slider-input__input', question);
+    createSlider(sliderInput, questionJSON.slider);
 }
 
 /**
@@ -14,6 +16,7 @@ function bindSliderData(questionJSON) {
 *                   }
 */
 function createSlider(sliderInput, sliderData) {
+    console.log(sliderData);
     // create the div
     slider = $('<div class="enp-slider" aria-hidden="true" role="presentation"></div>');
     // add data
@@ -30,8 +33,18 @@ function createSlider(sliderInput, sliderData) {
             $( sliderInput ).val( ui.value );
         }
     });
+    // get the slider input container
+    sliderInputContainer = $(sliderInput).parent();
     // inject the slider to the DOM after the parent wrapper of the input
-    $(sliderInput).parent().after(slider);
+    sliderInputContainer.after(slider);
+
+    // get the slider range helper template
+    sliderTakeRangeHelpers = sliderRangeHelpersTemplate({
+            'slider_range_low': parseFloat(sliderData.slider_range_low),
+            'slider_range_high': parseFloat(sliderData.slider_range_high)
+    });
+    // add in the slider range helpers
+    sliderInputContainer.append(sliderTakeRangeHelpers);
 }
 
 // update slider on value change

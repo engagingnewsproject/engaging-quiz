@@ -580,12 +580,8 @@ function createSliderTemplate(container) {
     // create slider template
     slider = sliderTakeTemplate(sliderData);
     sliderExample = $('<div class="enp-slider-preview"></div>').html(slider);
-    sliderRangeHelpers = sliderTakeRangeHelpersTemplate(sliderData);
     // insert it
     $(sliderExample).prependTo(container);
-    // get our new input__container and add our range helpers to it
-    inputContainer = $('.enp-slider-input__container', container);
-    $(sliderRangeHelpers).appendTo(inputContainer);
 
     $('.enp-slider__label', container).text('Slider Preview');
     // create the jQuery slider
@@ -1114,8 +1110,18 @@ function createSlider(sliderInput, sliderData) {
             $( sliderInput ).val( ui.value );
         }
     });
+    // get the slider input container
+    sliderInputContainer = $(sliderInput).parent();
     // inject the slider to the DOM after the parent wrapper of the input
-    $(sliderInput).parent().after(slider);
+    sliderInputContainer.after(slider);
+
+    // get the slider range helper template
+    sliderTakeRangeHelpers = sliderTakeRangeHelpersTemplate({
+            'slider_range_low': parseFloat(sliderData.slider_range_low),
+            'slider_range_high': parseFloat(sliderData.slider_range_high)
+    });
+    // add in the slider range helpers
+    sliderInputContainer.append(sliderTakeRangeHelpers);
 }
 
 // update slider on value change

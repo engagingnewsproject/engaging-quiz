@@ -149,6 +149,10 @@
         @include _(hidden--accessible);
     }
 
+    .enp-question__fieldset--slider .enp-question__submit {
+        margin-top: 3rem;
+    }
+
     .enp-option__input:checked ~ .enp-options__submit {
         margin-top: 1.4rem;
         animation: .3s slideInTop ease-in-out forwards;
