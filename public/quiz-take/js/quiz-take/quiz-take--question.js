@@ -32,31 +32,64 @@ $(document).on('click', '.enp-question__submit', function(e){
     // set-up the current question container class state, remove unanswered class
     $('.enp-question__container').addClass('enp-question__container--explanation').removeClass('enp-question__container--unanswered');
 
-    // find the selected mc option input
-    var selectedMCInput = $('.enp-option__input:checked');
-    // see if the input is correct or incorrect
-    var correct = selectedMCInput.data('correct');
-
-    // check if it's correct or not
-    if(correct === '1') {
-        correct_string = 'correct';
-        // it's right! add the correct class to the input
-        selectedMCInput.addClass('enp-option__input--correct-clicked');
-        // add the class thta highlights the correct option
-        showCorrectMCOption(selectedMCInput);
-    } else {
-        // it's wrong :( :( :(
-        correct_string = 'incorrect';
-        // add incorrect clicked class so it remains in view, but is highlighted as the one they clicked
-        selectedMCInput.addClass('enp-option__input--incorrect-clicked');
-        // highlight the correct option
-        correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
-    }
-    // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
-    locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
-
     // get the JSON data for this question
     var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
+
+    // if mc option
+    if(questionJSON.question_type === 'mc') {
+        // find the selected mc option input
+        var selectedMCInput = $('.enp-option__input:checked');
+        // see if the input is correct or incorrect
+        var correct = selectedMCInput.data('correct');
+
+        // check if it's correct or not
+        if(correct === '1') {
+            correct_string = 'correct';
+            // it's right! add the correct class to the input
+            selectedMCInput.addClass('enp-option__input--correct-clicked');
+            // add the class thta highlights the correct option
+            showCorrectMCOption(selectedMCInput);
+        } else {
+            // it's wrong :( :( :(
+            correct_string = 'incorrect';
+            // add incorrect clicked class so it remains in view, but is highlighted as the one they clicked
+            selectedMCInput.addClass('enp-option__input--incorrect-clicked');
+            // highlight the correct option
+            correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
+        }
+        // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
+        locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
+    } else if(questionJSON.question_type === 'slider') {
+        // get the slider input
+        sliderInput = $(this).parent().find('.enp-slider-input__input');
+        // get the value they entered in the slider input
+        sliderSubmittedVal = parseFloat(sliderInput.val());
+        // get sliderJSON
+        sliderJSON = sliderInput.data('sliderJSON');
+        sliderCorrectLow = parseFloat(sliderJSON.slider_correct_low);
+        sliderCorrectHigh = parseFloat(sliderJSON.slider_correct_high);
+        // see if it's correct
+        if(sliderCorrectLow <= sliderSubmittedVal && sliderSubmittedVal <= sliderCorrectHigh) {
+            // correct!
+            correct_string = 'correct';
+            sliderInput.addClass('.enp-slider-input__input--correct');
+        } else {
+            // wrong!
+            correct_string = 'incorrect';
+            sliderInput.addClass('.enp-slider-input__input--incorrect');
+            questionFieldset = $(this).parent();
+            $('.ui-slider-range-min', questionFieldset).addClass('ui-slider-range-min--incorrect').after('<div class="ui-slider-range-show-correct ui-slider-range"></div>');
+            $('.ui-slider-handle', questionFieldset).addClass('ui-slider-handle--incorrect');
+            // figure out how to overlay some kind of red bar on top of the slider
+            // and display the right values
+            $('.ui-slider-range-show-correct', questionFieldset).css('width', '4px').text(sliderJSON.sliderCorrectLow);
+
+        }
+
+
+    }
+
+    // add answered class
     $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
     // show the explanation by generating the question explanation template
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
@@ -182,8 +215,23 @@ function generateQuestion(questionJSON) {
         bindMCOptionData(questionJSON);
 
     } else if(questionJSON.question_type === 'slider') {
+        sliderJSON = questionJSON.slider;
+        sliderData = {
+                        slider_id: sliderJSON.slider_id,
+                        slider_range_low: sliderJSON.slider_range_low,
+                        slider_range_high: sliderJSON.slider_range_high,
+                        slider_correct_low: sliderJSON.slider_correct_low,
+                        slider_correct_high: sliderJSON.slider_correct_high,
+                        slider_increment: sliderJSON.slider_increment,
+                        slider_prefix: sliderJSON.slider_prefix,
+                        slider_suffix: sliderJSON.slider_suffix
+                    };
         // generate slider template
-
+        slider = sliderTemplate(sliderData);
+        // inject the slider template into the page
+        $('#question_'+questionJSON.question_id+' .enp-question__submit').before(slider);
+        // bind the data to the slider
+        bindSliderData(questionJSON);
     }
 }
 

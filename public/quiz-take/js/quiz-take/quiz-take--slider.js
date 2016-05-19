@@ -2,6 +2,9 @@ function bindSliderData(questionJSON) {
     // assigns data and creates the jQuery slider
     question = $('#question_'+questionJSON.question_id);
     sliderInput = $('.enp-slider-input__input', question);
+    // bind slider JSON data
+    sliderInput.data('sliderJSON', questionJSON.slider);
+    // create the jQuery slider
     createSlider(sliderInput, questionJSON.slider);
 }
 
@@ -16,7 +19,6 @@ function bindSliderData(questionJSON) {
 *                   }
 */
 function createSlider(sliderInput, sliderData) {
-    console.log(sliderData);
     // create the div
     slider = $('<div class="enp-slider" aria-hidden="true" role="presentation"></div>');
     // add data

@@ -105,7 +105,9 @@
 			}
 		}
 
-
+		.ui-slider-handle--incorrect {
+			background: $red;
+		}
 
 		.ui-slider-range {
 			position: absolute;
@@ -118,6 +120,10 @@
 
 		.ui-slider-range-min {
 			background: $green;
+		}
+
+		.ui-slider-handle--incorrect {
+			background: $red;
 		}
 
 		/* support: IE8 - See #6727 */

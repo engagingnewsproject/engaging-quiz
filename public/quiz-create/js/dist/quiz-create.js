@@ -1080,7 +1080,12 @@ function unsetWait() {
 
 function bindSliderData(questionJSON) {
     // assigns data and creates the jQuery slider
-    console.log(questionJSON.slider);
+    question = $('#question_'+questionJSON.question_id);
+    sliderInput = $('.enp-slider-input__input', question);
+    // bind slider JSON data
+    sliderInput.data('sliderJSON', questionJSON.slider);
+    // create the jQuery slider
+    createSlider(sliderInput, questionJSON.slider);
 }
 
 /**
@@ -1116,7 +1121,7 @@ function createSlider(sliderInput, sliderData) {
     sliderInputContainer.after(slider);
 
     // get the slider range helper template
-    sliderTakeRangeHelpers = sliderTakeRangeHelpersTemplate({
+    sliderTakeRangeHelpers = sliderRangeHelpersTemplate({
             'slider_range_low': parseFloat(sliderData.slider_range_low),
             'slider_range_high': parseFloat(sliderData.slider_range_high)
     });

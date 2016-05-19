@@ -337,31 +337,37 @@ body {
 @mixin btn--icon--hover-circle($rootBEM) {
     .#{$rootBEM} {
         @include _(btn--icon--icon-circle);
-        padding-right: 0.8em;
-    }
-
-    .#{$rootBEM}__text {
         position: relative;
-        top: -0.4em;
+        padding-right: 2.8em;
+        padding-top: 1em;
+        padding-bottom: 0.95em;
+        transition: padding .3s ease-in-out;
     }
 
     .#{$rootBEM}__icon {
         @include _(btn--icon__icon--circle);
-        margin-left: 0;
         width: 1.6em;
         height: 1.6em;
         background: transparent;
         fill: #fff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin-top: auto;
+        margin-bottom: auto;
         transform: translate3d(0, 0, 0);
         transition: all .3s ease-in-out;
     }
 
-    .#{$rootBEM}:hover .#{$rootBEM}__icon,
-    .#{$rootBEM}:focus .#{$rootBEM}__icon {
-        @include _(btn--icon__icon--circle--hover);
-        transform: translate3d(1em, 0, 0);
-        margin-right: 1em;
+    .#{$rootBEM}:hover,
+    .#{$rootBEM}:focus {
+
+        .#{$rootBEM}__icon {
+            @include _(btn--icon__icon--circle--hover);
+        }
     }
+
+
 
 
 }

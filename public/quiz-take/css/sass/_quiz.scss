@@ -151,6 +151,15 @@
 
     .enp-question__fieldset--slider .enp-question__submit {
         margin-top: 3rem;
+
+        &:hover,
+        &:focus {
+            padding-right: 4em;
+        }
+
+        .enp-question__submit__icon {
+            right: 0.8em;
+        }
     }
 
     .enp-option__input:checked ~ .enp-options__submit {
@@ -267,23 +276,23 @@
     @include btn--icon--hover-circle(enp-next-step);
     .enp-next-step {
         @include _(btn--ghost);
-        padding-top: 1em;
-        padding-bottom: 0.95em;
         width: 100%;
+        padding-right: 0.8em;
         position: relative;
 
         .enp-next-step__icon {
             fill: $blue;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            margin: auto;
         }
 
-        &:hover .enp-next-step__icon {
-            fill: #fff;
-            background: $blue;
-            margin-right: 0;
+        &:hover,
+        &:focus {
+            .enp-next-step__icon {
+                fill: #fff;
+                background: $blue;
+                margin-right: 0;
+                transform: translate3d(1em, 0, 0);
+                margin-right: 1em;
+            }
         }
     }
 

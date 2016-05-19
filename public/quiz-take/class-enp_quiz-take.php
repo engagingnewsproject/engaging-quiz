@@ -177,6 +177,7 @@ class Enp_quiz_Take {
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_ab_test.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_question.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_mc.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_response_slider.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
 
 	}

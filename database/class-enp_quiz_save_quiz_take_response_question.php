@@ -31,6 +31,14 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
                 // see if the mc option is correct or not
                 $response['response_correct'] = $this->is_mc_option_response_correct($response);
             }
+        } elseif($response['question_type'] === 'slider') {
+            $slider = $this->validate_slider_response($response);
+            if(is_object($slider) && $slider !== 'invalid') {
+                // add in the slider_id to our response array
+                $response['slider_id'] = $slider->get_slider_id();
+                // see if it's correct
+                $response['response_correct'] = $this->is_slider_response_correct($response, $slider);
+            }
         }
         return $response;
     }
@@ -57,6 +65,56 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         // will return 0 if wrong, 1 if right. We don't care if
         // it's right or not, just that we KNOW if it's right or not
         $response_correct = $mc->get_mc_option_correct();
+
+        return $response_correct;
+    }
+
+    /**
+    * Checks if the response is valid or not
+    * @param $response = submitted response
+    * @return (mixed) 'invalid' if not valid, Enp_quiz_Slider object if valid
+    */
+    protected function validate_slider_response($response) {
+        // validate that this ID is attached to this question
+        $question = new Enp_quiz_Question($response['question_id']);
+        $slider_id = $question->get_slider();
+        $slider = new Enp_quiz_Slider($slider_id);
+        // see if their response is within the range
+        $slider_response = (float) $response['question_response'];
+        $slider_range_low = (float) $slider->get_slider_range_low();
+        $slider_range_high = (float) $slider->get_slider_range_high();
+
+        if($slider_range_low <= $slider_response && $slider_response <= $slider_range_high) {
+            // it's valid!
+            $valid = $slider;
+        } else {
+            // TODO
+            // process it somehow?
+            var_dump('Response is outside of the slider range.');
+            $valid = 'invalid';
+        }
+
+        return $valid;
+    }
+
+    /**
+    * Checks if the response is correct or not
+    * @param $response = submitted response
+    * @param $slider = slider object
+    * @return 0 if wrong, 1 if correct
+    */
+    protected function is_slider_response_correct($response, $slider) {
+
+        $response = (float) $response['question_response'];
+        $slider_correct_low = (float) $slider->get_slider_correct_low();
+        $slider_correct_high = (float) $slider->get_slider_correct_high();
+
+        if($slider_correct_low <= $response && $response <= $slider_correct_high) {
+            // it's correct!
+            $response_correct = '1';
+        } else {
+            $response_correct = '0';
+        }
 
         return $response_correct;
     }
@@ -163,6 +221,11 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
                 $return = array_merge($return, $return_mc_response);
             } elseif($response['question_type'] === 'slider') {
                 // TODO: Build slider save response
+                $response_slider = new Enp_quiz_Save_quiz_take_Response_Slider();
+                $return_slider_response = $response_slider->insert_response_slider($return);
+
+                // merge the response arrays
+                $return = array_merge($return, $return_slider_response);
             }
             // update question response data
             $this->update_question_response_data($response);
