@@ -54,9 +54,13 @@ function createSliderTemplate(container) {
     // create slider template
     slider = sliderTakeTemplate(sliderData);
     sliderExample = $('<div class="enp-slider-preview"></div>').html(slider);
-
+    sliderRangeHelpers = sliderTakeRangeHelpersTemplate(sliderData);
     // insert it
     $(sliderExample).prependTo(container);
+    // get our new input__container and add our range helpers to it
+    inputContainer = $('.enp-slider-input__container', container);
+    $(sliderRangeHelpers).appendTo(inputContainer);
+
     $('.enp-slider__label', container).text('Slider Preview');
     // create the jQuery slider
     createSlider($('.enp-slider-input__input', container), sliderData);

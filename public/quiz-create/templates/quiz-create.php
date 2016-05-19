@@ -132,6 +132,12 @@ $quiz_id = $quiz->get_quiz_id();
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider.php');
             // end our template
             echo '</script>';
+
+            // set-up our template
+            echo '<script type="text/template" id="slider_take_range_helpers_template">';
+                include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider--range-helpers.php');
+            // end our template
+            echo '</script>';
             // reset back to slider var
             $slider = $original_slider;
 

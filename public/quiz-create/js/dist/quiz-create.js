@@ -195,6 +195,7 @@ var questionImageUploadTemplate = _.template($('#question_image_upload_template'
 var mcOptionTemplate = _.template($('#mc_option_template').html());
 var sliderTemplate = _.template($('#slider_template').html());
 var sliderTakeTemplate = _.template($('#slider_take_template').html());
+var sliderTakeRangeHelpersTemplate = _.template($('#slider_take_range_helpers_template').html());
 //$('#enp-quiz').prepend(questionTemplate({question_id: '999', question_position: '53'}));
 
 /*
@@ -579,9 +580,13 @@ function createSliderTemplate(container) {
     // create slider template
     slider = sliderTakeTemplate(sliderData);
     sliderExample = $('<div class="enp-slider-preview"></div>').html(slider);
-
+    sliderRangeHelpers = sliderTakeRangeHelpersTemplate(sliderData);
     // insert it
     $(sliderExample).prependTo(container);
+    // get our new input__container and add our range helpers to it
+    inputContainer = $('.enp-slider-input__container', container);
+    $(sliderRangeHelpers).appendTo(inputContainer);
+
     $('.enp-slider__label', container).text('Slider Preview');
     // create the jQuery slider
     createSlider($('.enp-slider-input__input', container), sliderData);
@@ -1093,7 +1098,6 @@ function bindSliderData(questionJSON) {
 *                   }
 */
 function createSlider(sliderInput, sliderData) {
-    console.log('createSlider');
     // create the div
     slider = $('<div class="enp-slider" aria-hidden="true" role="presentation"></div>');
     // add data
