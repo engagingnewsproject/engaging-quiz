@@ -96,6 +96,7 @@ if(isset($qt_question) && is_object($qt_question)) {
     echo $qt_question->question_js_templates();
     echo $qt_question->question_explanation_js_template();
     echo $qt_question->mc_option_js_template();
+    echo $qt_question->slider_js_template();
 }
 echo $qt_end->quiz_end_template();
 

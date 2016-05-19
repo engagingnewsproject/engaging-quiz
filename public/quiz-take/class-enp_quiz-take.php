@@ -122,6 +122,7 @@ class Enp_quiz_Take {
 		$scripts = array(
 						//"https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.js',
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery-ui.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/underscore.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.js'
 					);
@@ -162,6 +163,7 @@ class Enp_quiz_Take {
         require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-quiz.php';
         require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-question.php';
         require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-slider.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-ab_test.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-nonce.php';
 		// Quiz Take Classes

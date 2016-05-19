@@ -62,11 +62,9 @@ function showCorrectMCOption(obj) {
 * @param questionJSON (JSON String) Question level JSON
 */
 function bindMCOptionData(questionJSON) {
-    if(questionJSON.question_type === 'mc') {
-        for(var prop in questionJSON.mc_option) {
-            mc_option_id = questionJSON.mc_option[prop].mc_option_id;
-            mc_option_correct = questionJSON.mc_option[prop].mc_option_correct;
-            $('#enp-option__'+mc_option_id).data('correct', mc_option_correct);
-        }
+    for(var prop in questionJSON.mc_option) {
+        mc_option_id = questionJSON.mc_option[prop].mc_option_id;
+        mc_option_correct = questionJSON.mc_option[prop].mc_option_correct;
+        $('#enp-option__'+mc_option_id).data('correct', mc_option_correct);
     }
 }

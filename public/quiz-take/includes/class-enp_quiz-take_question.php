@@ -133,7 +133,7 @@ class Enp_quiz_Take_Question {
 	}
 
 	public function get_question_classes() {
-		$classes = '';
+		$classes = 'enp-question__fieldest--'.$this->question->get_question_type().' ';
 		if($this->qt->state === 'question') {
 
 		} elseif($this->qt->state === 'question_explanation') {
@@ -232,6 +232,26 @@ class Enp_quiz_Take_Question {
 		$template = '<script type="text/template" id="mc_option_template">';
 		ob_start();
 		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+		return $template;
+	}
+
+	public function slider_js_template() {
+		$slider = new Enp_quiz_Slider(0);
+		foreach($slider as $key => $value) {
+			$slider->$key = '{{'.$key.'}}';
+		}
+		$template = '<script type="text/template" id="slider_template">';
+		ob_start();
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider.php');
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+		$template .= '<script type="text/template" id="slider_range_helpers_template">';
+		ob_start();
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/slider--range-helpers.php');
 		$template .= ob_get_clean();
 		$template .= '</script>';
 

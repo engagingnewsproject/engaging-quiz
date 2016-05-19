@@ -1077,6 +1077,11 @@ function unsetWait() {
     $('.enp-quiz-message--saving').remove();
 }
 
+function bindSliderData(questionJSON) {
+    // assigns data and creates the jQuery slider
+    console.log(questionJSON.slider);
+}
+
 /**
 * Creates a jQuery slider and injects it after the parent wrapper of the enp slider input
 * @param sliderInput $('.enp-slider-input')

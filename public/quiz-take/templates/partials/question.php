@@ -25,6 +25,10 @@
             $mc_option = new Enp_quiz_MC_option($mc_option_id);
             include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
         }
+    } elseif($question_type === 'slider' && $question_state === 'question') {
+        $slider_id = $qt_question->question->get_slider();
+        $slider = new Enp_quiz_Slider($slider_id);
+        include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider.php');
     }?>
 
     <button type="submit" class="enp-btn enp-options__submit enp-question__submit" name="enp-question-submit" value="enp-question-submit">Submit Answer <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
