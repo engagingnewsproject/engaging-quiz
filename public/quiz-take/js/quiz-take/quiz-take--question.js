@@ -223,8 +223,10 @@ function generateQuestion(questionJSON) {
                         slider_correct_low: sliderJSON.slider_correct_low,
                         slider_correct_high: sliderJSON.slider_correct_high,
                         slider_increment: sliderJSON.slider_increment,
+                        slider_start: sliderJSON.slider_start,
                         slider_prefix: sliderJSON.slider_prefix,
-                        slider_suffix: sliderJSON.slider_suffix
+                        slider_suffix: sliderJSON.slider_suffix,
+                        slider_input_size: sliderJSON.slider_range_high.length
                     };
         // generate slider template
         slider = sliderTemplate(sliderData);
