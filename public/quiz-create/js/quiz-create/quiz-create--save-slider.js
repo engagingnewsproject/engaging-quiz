@@ -106,6 +106,25 @@ $(document).on('blur', '.enp-slider-range-high__input', function() {
     setSliderStart(slider, sliderInput);
 });
 
+/**
+* If the high correct value range isn't being used, we need to keep
+* the low and high correct values in sync.
+*/
+$(document).on('input', '.enp-slider-correct-low__input', function() {
+
+    // Check if the high input is being used.
+    // if it's NOT being used, we need to keep the high value in sync
+    if($(this).data('correctRangeInUse') === false) {
+        // get the high correct input from the data on the low input
+        highCorrectInput = $(this).data('highCorrectInput');
+        // get the low correct value
+        lowCorrectVal = $(this).val();
+        // make the high correct input match the low correct input
+        highCorrectInput.val(lowCorrectVal);
+        console.log(highCorrectInput.val());
+    }
+});
+
 // update high range and max value
 $(document).on('blur', '.enp-slider-increment__input', function() {
     sliderID = $(this).data('sliderID');
@@ -119,8 +138,8 @@ $(document).on('blur', '.enp-slider-increment__input', function() {
     setSliderStart(slider, sliderInput);
 });
 
-// update the slider prefix on keydown
-$(document).on('keyup', '.enp-slider-prefix__input', function() {
+// update the slider prefix on value change
+$(document).on('input', '.enp-slider-prefix__input', function() {
     var prefix;
     // get input value
     prefix = $(this).val();
@@ -128,8 +147,8 @@ $(document).on('keyup', '.enp-slider-prefix__input', function() {
     sliderPreview.text(prefix);
 });
 
-// update the slider suffix on keydown
-$(document).on('keyup', '.enp-slider-suffix__input', function() {
+// update the slider suffix on value change
+$(document).on('input', '.enp-slider-suffix__input', function() {
     var suffix;
     // get input value
     suffix = $(this).val();
@@ -177,7 +196,12 @@ $(document).on('click', '.enp-slider-correct-answer-range', function() {
 
 
 function removeSliderRange(sliderID) {
+    var container,
+        lowCorrectInput;
     container = getSliderOptionsContainer(sliderID);
+    // get low input
+    lowCorrectInput = $('.enp-slider-correct-low__input', container);
+
     // hide the answer range high input and "to" thang
     $('.enp-slider-correct__helper', container).addClass('enp-slider-correct__helper--hidden').text('');
     // hide the input correct high container
@@ -186,26 +210,40 @@ function removeSliderRange(sliderID) {
     $('.enp-slider-correct-low__label', container).text('Slider Answer');
     // Set the button content and classes
     $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--remove-range').addClass('enp-slider-correct-answer-range--add-range').html('<span class="enp-screen-reader-text">Remove Answer Range</span><svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-add" /></svg> Answer Range');
+
     // Make Correct High value equal the Low value
-    lowCorrectVal = $('.enp-slider-correct-low__input', container).val();
+    lowCorrectVal = lowCorrectInput.val();
     $('.enp-slider-correct-high__input', container).val(lowCorrectVal);
+    // set data attribute on the low input so we know if the high input needs to get updated or not
+    lowCorrectInput.data('correctRangeInUse', false);
 }
 
 function addSliderRange(sliderID) {
+    var container,
+        lowCorrectInput,
+        highCorrectInput;
+
     container = getSliderOptionsContainer(sliderID);
+    // get low input
+    lowCorrectInput = $('.enp-slider-correct-low__input', container);
+    // get high input
+    highCorrectInput = $('.enp-slider-correct-high__input', container);
+
     $('.enp-slider-correct-low__label', container).text('Slider Answer Low');
     $('.enp-slider-correct__helper', container).removeClass('enp-slider-correct__helper--hidden').text('to');
     $('.enp-slider-correct-high__input-container', container).removeClass('enp-slider-correct-high__input-container--hidden');
     $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--add-range').addClass('enp-slider-correct-answer-range--remove-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-close" /></svg>');
     // Add one interval to the high value if it equals the low value
-    highCorrectVal = parseFloat( $('.enp-slider-correct-high__input', container).val() );
-    lowCorrectVal = parseFloat( $('.enp-slider-correct-low__input', container).val() );
+    highCorrectVal = parseFloat( highCorrectInput.val() );
+    lowCorrectVal = parseFloat( lowCorrectInput.val() );
     increment = parseFloat( $('.enp-slider-increment__input', container).val() );
     if(highCorrectVal <= lowCorrectVal) {
-        $('.enp-slider-correct-high__input', container).val(lowCorrectVal + increment);
+        highCorrectInput.val(lowCorrectVal + increment);
     }
     // focus the slider range high input
-    $('.enp-slider-correct-high__input').focus();
+    highCorrectInput.focus();
+    // set data attribute on the low input so we know if the high input needs to get updated or not
+    lowCorrectInput.data('correctRangeInUse', true);
 }
 
 function getSliderOptionsContainer(sliderID) {
@@ -237,18 +275,23 @@ function setUpSliderTemplate(sliderOptionsContainer) {
     $('input, button', sliderOptionsContainer).each(function() {
         $(this).data('sliderID', sliderID);
     });
-
-
+    // get low correct input
+    lowCorrectInput = $('.enp-slider-correct-low__input', sliderOptionsContainer);
+    // get high correct input
+    highCorrectInput = $('.enp-slider-correct-high__input', sliderOptionsContainer);
     // See if we should hide the slider answer high and add in the option to add in a high value
-    correctLow = parseFloat( $('.enp-slider-correct-low__input', sliderOptionsContainer).val() );
-    correctHigh = parseFloat( $('.enp-slider-correct-high__input', sliderOptionsContainer).val() );
-    console.log(correctLow);
-    console.log(correctHigh);
+    // link the high and low inputs together so we can easily find them as needed
+    lowCorrectInput.data('highCorrectInput', highCorrectInput);
+    highCorrectInput.data('lowCorrectInput', lowCorrectInput);
+    correctLow = parseFloat( lowCorrectInput.val() );
+    correctHigh = parseFloat( highCorrectInput.val() );
+
     if( correctLow === correctHigh ) {
         removeSliderRange(sliderID);
     } else {
         addSliderRange(sliderID);
     }
+
 
     // set-up accordion for advanced options
     // create the title and content accordion object so our headings can get created
