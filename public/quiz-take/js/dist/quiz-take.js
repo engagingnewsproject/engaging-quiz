@@ -316,58 +316,16 @@ function generateQuestion(questionJSON) {
 
     // add in the image template, if necessary
     if(questionJSON.question_image !== '') {
-        // get the template and add it in
-        var questionImageData = {
-                            'question_image_src': questionJSON.question_image_src,
-                            'question_image_srcset': questionJSON.question_image_srcset,
-                            'question_image_alt': questionJSON.question_image_alt,
-        };
-        // populate the template
-        new_questionImageTemplate = questionImageTemplate(questionImageData);
-        // insert it into the page
-        $('#question_'+questionJSON.question_id+' .enp-question__question').after(new_questionImageTemplate);
+        buildImageTemplate(questionJSON);
     }
 
+    // Build templates and bind data for the question
     if(questionJSON.question_type === 'mc') {
-        // generate mc option templates
-        questionJSON.mc_option = _.shuffle(questionJSON.mc_option);
-        for(var prop in questionJSON.mc_option) {
-            mc_option_id = questionJSON.mc_option[prop].mc_option_id;
-            mc_option_content = questionJSON.mc_option[prop].mc_option_content;
-            mcOptionData = {
-                            'mc_option_id': mc_option_id,
-                            'mc_option_content': mc_option_content
-            };
-
-            // generate the template
-            new_mcOption = mcOptionTemplate(mcOptionData);
-            // insert it into the page
-            $('#question_'+questionJSON.question_id+' .enp-question__submit').before(new_mcOption);
-        }
-
-        // append the data to the mc options
-        bindMCOptionData(questionJSON);
-
+        // build mc option templates and bind data
+        buildMCOptions(questionJSON);
     } else if(questionJSON.question_type === 'slider') {
-        sliderJSON = questionJSON.slider;
-        sliderData = {
-                        slider_id: sliderJSON.slider_id,
-                        slider_range_low: sliderJSON.slider_range_low,
-                        slider_range_high: sliderJSON.slider_range_high,
-                        slider_correct_low: sliderJSON.slider_correct_low,
-                        slider_correct_high: sliderJSON.slider_correct_high,
-                        slider_increment: sliderJSON.slider_increment,
-                        slider_start: sliderJSON.slider_start,
-                        slider_prefix: sliderJSON.slider_prefix,
-                        slider_suffix: sliderJSON.slider_suffix,
-                        slider_input_size: sliderJSON.slider_range_high.length
-                    };
-        // generate slider template
-        slider = sliderTemplate(sliderData);
-        // inject the slider template into the page
-        $('#question_'+questionJSON.question_id+' .enp-question__submit').before(slider);
-        // bind the data to the slider
-        bindSliderData(questionJSON);
+        // build slider template and bind data
+        buildSlider(questionJSON);
     }
 }
 
@@ -417,6 +375,19 @@ function prepareQuestionFormData(clickedButton) {
     data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
 
     return data;
+}
+
+function buildImageTemplate(questionJSON) {
+    // get the template and add it in
+    var questionImageData = {
+                        'question_image_src': questionJSON.question_image_src,
+                        'question_image_srcset': questionJSON.question_image_srcset,
+                        'question_image_alt': questionJSON.question_image_alt,
+    };
+    // populate the template
+    new_questionImageTemplate = questionImageTemplate(questionImageData);
+    // insert it into the page
+    $('#question_'+questionJSON.question_id+' .enp-question__question').after(new_questionImageTemplate);
 }
 
 /**
@@ -605,6 +576,27 @@ function bindMCOptionData(questionJSON) {
     }
 }
 
+function buildMCOptions(questionJSON) {
+    // generate mc option templates
+    questionJSON.mc_option = _.shuffle(questionJSON.mc_option);
+    for(var prop in questionJSON.mc_option) {
+        mc_option_id = questionJSON.mc_option[prop].mc_option_id;
+        mc_option_content = questionJSON.mc_option[prop].mc_option_content;
+        mcOptionData = {
+                        'mc_option_id': mc_option_id,
+                        'mc_option_content': mc_option_content
+        };
+
+        // generate the template
+        new_mcOption = mcOptionTemplate(mcOptionData);
+        // insert it into the page
+        $('#question_'+questionJSON.question_id+' .enp-question__submit').before(new_mcOption);
+    }
+
+    // append the data to the mc options
+    bindMCOptionData(questionJSON);
+}
+
 function bindSliderData(questionJSON) {
     // assigns data and creates the jQuery slider
     question = $('#question_'+questionJSON.question_id);
@@ -729,6 +721,28 @@ function getSlider(sliderID, callback) {
         }
     });
     return slider;
+}
+
+function buildSlider(questionJSON) {
+    sliderJSON = questionJSON.slider;
+    sliderData = {
+                    slider_id: sliderJSON.slider_id,
+                    slider_range_low: sliderJSON.slider_range_low,
+                    slider_range_high: sliderJSON.slider_range_high,
+                    slider_correct_low: sliderJSON.slider_correct_low,
+                    slider_correct_high: sliderJSON.slider_correct_high,
+                    slider_increment: sliderJSON.slider_increment,
+                    slider_start: sliderJSON.slider_start,
+                    slider_prefix: sliderJSON.slider_prefix,
+                    slider_suffix: sliderJSON.slider_suffix,
+                    slider_input_size: sliderJSON.slider_range_high.length
+                };
+    // generate slider template
+    slider = sliderTemplate(sliderData);
+    // inject the slider template into the page
+    $('#question_'+questionJSON.question_id+' .enp-question__submit').before(slider);
+    // bind the data to the slider
+    bindSliderData(questionJSON);
 }
 
 /**

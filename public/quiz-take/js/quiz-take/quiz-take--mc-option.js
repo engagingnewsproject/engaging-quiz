@@ -68,3 +68,24 @@ function bindMCOptionData(questionJSON) {
         $('#enp-option__'+mc_option_id).data('correct', mc_option_correct);
     }
 }
+
+function buildMCOptions(questionJSON) {
+    // generate mc option templates
+    questionJSON.mc_option = _.shuffle(questionJSON.mc_option);
+    for(var prop in questionJSON.mc_option) {
+        mc_option_id = questionJSON.mc_option[prop].mc_option_id;
+        mc_option_content = questionJSON.mc_option[prop].mc_option_content;
+        mcOptionData = {
+                        'mc_option_id': mc_option_id,
+                        'mc_option_content': mc_option_content
+        };
+
+        // generate the template
+        new_mcOption = mcOptionTemplate(mcOptionData);
+        // insert it into the page
+        $('#question_'+questionJSON.question_id+' .enp-question__submit').before(new_mcOption);
+    }
+
+    // append the data to the mc options
+    bindMCOptionData(questionJSON);
+}
