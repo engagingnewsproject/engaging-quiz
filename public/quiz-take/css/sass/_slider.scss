@@ -1,6 +1,11 @@
 @import 'jquery-ui';
 
 #enp-quiz {
+
+    .enp-slider {
+        margin-bottom: 1.6rem;
+    }
+    
     .enp-slider-input__container {
         display: flex;
         align-items: center;
