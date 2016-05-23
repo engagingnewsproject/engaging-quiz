@@ -62,10 +62,11 @@ $(document).on('click', '.enp-question__submit', function(e){
     } else if(questionJSON.question_type === 'slider') {
         // get the slider input
         sliderInput = $(this).parent().find('.enp-slider-input__input');
+        slider = $(this).parent().find('.enp-slider');
 
-        //
-        // TODO: disable the sliderInput
-        //
+        // disable the slider and input
+        sliderInput.attr('disabled', 'disabled');
+        slider.slider('disable');
 
         // get the value they entered in the slider input
         sliderSubmittedVal = parseFloat(sliderInput.val());
