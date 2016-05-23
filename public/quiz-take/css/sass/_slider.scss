@@ -46,7 +46,7 @@
     }
 
     .enp-slider-input__input--correct {
-        color: $green;
+        color: $dark_green;
     }
 
     .enp-slider-input__input--invalid-animation {
@@ -102,7 +102,7 @@
 
     .ui-slider-range-show-correct__tooltip__text {
         position: relative;
-        color: darken($green, 12);
+        color: darken($green, 20);
         padding: 0 4px;
         bottom: 1rem;
         font-size: .8rem;

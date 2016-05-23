@@ -133,11 +133,6 @@
 			background: $green;
 		}
 
-		.ui-slider-range-min--correct,
-		.ui-slider-range-min--incorrect {
-			background: #fff;
-		}
-
 		.ui-slider-range-max {
 			right: 0;
 		}
@@ -151,5 +146,16 @@
 
 	.ui-slider-horizontal {
 		height: .3rem;
+	}
+
+	.enp-question__answered {
+		.ui-slider {
+			background: #bbb;
+		}
+
+		.ui-slider-range-min {
+			background: #fff;
+		}
+
 	}
 }
