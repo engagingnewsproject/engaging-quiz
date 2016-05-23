@@ -145,12 +145,7 @@
     // show the submit button (they can also hit enter to submit tho)
     @include btn--icon--hover-circle(enp-question__submit);
 
-    .enp-question__fieldset--mc .enp-question__submit {
-        @include _(hidden--accessible);
-    }
-
-    .enp-question__fieldset--slider .enp-question__submit {
-        margin-top: 3rem;
+    .enp-question__submit {
 
         &:hover,
         &:focus {
@@ -162,11 +157,21 @@
         }
     }
 
-    .enp-option__input:checked ~ .enp-options__submit {
+    .enp-question__fieldset--mc .enp-question__submit {
+        opacity: 0;
+        height: 0;
+    }
+
+    .enp-question__fieldset--mc .enp-option__input:checked ~ .enp-options__submit {
         margin-top: 1.4rem;
+        height: auto;
+        opacity: 1;
         animation: .3s slideInTop ease-in-out forwards;
     }
 
+    .enp-question__fieldset--slider .enp-options__submit {
+        margin-top: 3rem;
+    }
       // ----------------------//
      //  Answer Explanation   //
     // ----------------------//
