@@ -83,7 +83,6 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         $slider_response = (float) $response['question_response'];
         $slider_range_low = (float) $slider->get_slider_range_low();
         $slider_range_high = (float) $slider->get_slider_range_high();
-
         if($slider_range_low <= $slider_response && $slider_response <= $slider_range_high) {
             // it's valid!
             $valid = $slider;

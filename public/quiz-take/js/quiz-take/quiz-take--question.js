@@ -273,11 +273,15 @@ function showNextQuestion(obj) {
 *
 */
 function prepareQuestionFormData(clickedButton) {
+    // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
+    // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
+    questionResponse = 'enp-question-response='+$('.enp-question__form input[name="enp-question-response"]').val();
+
     // add button value and name to the data since jQuery doesn't submit button value
     userAction = clickedButton.attr("name") + "=" + clickedButton.val();
     // add in a little data to let the server know the data is coming from an ajax call
     doing_ajax = 'doing_ajax=doing_ajax';
-    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+    data = $('.enp-question__form').serialize() + "&" + questionResponse + "&" + userAction + "&" + doing_ajax;
 
     return data;
 }
