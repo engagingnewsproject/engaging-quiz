@@ -98,19 +98,22 @@
 			cursor: default;
 			-ms-touch-action: none;
 			touch-action: none;
+			top: -.4rem;
+			margin-left: -.6rem;
+			transition: opacity 0.2s ease-in-out;
 
 			&:focus {
 				outline: none;
 				box-shadow: 0 0 3px 1px #4D90FE;
 			}
+
 		}
 
 		.ui-slider-handle--incorrect {
 			background: $red;
 		}
 
-		.ui-slider-range-show-correct,
-		.ui-slider-handle--correct {
+		.ui-slider-range-show-correct {
 			background: $green;
 		}
 
@@ -121,14 +124,22 @@
 			display: block;
 			border: 0;
 			background-position: 0 0;
+			top: 0;
+			height: 100%;
 		}
 
 		.ui-slider-range-min {
+			left: 0;
 			background: $green;
 		}
 
-		.ui-slider-handle--incorrect {
-			background: $red;
+		.ui-slider-range-min--correct,
+		.ui-slider-range-min--incorrect {
+			background: #fff;
+		}
+
+		.ui-slider-range-max {
+			right: 0;
 		}
 
 		/* support: IE8 - See #6727 */
@@ -140,43 +151,5 @@
 
 	.ui-slider-horizontal {
 		height: .3rem;
-
-		.ui-slider-handle {
-			top: -.4rem;
-			margin-left: -.6rem;
-		}
-		.ui-slider-range {
-			top: 0;
-			height: 100%;
-		}
-		.ui-slider-range-min {
-			left: 0;
-		}
-		.ui-slider-range-max {
-			right: 0;
-		}
 	}
-
-	.ui-slider-vertical {
-		width: .8rem;
-		height: 100px;
-
-		.ui-slider-handle {
-			left: -.3rem;
-			margin-left: 0;
-			margin-bottom: -.6rem;
-		}
-		.ui-slider-range {
-			left: 0;
-			width: 100%;
-		}
-		.ui-slider-range-min {
-			bottom: 0;
-		}
-		.ui-slider-range-max {
-			top: 0;
-		}
-	}
-
-
 }

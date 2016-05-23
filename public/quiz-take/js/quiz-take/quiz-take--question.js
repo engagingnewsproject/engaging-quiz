@@ -62,30 +62,67 @@ $(document).on('click', '.enp-question__submit', function(e){
     } else if(questionJSON.question_type === 'slider') {
         // get the slider input
         sliderInput = $(this).parent().find('.enp-slider-input__input');
+
+        //
+        // TODO: disable the sliderInput
+        //
+
         // get the value they entered in the slider input
         sliderSubmittedVal = parseFloat(sliderInput.val());
         // get sliderJSON
         sliderJSON = sliderInput.data('sliderJSON');
         sliderCorrectLow = parseFloat(sliderJSON.slider_correct_low);
         sliderCorrectHigh = parseFloat(sliderJSON.slider_correct_high);
+        questionFieldset = $(this).parent();
         // see if it's correct
         if(sliderCorrectLow <= sliderSubmittedVal && sliderSubmittedVal <= sliderCorrectHigh) {
             // correct!
             correct_string = 'correct';
-            sliderInput.addClass('.enp-slider-input__input--correct');
         } else {
             // wrong!
             correct_string = 'incorrect';
-            sliderInput.addClass('.enp-slider-input__input--incorrect');
-            questionFieldset = $(this).parent();
-            $('.ui-slider-range-min', questionFieldset).addClass('ui-slider-range-min--incorrect').after('<div class="ui-slider-range-show-correct ui-slider-range"></div>');
-            $('.ui-slider-handle', questionFieldset).addClass('ui-slider-handle--incorrect');
-            // figure out how to overlay some kind of red bar on top of the slider
-            // and display the right values
-            $('.ui-slider-range-show-correct', questionFieldset).css('width', '4px').text(sliderJSON.sliderCorrectLow);
-
         }
 
+        sliderInput.addClass('enp-slider-input__input--'+correct_string);
+        $('.ui-slider-range-min', questionFieldset).addClass('ui-slider-range-min--'+correct_string);
+        $('.ui-slider-handle', questionFieldset).addClass('ui-slider-handle--'+correct_string);
+
+        if(correct_string === 'incorrect' || sliderCorrectLow !== sliderCorrectHigh) {
+            // fade out range helpers in case the answer is at the very end or beginning. // If it is at the beg/end, then it'll overlap in a weird way
+            $('.enp-slider-input__range-helper__number').hide();
+
+            $('.ui-slider-range-min', questionFieldset).after('<div class="ui-slider-range-show-correct ui-slider-range"></div>');
+            // figure out how to overlay some kind of red bar on top of the slider
+            // and display the right values
+            // calulate total intervals
+            sliderRangeLow = parseFloat(sliderJSON.slider_range_low);
+            sliderRangeHigh = parseFloat(sliderJSON.slider_range_high);
+            sliderIncrement = parseFloat(sliderJSON.slider_increment);
+            sliderTotalIntervals = (sliderRangeHigh - sliderRangeLow)/sliderIncrement;
+            // calculate offset left for answer
+            // how many intervals until the right answer?
+            correctLowIntervals = sliderCorrectLow/sliderIncrement;
+            correctHighIntervals = sliderCorrectHigh/sliderIncrement;
+            // what percentage offset should it be?
+            correctLowOffsetLeft = (correctLowIntervals/sliderTotalIntervals) * 100;
+            correctHighOffsetLeft = (correctHighIntervals/sliderTotalIntervals) * 100;
+            // calculate width for answer in % (default 1% if equal low/high)
+            correctRangeWidth = correctHighOffsetLeft - correctLowOffsetLeft;
+
+            // set the attributes on our correct width bar
+            $('.ui-slider-range-show-correct', questionFieldset).css({'width': correctRangeWidth+'%','left':correctLowOffsetLeft+'%'}).text(sliderJSON.sliderCorrectLow);
+            toolTipHTML = '<div class="ui-slider-range-show-correct__tooltip ui-slider-range-show-correct__tooltip--low"><span class="ui-slider-range-show-correct__tooltip__text ui-slider-range-show-correct__tooltip__text--low">'+sliderCorrectLow+'</span></div>';
+            if(sliderCorrectLow !== sliderCorrectHigh) {
+                toolTipHTML += '<div class="ui-slider-range-show-correct__tooltip ui-slider-range-show-correct__tooltip--high"><span class="ui-slider-range-show-correct__tooltip__text ui-slider-range-show-correct__tooltip__text--high">'+sliderCorrectHigh+'</span></div>';
+            }
+
+            // add in a tool tip to display the correct answer
+            $('.ui-slider-range-show-correct', questionFieldset).append('<div class="ui-slider-range-show-correct__tooltip-container">'+toolTipHTML+'</div>');
+            // center the correct indicator label if they match
+            if(sliderCorrectLow === sliderCorrectHigh) {
+                $('.ui-slider-range-show-correct__tooltip__text--low', questionFieldset).addClass('ui-slider-range-show-correct__tooltip__text--low-center');
+            }
+        }
 
     }
 
