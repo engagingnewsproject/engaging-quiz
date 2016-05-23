@@ -221,14 +221,10 @@
     .enp-explanation {
         background: #fff;
         padding: 1.6rem 1.6rem 1.5rem;
-        //@include _(hidden--accessible);
     }
 
-    .enp-explanation--show {
-        padding: 1.6rem 1.6rem 1.5rem;
-        height: auto;
-        overflow: visible;
-        opacity: 1;
+    .enp-question__fieldset--slider .enp-explanation  {
+        animation: slideInBottom .3s ease-in-out forwards;
     }
 
     .enp-explanation--correct {

@@ -93,6 +93,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
     // show the explanation by generating the question explanation template
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
+
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
     // submit the question

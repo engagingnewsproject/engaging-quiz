@@ -109,6 +109,11 @@
 			background: $red;
 		}
 
+		.ui-slider-range-show-correct,
+		.ui-slider-handle--correct {
+			background: $green;
+		}
+
 		.ui-slider-range {
 			position: absolute;
 			z-index: 1;
