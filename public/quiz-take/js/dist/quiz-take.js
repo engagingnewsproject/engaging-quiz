@@ -171,28 +171,7 @@ $(document).on('click', '.enp-question__submit', function(e){
 
     // if mc option
     if(questionJSON.question_type === 'mc') {
-        // find the selected mc option input
-        var selectedMCInput = $('.enp-option__input:checked');
-        // see if the input is correct or incorrect
-        var correct = selectedMCInput.data('correct');
-
-        // check if it's correct or not
-        if(correct === '1') {
-            correct_string = 'correct';
-            // it's right! add the correct class to the input
-            selectedMCInput.addClass('enp-option__input--correct-clicked');
-            // add the class thta highlights the correct option
-            showCorrectMCOption(selectedMCInput);
-        } else {
-            // it's wrong :( :( :(
-            correct_string = 'incorrect';
-            // add incorrect clicked class so it remains in view, but is highlighted as the one they clicked
-            selectedMCInput.addClass('enp-option__input--incorrect-clicked');
-            // highlight the correct option
-            correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
-        }
-        // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
-        locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
+        correct_string = processMCSubmit();
     } else if(questionJSON.question_type === 'slider') {
         // get the slider input
         sliderInput = $(this).parent().find('.enp-slider-input__input');
@@ -407,15 +386,20 @@ function showNextQuestion(obj) {
 *
 */
 function prepareQuestionFormData(clickedButton) {
-    // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
-    // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
-    questionResponse = 'enp-question-response='+$('.enp-question__form input[name="enp-question-response"]').val();
-
     // add button value and name to the data since jQuery doesn't submit button value
     userAction = clickedButton.attr("name") + "=" + clickedButton.val();
     // add in a little data to let the server know the data is coming from an ajax call
     doing_ajax = 'doing_ajax=doing_ajax';
-    data = $('.enp-question__form').serialize() + "&" + questionResponse + "&" + userAction + "&" + doing_ajax;
+    data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+
+    // see if our question response is in there.
+    // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
+    // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
+    questionPattern = new RegExp("&enp-question-response=");
+    if(questionPattern.test(data) !== true) {
+        // the question response field isn't in there, so let's add it
+        data += '&enp-question-response='+$('.enp-question__form input[name="enp-question-response"]').val();
+    }
 
     return data;
 }
@@ -643,6 +627,33 @@ function buildMCOptions(questionJSON) {
 
     // append the data to the mc options
     bindMCOptionData(questionJSON);
+}
+
+function processMCSubmit() {
+    // find the selected mc option input
+    var selectedMCInput = $('.enp-option__input:checked');
+    // see if the input is correct or incorrect
+    var correct = selectedMCInput.data('correct');
+
+    // check if it's correct or not
+    if(correct === '1') {
+        correct_string = 'correct';
+        // it's right! add the correct class to the input
+        selectedMCInput.addClass('enp-option__input--correct-clicked');
+        // add the class thta highlights the correct option
+        showCorrectMCOption(selectedMCInput);
+    } else {
+        // it's wrong :( :( :(
+        correct_string = 'incorrect';
+        // add incorrect clicked class so it remains in view, but is highlighted as the one they clicked
+        selectedMCInput.addClass('enp-option__input--incorrect-clicked');
+        // highlight the correct option
+        correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
+    }
+    // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
+    locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
+
+    return correct_string;
 }
 
 function bindSliderData(questionJSON) {

@@ -89,3 +89,30 @@ function buildMCOptions(questionJSON) {
     // append the data to the mc options
     bindMCOptionData(questionJSON);
 }
+
+function processMCSubmit() {
+    // find the selected mc option input
+    var selectedMCInput = $('.enp-option__input:checked');
+    // see if the input is correct or incorrect
+    var correct = selectedMCInput.data('correct');
+
+    // check if it's correct or not
+    if(correct === '1') {
+        correct_string = 'correct';
+        // it's right! add the correct class to the input
+        selectedMCInput.addClass('enp-option__input--correct-clicked');
+        // add the class thta highlights the correct option
+        showCorrectMCOption(selectedMCInput);
+    } else {
+        // it's wrong :( :( :(
+        correct_string = 'incorrect';
+        // add incorrect clicked class so it remains in view, but is highlighted as the one they clicked
+        selectedMCInput.addClass('enp-option__input--incorrect-clicked');
+        // highlight the correct option
+        correctInput = locateCorrectMCOption($('.enp-question__fieldset'), showCorrectMCOption);
+    }
+    // remove all the ones that are incorrect that DON'T Have incorrect-clicked on them
+    locateIncorrectMCOptions($('.enp-question__fieldset'), removeMCOption);
+
+    return correct_string;
+}
