@@ -102,7 +102,7 @@
     }
 
     .enp-question-results,
-    .enp-quiz-scores-table {
+    .enp-ab-scores .enp-quiz-scores-table {
         margin-bottom: 1.6rem;
 
         @include breakpoint(large) {
