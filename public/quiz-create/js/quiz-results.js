@@ -1,11 +1,5 @@
 jQuery( document ).ready( function( $ ) {
 
-    // set-up accordions for question results
-    $('.enp-results-question').each(function() {
-        var accordion = {header: $('.enp-results-question__header', this), content: $('.enp-results-question__content', this)};
-        enp_accordion__setup(accordion);
-    });
-
     var yScaleMax = _.max(quiz_results_json.quiz_scores);
     var yScaleMin = _.min(quiz_results_json.quiz_scores);
     // get the difference between them
@@ -50,5 +44,22 @@ jQuery( document ).ready( function( $ ) {
           }
         });
       }
+    });
+
+    // set-up accordions for question results
+    $('.enp-results-question').each(function() {
+        var accordion = {header: $('.enp-results-question__header', this), content: $('.enp-results-question__content', this)};
+        enp_accordion__setup(accordion);
+    });
+
+    // set-up accordions for slider response tables
+    $('.enp-results-question--slider').each(function() {
+        // create the title and content accordion object so our headings can get created
+        accordion = {title:  'All Slider Response Data', content: $('.enp-slider-responses-table__content', this), baseID: $(this).attr('id')};
+        //returns an accordion object with the header object and content object
+        accordion = enp_accordion__create_headers(accordion);
+        // set-up all the accordion classes and start classes (so they're closed by default)
+        enp_accordion__setup(accordion);
+
     });
 });

@@ -1,4 +1,4 @@
-<li class="enp-results-question">
+<li class="enp-results-question enp-results-question--<?php echo $question->get_question_type();?>">
     <div class="enp-results-question__header">
         <h3 class="enp-results-question__question"><?php echo $question->get_question_title();?></h3>
         <div class="enp-results-question__stats">
