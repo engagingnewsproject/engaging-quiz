@@ -64,6 +64,17 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 
     }
 
+    public function slider_results_json($slider) {
+
+        $slider_responses_chart_data = $slider->get_slider_responses_chart_data();
+
+        echo '<script type="text/javascript">';
+		    // print this whole object as js global vars in json
+			echo 'var slider_'.$slider->get_slider_id().'_results_json = '.json_encode($slider_responses_chart_data).';';
+		echo '</script>';
+
+    }
+
 	/**
 	 * Register and enqueue the JavaScript for quiz create.
 	 *

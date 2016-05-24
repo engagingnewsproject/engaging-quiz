@@ -24,27 +24,27 @@
                 <div class="enp-results-question__deep-stat__label">Responses</div>
             </li>
         </ul>
-        <ul class="enp-results-question__options">
+
             <?php
                 $question_type = $question->get_question_type();
                 if($question_type === 'mc') {
                     $mc_option_ids = $question->get_mc_options();
-                    foreach($mc_option_ids as $mc_option_id) {
-                        // IF AB Test, we need to return AB Test MC Option data instead
-                        if(isset($ab_test) && !empty($ab_test->ab_test_id)) {
-                            $mc_option = new Enp_quiz_MC_option_AB_test_result($mc_option_id, $ab_test->get_ab_test_id());
-                        } else {
-                            $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                    echo '<ul class="enp-results-question__options">';
+                        foreach($mc_option_ids as $mc_option_id) {
+                            // IF AB Test, we need to return AB Test MC Option data instead
+                            if(isset($ab_test) && !empty($ab_test->ab_test_id)) {
+                                $mc_option = new Enp_quiz_MC_option_AB_test_result($mc_option_id, $ab_test->get_ab_test_id());
+                            } else {
+                                $mc_option = new Enp_quiz_MC_option($mc_option_id);
+                            }
+                            include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-mc-option.php');
                         }
-                        include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-mc-option.php');
-                    }
+                    echo '</ul>';
                 } elseif($question_type === 'slider') {
                     $slider_id = $question->get_slider();
                     $slider = new Enp_quiz_Slider_Result($slider_id);
                     include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-slider.php');
                 }
             ?>
-
-        </ul>
     </div>
 </li>

@@ -153,4 +153,22 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
     public function get_slider_responses_frequency() {
         return $this->slider_responses_frequency;
     }
+
+    public function get_slider_responses_chart_data() {
+        $slider_response = array();
+        $slider_response_frequency = array();
+        $all_slider_responses = $this->get_slider_responses_frequency();
+
+        foreach($all_slider_responses as $key => $val) {
+            $slider_response[] = $key;
+            $slider_response_frequency[] = $val;
+        }
+
+        $slider_responses_chart_data = array(
+            'slider_response' => (float) $slider_response,
+            'slider_response_frequency' => $slider_response_frequency,
+        );
+
+        return $slider_responses_chart_data;
+    }
 }
