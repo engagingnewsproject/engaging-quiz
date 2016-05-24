@@ -420,6 +420,21 @@
         }
     }
 
+    .enp-slider-responses__line-chart {
+        .ct-point {
+            stroke-width: 8px;
+        }
+    }
+
+    .enp-slider-responses__line-chart--low,
+    .enp-slider-responses__line-chart--high {
+        stroke: $red;
+    }
+
+    .enp-slider-responses__line-chart--correct {
+        stroke: $green;
+    }
+
     .enp-slider-responses-table__content {
         box-shadow: none;
         padding-top: 1rem;

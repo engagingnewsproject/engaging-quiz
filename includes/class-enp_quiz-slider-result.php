@@ -157,16 +157,55 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
     public function get_slider_responses_chart_data() {
         $slider_response = array();
         $slider_response_frequency = array();
+        $slider_response_low_frequency = array();
+        $slider_response_correct_frequency = array();
+        $slider_response_high_frequency = array();
+        $slider_correct_low = $this->get_slider_correct_low();
+        $slider_correct_high = $this->get_slider_correct_high();
+
         $all_slider_responses = $this->get_slider_responses_frequency();
 
         foreach($all_slider_responses as $key => $val) {
-            $slider_response[] = $key;
+            $slider_response[] = (float) $key;
             $slider_response_frequency[] = $val;
+
+            if($key < $slider_correct_low) {
+                $slider_response_low_frequency[] = $val;
+                $slider_response_correct_frequency[] = null;
+                $slider_response_high_frequency[] = null;
+            }
+            // see if the response is correct
+            elseif($slider_correct_low <= $key && $key <= $slider_correct_high) {
+
+                $slider_response_correct_frequency[] = $val;
+                // check if we're equal to low
+                if($key == $slider_correct_low) {
+                    $slider_response_low_frequency[] = $val;
+                } else {
+                    $slider_response_low_frequency[] = null;
+                }
+                // check if we're equal to high
+                if($key == $slider_correct_high) {
+                    $slider_response_high_frequency[] = $val;
+                } else {
+                    $slider_response_high_frequency[] = null;
+                }
+
+            }
+            elseif($slider_correct_high < $key) {
+                $slider_response_low_frequency[] = null;
+                $slider_response_correct_frequency[] = null;
+                $slider_response_high_frequency[] = $val;
+            }
+
         }
 
         $slider_responses_chart_data = array(
-            'slider_response' => (float) $slider_response,
+            'slider_response' => $slider_response,
             'slider_response_frequency' => $slider_response_frequency,
+            'slider_response_low_frequency' => $slider_response_low_frequency,
+            'slider_response_correct_frequency' => $slider_response_correct_frequency,
+            'slider_response_high_frequency' => $slider_response_high_frequency,
         );
 
         return $slider_responses_chart_data;

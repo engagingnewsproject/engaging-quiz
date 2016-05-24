@@ -35,6 +35,8 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         // add in json data for scores
         add_action('wp_footer', array($this, 'quiz_results_json'));
+        // add an empty slider data object
+        add_action('wp_head', array($this, 'setup_slider_results_json'));
     }
 
     public function load_template() {
@@ -64,13 +66,19 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 
     }
 
+    public function setup_slider_results_json() {
+        echo '<script type="text/javascript">';
+			echo 'slider_results_json = {};';
+		echo '</script>';
+    }
+
     public function slider_results_json($slider) {
 
         $slider_responses_chart_data = $slider->get_slider_responses_chart_data();
 
         echo '<script type="text/javascript">';
 		    // print this whole object as js global vars in json
-			echo 'var slider_'.$slider->get_slider_id().'_results_json = '.json_encode($slider_responses_chart_data).';';
+			echo 'slider_results_json["'.$slider->get_slider_id().'"] = '.json_encode($slider_responses_chart_data).';';
 		echo '</script>';
 
     }
