@@ -15,7 +15,6 @@ class Enp_quiz_Slider {
             $slider_prefix,
             $slider_suffix,
             $slider_input_size,
-            $slider_responses,
             $slider_is_deleted;
 
     public function __construct($slider_id) {
@@ -73,7 +72,6 @@ class Enp_quiz_Slider {
         $this->slider_prefix = $this->set_slider_prefix($slider);
         $this->slider_suffix = $this->set_slider_suffix($slider);
         $this->slider_input_size = $this->set_slider_input_size();
-        $this->slider_responses = $this->set_slider_responses($slider);
         $this->slider_is_deleted = $this->set_slider_is_deleted($slider);
     }
 
@@ -177,15 +175,6 @@ class Enp_quiz_Slider {
     */
     protected function set_slider_input_size() {
         return strlen($this->slider_range_high);
-    }
-
-    /**
-    * Set the slider_responses for our Slider Object
-    * @param $slider = slider row from slider database table
-    * @return slider_responses field from the database
-    */
-    protected function set_slider_responses($slider) {
-        //return $slider['slider_responses'];
     }
 
     /**
