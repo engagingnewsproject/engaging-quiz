@@ -14,18 +14,20 @@
 
 <div class="enp-slider-responses-table__content">
     <table class="enp-slider-responses-table">
-        <tr>
-            <th class="enp-slider-responses-table__response">Response</th>
-            <th class="enp-slider-responses-table__response-frequency"># of Responses</th>
-        </tr>
-        <?php
-        $response_frequency = $slider->get_slider_responses_frequency();
-        foreach($response_frequency as $key => $val) {?>
+        <tbody>
             <tr>
-                <td class="enp-slider-responses-table__response"><?php echo (float) $key;?></td>
-                <td class="enp-slider-responses-table__frequency"><?php echo $val;?></td>
+                <th class="enp-slider-responses-table__response">Response</th>
+                <th class="enp-slider-responses-table__response-frequency"><span class="enp-slider-responses-table__response-frequency__text"># of Responses</span></th>
             </tr>
-        <?php } ?>
+            <?php
+            $response_frequency = $slider->get_slider_responses_frequency();
+            foreach($response_frequency as $key => $val) {?>
+                <tr class="enp-slider-responses-table__row<?php echo ($val === 0 ? ' enp-slider-responses-table__frequency--zero' : '');?>">
+                    <td class="enp-slider-responses-table__response"><?php echo (float) $key;?></td>
+                    <td class="enp-slider-responses-table__frequency"><?php echo $val;?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
     </table>
 </div>
 

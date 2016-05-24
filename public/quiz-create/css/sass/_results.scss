@@ -425,6 +425,24 @@
         padding-top: 1rem;
     }
 
+    .enp-slider-responses-table--hide-zero {
+        .enp-slider-responses-table__frequency--zero {
+            display: none;
+        }
+    }
+
+    .enp-slider-responses-table__response-frequency {
+        @include _('flex-spread');
+        align-items: center;
+    }
+
+    .enp-slider-responses-table__toggle-zero-frequency {
+        @include _('accordion__header');
+        width: auto;
+        padding: 0 0.6rem;
+        margin: 0;
+    }
+
 }
 
 .enp-quiz-results .enp-results-questions__title__quiz-title {

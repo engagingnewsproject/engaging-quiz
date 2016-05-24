@@ -55,11 +55,32 @@ jQuery( document ).ready( function( $ ) {
     // set-up accordions for slider response tables
     $('.enp-results-question--slider').each(function() {
         // create the title and content accordion object so our headings can get created
-        accordion = {title:  'All Slider Response Data', content: $('.enp-slider-responses-table__content', this), baseID: $(this).attr('id')};
+        accordion = {title:  'Slider Response Data', content: $('.enp-slider-responses-table__content', this), baseID: $(this).attr('id')};
         //returns an accordion object with the header object and content object
         accordion = enp_accordion__create_headers(accordion);
         // set-up all the accordion classes and start classes (so they're closed by default)
         enp_accordion__setup(accordion);
+
+        // hide zero slider responses by default
+        $('.enp-slider-responses-table').addClass('enp-slider-responses-table--hide-zero');
+        // write button to control showing/hiding of zero'd data
+        $('.enp-slider-responses-table__response-frequency', this).append('<button class="enp-slider-responses-table__toggle-zero-frequency" type="button">Show All</button>');
+
+    });
+
+    $(document).on('click', '.enp-slider-responses-table__toggle-zero-frequency', function() {
+        responseTable = $(this).parent().parent().parent().parent();
+        if(responseTable.hasClass('enp-slider-responses-table--show-zero')) {
+            $('.enp-slider-responses-table__frequency--zero', responseTable).hide();
+            responseTable.removeClass('enp-slider-responses-table--show-zero');
+            responseTable.addClass('enp-slider-responses-table--hide-zero');
+            $(this).text('Show All');
+        } else {
+            $('.enp-slider-responses-table__frequency--zero', responseTable).show();
+            responseTable.removeClass('enp-slider-responses-table--hide-zero');
+            responseTable.addClass('enp-slider-responses-table--show-zero');
+            $(this).text('Hide Zeros');
+        }
 
     });
 });
