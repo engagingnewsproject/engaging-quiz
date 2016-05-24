@@ -420,6 +420,12 @@
         }
     }
 
+    .enp-slider-responses__title {
+        @include _(small-uppercase);
+        font-weight: 400;
+        margin-top: 1.6rem;
+    }
+
     .enp-slider-responses__line-chart {
         .ct-point {
             stroke-width: 8px;

@@ -87,8 +87,6 @@ jQuery( document ).ready( function( $ ) {
             yScaleMin = 0;
         }
 
-        console.log(sliderJSON);
-
         var sliderChart = new Chartist.Line('#'+sliderChartID, {
           labels: sliderJSON.slider_response,
           series: [{

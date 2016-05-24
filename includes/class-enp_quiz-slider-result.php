@@ -154,12 +154,22 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
         return $this->slider_responses_frequency;
     }
 
+    /**
+    * Gets all the data we need to output our line chart on the quiz results page
+    */
     public function get_slider_responses_chart_data() {
         $slider_response = array();
         $slider_response_frequency = array();
+        // low frequency is all responses on the low range. All other
+        // values will be null (except if it equals the low correct value)
         $slider_response_low_frequency = array();
+        // correct values (low and high will equal null)
         $slider_response_correct_frequency = array();
+        // high frequency is all responses on the high range. All other
+        // values will be null (except if it equals the high correct value)
         $slider_response_high_frequency = array();
+
+
         $slider_correct_low = $this->get_slider_correct_low();
         $slider_correct_high = $this->get_slider_correct_high();
 
@@ -170,6 +180,7 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
             $slider_response_frequency[] = $val;
 
             if($key < $slider_correct_low) {
+                // if we're less than the correct low, all we need is the low frequency
                 $slider_response_low_frequency[] = $val;
                 $slider_response_correct_frequency[] = null;
                 $slider_response_high_frequency[] = null;
@@ -178,13 +189,17 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
             elseif($slider_correct_low <= $key && $key <= $slider_correct_high) {
 
                 $slider_response_correct_frequency[] = $val;
-                // check if we're equal to low
+                // check if we're equal to low correct
+                // if we are, then set the low frequency to this value
+                // too so that our line chart is seamless
                 if($key == $slider_correct_low) {
                     $slider_response_low_frequency[] = $val;
                 } else {
                     $slider_response_low_frequency[] = null;
                 }
-                // check if we're equal to high
+                // check if we're equal to high correct
+                // if we are, then set the high frequency to this value
+                // too so that our line chart is seamless
                 if($key == $slider_correct_high) {
                     $slider_response_high_frequency[] = $val;
                 } else {
@@ -193,6 +208,7 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
 
             }
             elseif($slider_correct_high < $key) {
+                // if we're greater than the correct, all we need is the high frequency
                 $slider_response_low_frequency[] = null;
                 $slider_response_correct_frequency[] = null;
                 $slider_response_high_frequency[] = $val;

@@ -5,31 +5,7 @@
     $slider_correct_high = $slider->get_slider_correct_high();
 ?>
 
-<div class="enp-slider-responses">
-    <?php
-    // outputs slider respnose JSON
-    $this->slider_results_json($slider);?>
-    <div id="enp-slider-responses__line-chart--<?php echo $slider_id;?>" data-slider-id="<?php echo $slider_id;?>" class="enp-slider-responses__line-chart"></div>
-</div>
 
-<div class="enp-slider-responses-table__content">
-    <table class="enp-slider-responses-table">
-        <tbody>
-            <tr>
-                <th class="enp-slider-responses-table__response">Response</th>
-                <th class="enp-slider-responses-table__response-frequency"><span class="enp-slider-responses-table__response-frequency__text"># of Responses</span></th>
-            </tr>
-            <?php
-            $response_frequency = $slider->get_slider_responses_frequency();
-            foreach($response_frequency as $key => $val) {?>
-                <tr class="enp-slider-responses-table__row<?php echo ($val === 0 ? ' enp-slider-responses-table__frequency--zero' : '');?>">
-                    <td class="enp-slider-responses-table__response"><?php echo (float) $key;?></td>
-                    <td class="enp-slider-responses-table__frequency"><?php echo $val;?></td>
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
 
 <ul class="enp-results-question__options">
     <li class="enp-results-question__option enp-results-question__option--incorrect">
@@ -60,3 +36,30 @@
         </div>
     </li>
 </ul>
+
+<div class="enp-slider-responses">
+    <h4 class="enp-slider-responses__title">Response Distribution</h4>
+    <?php
+    // outputs slider respnose JSON
+    $this->slider_results_json($slider);?>
+    <div id="enp-slider-responses__line-chart--<?php echo $slider_id;?>" data-slider-id="<?php echo $slider_id;?>" class="enp-slider-responses__line-chart"></div>
+</div>
+
+<div class="enp-slider-responses-table__content">
+    <table class="enp-slider-responses-table">
+        <tbody>
+            <tr>
+                <th class="enp-slider-responses-table__response">Response</th>
+                <th class="enp-slider-responses-table__response-frequency"><span class="enp-slider-responses-table__response-frequency__text"># of Responses</span></th>
+            </tr>
+            <?php
+            $response_frequency = $slider->get_slider_responses_frequency();
+            foreach($response_frequency as $key => $val) {?>
+                <tr class="enp-slider-responses-table__row<?php echo ($val === 0 ? ' enp-slider-responses-table__frequency--zero' : '');?>">
+                    <td class="enp-slider-responses-table__response"><?php echo (float) $key;?></td>
+                    <td class="enp-slider-responses-table__frequency"><?php echo $val;?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+</div>
