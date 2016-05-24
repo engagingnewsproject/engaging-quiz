@@ -41,6 +41,7 @@
                 } elseif($question_type === 'slider') {
                     $slider_id = $question->get_slider();
                     $slider = new Enp_quiz_Slider_Result($slider_id);
+                    include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-slider.php');
                 }
             ?>
 

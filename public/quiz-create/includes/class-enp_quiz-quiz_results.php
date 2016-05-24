@@ -83,7 +83,7 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 
 	}
 
-    public function mc_option_correct_icon($correct) {
+    public function option_correct_icon($correct) {
         if($correct === '1') {
             $svg = '<svg class="enp-icon enp-icon--close enp-results-question__option__icon enp-results-question__option__icon--correct">
                 <use xlink:href="#icon-check" />

@@ -7,7 +7,7 @@
     }
 ?>
 <li class="enp-results-question__option enp-results-question__option--<?php echo $correct_string;?>">
-    <?php echo $this->mc_option_correct_icon($correct);?>
+    <?php echo $this->option_correct_icon($correct);?>
     <div class="enp-results-question__option__text">
         <?php echo $mc_option->get_mc_option_content();?>
     </div>

@@ -374,6 +374,12 @@
         margin-right: 1rem;
     }
 
+    .enp-results-question__option__text__helper {
+        font-weight: 300;
+        @include _(small-uppercase);
+        margin-right: 0.4rem;
+    }
+
     .enp-results-question__option__icon {
         @include media(max-small) {
             position: relative;

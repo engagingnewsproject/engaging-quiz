@@ -134,4 +134,23 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
 
     }
 
+    public function get_slider_responses_total() {
+        return $this->slider_responses_total;
+    }
+
+    public function get_slider_responses_low() {
+        return $this->slider_responses_low;
+    }
+
+    public function get_slider_responses_correct() {
+        return $this->slider_responses_correct;
+    }
+
+    public function get_slider_responses_high() {
+        return $this->slider_responses_high;
+    }
+
+    public function get_slider_responses_frequency() {
+        return $this->slider_responses_frequency;
+    }
 }
