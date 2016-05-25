@@ -101,7 +101,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
         // If they entered a higher value in the slider_range_high value, don't throw an error trying to explain that they entered a higher value in the low one, just switch it for them
         // we're setting these as an agnostic range right now. We'll set the actual values later
         $a = $this->set_slider_value('slider_range_low', 0);
-        $b = $this->set_slider_value('slider_range_high', 100);
+        $b = $this->set_slider_value('slider_range_high', 10);
         $a = (float) $a;
         $b = (float) $b;
 
@@ -126,8 +126,8 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
     protected function set_slider_correct() {
         // If they entered a higher value in the slider_correct_high value, don't throw an error trying to explain that they entered a higher value in the low one, just switch it for them
         // we're setting these as an agnostic range right now. We'll set the actual values later
-        $a = $this->set_slider_value('slider_correct_low', '50');
-        $b = $this->set_slider_value('slider_correct_high', '50');
+        $a = $this->set_slider_value('slider_correct_low', '5');
+        $b = $this->set_slider_value('slider_correct_high', '5');
         $a = (float) $a;
         $b = (float) $b;
 

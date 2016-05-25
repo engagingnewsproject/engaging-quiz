@@ -531,9 +531,9 @@ function temp_addSlider(questionID) {
             question_position: 'newQuestionPosition',
             slider_id: 'newSliderID',
             slider_range_low: '0',
-            slider_range_high: '100',
-            slider_correct_low: '50',
-            slider_correct_high: '50',
+            slider_range_high: '10',
+            slider_correct_low: '5',
+            slider_correct_high: '5',
             slider_increment: '1',
             slider_prefix: '',
             slider_suffix: ''
