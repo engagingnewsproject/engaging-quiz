@@ -65,6 +65,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-question.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-mc_option.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-slider.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-slider-result.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-slider-ab_result.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-user.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-nonce.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-ab_test.php';
