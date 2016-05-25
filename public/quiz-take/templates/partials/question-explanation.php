@@ -1,4 +1,4 @@
-<section class="enp-explanation enp-explanation--<?php echo $qt_question->get_question_explanation_title();?>">
+<section class="enp-explanation enp-explanation--<?php echo $qt_question->get_question_explanation_title();?>" tabindex="0">
     <input id="enp-question-id" type="hidden" name="enp-question-id" value="<? echo $qt_question->question->get_question_id();?>"/>
     <header class="enp-explanation__header">
         <h3 class="enp-explanation__title">

@@ -188,12 +188,6 @@ class Enp_quiz_Take_Quiz_end {
 				$qt_end->$key = '{{'.$key.'}}';
 			}
 		}
-		// quiz object variables
-		foreach($qt_end->quiz as $key => $value) {
-			// we don't want to unset our question object
-			$qt_end->quiz->$key = '{{'.$key.'}}';
-		}
-
 
 		$template = '<script type="text/template" id="quiz_end_template">';
 		ob_start();
