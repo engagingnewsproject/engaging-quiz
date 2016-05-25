@@ -181,10 +181,19 @@ class Enp_quiz_Take_Quiz_end {
 		// clone the object so we don't reset its own values
 		$qt_end = clone $this;
 
+		// quiz end object variables
 		foreach($qt_end as $key => $value) {
-			// we don't want to unset our question object
-			$qt_end->$key = '{{'.$key.'}}';
+			// we don't want to unset our quiz object
+			if($key !== 'quiz') {
+				$qt_end->$key = '{{'.$key.'}}';
+			}
 		}
+		// quiz object variables
+		foreach($qt_end->quiz as $key => $value) {
+			// we don't want to unset our question object
+			$qt_end->quiz->$key = '{{'.$key.'}}';
+		}
+
 
 		$template = '<script type="text/template" id="quiz_end_template">';
 		ob_start();

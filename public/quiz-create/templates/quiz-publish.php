@@ -19,7 +19,7 @@
             <h1 class="enp-page-title enp-publish-page__title">Embed</h1>
             <p>Copy and paste the embed code onto your website where you'd like it to appear.</p>
             <textarea class="enp-embed-code enp-publish-page__embed-code" rows="7"><script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>public/quiz-take/js/dist/iframe-parent.js"></script>
-<iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id();?>" class="enp-quiz-iframe" src="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
+<iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id();?>" class="enp-quiz-iframe" src="<?php echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
             </textarea>
 
         </section>
@@ -34,7 +34,7 @@
                           <use xlink:href="#icon-facebook" />
                         </svg>
                     </a></li>
-                    <li class="enp-share-quiz__item"><a class="enp-share-quiz__link enp-share-quiz__item--twitter" href="#twitter">
+                    <li class="enp-share-quiz__item"><a class="enp-share-quiz__link enp-share-quiz__item--twitter" href="http://twitter.com/intent/tweet?text=<?php echo urlencode('How well can you do on the '.$quiz->get_quiz_title().' Quiz?');?>&url=<?php echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>">
                         <svg class="enp-icon enp-icon--twitter enp-share-quiz__item__icon enp-share-quiz__item__icon--twitter">
                           <use xlink:href="#icon-twitter" />
                         </svg>
