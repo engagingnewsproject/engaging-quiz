@@ -48,6 +48,10 @@ class Enp_quiz_Question_AB_test_result extends Enp_quiz_Question {
     public function set_ab_test_question_results() {
         $this->question_views = $this->set_question_views();
         $this->question_responses = $this->set_question_responses();
+        $this->question_responses_correct = $this->set_question_responses_correct();
+        $this->question_responses_incorrect = $this->set_question_responses_incorrect();
+        $this->question_responses_correct_percentage = $this->set_question_responses_correct_percentage();
+        $this->question_responses_incorrect_percentage = $this->set_question_responses_incorrect_percentage();
     }
 
     public function set_question_views() {
@@ -58,13 +62,80 @@ class Enp_quiz_Question_AB_test_result extends Enp_quiz_Question {
         $responses = 0;
         if(!empty(self::$results)) {
             foreach(self::$results as $result) {
-
                 if($result['question_responded'] === '1') {
                     $responses++;
                 }
             }
         }
         return $responses;
+    }
+
+    /**
+    * Set the question_responses_correct for our Quiz Object
+    * @param self::$results = all results from select_ab_test_question_results() query
+    * @return (string) question_responses_correct
+    */
+    protected function set_question_responses_correct() {
+        $question_responses_correct = 0;
+
+        if(!empty(self::$results)) {
+            foreach(self::$results as $result) {
+                if($result['question_responded'] === '1' && $result['response_correct'] === '1') {
+                    $question_responses_correct++;
+                }
+            }
+        }
+
+        return $question_responses_correct;
+    }
+
+    /**
+    * Set the question_responses_incorrect for our Quiz Object
+    * @param self::$results = all results from select_ab_test_question_results() query
+    * @return (string) question_responses_incorrect
+    */
+    protected function set_question_responses_incorrect() {
+        $question_responses_incorrect = 0;
+
+        if(!empty(self::$results)) {
+            foreach(self::$results as $result) {
+                if($result['question_responded'] === '1' && $result['response_correct'] === '0') {
+                    $question_responses_incorrect++;
+                }
+            }
+        }
+
+        return $question_responses_incorrect;
+    }
+
+    /**
+    * Set the question_responses_correct_percentage for our Quiz Object
+    * @param self::$results = all results from select_ab_test_question_results() query
+    * @return (string) question_responses_correct_percentage (ex. 10)
+    */
+    protected function set_question_responses_correct_percentage() {
+        $question_responses_correct_percentage = 0;
+
+        if((int) $this->question_responses !== 0) {
+            $question_responses_correct_percentage = $this->question_responses_correct / $this->question_responses;
+        }
+
+        return $question_responses_correct_percentage;
+    }
+
+    /**
+    * Set the question_responses_incorrect_percentage for our Quiz Object
+    * @param self::$results = all results from select_ab_test_question_results() query
+    * @return (string) question_responses_incorrect_percentage (ex. 10)
+    */
+    protected function set_question_responses_incorrect_percentage() {
+        $question_responses_incorrect_percentage = 0;
+
+        if((int) $this->question_responses !== 0) {
+            $question_responses_incorrect_percentage = $this->question_responses_incorrect / $this->question_responses;
+        }
+
+        return $question_responses_incorrect_percentage;
     }
 
 
