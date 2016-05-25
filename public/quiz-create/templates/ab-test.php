@@ -6,7 +6,7 @@
  * @package           Enp_quiz
  */
 ?>
-
+<?php echo $this->dashboard_breadcrumb_link();?>
 <div class="enp-container enp-ab-create__container">
     <?php do_action('enp_quiz_display_messages'); ?>
     <?php

@@ -410,5 +410,12 @@ $placeholders: ();
 .enp-breadcrumb-link {
     @include _(small-uppercase);
     position: absolute;
-    top: -1.6rem;
+    margin-top: -2rem;
+    z-index: 9999999999999;
+}
+
+.enp-breadcrumb-link__icon {
+    position: relative;
+    top: 0.4rem;
+    left: 0.4rem;
 }

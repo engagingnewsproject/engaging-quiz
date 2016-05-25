@@ -32,7 +32,7 @@ $quiz_id = $quiz->get_quiz_id();
  if(empty($quiz_id))
  { $new_quiz_flag= '1'; } else { $new_quiz_flag= '0'; }
 ?>
-
+<?php echo $this->dashboard_breadcrumb_link();?>
 <section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
     <?php
 

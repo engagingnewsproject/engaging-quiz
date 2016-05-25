@@ -10,7 +10,7 @@
  * $quiz = quiz object (if exits), error page if it doesn't (TODO)
  */
 ?>
-
+<?php echo $this->dashboard_breadcrumb_link();?>
 <div class="enp-container enp-publish-page-container">
     <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');?>
     <?php do_action('enp_quiz_display_messages'); ?>

@@ -77,23 +77,6 @@ class Enp_quiz_Admin {
 		<?php
 	}
 
-	public function enp_quiz_dashboard_rewrite_catch() {
-		global $wp_query;
-		// see if enp_quiz_template is one of the query_vars posted
-		if ( array_key_exists( 'page', $wp_query->query_vars ) ) {
-			// if it's there, then see what the value is
-			$page = $wp_query->get( 'page' );
-			if($page === 'enp_quiz_creator_dashboard') {
-				// redirect to dashboard
-				wp_redirect( site_url( '/enp-quiz/dashboard/user' ) );
-				exit;
-			}
-		} else {
-			echo 'hi';
-		}
-
-	}
-
 	/**
 	 * Register the stylesheets for the admin area.
 	 *

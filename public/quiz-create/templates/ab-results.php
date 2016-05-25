@@ -6,7 +6,7 @@
  * @package           Enp_quiz
  */
 ?>
-
+<?php echo $this->dashboard_breadcrumb_link();?>
 <h1 class="enp-page-title enp-results-title enp-results-title--ab"><?php echo $ab_test->get_ab_test_title();?></h1>
 <?php do_action('enp_quiz_display_messages');
 // see if we just created the ab test or not
