@@ -42,7 +42,12 @@
                     echo '</ul>';
                 } elseif($question_type === 'slider') {
                     $slider_id = $question->get_slider();
-                    $slider = new Enp_quiz_Slider_Result($slider_id);
+                    if(isset($ab_test) && !empty($ab_test->ab_test_id)) {
+                        $slider = new Enp_quiz_Slider_AB_test_result($slider_id, $ab_test->get_ab_test_id());
+                    } else {
+                        $slider = new Enp_quiz_Slider_Result($slider_id);
+                    }
+
                     include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-slider.php');
                 }
             ?>
