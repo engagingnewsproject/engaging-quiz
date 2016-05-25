@@ -52,10 +52,45 @@ class Enp_quiz_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		//  Create link to the menu page.
+		add_action('admin_menu', array($this, 'enp_quiz_menu'));
 		// load take quiz styles
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+
+	}
+
+	public function enp_quiz_menu() {
+		//create new top-level menu
+		add_menu_page('Quiz Creator', 'Quiz Creator', 'read', 'enp_quiz_creator_dashboard', array($this, 'enp_quiz_creator_links'), 'dashicons-megaphone', 100);
+	}
+
+	public function enp_quiz_creator_links() {
+		// setup links to quiz creator if no JS
+		?>
+		<nav>
+			<ul>
+				<li><a class="enp-quiz-dashboard-link" href="<?php echo site_url('enp-quiz/dashboard/user');?>">Go to Quiz Dashboard</a></li>
+			</ul>
+		</nav>
+		<?php
+	}
+
+	public function enp_quiz_dashboard_rewrite_catch() {
+		global $wp_query;
+		// see if enp_quiz_template is one of the query_vars posted
+		if ( array_key_exists( 'page', $wp_query->query_vars ) ) {
+			// if it's there, then see what the value is
+			$page = $wp_query->get( 'page' );
+			if($page === 'enp_quiz_creator_dashboard') {
+				// redirect to dashboard
+				wp_redirect( site_url( '/enp-quiz/dashboard/user' ) );
+				exit;
+			}
+		} else {
+			echo 'hi';
+		}
 
 	}
 
