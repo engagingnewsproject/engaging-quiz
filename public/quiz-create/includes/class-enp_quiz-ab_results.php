@@ -39,6 +39,8 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
 
         // add in json data for scores
         add_action('wp_footer', array($this, 'quiz_results_json'));
+        // add an empty slider data object
+        add_action('wp_head', array($this, 'setup_slider_results_json'));
     }
 
     public function load_template() {
@@ -137,7 +139,7 @@ class Enp_quiz_AB_results extends Enp_quiz_Quiz_results {
         wp_register_script( $this->plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'jquery' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-accordion' );
         // general scripts
-		wp_register_script( $this->plugin_name.'-ab-results', plugin_dir_url( __FILE__ ) . '../js/ab-results.js', array( 'jquery', 'underscore', $this->plugin_name.'-accordion' ), $this->version, true );
+		wp_register_script( $this->plugin_name.'-ab-results', plugin_dir_url( __FILE__ ) . '../js/dist/ab-results.js', array( 'jquery', 'underscore', $this->plugin_name.'-accordion' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-ab-results' );
 
 	}

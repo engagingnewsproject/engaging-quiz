@@ -97,7 +97,7 @@ class Enp_quiz_Quiz_results extends Enp_quiz_Create {
 		wp_enqueue_script( $this->plugin_name.'-accordion' );
 
         // general scripts
-		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/quiz-results.js', array( 'jquery', 'underscore', $this->plugin_name.'-accordion', $this->plugin_name.'-charts' ), $this->version, true );
+		wp_register_script( $this->plugin_name.'-quiz-results', plugin_dir_url( __FILE__ ) . '../js/dist/quiz-results.js', array( 'jquery', 'underscore', $this->plugin_name.'-accordion', $this->plugin_name.'-charts' ), $this->version, true );
 		wp_enqueue_script( $this->plugin_name.'-quiz-results' );
 
 	}
