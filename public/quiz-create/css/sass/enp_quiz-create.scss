@@ -5,13 +5,12 @@
 @import "typography";
 @import "animations";
 @import "forms";
-@import "add-questions";
-@import "preview";
-@import "publish";
-@import "quiz";
+@import "quiz-create";
+@import "quiz-preview";
+@import "quiz-publish";
 @import "ab-create";
 @import "dashboard";
 @import "breadcrumbs";
-@import "results";
+@import "quiz-results";
 @import "ab-results";
 @import "../../../quiz-take/css/sass/slider";
