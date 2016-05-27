@@ -47,7 +47,7 @@ _.is_json_string = function(str) {
 _.get_quiz_id = function() {
     json = $('#quiz').data('quizJSON');
     return json.quiz_id;
-}
+};
 
 _.get_ab_test_id = function() {
     return ab_test_id_json.ab_test_id;

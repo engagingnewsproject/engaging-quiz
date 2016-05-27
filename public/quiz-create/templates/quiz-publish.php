@@ -29,7 +29,7 @@
                 <h3 class="enp-aside-title enp-share-quiz__title">Share Your Quiz</h3>
                 <a class="enp-share-quiz__url" href="<? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>"><? echo ENP_QUIZ_URL.$quiz->get_quiz_id();?></a></p>
                 <ul class="enp-share-quiz">
-                    <li class="enp-share-quiz__item"><a class="enp-share-quiz__link enp-share-quiz__item--facebook" href="#facebook">
+                    <li class="enp-share-quiz__item"><a class="enp-share-quiz__link enp-share-quiz__item--facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(ENP_QUIZ_URL.$quiz->get_quiz_id());?>">
                         <svg class="enp-icon enp-icon--facebook enp-share-quiz__item__icon enp-share-quiz__item__icon--facebook">
                           <use xlink:href="#icon-facebook" />
                         </svg>
