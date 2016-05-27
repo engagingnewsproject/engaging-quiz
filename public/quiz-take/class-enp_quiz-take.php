@@ -125,7 +125,8 @@ class Enp_quiz_Take {
 						//ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery-ui.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/underscore.min.js',
-						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.js'
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.ui.touch-punch.min.js',
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.min.js'
 					);
 		foreach($scripts as $src) {
 			echo '<script src="'.$src.'"></script>';
@@ -267,8 +268,11 @@ class Enp_quiz_Take {
 	}
 
 	public function validate_nonce($quiz_id) {
+		// Don't worry about Nonce validation for right now
+		// it's not working on Safari, Firefox, or iOS Safari
+		return true;
 		// validate nonce
-		if($this->ab_test_id !== false) {
+		/*if($this->ab_test_id !== false) {
 			// it's an ab test nonce
 			$nonce_name = 'enp_quiz_take_ab_test_'.$this->ab_test_id.'_nonce';
 		} else {
@@ -291,7 +295,7 @@ class Enp_quiz_Take {
  		   }
  	    }
 
-		return true;
+		return true;*/
 	}
 
 	public function save_quiz_take() {
