@@ -186,6 +186,7 @@ class Enp_quiz_Take {
 
 	public function meta_tags() {
 		echo '<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
     <meta property="og:url" content="http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] .'/'. $_SERVER['REQUEST_URI'] .'" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="'.$this->quiz->get_quiz_title().'" />
