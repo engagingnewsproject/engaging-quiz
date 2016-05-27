@@ -16,7 +16,7 @@
               <span class="enp-screen-reader-text">Link opens in new window</span>
             </svg>
         </a></li>
-        <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--twitter" target="_blank" href="http://twitter.com/intent/tweet?text=<?php echo rawurlencode('I got '.$qt_end->get_score_percentage().'% right on the '.$qt_end->quiz->get_quiz_title().' Quiz. How well can you do?');?>&url=<?php echo ENP_QUIZ_URL.$qt_end->quiz->get_quiz_id();?>">
+        <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--twitter" target="_blank" href="http://twitter.com/intent/tweet?text=<?php echo 'I got '.$qt_end->get_score_percentage().'%25 right on the '.$qt_end->quiz->get_quiz_title().' Quiz. How many can you get right?';?>&url=<?php echo ENP_QUIZ_URL.$qt_end->quiz->get_quiz_id();?>">
             <svg class="enp-icon enp-icon--twitter enp-results__share__item__icon enp-results__share__item__icon--twitter">
               <use xlink:href="#icon-twitter" />
             </svg>

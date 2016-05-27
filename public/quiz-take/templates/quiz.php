@@ -48,7 +48,10 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
 <html lang="en-US">
 <head>
     <title><?php echo $qt->quiz->get_quiz_title();?></title>
-    <?php // load styles
+    <?php
+    // load meta
+    $qt->meta_tags();
+    // load styles
     $qt->styles();?>
 </head>
 <body id="enp-quiz">

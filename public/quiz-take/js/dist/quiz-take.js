@@ -439,6 +439,8 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
 
         // see if there's a next question
         qEndTemplate = generateQuizEnd(responseJSON.quiz_end);
+        // update the og facebook title tag
+        updateOGTags(responseJSON.quiz_end);
         $('.enp-question__form').append(qEndTemplate);
         $('.enp-results').addClass('enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
         // make progress bar the full width
@@ -829,6 +831,11 @@ function generateQuizEnd(quizEndJSON, callback) {
         callback(explanation);
     }
     return qEndTemplate;
+}
+
+function updateOGTags(quizEndJSON) {
+    ogTitle = quizEndJSON.quiz.quiz_title + ' - I got '+quizEndJSON.score_percentage+'% right';
+    $("meta[property='og:title']").attr('content', ogTitle);
 }
 
 // function for our timeout to animate the svg percentage correct

@@ -182,6 +182,14 @@ class Enp_quiz_Take {
 
 	}
 
+	public function meta_tags() {
+		echo '<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:url" content="http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] .'/'. $_SERVER['REQUEST_URI'] .'" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="'.$this->quiz->get_quiz_title().'" />
+    <meta property="og:description" content="How well can you do?" />';
+	}
+
 	public function set_nonce($quiz_id) {
 		//Start the session
 	   session_start();
