@@ -97,6 +97,8 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
     if(response.status === 'success' && response.action === 'insert') {
         // set-up quiz
         setNewQuiz(response);
+        // show the preview/save buttons
+        showSaveButton();
     }
     // check user action
     if(userActionAction == 'add' && userActionElement == 'question') {

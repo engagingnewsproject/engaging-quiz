@@ -464,6 +464,10 @@
         }*/
     }
 
+    .enp-quiz-form__save--reveal {
+        animation: slideInTop--reduced-opacity .3s ease-out;
+    }
+
     @include btn--icon--circle(enp-btn--next-step);
 
     .enp-btn--next-step {
@@ -495,8 +499,10 @@
             }
         }*/
 
+    }
 
-
+    .enp-btn--next-step--reveal {
+        animation: slideInTop .3s ease-out;
     }
 
 

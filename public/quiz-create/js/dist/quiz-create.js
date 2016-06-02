@@ -223,6 +223,13 @@ $('.enp-slider-options').each(function() {
     setUpSliderTemplate($(this));
 });
 
+// check if there are any questions. If there aren't, then don't show the save/preview buttons
+var url = window.location.href;
+var patt = new RegExp("quiz-create/new");
+if(patt.test(url) === true) {
+    hideSaveButton();
+}
+
 /*
 * General UX interactions to make a better user experience
 */
@@ -241,6 +248,16 @@ $(document).on('click', '.enp-quiz-breadcrumbs__link--preview, .enp-quiz-breadcr
     e.preventDefault();
     $('.enp-btn--next-step').trigger('click');
 });
+
+
+function hideSaveButton() {
+    $('.enp-quiz-form__save, .enp-btn--next-step').hide();
+}
+
+function showSaveButton() {
+    $('.enp-quiz-form__save').show().addClass('enp-quiz-form__save--reveal');
+    $('.enp-btn--next-step').show().addClass('enp-btn--next-step--reveal');
+}
 
 // append ajax response message
 function appendMessage(message, status) {
@@ -935,6 +952,8 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
     if(response.status === 'success' && response.action === 'insert') {
         // set-up quiz
         setNewQuiz(response);
+        // show the preview/save buttons
+        showSaveButton();
     }
     // check user action
     if(userActionAction == 'add' && userActionElement == 'question') {

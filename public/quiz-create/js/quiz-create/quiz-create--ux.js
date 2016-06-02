@@ -16,3 +16,13 @@ $(document).on('click', '.enp-quiz-breadcrumbs__link--preview, .enp-quiz-breadcr
     e.preventDefault();
     $('.enp-btn--next-step').trigger('click');
 });
+
+
+function hideSaveButton() {
+    $('.enp-quiz-form__save, .enp-btn--next-step').hide();
+}
+
+function showSaveButton() {
+    $('.enp-quiz-form__save').show().addClass('enp-quiz-form__save--reveal');
+    $('.enp-btn--next-step').show().addClass('enp-btn--next-step--reveal');
+}
