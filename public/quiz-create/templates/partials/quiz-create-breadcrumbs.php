@@ -38,7 +38,7 @@ if($quiz->get_quiz_status() === 'published') {
          <use xlink:href="#icon-chevron-right" />
         </svg></li>
         <li class="enp-quiz-breadcrumbs__item">
-            <a class="enp-quiz-breadcrumbs__link<?php echo $enp_publish_class;?>" href="<? echo $enp_publish_url;?>"><?echo $enp_publish_name;?></a>
+            <a class="enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--publish<?php echo $enp_publish_class;?>" href="<? echo $enp_publish_url;?>"><?echo $enp_publish_name;?></a>
         </li>
     </ul>
 </nav>
