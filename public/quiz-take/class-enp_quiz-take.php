@@ -299,6 +299,19 @@ class Enp_quiz_Take {
 		return true;*/
 	}
 
+	public function get_error_messages() {
+		if(isset($this->response->error) && !empty($this->response->error)) {
+	        $errors = $this->response->error;
+	        echo '<div class="enp-quiz-message enp-quiz-message--error">
+	        <h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
+	        <ul class="enp-message__list">';
+	        foreach($errors as $error) {
+	            echo '<li class="enp-message__list__item">'.$error.'</li>';
+	        }
+	        echo '</ul></div>';
+		}
+	}
+
 	public function save_quiz_take() {
 		$response = false;
 		$save_data = array();
