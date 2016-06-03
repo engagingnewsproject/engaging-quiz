@@ -120,9 +120,9 @@ class Enp_quiz_Take {
 	 */
 	public function scripts() {
 		$scripts = array(
-						"https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+						// "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
 						// if developing offline
-						// ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.min.js',
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery-ui.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/underscore.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.ui.touch-punch.min.js',
@@ -418,7 +418,7 @@ class Enp_quiz_Take {
 		$question = array();
 		$question_id = '';
 		$question_id_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_question_id';
-		if(isset($this->response) && !empty($this->response)) {
+		if(isset($this->response) && !empty($this->response) && empty($this->response->error)) {
 			// see what we should do
 			if($this->state === 'question_explanation') {
 				// show the question explanation template
@@ -482,9 +482,9 @@ class Enp_quiz_Take {
 
 	public function set_state() {
 		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
-		// set state off response, if it's there
 
-		if(isset($this->response) && !empty($this->response)) {
+		// set state off response, if it's there
+		if(isset($this->response->state) && !empty($this->response->state)) {
 			$this->state = $this->response->state;
 		}
 		// restarting a quiz

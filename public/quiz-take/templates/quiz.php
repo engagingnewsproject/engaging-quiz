@@ -75,6 +75,17 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
             </div>
         </div>
     </header>
+    <?php if(!empty($qt->response->error)) {
+        $errors = $qt->response->error;
+        echo '<div class="enp-quiz-message enp-quiz-message--error">
+        <h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
+        <ul class="enp-message__list">';
+        foreach($errors as $error) {
+            echo '<li class="enp-message__list__item">'.$error.'</li>';
+        }
+        echo '</ul></div>';
+
+    };?>
 
     <section class="enp-question__container <?php echo $qt->get_question_container_class();?>">
         <form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action();?>">

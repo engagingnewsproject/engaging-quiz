@@ -33,8 +33,10 @@ class Enp_quiz_Save_quiz_take {
         $valid = $this->validate_save_quiz_take($data);
 
         if($valid === false) {
+            self::$return = json_encode(self::$return);
             return self::$return;
         }
+
         // set our initial return as the data object (this is necessary for returning states and stuff when we're on a Preview so we can move through the quiz without actually saving data)
         self::$return = array_merge($data, self::$return);
 
@@ -47,7 +49,17 @@ class Enp_quiz_Save_quiz_take {
         // create our save response class
         self::$save_response_question_obj = new Enp_quiz_Save_quiz_take_Response_question();
 
+        // if we're not published, then don't save the response
         if($data['user_action'] === 'enp-question-submit' && $quiz_published_status === 'published') {
+            // validate that they have a correct response (ie their slider response is within range or their MC Option ID is valid for that question)
+            $valid_response = self::$save_response_question_obj->validate_response_data(self::$return);
+            // if it's not true, get outta here
+            if($valid_response !== true) {
+                self::$return['error'][] = 'Invalid response.';
+                self::$return = json_encode(self::$return);
+                return self::$return;
+            }
+
             $save_response_quiz_response = self::$save_response_quiz_obj->update_response_quiz_started(self::$return);
             // check to make sure whatever we saved returned a response
             if(!empty($save_response_quiz_response)) {
