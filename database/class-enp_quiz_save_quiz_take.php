@@ -37,10 +37,7 @@ class Enp_quiz_Save_quiz_take {
             return self::$return;
         }
 
-        // old comment - separating preview from publish was so May 2016 //
-        // set our initial return as the data object (this is necessary for returning states and stuff when we're on a Preview so we can move through the quiz without actually saving data)
-        // end old comment //
-        // TODO: Test if merging data with return is necessary. I suspect it's not //
+        // merge data into our response
         self::$return = array_merge($data, self::$return);
 
         self::$quiz = new Enp_quiz_Quiz($data['quiz_id']);
