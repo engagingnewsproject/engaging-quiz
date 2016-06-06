@@ -260,5 +260,6 @@ class Enp_quiz_Save_quiz_take {
     		self::$save_response_question_obj->insert_response_question($data);
 		}
     }
+
 }
 ?>
