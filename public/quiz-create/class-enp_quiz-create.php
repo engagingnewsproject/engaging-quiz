@@ -743,6 +743,10 @@ class Enp_quiz_Create {
 			setcookie($cookie_name, '', time() - 3600, $path);
 		}
 
+		// unset the response cookie too so a new response gets generated
+		// on the next time they load the quiz
+		setcookie('enp_response_id_quiz_'.$quiz_id, '', time() - 3600, $path);
+
 	}
 
 	public function dashboard_breadcrumb_link() {
