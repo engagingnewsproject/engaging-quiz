@@ -54,7 +54,7 @@ class Enp_quiz_Take {
 		$this->set_user_id();
 		// get our quiz
 		$this->quiz = new Enp_quiz_Quiz($quiz_id);
-		// set a response, if published
+		// set a response
 		$this->set_response_quiz_id($quiz_id);
 		// check if we have a posted var
 		if(isset($_POST['enp-question-submit'])) {
@@ -81,13 +81,9 @@ class Enp_quiz_Take {
 		// set cookies we'll need on reload or correct/incorrect amounts
 		$this->set_cookies();
 
-		// see if the quiz is published or not
-		$quiz_status = $this->quiz->get_quiz_status();
-		if($quiz_status === 'published') {
-			// if it's the first question, we need to save the initial quiz view
-			// and question view
-			$this->save_initial_view_data();
-		}
+		// if it's the first question, we need to save the
+		// initial quiz view and question view
+		$this->save_initial_view_data();
 
 		// if we're doing AJAX, echo the response back to the server
 		// this is echo-ed after everything else is done so we don't get "header already sent" errors from PHP
@@ -120,13 +116,13 @@ class Enp_quiz_Take {
 	 */
 	public function scripts() {
 		$scripts = array(
-						// "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+						"https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
 						// if developing offline
-						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.min.js',
+						// ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery-ui.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/underscore.min.js',
 						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/jquery.ui.touch-punch.min.js',
-						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.min.js'
+						ENP_QUIZ_PLUGIN_URL.'public/quiz-take/js/dist/quiz-take.js'
 					);
 		foreach($scripts as $src) {
 			echo '<script src="'.$src.'"></script>';
@@ -411,12 +407,10 @@ class Enp_quiz_Take {
 			return false;
 		}
 
-		if($quiz_status === 'published') {
-			// update our quiz restarted field in the response_quiz table
-			$this->response_quiz_restarted();
-			// we're also going to set a new response_quiz_id since we've reloaded the quiz
-			$this->create_response_quiz_id($quiz_id);
-		}
+		// update our quiz restarted field in the response_quiz table
+		$this->response_quiz_restarted();
+		// we're also going to set a new response_quiz_id since we've reloaded the quiz
+		$this->create_response_quiz_id($quiz_id);
 
 		// clear the cookies and send them back to the beginning of the quiz
 		$this->unset_cookies();
@@ -618,11 +612,6 @@ class Enp_quiz_Take {
 
 
 	protected function set_response_quiz_id($quiz_id) {
-		// if the quiz isn't published, then don't send a response
-		$quiz_status = $this->quiz->get_quiz_status();
-		if($quiz_status !== 'published') {
-			return false;
-		}
 
 		$response_quiz_id_cookie_name = 'enp_response_id_quiz_'.$quiz_id;
 		// check if the cookie exists already
@@ -630,15 +619,6 @@ class Enp_quiz_Take {
 			$this->response_quiz_id = $_COOKIE[$response_quiz_id_cookie_name];
 		} else {
 			$this->create_response_quiz_id($quiz_id);
-		}
-
-	}
-
-	protected function set_response_question_id($question_id) {
-		// if the quiz isn't published, then don't send a response
-		$quiz_status = $this->quiz->get_quiz_status();
-		if($quiz_status !== 'published') {
-			return false;
 		}
 
 	}

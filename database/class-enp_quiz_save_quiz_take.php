@@ -37,20 +37,21 @@ class Enp_quiz_Save_quiz_take {
             return self::$return;
         }
 
+        // old comment - separating preview from publish was so May 2016 //
         // set our initial return as the data object (this is necessary for returning states and stuff when we're on a Preview so we can move through the quiz without actually saving data)
+        // end old comment //
+        // TODO: Test if merging data with return is necessary. I suspect it's not //
         self::$return = array_merge($data, self::$return);
 
         self::$quiz = new Enp_quiz_Quiz($data['quiz_id']);
 
-        // decide what we're saving based on the user_action
-        $quiz_published_status = self::$quiz->get_quiz_status();
         // create our save quiz response class
         self::$save_response_quiz_obj = new Enp_quiz_Save_quiz_take_Response_quiz();
         // create our save response class
         self::$save_response_question_obj = new Enp_quiz_Save_quiz_take_Response_question();
 
-        // if we're not published, then don't save the response
-        if($data['user_action'] === 'enp-question-submit' && $quiz_published_status === 'published') {
+        // Check that they submitted a question on the form
+        if($data['user_action'] === 'enp-question-submit') {
             // validate that they have a correct response (ie their slider response is within range or their MC Option ID is valid for that question)
             $valid_response = self::$save_response_question_obj->validate_response_data(self::$return);
             // if it's not true, get outta here
@@ -72,6 +73,7 @@ class Enp_quiz_Save_quiz_take {
                 self::$return = array_merge(self::$return, $save_response_question_response);
             }
         }
+
         // get current question & build next question
         if(array_key_exists('question_id', $data) && !empty($data['question_id'])) {
             $current_question_id = $data['question_id'];
@@ -88,14 +90,9 @@ class Enp_quiz_Save_quiz_take {
             $this->set_quiz_end();
         }
 
-        if($quiz_published_status === 'published') {
-            // update quiz/question data
-            $this->update_quiz_data($data);
-            $this->update_question_data();
-        } elseif(self::$return['state'] === 'question_explanation') {
-            // we're on a preview. If we're a MC Question, we still have to check if the answer was right or not for the response
-            self::$return = self::$save_response_question_obj->validate_response_data(self::$return);
-        }
+        // update quiz/question data
+        $this->update_quiz_data($data);
+        $this->update_question_data();
 
         // convert to JSON and return it
         self::$return = json_encode(self::$return);
