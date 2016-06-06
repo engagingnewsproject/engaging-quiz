@@ -246,6 +246,12 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                 $this->delete_question_responses($question_id);
                 // reset stats
                 $this->reset_question_data($question_id);
+                // reset mc option responses
+                // this resets even if the question isn't an mc type
+                // Basically, this saves us having to fire up the
+                // question class just to check if it's an mc or not
+                $this->reset_mc_option_data($question_id);
+
             }
         }
 
@@ -283,7 +289,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
     /*
     * Resets compiled question data on question row to 0
     * @param $question_id (string or int)
-    * @return (mixed) pdo affected row if sucess
+    * @return (mixed) pdo row count if successful
     *         or false if not successful
     */
     protected function reset_question_data($question_id) {
@@ -304,6 +310,35 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                         question_responses_incorrect = 0,
                         question_score_average = 0,
                         question_time_spent_average = 0
+                 WHERE  question_id = :question_id";
+        // update the quiz data in the database
+        $stmt = $pdo->query($sql, $params);
+
+        if($stmt !== false) {
+            // success! If this rowCount doesn't === 1 then we have a problem...
+            return $stmt->rowCount();
+        } else {
+            // error :(
+            return false;
+        }
+    }
+
+    /*
+    * Resets compiled mc option data on mc option row to 0
+    * @param $mc_option_id (string or int)
+    * @return (mixed) row count if successful
+    *         or false if not successful
+    */
+    protected function reset_mc_option_data($question_id) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(
+                        ':question_id' => $question_id
+                    );
+        // write our SQL statement
+        $sql = "UPDATE ".$pdo->question_mc_option_table."
+                   SET  mc_option_responses = 0
                  WHERE  question_id = :question_id";
         // update the quiz data in the database
         $stmt = $pdo->query($sql, $params);
