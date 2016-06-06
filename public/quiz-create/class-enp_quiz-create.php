@@ -285,12 +285,7 @@ class Enp_quiz_Create {
 			}
 
         } elseif($validate === 'valid' && $publish === 'publish') {
-			/* publish the quiz and send them to the publish page
-				$save = new Enp_quiz_Save_quiz();
-				$save->publish_quiz($quiz);
-				// redirect them so we can add the messages to the output
-				$this->redirect_to_quiz_publish($quiz->get_quiz_id());
-			*/
+
 			// let's just send them to the preview page if they're trying to
 			// access the publish URL on a NON-published quiz
 			if($quiz->get_quiz_status() !== 'published') {
