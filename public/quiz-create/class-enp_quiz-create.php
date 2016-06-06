@@ -729,6 +729,8 @@ class Enp_quiz_Create {
 		$question_ids = $quiz->get_questions();
 		$twentythirtyeight = 2147483647;
 		$path = parse_url(ENP_QUIZ_URL, PHP_URL_PATH);
+		// strip trailing slash
+		$path = rtrim($path, '/');
 
 		setcookie('enp_take_quiz_'.$quiz_id.'_state', 'question', $twentythirtyeight, $path);
 		setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $question_ids[0], $twentythirtyeight, $path);
