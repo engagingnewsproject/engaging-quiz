@@ -246,11 +246,26 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                 $this->delete_question_responses($question_id);
                 // reset stats
                 $this->reset_question_data($question_id);
-                // reset mc option responses
-                // this resets even if the question isn't an mc type
-                // Basically, this saves us having to fire up the
-                // question class just to check if it's an mc or not
-                $this->reset_mc_option_data($question_id);
+                // create the question object
+                $question = new Enp_quiz_Question($question_id);
+                // get the question type
+                $question_type = $question->get_question_type();
+
+                if($question_type === 'mc') {
+                    $mc_option_ids = $question->get_mc_options();
+                    foreach($mc_option_ids as $mc_option_id) {
+                        // reset compiled mc option data
+                        $this->reset_mc_option_data($mc_option_id);
+                        // soft delete mc option response
+                        $this->delete_mc_option_responses($mc_option_id);
+                    }
+                }
+                elseif($question_type === 'slider') {
+                    // get the slider id
+                    $slider_id = $question->get_slider();
+                    // soft delete the responses
+                    $this->delete_slider_responses($slider_id);
+                }
 
             }
         }
@@ -324,22 +339,51 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
     }
 
     /*
+    * Soft deletes all mc option responses
+    * @param $mc_option_id (string or int)
+    * @return (mixed) pdo affected row count
+    *         or false if not successful
+    */
+    protected function delete_mc_option_responses($mc_option_id) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(
+                        ':mc_option_id' => $mc_option_id
+                    );
+        // write our SQL statement
+        $sql = "UPDATE ".$pdo->response_mc_table."
+                   SET  response_mc_is_deleted = 1
+                 WHERE  mc_option_id = :mc_option_id";
+        // update the quiz responses the database
+        $stmt = $pdo->query($sql, $params);
+
+        if($stmt !== false) {
+            // success!
+            return $stmt->rowCount();
+        } else {
+            // error :(
+            return false;
+        }
+    }
+
+    /*
     * Resets compiled mc option data on mc option row to 0
     * @param $mc_option_id (string or int)
     * @return (mixed) row count if successful
     *         or false if not successful
     */
-    protected function reset_mc_option_data($question_id) {
+    protected function reset_mc_option_data($mc_option_id) {
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
         $params = array(
-                        ':question_id' => $question_id
+                        ':mc_option_id' => $mc_option_id
                     );
         // write our SQL statement
         $sql = "UPDATE ".$pdo->question_mc_option_table."
                    SET  mc_option_responses = 0
-                 WHERE  question_id = :question_id";
+                 WHERE  mc_option_id = :mc_option_id";
         // update the quiz data in the database
         $stmt = $pdo->query($sql, $params);
 
@@ -352,4 +396,32 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
         }
     }
 
+    /*
+    * Soft deletes all slider responses
+    * @param $slider_id (string or int)
+    * @return (mixed) pdo affected row count
+    *         or false if not successful
+    */
+    protected function delete_slider_responses($slider_id) {
+        // connect to PDO
+        $pdo = new enp_quiz_Db();
+        // Get our Parameters ready
+        $params = array(
+                        ':slider_id' => $slider_id
+                    );
+        // write our SQL statement
+        $sql = "UPDATE ".$pdo->response_slider_table."
+                   SET  response_slider_is_deleted = 1
+                 WHERE  slider_id = :slider_id";
+        // update the quiz responses the database
+        $stmt = $pdo->query($sql, $params);
+
+        if($stmt !== false) {
+            // success!
+            return $stmt->rowCount();
+        } else {
+            // error :(
+            return false;
+        }
+    }
 }
