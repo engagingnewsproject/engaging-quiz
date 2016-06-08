@@ -316,6 +316,7 @@ class Enp_quiz_Slider {
     */
 
     public function check_slider_answer($selected) {
+            $selected = (float) $selected;
             $slider_range_low = $this->get_slider_range_low();
             $slider_range_high = $this->get_slider_range_high();
             $slider_correct_low = $this->get_slider_correct_low();
