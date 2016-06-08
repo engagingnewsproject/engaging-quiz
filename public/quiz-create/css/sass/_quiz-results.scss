@@ -473,8 +473,18 @@
         margin: 0;
     }
 
+
+
 }
 
-.enp-quiz-results .enp-results-questions__title__quiz-title {
-    @include _(screen-reader-text);
+
+
+.enp-quiz-results {
+    #enp-quiz .enp-share-quiz__container {
+        border: none;
+    }
+
+    .enp-results-questions__title__quiz-title {
+        @include _(screen-reader-text);
+    }
 }

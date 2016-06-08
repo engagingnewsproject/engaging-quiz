@@ -38,3 +38,5 @@
 </section>
 
 <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/question-results-section.php');?>
+
+<?php include (ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-share.php');?>
