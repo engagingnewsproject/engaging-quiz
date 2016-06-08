@@ -17,10 +17,7 @@
     <div class="enp-flex enp-publish-page-flex-container">
         <section class="enp-container enp-publish-container">
             <h1 class="enp-page-title enp-publish-page__title">Embed</h1>
-            <p>Copy and paste the embed code onto your website where you'd like it to appear.</p>
-            <textarea class="enp-embed-code enp-publish-page__embed-code" rows="7"><script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL;?>public/quiz-take/js/dist/iframe-parent.js"></script>
-<iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id();?>" class="enp-quiz-iframe" src="<?php echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>" style="width: <? echo $quiz->get_quiz_width();?>; height: 500px;"></iframe>
-            </textarea>
+            <?php include (ENP_QUIZ_CREATE_TEMPLATES_PATH.'partials/quiz-embed-code.php');?>
 
         </section>
 
