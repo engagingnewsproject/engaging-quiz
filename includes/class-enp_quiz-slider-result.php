@@ -176,14 +176,16 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
             $slider_response[] = (float) $key;
             $slider_response_frequency[] = $val;
 
-            if($key < $slider_correct_low) {
+            $check_slider_answer = $this->check_slider_answer($key);
+
+            if($check_slider_answer === 'low') {
                 // if we're less than the correct low, all we need is the low frequency
                 $slider_response_low_frequency[] = $val;
                 $slider_response_correct_frequency[] = null;
                 $slider_response_high_frequency[] = null;
             }
             // see if the response is correct
-            elseif($slider_correct_low <= $key && $key <= $slider_correct_high) {
+            elseif($check_slider_answer === 'correct') {
 
                 $slider_response_correct_frequency[] = $val;
                 // check if we're equal to low correct
@@ -204,7 +206,7 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
                 }
 
             }
-            elseif($slider_correct_high < $key) {
+            elseif($check_slider_answer === 'high') {
                 // if we're greater than the correct, all we need is the high frequency
                 $slider_response_low_frequency[] = null;
                 $slider_response_correct_frequency[] = null;
