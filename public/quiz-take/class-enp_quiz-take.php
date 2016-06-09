@@ -31,7 +31,8 @@ class Enp_quiz_Take {
 		   $next_question_id,
 		   $current_question_number,
 		   $nonce,
-		   $response = array();
+		   $response = array(),
+		   $error = array();
 
 	/**
 	* This is a big constructor. We require our files, check for $_POST submission,
@@ -71,6 +72,8 @@ class Enp_quiz_Take {
             $this->quiz_restart();
         }
 
+		// check for any errors
+		$this->set_error_messages();
 		// set our state
 		$this->set_state();
 
@@ -266,11 +269,8 @@ class Enp_quiz_Take {
 	}
 
 	public function validate_nonce($quiz_id) {
-		// Don't worry about Nonce validation for right now
-		// it's not working on Safari, Firefox, or iOS Safari
-		return true;
 		// validate nonce
-		/*if($this->ab_test_id !== false) {
+		if($this->ab_test_id !== false) {
 			// it's an ab test nonce
 			$nonce_name = 'enp_quiz_take_ab_test_'.$this->ab_test_id.'_nonce';
 		} else {
@@ -289,11 +289,12 @@ class Enp_quiz_Take {
  		   if(!isset($posted_nonce) || !$this->nonce->validate($posted_nonce)) {
  			   // Form key is invalid,
 			   // return them to the page (they're probably refreshing the page)
+			   $this->error[] = 'It looks like this quiz got started in a different window. <a href="'.ENP_QUIZ_URL.$this->quiz->get_quiz_id().'">Click here to get this quiz working again.</a>';
 			   return false;
  		   }
  	    }
 
-		return true;*/
+		return true;
 	}
 
 	public function get_error_messages() {
@@ -321,6 +322,12 @@ class Enp_quiz_Take {
 		$validate_nonce = $this->validate_nonce($save_data['quiz_id']);
 
 		if($validate_nonce === false) {
+			// set the response as our error
+			$this->response = array('error'=>$this->error);
+			// cast it to an object so we can access it like
+			// $this->response->error as if it actually came back
+			// from the save_quiz_take class that way
+			$this->response = (object) $this->response;
 			return false;
 		}
 
@@ -489,6 +496,12 @@ class Enp_quiz_Take {
 		$this->current_question_number = $current_question_number;
 	}
 
+	public function set_error_messages() {
+		if(isset($this->response->error) && !empty($this->response->error)) {
+			$this->error = $this->response->error;
+		}
+	}
+
 	public function set_state() {
 		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
 
@@ -557,6 +570,10 @@ class Enp_quiz_Take {
 		$twentythirtyeight = 2147483647;
 		$quiz_id = $this->quiz->get_quiz_id();
 
+		// check for errors first
+		if(!empty($this->error)) {
+			return false;
+		}
 		// quiz state
 		if(!empty($this->state)) {
 			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $twentythirtyeight);
