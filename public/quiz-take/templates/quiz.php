@@ -62,10 +62,6 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
 <body id="enp-quiz">
 <?php //add in our SVG
     echo $qt->load_svg();
-    var_dump($qt->response);
-    var_dump($qt->state);
-    print_r($_COOKIE['enp_take_quiz_23_state']);
-
 ?>
 <section id="enp-quiz-container" class="enp-quiz__container">
     <?php
