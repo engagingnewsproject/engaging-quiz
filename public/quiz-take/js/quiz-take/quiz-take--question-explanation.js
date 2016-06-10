@@ -78,6 +78,11 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     console.log(responseJSON);
 
+    // see if there are any errors
+    if(responseJSON.error.length) {
+        _.handle_error_message(responseJSON.error[0]);
+    }
+
     if(responseJSON.state === 'quiz_end') {
 
         // see if there's a next question

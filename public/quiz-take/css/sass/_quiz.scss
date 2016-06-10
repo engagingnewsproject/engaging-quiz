@@ -181,7 +181,7 @@
     // ----------------------//
 
     .enp-question__container--explanation {
-        background: rgba(0, 0, 0, 0.15);
+        background-color: rgba(0, 0, 0, 0.15);
 
         .enp-question__submit {
             display: none;
@@ -406,4 +406,12 @@
     .enp-quiz-restart__container {
         text-align: center;
     }
+
+    // error state
+    .enp-question__container--error {
+        padding: 1rem 10px;
+        //background-color: rgba($red, .2);
+        animation: errorContainer .3s ease-out forwards;
+    }
+
 }

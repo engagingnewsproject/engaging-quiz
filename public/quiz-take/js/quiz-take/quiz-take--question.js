@@ -89,8 +89,9 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
     console.log(responseJSON);
     // see if there are any errors
     if(responseJSON.error.length) {
-        console.log(responseJSON.error);
+        _.handle_error_message(responseJSON.error[0]);
     }
+
     // see if there's a next question
     else if(responseJSON.next_state === 'question') {
         // we have a next question, so generate it

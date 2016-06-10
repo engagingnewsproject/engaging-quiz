@@ -111,6 +111,7 @@ if(isset($qt_question) && is_object($qt_question)) {
     echo $qt_question->slider_js_template();
 }
 echo $qt_end->quiz_end_template();
+echo $qt->error_message_js_template();
 
 // load scripts
 $qt->scripts();

@@ -53,6 +53,18 @@ _.get_ab_test_id = function() {
     return ab_test_id_json.ab_test_id;
 };
 
+_.handle_error_message = function(error) {
+    errorMessage = errorMessageTemplate({'error': error});
+    // remove the question container
+    $('.enp-question__fieldset').remove();
+    // add an error class to the container
+    $('.enp-question__container').addClass('enp-question__container--error');
+    // insert it into the page
+    $('.enp-question__container').prepend(errorMessage);
+    // focus the error message
+    $('.enp-quiz-message--error').focus();
+};
+
 // turn on mustache/handlebars style templating
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
@@ -64,6 +76,7 @@ if($('#question_template').length) {
     var sliderTemplate = _.template($('#slider_template').html());
     var sliderRangeHelpersTemplate = _.template($('#slider_range_helpers_template').html());
     var questionImageTemplate = _.template($('#question_image_template').html());
+    var errorMessageTemplate = _.template($('#error_message_template').html());
 }
 if($('#question_explanation_template').length) {
     var questionExplanationTemplate = _.template($('#question_explanation_template').html());
@@ -223,8 +236,9 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
     console.log(responseJSON);
     // see if there are any errors
     if(responseJSON.error.length) {
-        console.log(responseJSON.error);
+        _.handle_error_message(responseJSON.error[0]);
     }
+
     // see if there's a next question
     else if(responseJSON.next_state === 'question') {
         // we have a next question, so generate it
@@ -444,6 +458,11 @@ $(document).on('click', '.enp-next-step', function(e){
 function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
     var responseJSON = $.parseJSON(jqXHR.responseText);
     console.log(responseJSON);
+
+    // see if there are any errors
+    if(responseJSON.error.length) {
+        _.handle_error_message(responseJSON.error[0]);
+    }
 
     if(responseJSON.state === 'quiz_end') {
 

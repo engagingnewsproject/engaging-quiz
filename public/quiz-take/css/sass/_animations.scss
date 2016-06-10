@@ -70,6 +70,17 @@
     }
 }
 
+
+@keyframes errorContainer {
+    0% {
+        //background-color: #fff;
+    }
+    100% {
+        background-color: rgba($red, .2);
+    }
+}
+
+
 .spinner {
   margin: 0 auto;
   width: 70px;

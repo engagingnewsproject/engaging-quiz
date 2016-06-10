@@ -289,7 +289,7 @@ class Enp_quiz_Take {
  		   if(!isset($posted_nonce) || !$this->nonce->validate($posted_nonce)) {
  			   // Form key is invalid,
 			   // return them to the page (they're probably refreshing the page)
-			   $this->error[] = 'It looks like this quiz got started in a different window. <a href="'.ENP_QUIZ_URL.$this->quiz->get_quiz_id().'">Click here to get this quiz working again.</a>';
+			   $this->error[] = 'It looks like this quiz got started in a different browser window. <a href="'.ENP_QUIZ_URL.$this->quiz->get_quiz_id().'">Click here to get it working again.</a>';
 			   return false;
  		   }
  	    }
@@ -308,6 +308,17 @@ class Enp_quiz_Take {
 	        }
 	        echo '</ul></div>';
 		}
+	}
+
+	public function error_message_js_template() {
+		return '<script type="text/template" id="error_message_template">
+			<div class="enp-quiz-message enp-quiz-message--error">
+				<h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
+				<ul class="enp-message__list">
+					<li class="enp-message__list__item">{{error}}</li>
+				</ul>
+			</div>
+		</script>';
 	}
 
 	public function save_quiz_take() {
@@ -415,6 +426,13 @@ class Enp_quiz_Take {
 			return false;
 		}
 
+		// check to make sure we're actually at the end of the quiz
+		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
+
+		if(isset($_COOKIE[$quiz_state_cookie_name]) && $_COOKIE[$quiz_state_cookie_name] !== 'quiz_end') {
+			return false;
+		}
+
 		// update our quiz restarted field in the response_quiz table
 		$this->response_quiz_restarted();
 
@@ -511,7 +529,24 @@ class Enp_quiz_Take {
 		}
 		// restarting a quiz
 		elseif(isset($_POST['enp-quiz-restart'])) {
-			$this->state = 'question';
+			// The weird part about this is if you restart a quiz, then click a few times through the quiz and then Refresh (command + r, not just going to the page again), the $_POST[] is still set as enp-quiz-restart, so it'll just send you to the beginning. So, we have to do a bit more work to make sure we're doing the right thing.
+
+			// check if the current cookie state is quiz_end or not
+			if(isset($_COOKIE[$quiz_state_cookie_name])) {
+				 if($_COOKIE[$quiz_state_cookie_name] === 'quiz_end') {
+					 // set it as 'question', because it's a legit restart
+					 $this->state = 'question';
+				 } else {
+					 // they might be reloading after a quiz restart.
+					 // in that case, set it to the current cookie state
+					 $this->state = $_COOKIE[$quiz_state_cookie_name];
+				 }
+			} else {
+				// they have cookies off, or something went wrong.
+				// be safe and reset to question
+				$this->state = 'question';
+			}
+
 		}
 		// try to set the state from the cookie
 		elseif(isset($_COOKIE[$quiz_state_cookie_name])) {
