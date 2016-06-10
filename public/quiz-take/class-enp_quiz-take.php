@@ -446,6 +446,8 @@ class Enp_quiz_Take {
 		// clear the cookies and send them back to the beginning of the quiz
 		$this->unset_cookies();
 
+		// TODO: Instead of setting a cookie, we should probably just set all the states on the unset_cookies so it's a clean reload
+		
 		$twentythirtyeight = 2147483647;
 		setcookie('enp_quiz_restarted', '1', $twentythirtyeight, $this->cookie_path);
 
