@@ -452,6 +452,7 @@ class Enp_quiz_Take {
 		$question = array();
 		$question_id = '';
 		$question_id_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_question_id';
+		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
 		if(isset($this->response) && !empty($this->response) && empty($this->response->error)) {
 			// see what we should do
 			if($this->state === 'question_explanation') {
@@ -466,7 +467,8 @@ class Enp_quiz_Take {
 		}
 		// check if we're resetting the quiz
 		// restarting a quiz
-		elseif(isset($_POST['enp-quiz-restart'])) {
+		elseif(isset($_POST['enp-quiz-restart']) && isset($_COOKIE[$quiz_state_cookie_name]) && $_COOKIE[$quiz_state_cookie_name] === 'quiz_end') {
+
 			$question_ids = $this->quiz->get_questions();
 			// set the first question off of the question_ids from the quiz
 			$question_id = $question_ids[0];
@@ -554,6 +556,7 @@ class Enp_quiz_Take {
 		}
 		// probably a new quiz
 		else {
+
 			$this->state = 'question';
 		}
 	}
