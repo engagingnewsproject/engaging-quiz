@@ -31,6 +31,7 @@ class Enp_quiz_Take {
 		   $next_question_id,
 		   $current_question_number,
 		   $nonce,
+		   $cookie_path,
 		   $response = array(),
 		   $error = array();
 
@@ -54,6 +55,7 @@ class Enp_quiz_Take {
 		// set nonce
 		$this->set_nonce($quiz_id);
 		$this->set_user_id();
+		$this->cookie_path = parse_url(ENP_QUIZ_URL, PHP_URL_PATH).$quiz_id;
 		// get our quiz
 		$this->quiz = new Enp_quiz_Quiz($quiz_id);
 		// set a response
@@ -427,9 +429,7 @@ class Enp_quiz_Take {
 		}
 
 		// check to make sure we're actually at the end of the quiz
-		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
-
-		if(isset($_COOKIE[$quiz_state_cookie_name]) && $_COOKIE[$quiz_state_cookie_name] !== 'quiz_end') {
+		if(isset($_COOKIE['enp_quiz_state']) && $_COOKIE['enp_quiz_state'] !== 'quiz_end') {
 			return false;
 		}
 
@@ -442,6 +442,8 @@ class Enp_quiz_Take {
 		// clear the cookies and send them back to the beginning of the quiz
 		$this->unset_cookies();
 
+		
+
 	}
 
 	public function set_total_questions() {
@@ -451,8 +453,7 @@ class Enp_quiz_Take {
 	public function set_current_question_id() {
 		$question = array();
 		$question_id = '';
-		$question_id_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_question_id';
-		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
+
 		if(isset($this->response) && !empty($this->response) && empty($this->response->error)) {
 			// see what we should do
 			if($this->state === 'question_explanation') {
@@ -467,15 +468,15 @@ class Enp_quiz_Take {
 		}
 		// check if we're resetting the quiz
 		// restarting a quiz
-		elseif(isset($_POST['enp-quiz-restart']) && isset($_COOKIE[$quiz_state_cookie_name]) && $_COOKIE[$quiz_state_cookie_name] === 'quiz_end') {
+		elseif(isset($_POST['enp-quiz-restart']) && isset($_COOKIE['enp_quiz_state']) && $_COOKIE['enp_quiz_state'] === 'quiz_end') {
 
 			$question_ids = $this->quiz->get_questions();
 			// set the first question off of the question_ids from the quiz
 			$question_id = $question_ids[0];
 		}
 		// check for cookies to see if we're on a page reload or something
-		elseif(isset($_COOKIE[$question_id_cookie_name])) {
-			$question_id = $_COOKIE[$question_id_cookie_name];
+		elseif(isset($_COOKIE['enp_current_question_id'])) {
+			$question_id = $_COOKIE['enp_current_question_id'];
 		}
 		// probably new pageload. just get the first question of the quiz
 		else {
@@ -523,7 +524,6 @@ class Enp_quiz_Take {
 	}
 
 	public function set_state() {
-		$quiz_state_cookie_name = 'enp_take_quiz_'.$this->quiz->get_quiz_id().'_state';
 
 		// set state off response, if it's there
 		if(isset($this->response->state) && !empty($this->response->state)) {
@@ -534,14 +534,14 @@ class Enp_quiz_Take {
 			// The weird part about this is if you restart a quiz, then click a few times through the quiz and then Refresh (command + r, not just going to the page again), the $_POST[] is still set as enp-quiz-restart, so it'll just send you to the beginning. So, we have to do a bit more work to make sure we're doing the right thing.
 
 			// check if the current cookie state is quiz_end or not
-			if(isset($_COOKIE[$quiz_state_cookie_name])) {
-				 if($_COOKIE[$quiz_state_cookie_name] === 'quiz_end') {
+			if(isset($_COOKIE['enp_quiz_state'])) {
+				 if($_COOKIE['enp_quiz_state'] === 'quiz_end') {
 					 // set it as 'question', because it's a legit restart
 					 $this->state = 'question';
 				 } else {
 					 // they might be reloading after a quiz restart.
 					 // in that case, set it to the current cookie state
-					 $this->state = $_COOKIE[$quiz_state_cookie_name];
+					 $this->state = $_COOKIE['enp_quiz_state'];
 				 }
 			} else {
 				// they have cookies off, or something went wrong.
@@ -551,8 +551,8 @@ class Enp_quiz_Take {
 
 		}
 		// try to set the state from the cookie
-		elseif(isset($_COOKIE[$quiz_state_cookie_name])) {
-			$this->state = $_COOKIE[$quiz_state_cookie_name];
+		elseif(isset($_COOKIE['enp_quiz_state'])) {
+			$this->state = $_COOKIE['enp_quiz_state'];
 		}
 		// probably a new quiz
 		else {
@@ -614,19 +614,19 @@ class Enp_quiz_Take {
 		}
 		// quiz state
 		if(!empty($this->state)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_state', $this->state, $twentythirtyeight);
+			setcookie('enp_quiz_state', $this->state, $twentythirtyeight, $this->cookie_path);
 		} else {
 			return false;
 		}
 
 		// question number
 		if($this->state === 'question') {
-			setcookie('enp_take_quiz_'.$quiz_id.'_question_id', $this->current_question_id, $twentythirtyeight);
+			setcookie('enp_current_question_id', $this->current_question_id, $twentythirtyeight, $this->cookie_path);
 		}
 		// if we're on a question explanation, how'd they do for that question?
 		// next question
 		elseif($this->state === 'question_explanation' && !empty($this->response)) {
-			setcookie('enp_take_quiz_'.$quiz_id.'_'.$this->current_question_id, $this->response->response_correct, $twentythirtyeight);
+			setcookie('enp_question_'.$this->current_question_id.'_is_correct', $this->response->response_correct, $twentythirtyeight, $this->cookie_path);
 		}
 	}
 
@@ -637,8 +637,8 @@ class Enp_quiz_Take {
 		// loop through all questions and unset their cookie
 		foreach($question_ids as $question_id) {
 			// build cookie name
-			$cookie_name = 'enp_take_quiz_'.$quiz_id.'_'.$question_id;
-			setcookie($cookie_name, '', time() - 3600);
+			$cookie_name = 'enp_question_'.$question_id.'_is_correct';
+			setcookie($cookie_name, '', time() - 3600, $this->cookie_path);
 		}
 
 		// We don't need to unset the Response ID here because it gets regenerated on Quiz Reset
@@ -672,10 +672,9 @@ class Enp_quiz_Take {
 
 	protected function set_response_quiz_id($quiz_id) {
 
-		$response_quiz_id_cookie_name = 'enp_response_id_quiz_'.$quiz_id;
 		// check if the cookie exists already
-		if(isset($_COOKIE[$response_quiz_id_cookie_name])) {
-			$this->response_quiz_id = $_COOKIE[$response_quiz_id_cookie_name];
+		if(isset($_COOKIE['enp_response_id'])) {
+			$this->response_quiz_id = $_COOKIE['enp_response_id'];
 		} else {
 			$this->create_response_quiz_id($quiz_id);
 		}
@@ -694,7 +693,7 @@ class Enp_quiz_Take {
 		$this->response_quiz_id = $response_quiz['response_quiz_id'];
 		// set our response_quiz_id cookie
 		$twentythirtyeight = 2147483647;
-		setcookie('enp_response_id_quiz_'.$quiz_id, $this->response_quiz_id, $twentythirtyeight);
+		setcookie('enp_response_id', $this->response_quiz_id, $twentythirtyeight, $this->cookie_path);
 
 		if($this->ab_test_id !== false) {
 			// we're on an AB Test, so link the response to it.
