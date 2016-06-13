@@ -243,6 +243,10 @@ class Enp_quiz_Take_Question {
 		foreach($slider as $key => $value) {
 			$slider->$key = '{{'.$key.'}}';
 		}
+
+		$qt_question = clone $this;
+		$qt_question->question_id = '{{question_id}}';
+
 		$template = '<script type="text/template" id="slider_template">';
 		ob_start();
 		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider.php');

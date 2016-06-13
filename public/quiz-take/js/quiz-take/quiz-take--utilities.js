@@ -62,5 +62,5 @@ _.handle_error_message = function(error) {
     // insert it into the page
     $('.enp-question__container').prepend(errorMessage);
     // focus the error message
-    $('.enp-quiz-message--error').focus();
+    $('.enp-quiz-message--error a, .enp-quiz-message--error button').focus();
 };

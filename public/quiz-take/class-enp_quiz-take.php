@@ -302,7 +302,7 @@ class Enp_quiz_Take {
 	public function get_error_messages() {
 		if(isset($this->response->error) && !empty($this->response->error)) {
 	        $errors = $this->response->error;
-	        echo '<section class="enp-quiz-message enp-quiz-message--error" tabindex="0">
+	        echo '<section class="enp-quiz-message enp-quiz-message--error" role="alertdialog"  aria-labelledby="enp-quiz-message__title" aria-describedby="enp-message__list">
 	        <h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
 	        <ul class="enp-message__list">';
 	        foreach($errors as $error) {
@@ -314,9 +314,9 @@ class Enp_quiz_Take {
 
 	public function error_message_js_template() {
 		return '<script type="text/template" id="error_message_template">
-			<section class="enp-quiz-message enp-quiz-message--error" tabindex="0">
-				<h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
-				<ul class="enp-message__list">
+			<section class="enp-quiz-message enp-quiz-message--error" role="alertdialog" aria-labelledby="enp-quiz-message__title" aria-describedby="enp-message__list">
+				<h3 id="enp-quiz-message__title" class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
+				<ul id="enp-message__list" class="enp-message__list">
 					<li class="enp-message__list__item">{{error}}</li>
 				</ul>
 			</section>

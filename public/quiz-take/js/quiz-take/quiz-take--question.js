@@ -58,7 +58,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
     // focus it
-    $('.enp-explanation').focus();
+    $('.enp-next-step').focus();
     // submit the question
     data = prepareQuestionFormData($(this));
     url = $('.enp-question__form').attr('action');
@@ -180,8 +180,11 @@ function increaseQuestionProgress(questionOrder) {
     }
     progressBarWidth = progressBarWidth + '%';
 
+
     // BEM Taken WAAAAAAY too far...
+    $('.enp-quiz__progress__bar').attr('aria-valuenow', questionNumber);
     $('.enp-quiz__progress__bar__question-count__current-number').text(questionNumber);
+
     $('.enp-quiz__progress__bar').css('width', progressBarWidth);
 }
 
@@ -196,6 +199,8 @@ function showNextQuestion(obj) {
     questionOrder = questionShowJSON.question_order;
     // increase the number and the width of the progress bar
     increaseQuestionProgress(questionOrder);
+    // focus the question
+    $('input[name="enp-question-response"]', obj).focus();
 }
 
 

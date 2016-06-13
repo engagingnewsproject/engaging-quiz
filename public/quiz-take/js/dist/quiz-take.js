@@ -62,7 +62,7 @@ _.handle_error_message = function(error) {
     // insert it into the page
     $('.enp-question__container').prepend(errorMessage);
     // focus the error message
-    $('.enp-quiz-message--error').focus();
+    $('.enp-quiz-message--error a, .enp-quiz-message--error button').focus();
 };
 
 // turn on mustache/handlebars style templating
@@ -205,7 +205,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
     // focus it
-    $('.enp-explanation').focus();
+    $('.enp-next-step').focus();
     // submit the question
     data = prepareQuestionFormData($(this));
     url = $('.enp-question__form').attr('action');
@@ -327,8 +327,11 @@ function increaseQuestionProgress(questionOrder) {
     }
     progressBarWidth = progressBarWidth + '%';
 
+
     // BEM Taken WAAAAAAY too far...
+    $('.enp-quiz__progress__bar').attr('aria-valuenow', questionNumber);
     $('.enp-quiz__progress__bar__question-count__current-number').text(questionNumber);
+
     $('.enp-quiz__progress__bar').css('width', progressBarWidth);
 }
 
@@ -343,6 +346,8 @@ function showNextQuestion(obj) {
     questionOrder = questionShowJSON.question_order;
     // increase the number and the width of the progress bar
     increaseQuestionProgress(questionOrder);
+    // focus the question
+    $('input[name="enp-question-response"]', obj).focus();
 }
 
 
@@ -482,6 +487,9 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
         $('.enp-quiz__progress__bar__question-count__total-questions').append(' Correct');
         // Change the first number to the amount they got correct
         $('.enp-quiz__progress__bar__question-count__current-number').text(responseJSON.quiz_end.score_total_correct);
+        // change the ARIA progress bar description
+        $('.enp-quiz__progress__bar').attr('aria-valuetext', $('.enp-quiz__progress__bar__question-count').text());
+
         // add the resetOffset to take it to 0%
         $('#enp-results__score__circle__path').attr('class', 'enp-results__score__circle__resetOffset');
         // add the animateScore after a slight delay so the animation comes in
@@ -763,6 +771,7 @@ function getSlider(sliderID, callback) {
 function buildSlider(questionJSON) {
     sliderJSON = questionJSON.slider;
     sliderData = {
+                    question_id: questionJSON.question_id,
                     slider_id: sliderJSON.slider_id,
                     slider_range_low: sliderJSON.slider_range_low,
                     slider_range_high: sliderJSON.slider_range_high,
