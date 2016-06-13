@@ -73,6 +73,27 @@
         font-weight: bold;
         line-height: 1.2;
         margin-bottom: 0.2rem;
+        padding-bottom: 0.1rem;
+        position: relative;
+
+        &:after {
+            content: '';
+            position: absolute;
+            height: 2px;
+            background: rgba(0,0,0,.2);
+            margin: auto;
+            width: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        &:focus {
+            &:after {
+                animation: pop .3s forwards;
+            }
+
+        }
     }
 
     .enp-question-image {

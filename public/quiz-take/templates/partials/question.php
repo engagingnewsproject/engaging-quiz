@@ -1,8 +1,8 @@
-<fieldset id="question_<?php echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset <?php echo $qt_question->get_question_classes();?>" role="region" aria-labelledby="enp-question__question--<?php echo $qt_question->question->get_question_id();?>" aria-describedby="enp-question__helper--<?php echo $qt_question->question->get_question_id();?>">
+<fieldset id="question_<?php echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset <?php echo $qt_question->get_question_classes();?>">
     <input id="enp-question-id" type="hidden" name="enp-question-id" value="<?php echo $qt_question->question->get_question_id();?>"/>
     <input id="enp-question-type" type="hidden" name="enp-question-type" value="<?php echo $qt_question->question->get_question_type();?>"/>
 
-    <legend id="enp-question__question--<?php echo $qt_question->question->get_question_id();?>" class="enp-question__legend enp-question__question"><?php echo $qt_question->question->get_question_title();?></legend>
+    <legend id="enp-question__question--<?php echo $qt_question->question->get_question_id();?>" class="enp-question__legend enp-question__question" tabindex="0"><?php echo $qt_question->question->get_question_title();?></legend>
 
     <?php
     $question_image = $qt_question->question->get_question_image();
@@ -31,7 +31,7 @@
         include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/slider.php');
     }?>
 
-    <button type="submit" class="enp-btn enp-options__submit enp-question__submit" name="enp-question-submit" value="enp-question-submit"><span class="enp-question__submit__text">Submit Answer</span> <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon">
+    <button type="submit" class="enp-btn enp-options__submit enp-question__submit" name="enp-question-submit" value="enp-question-submit"><span class="enp-question__submit__text">Submit Answer</span> <svg class="enp-icon enp-icon--chevron-right enp-options__submit__icon enp-question__submit__icon" role="presentation" aria-hidden="true">
       <use xlink:href="#icon-chevron-right" />
     </svg></button>
 

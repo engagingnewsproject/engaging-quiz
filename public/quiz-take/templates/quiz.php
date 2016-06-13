@@ -76,7 +76,7 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
                 aria-valuemin="1"
                 aria-valuenow="<?php echo  $qt->get_current_question_number();?>"
                 aria-valuemax="<?php echo $qt->get_total_questions();?>">
-                
+
                 <div class="enp-quiz__progress__bar__question-count"><span class="enp-quiz__progress__bar__question-count__current-number"><?php echo  $qt->get_current_question_number();?></span>/<span class="enp-quiz__progress__bar__question-count__total-questions"><?php echo $qt->get_total_questions();?></span></div>
             </div>
         </div>
@@ -86,7 +86,10 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
     // check for errors
     echo $qt->get_error_messages();?>
 
-    <main class="enp-question__container <?php echo $qt->get_question_container_class();?>" role="main">
+    <main class="enp-question__container <?php echo $qt->get_question_container_class();?>"
+        role="main"
+        aria-live="polite"
+        aria-relevant="additions text" >
         <form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action();?>">
             <?php $qt->nonce->outputKey();?>
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
