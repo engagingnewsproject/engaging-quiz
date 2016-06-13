@@ -182,8 +182,9 @@ function increaseQuestionProgress(questionOrder) {
 
 
     // BEM Taken WAAAAAAY too far...
-    $('.enp-quiz__progress__bar').attr('aria-valuenow', questionNumber);
     $('.enp-quiz__progress__bar__question-count__current-number').text(questionNumber);
+    
+    $('.enp-quiz__progress__bar').attr('aria-valuenow', $('.enp-quiz__progress__bar__question-count').text());
 
     $('.enp-quiz__progress__bar').css('width', progressBarWidth);
 }

@@ -1,4 +1,4 @@
-<fieldset id="question_<?php echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset <?php echo $qt_question->get_question_classes();?>" role="dialog" aria-labelledby="enp-question__question--<?php echo $qt_question->question->get_question_id();?>" aria-describedby="enp-question__helper--<?php echo $qt_question->question->get_question_id();?>">
+<fieldset id="question_<?php echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset <?php echo $qt_question->get_question_classes();?>" role="region" aria-labelledby="enp-question__question--<?php echo $qt_question->question->get_question_id();?>" aria-describedby="enp-question__helper--<?php echo $qt_question->question->get_question_id();?>">
     <input id="enp-question-id" type="hidden" name="enp-question-id" value="<?php echo $qt_question->question->get_question_id();?>"/>
     <input id="enp-question-type" type="hidden" name="enp-question-type" value="<?php echo $qt_question->question->get_question_type();?>"/>
 

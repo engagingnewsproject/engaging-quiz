@@ -70,7 +70,13 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
     <header class="enp-quiz__header" role="banner">
         <h3 class="enp-quiz__title <?php echo 'enp-quiz__title--'. $qt->quiz->get_quiz_title_display();?>"><?php echo $qt->quiz->get_quiz_title();?></h3>
         <div class="enp-quiz__progress">
-            <div class="enp-quiz__progress__bar" role="progressbar" aria-valuenow="<?php echo  $qt->get_current_question_number();?>" aria-valuemin="1" aria-valuemax="<?php echo $qt->get_total_questions();?>">
+            <div class="enp-quiz__progress__bar"
+                role="progressbar"
+                aria-valuetext="Question <?php echo  $qt->get_current_question_number();?> of <?php echo $qt->get_total_questions();?>"
+                aria-valuemin="1"
+                aria-valuenow="<?php echo  $qt->get_current_question_number();?>"
+                aria-valuemax="<?php echo $qt->get_total_questions();?>">
+                
                 <div class="enp-quiz__progress__bar__question-count"><span class="enp-quiz__progress__bar__question-count__current-number"><?php echo  $qt->get_current_question_number();?></span>/<span class="enp-quiz__progress__bar__question-count__total-questions"><?php echo $qt->get_total_questions();?></span></div>
             </div>
         </div>
