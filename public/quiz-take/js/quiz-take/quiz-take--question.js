@@ -57,6 +57,8 @@ $(document).on('click', '.enp-question__submit', function(e){
 
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
+    // focus it
+    $('.enp-explanation').focus();
     // submit the question
     data = prepareQuestionFormData($(this));
     url = $('.enp-question__form').attr('action');
@@ -96,6 +98,7 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
     else if(responseJSON.next_state === 'question') {
         // we have a next question, so generate it
         generateQuestion(responseJSON.next_question);
+
     } else {
         // we're at the quiz end, in the future, we might get some data
         // ready so we can populate quiz end instantly. Let's just do it based on a response from the server instead for now so we don't have to set localStorage and have duplicate copy for all the quiz end states
