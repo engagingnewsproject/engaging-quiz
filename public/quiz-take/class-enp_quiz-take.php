@@ -302,24 +302,24 @@ class Enp_quiz_Take {
 	public function get_error_messages() {
 		if(isset($this->response->error) && !empty($this->response->error)) {
 	        $errors = $this->response->error;
-	        echo '<div class="enp-quiz-message enp-quiz-message--error" tabindex="0">
+	        echo '<section class="enp-quiz-message enp-quiz-message--error" tabindex="0">
 	        <h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
 	        <ul class="enp-message__list">';
 	        foreach($errors as $error) {
 	            echo '<li class="enp-message__list__item">'.$error.'</li>';
 	        }
-	        echo '</ul></div>';
+	        echo '</ul></section>';
 		}
 	}
 
 	public function error_message_js_template() {
 		return '<script type="text/template" id="error_message_template">
-			<div class="enp-quiz-message enp-quiz-message--error" tabindex="0">
+			<section class="enp-quiz-message enp-quiz-message--error" tabindex="0">
 				<h3 class="enp-quiz-message__title enp-quiz-message__title--error">Error</h3>
 				<ul class="enp-message__list">
 					<li class="enp-message__list__item">{{error}}</li>
 				</ul>
-			</div>
+			</section>
 		</script>';
 	}
 

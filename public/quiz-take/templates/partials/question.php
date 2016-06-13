@@ -1,8 +1,8 @@
-<fieldset id="question_<?php echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset <?php echo $qt_question->get_question_classes();?>"  tabindex="0">
+<fieldset id="question_<?php echo $qt_question->question->get_question_id();?>" class="enp-question__fieldset <?php echo $qt_question->get_question_classes();?>" tabindex="0">
     <input id="enp-question-id" type="hidden" name="enp-question-id" value="<? echo $qt_question->question->get_question_id();?>"/>
     <input id="enp-question-type" type="hidden" name="enp-question-type" value="<? echo $qt_question->question->get_question_type();?>"/>
 
-    <legend class="enp-question__legend enp-question__question"><? echo $qt_question->question->get_question_title();?></legend>
+    <legend class="enp-question__legend enp-question__question" tabindex="0"><? echo $qt_question->question->get_question_title();?></legend>
 
     <?php
     $question_image = $qt_question->question->get_question_image();
