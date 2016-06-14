@@ -90,7 +90,7 @@
 
         &:focus {
             &:after {
-                animation: pop 1s cubic-bezier(0.000, 0.725, 0.285, 1.000);
+                animation: pop 1.2s cubic-bezier(0.000, 0.725, .3, 1);
             }
 
         }
