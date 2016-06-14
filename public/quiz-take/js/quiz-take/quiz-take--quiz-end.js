@@ -5,6 +5,7 @@
 * @return HTML of the quiz end template with all data inserted
 */
 function generateQuizEnd(quizEndJSON, callback) {
+    console.log(quizEndJSON);
     quizEndData = {
                     score_percentage: quizEndJSON.score_percentage,
                     score_circle_dashoffset: quizEndJSON.score_circle_dashoffset,
