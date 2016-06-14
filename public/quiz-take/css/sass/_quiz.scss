@@ -69,12 +69,16 @@
     }
 
     .enp-question__question {
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: bold;
         line-height: 1.2;
         margin-bottom: 0.2rem;
         padding-bottom: 0.1rem;
         position: relative;
+
+        @include breakpoint(small) {
+            font-size: 2rem;
+        }
 
         &:after {
             content: '';
@@ -303,7 +307,7 @@
     .enp-next-step {
         @include _(btn--ghost);
         width: 100%;
-        padding-right: 0.8em;
+        padding-right: 2.4em;
         position: relative;
 
 
