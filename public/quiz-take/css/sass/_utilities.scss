@@ -279,7 +279,7 @@ $placeholders: ();
 
     .enp-quiz-message--error {
         border-left: 6px solid $red;
-        animation: slideInTop .3s ease-out;
+        animation: slideInTop .3s $fastInEaseOut;
     }
 
     .enp-quiz-message__title--error {

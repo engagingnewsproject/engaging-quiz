@@ -85,13 +85,15 @@
         width: 0;
         opacity: 1;
     }
-    50% {
-        opacity: 1;
+    30% {
+        width: 100%;
     }
     80% {
+        opacity: 1;
         width: 100%;
     }
     100% {
+        width: 40%;
         opacity: 0;
     }
 }

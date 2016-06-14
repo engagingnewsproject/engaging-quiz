@@ -1280,7 +1280,6 @@ function getSlider(sliderID, callback) {
 function buildSlider(questionJSON) {
     sliderJSON = questionJSON.slider;
     sliderData = {
-                    question_id: questionJSON.question_id,
                     slider_id: sliderJSON.slider_id,
                     slider_range_low: sliderJSON.slider_range_low,
                     slider_range_high: sliderJSON.slider_range_high,

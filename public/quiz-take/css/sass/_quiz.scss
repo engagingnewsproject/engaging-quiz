@@ -41,7 +41,7 @@
         width: 0;
         height: 3px;
         background: $green;
-        transition: all .5s ease-in-out;
+        transition: all .5s $fastInEaseOut;
     }
 
     .enp-quiz__progress__bar__question-count {
@@ -56,7 +56,7 @@
     }
 
     .enp-question__form {
-        //transition: all .3s ease-in-out;
+        //transition: all .3s $fastInEaseOut;
         @include _(container);
         overflow: hidden;
         color: $font;
@@ -90,7 +90,7 @@
 
         &:focus {
             &:after {
-                animation: pop 1.2s cubic-bezier(0.000, 0.725, .3, 1);
+                animation: pop .8s $fastInEaseOut;
             }
 
         }
@@ -131,7 +131,7 @@
         border-bottom: 1px solid rgba(0,0,0,.1);
         background: none;
         color: $title;
-        transition: color .2s ease-in-out, background .2s ease-in-out;
+        transition: color .2s $fastInEaseOut, background .2s $fastInEaseOut;
 
         &:before {
             content: '';
@@ -191,7 +191,7 @@
         margin-top: 1.4rem;
         height: auto;
         opacity: 1;
-        animation: .3s slideInTop ease-in-out forwards;
+        animation: .3s slideInTop $fastInEaseOut forwards;
     }
 
     .enp-question__fieldset--slider .enp-options__submit {
@@ -240,7 +240,7 @@
     .enp-option__input--slide-hide + .enp-option__label{
         margin: 0;
         height: 0;
-        animation: removeAnswers .5s ease-in-out forwards;
+        animation: removeAnswers .5s $fastInEaseOut forwards;
     }
 
     .enp-explanation {
@@ -249,7 +249,7 @@
     }
 
     .enp-question__fieldset--slider .enp-explanation  {
-        animation: slideInBottom .3s ease-in-out forwards;
+        animation: slideInBottom .3s $fastInEaseOut forwards;
     }
 
     .enp-explanation--correct {
@@ -306,8 +306,10 @@
         padding-right: 0.8em;
         position: relative;
 
+
         .enp-next-step__icon {
             fill: $blue;
+            transition: all .3s $fastInEaseOut;
         }
 
         &:hover {
@@ -336,12 +338,12 @@
     }
 
     .enp-question--show {
-        animation: showNextQuestion .5s ease-in-out forwards;
+        animation: showNextQuestion .5s $fastInEaseOut forwards;
     }
 
     .enp-question--remove {
         position: absolute;
-        animation: removeQuestion .15s ease-out forwards;
+        animation: removeQuestion .15s $fastInEaseOut forwards;
     }
 
       // ----------------------//
@@ -405,7 +407,7 @@
     }
 
     .enp-results__score__circle__setOffset {
-        transition: stroke-dashoffset 1.2s ease-in-out;
+        transition: stroke-dashoffset 1.2s $fastInEaseOut;
     }
 
     .enp-results__score__circle__resetOffset {
@@ -431,7 +433,7 @@
     .enp-question__container--error {
         padding: 1rem 10px;
         //background-color: rgba($red, .2);
-        animation: errorContainer .3s ease-out forwards;
+        animation: errorContainer .3s $fastInEaseOut forwards;
     }
 
 }
