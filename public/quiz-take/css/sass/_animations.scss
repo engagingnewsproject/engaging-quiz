@@ -82,10 +82,17 @@
 
 @keyframes pop {
     0% {
-        width: 0%;
+        width: 0;
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    80% {
+        width: 100%;
     }
     100% {
-        width: 100%;
+        opacity: 0;
     }
 }
 

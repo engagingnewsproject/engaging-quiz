@@ -90,7 +90,7 @@
 
         &:focus {
             &:after {
-                animation: pop .3s forwards;
+                animation: pop 1s cubic-bezier(0.000, 0.725, 0.285, 1.000);
             }
 
         }
@@ -310,8 +310,7 @@
             fill: $blue;
         }
 
-        &:hover,
-        &:focus {
+        &:hover {
             .enp-next-step__icon {
                 fill: #fff;
                 background: $blue;
