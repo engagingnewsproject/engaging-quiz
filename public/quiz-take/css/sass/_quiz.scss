@@ -7,7 +7,7 @@
     .enp-quiz__container {
         position: relative;
         padding: 0;
-        background: #fff;
+        background: #888;
         border: 1px solid #ddd;
     }
 
@@ -52,7 +52,7 @@
     }
 
     .enp-question__container {
-
+        display: block;
     }
 
     .enp-question__form {
