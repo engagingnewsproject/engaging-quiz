@@ -287,12 +287,18 @@ class Enp_quiz_Take {
 
 	    //Is it a POST request?
  	    if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+		   $validate_nonce = $this->nonce->validate($posted_nonce);
  		   //Validate the form key
- 		   if(!isset($posted_nonce) || !$this->nonce->validate($posted_nonce)) {
+ 		   if(!isset($posted_nonce) || $validate_nonce !== true) {
  			   // Form key is invalid,
 			   // return them to the page (they're probably refreshing the page)
-			   $this->error[] = 'It looks like this quiz got started in a different browser window. <a href="'.ENP_QUIZ_URL.$this->quiz->get_quiz_id().'">Click here to get it working again.</a>';
+			   //first, check if it's null or not
+			   if($validate_nonce === null) {
+				   // cookies are likely disabled
+				   $this->error[] = 'It looks like Cookies are disabled. Please enable Cookies in order to take the quiz. If you only have third-party Cookies disabled, <a href="'.ENP_QUIZ_URL.$this->quiz->get_quiz_id().'" target="_blank">go here to take the quiz.</a>';
+			   } else {
+				   $this->error[] = 'It looks like this quiz got started in a different browser window. <a href="'.ENP_QUIZ_URL.$this->quiz->get_quiz_id().'">Click here to get it working again.'.$posted_nonce.'</a>';
+			   }
 			   return false;
  		   }
  	    }
