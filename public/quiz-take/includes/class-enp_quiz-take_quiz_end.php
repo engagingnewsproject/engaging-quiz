@@ -27,6 +27,7 @@ class Enp_quiz_Take_Quiz_end {
 		   $score_total_correct,
 		   $score_circle_dashoffset,
 		   $quiz_end_title,
+		   $twitter_share_text,
 		   $quiz_end_content;
 
 	/**
@@ -48,6 +49,8 @@ class Enp_quiz_Take_Quiz_end {
 		$this->set_quiz_end_content();
 		// set score circle dashoffset for SVG animation
 		$this->set_score_circle_dashoffset();
+		// set twitter share text
+		$this->set_twitter_share_text();
 	}
 
 
@@ -181,7 +184,7 @@ class Enp_quiz_Take_Quiz_end {
 		// quiz end object variables
 		foreach($qt_end as $key => $value) {
 			// we don't want to unset our quiz object
-			if($key !== 'quiz') {
+			if($key !== 'quiz' && $key !== 'twitter_share_text') {
 				$qt_end->$key = '{{'.$key.'}}';
 			}
 		}
@@ -195,4 +198,31 @@ class Enp_quiz_Take_Quiz_end {
 		return $template;
 	}
 
+	function set_twitter_share_text() {
+		// this will be grabbed from the DB off the quiz object
+		$share_text = 'I got {{score_percentage}}% right on this Quiz. How many can you get right?';
+		// url encode it
+		$share_text = urlencode($share_text);
+		// replace the encoded mustache variable with the normal one
+		$share_text = $this->prepare_encoded_mustache_string($share_text);
+		$this->twitter_share_text = $share_text;
+	}
+
+	function get_twitter_share_text() {
+		$share_text = $this->twitter_share_text;
+		$share_text = $this->replace_mustache_variable($share_text);
+		return $share_text;
+	}
+
+	function prepare_encoded_mustache_string($str) {
+		$str = str_replace('%7B%7Bscore_percentage%7D%7D', '{{score_percentage}}', $str);
+		return $str;
+	}
+
+	function replace_mustache_variable($str) {
+		// regex to match {{string}} and extract string
+		// /\{\{([^}]+)\}\}/g
+		$str = str_replace('{{score_percentage}}', $this->get_score_percentage(), $str);
+		return $str;
+	}
 }
