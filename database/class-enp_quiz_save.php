@@ -142,4 +142,37 @@ class Enp_quiz_Save {
         }
         return $a;
     }
+
+
+	/**
+	* Encode and replace {{mustache}} template vars for share text
+	*
+	* @param $encoding (mixed - string or boolean).
+	*		 false = no encoding. rawurl = rawurlencode(). url = urlencode();
+	* @return STRING encoded and {{mustache}} replaced $content
+	*/
+	public function encode_content($content = '', $encoding = 'url') {
+		if($encoding === 'url') {
+			$content = urlencode($content);
+		} elseif($encoding === 'rawurl') {
+			$content = rawurlencode($content);
+		}
+		// re-create mustache template variables that just got encoded
+		$content = $this->prepare_encoded_mustache_string($content);
+
+		return $content;
+	}
+
+
+	/**
+	* If a string is URL encoded and you need to make it turn back into
+	* {{var}}. Right now it only replaces score_percentage, but we could upgrade * it to use regex or an array later (or the Mustache PHP implementation)
+	*
+	* @param $str (urlcoded string)
+	* @return $str with %7B%7Bscore_percentage%7D%7D turned into {{score_percentage}}
+	*/
+	public function prepare_encoded_mustache_string($str) {
+		$str = str_replace('%7B%7Bscore_percentage%7D%7D', '{{score_percentage}}', $str);
+		return $str;
+	}
 }

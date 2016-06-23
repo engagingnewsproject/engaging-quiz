@@ -16,9 +16,7 @@ class Enp_quiz_Quiz {
             $quiz_updated_at,
             $questions,
             $quiz_title_display,
-            $quiz_width,
-            $quiz_bg_color,
-            $quiz_text_color,
+            $quiz_options,
             $quiz_views,
             $quiz_starts,
             $quiz_finishes,
@@ -89,6 +87,7 @@ class Enp_quiz_Quiz {
         $this->quiz_score_average = $this->set_quiz_score_average();
         $this->quiz_time_spent = $this->set_quiz_time_spent();
         $this->quiz_time_spent_average = $this->set_quiz_time_spent_average();
+        $this->quiz_share_content = $this->set_quiz_share_content();
 
         // set options
         $this->set_quiz_options();
@@ -101,16 +100,16 @@ class Enp_quiz_Quiz {
     protected function set_quiz_options() {
         $option_rows = $this->select_quiz_options();
         foreach($option_rows as $row => $option) {
-            // if it equals one of our allowed options, then set it!
-            // if adding options, then add them to the allowed list here
-            // or maybe create an allowed option key array?
-            if($option['quiz_option_name'] === 'quiz_title_display' || 'quiz_width' || 'quiz_bg_color' || 'quiz_text_color' ) {
-                // $this->quiz_title_display = value from that row
-                // $this->quiz_width = value from that row
-                // etc. This is just a quick setter.
+            // allow any option value to be set. We can whitelist it later if we'd like/if it's a security issue
+            // $whitelist = array('');
+            // check if in_array($whitelist);
+            // ...
 
-                $this->$option['quiz_option_name'] = $option['quiz_option_value'];
-            }
+            $option_value = $option['quiz_option_value'];
+            $option_name = $option['quiz_option_name'];
+
+            $this->quiz_options[$option_name] = $option_value;
+
         }
     }
 
@@ -421,7 +420,7 @@ class Enp_quiz_Quiz {
     * @return (string) %, px, em, or rem value (100%, 800px, 20rem, etc)
     */
     public function get_quiz_width() {
-        $quiz_width = $this->quiz_width;
+        $quiz_width = $this->quiz_options['quiz_width'];
         return $quiz_width;
     }
 
@@ -431,7 +430,7 @@ class Enp_quiz_Quiz {
     * @return #hex code
     */
     public function get_quiz_bg_color() {
-        $quiz_bg_color = $this->quiz_bg_color;
+        $quiz_bg_color = $this->quiz_options['quiz_bg_color'];
         return $quiz_bg_color;
     }
 
@@ -441,7 +440,7 @@ class Enp_quiz_Quiz {
     * @return #hex code
     */
     public function get_quiz_text_color() {
-        $quiz_text_color = $this->quiz_text_color;
+        $quiz_text_color = $this->quiz_options['quiz_text_color'];
         return $quiz_text_color;
     }
 

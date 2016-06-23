@@ -27,7 +27,7 @@ class Enp_quiz_Take_Quiz_end {
 		   $score_total_correct,
 		   $score_circle_dashoffset,
 		   $quiz_end_title,
-		   $twitter_share_text,
+		   $share_content,
 		   $quiz_end_content;
 
 	/**
@@ -50,7 +50,7 @@ class Enp_quiz_Take_Quiz_end {
 		// set score circle dashoffset for SVG animation
 		$this->set_score_circle_dashoffset();
 		// set twitter share text
-		$this->set_twitter_share_text();
+		$this->set_share_content();
 	}
 
 
@@ -183,7 +183,7 @@ class Enp_quiz_Take_Quiz_end {
 
 		// quiz end object variables
 		foreach($qt_end as $key => $value) {
-			// we don't want to unset our quiz object
+			// we don't want to unset our quiz object or twitter_share_text
 			if($key !== 'quiz' && $key !== 'twitter_share_text') {
 				$qt_end->$key = '{{'.$key.'}}';
 			}
@@ -198,31 +198,42 @@ class Enp_quiz_Take_Quiz_end {
 		return $template;
 	}
 
-	function set_twitter_share_text() {
-		// this will be grabbed from the DB off the quiz object
-		$share_text = 'I got {{score_percentage}}% right on this Quiz. How many can you get right?';
-		// url encode it
-		$share_text = urlencode($share_text);
-		// replace the encoded mustache variable with the normal one
-		$share_text = $this->prepare_encoded_mustache_string($share_text);
-		$this->twitter_share_text = $share_text;
-	}
-
-	function get_twitter_share_text() {
-		$share_text = $this->twitter_share_text;
-		$share_text = $this->replace_mustache_variable($share_text);
-		return $share_text;
-	}
-
-	function prepare_encoded_mustache_string($str) {
-		$str = str_replace('%7B%7Bscore_percentage%7D%7D', '{{score_percentage}}', $str);
-		return $str;
-	}
-
-	function replace_mustache_variable($str) {
+	/**
+	* Replace a {{mustache}} var with it's actual value. Only works with
+	* {{score_percentage}} right now, but we could upgrade it to use regex or an array later (or the Mustache PHP implementation)
+	*
+	* @param $str (string) with {{mustache}} variable in it
+	* @return $str (string) with {{score_percentage}} replaced by the actual get_score_percentage()
+	*/
+	public function replace_mustache_variable($str) {
 		// regex to match {{string}} and extract string
 		// /\{\{([^}]+)\}\}/g
 		$str = str_replace('{{score_percentage}}', $this->get_score_percentage(), $str);
 		return $str;
 	}
+
+	/**
+	* Get the share content from the array and encode/replace {{mustache}}
+	* template values (if encoded)
+	* @param $key (str) key in $this->share_content array
+	*		('facebook_title_end', 'twitter_text_start', etc)
+	* @param $replace_mustache (boolean) true = search_repace {{vars}}, false = nope
+	* @return (string) $this->share_content($key), if found.
+	*/
+	public function get_share_content($key = false, $replace_mustache = true) {
+		// check if it's there
+		if($key === false || !array_key_exists($key, $this->share_content)) {
+			// we're gonna need some more from you here...
+			return false;
+		}
+		// get the content from the array
+		$content = $this->share_content[$key];
+		// replace mustache var if necessary
+		if($replace_mustache === true) {
+			$content = $this->replace_mustache_variable($content);
+		}
+
+		return $content;
+	}
+
 }
