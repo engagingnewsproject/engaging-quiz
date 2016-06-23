@@ -37,6 +37,7 @@ $quiz_id = $quiz->get_quiz_id();
     <?php
 
     include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');
+
     ?>
 
     <?php do_action('enp_quiz_display_messages'); ?>

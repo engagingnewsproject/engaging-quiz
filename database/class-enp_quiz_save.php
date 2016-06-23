@@ -143,36 +143,73 @@ class Enp_quiz_Save {
         return $a;
     }
 
+    /**
+    * Checks to make sure the twitter value being saved is under the allowed
+    * character limit
+    *
+    * @param $tweet (string) string to validate
+    * @param $include_url (BOOLEAN) URLs count as 21 characters. Set true if
+    *                               you will be using a URL with the tweet
+    * @param $mustache (BOOLEAN) checks for {{score_percentage}} and replaces
+    *                            it with '100' if found
+    * @return BOOLEAN true if valid, false if not
+    */
+    public function validate_tweet($tweet, $include_url = false, $mustache = false) {
+        $valid = false;
+        if($mustache === true) {
+            // see if a {{score_percentage}} is in there and replace it with 100 (max length)
+            $tweet = str_replace('{{score_percentage}}', '100', $tweet);
+        }
 
-	/**
-	* Encode and replace {{mustache}} template vars for share text
-	*
-	* @param $encoding (mixed - string or boolean).
-	*		 false = no encoding. rawurl = rawurlencode(). url = urlencode();
-	* @return STRING encoded and {{mustache}} replaced $content
-	*/
-	public function encode_content($content = '', $encoding = 'url') {
-		if($encoding === 'url') {
-			$content = urlencode($content);
-		} elseif($encoding === 'rawurl') {
-			$content = rawurlencode($content);
-		}
-		// re-create mustache template variables that just got encoded
-		$content = $this->prepare_encoded_mustache_string($content);
+        // count the characters
+        $chars = strlen($tweet);
 
-		return $content;
-	}
+        // set the length we'll check against
+        if($include_url === true) {
+            // 140 - 23 = 117
+            // allowed tweet length if URL is included
+            $allowed_chars = 117;
+        } else {
+            $allowed_chars = 140;
+        }
+
+        // actually check if it's valid
+        if($chars <= $allowed_chars) {
+            $valid = true;
+        }
+
+        return $valid;
+    }
+
+    /**
+    * Encode and replace {{mustache}} template vars for share text
+    *
+    * @param $encoding (mixed - string or boolean).
+    *		 false = no encoding. rawurl = rawurlencode(). url = urlencode();
+    * @return STRING encoded and {{mustache}} replaced $content
+    */
+    public function encode_content($content = '', $encoding = 'url') {
+        if($encoding === 'url') {
+            $content = urlencode($content);
+        } elseif($encoding === 'rawurl') {
+            $content = rawurlencode($content);
+        }
+        // re-create mustache template variables that just got encoded
+        $content = $this->prepare_encoded_mustache_string($content);
+
+        return $content;
+    }
 
 
-	/**
-	* If a string is URL encoded and you need to make it turn back into
-	* {{var}}. Right now it only replaces score_percentage, but we could upgrade * it to use regex or an array later (or the Mustache PHP implementation)
-	*
-	* @param $str (urlcoded string)
-	* @return $str with %7B%7Bscore_percentage%7D%7D turned into {{score_percentage}}
-	*/
-	public function prepare_encoded_mustache_string($str) {
-		$str = str_replace('%7B%7Bscore_percentage%7D%7D', '{{score_percentage}}', $str);
-		return $str;
-	}
+    /**
+    * If a string is URL encoded and you need to make it turn back into
+    * {{var}}. Right now it only replaces score_percentage, but we could upgrade * it to use regex or an array later (or the Mustache PHP implementation)
+    *
+    * @param $str (urlcoded string)
+    * @return $str with %7B%7Bscore_percentage%7D%7D turned into {{score_percentage}}
+    */
+    public function prepare_encoded_mustache_string($str) {
+        $str = str_replace('%7B%7Bscore_percentage%7D%7D', '{{score_percentage}}', $str);
+        return $str;
+    }
 }

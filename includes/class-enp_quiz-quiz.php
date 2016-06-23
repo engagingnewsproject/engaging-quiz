@@ -87,7 +87,6 @@ class Enp_quiz_Quiz {
         $this->quiz_score_average = $this->set_quiz_score_average();
         $this->quiz_time_spent = $this->set_quiz_time_spent();
         $this->quiz_time_spent_average = $this->set_quiz_time_spent_average();
-        $this->quiz_share_content = $this->set_quiz_share_content();
 
         // set options
         $this->set_quiz_options();
@@ -104,7 +103,6 @@ class Enp_quiz_Quiz {
             // $whitelist = array('');
             // check if in_array($whitelist);
             // ...
-
             $option_value = $option['quiz_option_value'];
             $option_name = $option['quiz_option_name'];
 
@@ -420,8 +418,7 @@ class Enp_quiz_Quiz {
     * @return (string) %, px, em, or rem value (100%, 800px, 20rem, etc)
     */
     public function get_quiz_width() {
-        $quiz_width = $this->quiz_options['quiz_width'];
-        return $quiz_width;
+        return $this->quiz_options['quiz_width'];
     }
 
     /**
@@ -430,8 +427,7 @@ class Enp_quiz_Quiz {
     * @return #hex code
     */
     public function get_quiz_bg_color() {
-        $quiz_bg_color = $this->quiz_options['quiz_bg_color'];
-        return $quiz_bg_color;
+        return $this->quiz_options['quiz_bg_color'];
     }
 
     /**
@@ -440,10 +436,99 @@ class Enp_quiz_Quiz {
     * @return #hex code
     */
     public function get_quiz_text_color() {
-        $quiz_text_color = $this->quiz_options['quiz_text_color'];
-        return $quiz_text_color;
+        return $this->quiz_options['quiz_text_color'];
     }
 
+    /**
+    * Get the facebook_title_start for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_facebook_title_start() {
+        return $this->quiz_options['facebook_title_start'];
+    }
+
+    /**
+    * Get the facebook_description_start for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_facebook_description_start() {
+        return $this->quiz_options['facebook_description_start'];
+    }
+
+    /**
+    * Get the facebook_title_end for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_facebook_title_end() {
+        return $this->quiz_options['facebook_title_end'];
+    }
+
+    /**
+    * Get the facebook_description_end for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_facebook_description_end() {
+        return $this->quiz_options['facebook_description_end'];
+    }
+
+
+    /**
+    * Get the email_subject_start for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_email_subject_start() {
+        return $this->quiz_options['email_subject_start'];
+    }
+
+    /**
+    * Get the facebook_description_start for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_email_body_start() {
+        return $this->quiz_options['email_body_start'];
+    }
+
+    /**
+    * Get the email_subject_end for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_email_subject_end() {
+        return $this->quiz_options['email_subject_end'];
+    }
+
+    /**
+    * Get the email_body_end for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_email_body_end() {
+        return $this->quiz_options['email_body_end'];
+    }
+
+    /**
+    * Get the tweet_start for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_tweet_start() {
+        return $this->quiz_options['tweet_start'];
+    }
+
+    /**
+    * Get the tweet_end for our Quiz Object
+    * @param $quiz = quiz object
+    * @return string
+    */
+    public function get_tweet_end() {
+        return $this->quiz_options['tweet_end'];
+    }
     /**
     * Get the questions for our Quiz Object
     * @param $quiz = quiz object
