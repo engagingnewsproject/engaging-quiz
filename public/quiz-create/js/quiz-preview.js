@@ -1,5 +1,19 @@
 jQuery( document ).ready( function( $ ) {
 
+    // set-up accordions
+    $('.enp-fieldset--section').each( function(i) {
+        legend = $('.enp-legend:eq(0)', this);
+        legend.addClass('enp-screen-reader-text');
+        accordionTitle = legend.text();
+
+        // create the title and content accordion object so our headings can get created
+        accordion = {title: accordionTitle, content: $(this), baseID: i};
+        //returns an accordion object with the header object and content object
+        accordion = enp_accordion__create_headers(accordion);
+        // set-up all the accordion classes and start classes (so they're closed by default)
+        enp_accordion__setup(accordion);
+    });
+
     // a click on Publish nav just clicks the Publish button instead
     $(document).on('click', '.enp-quiz-breadcrumbs__link--publish', function(e) {
         e.preventDefault();
