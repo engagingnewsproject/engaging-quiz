@@ -46,6 +46,7 @@
 
     }
 
+    .enp-quiz-share__legend,
     .enp-quiz-settings__title {
         position: relative;
         @include _(small-uppercase);
@@ -81,8 +82,35 @@
         }
     }
 
+    .enp-quiz-share__input,
     .enp-quiz-styles__input {
         width: 100%;
+    }
+
+    .enp-tooltip {
+        position: relative;
+    }
+
+    .enp-tooltip__activator {
+
+
+        &:focus + .enp-tooltip__description {
+            display: block;
+        }
+    }
+
+
+
+    .enp-tooltip__description {
+        display: none;
+        position: absolute;
+        left: 103%;
+        margin-bottom: 2rem;
+        border-radius: 3px;
+        background: $light_gray;
+        font-size: 0.9rem;
+        padding: 0.9rem;
+        max-width: 200px;
     }
 
     .enp-preview-page-container {
