@@ -49,8 +49,6 @@ class Enp_quiz_Take_Quiz_end {
 		$this->set_quiz_end_content();
 		// set score circle dashoffset for SVG animation
 		$this->set_score_circle_dashoffset();
-		// set twitter share text
-		// $this->set_share_content();
 	}
 
 
@@ -222,12 +220,14 @@ class Enp_quiz_Take_Quiz_end {
 	*/
 	public function get_share_content($key = false, $replace_mustache = true) {
 		// check if it's there
-		if($key === false || !array_key_exists($key, $this->share_content)) {
+		if($key === false ) {
 			// we're gonna need some more from you here...
 			return false;
 		}
-		// get the content from the array
-		$content = $this->share_content[$key];
+		$get_quiz_option_value = 'get_'.$key;
+		// get the content from the quiz getter functions
+		$content = $this->quiz->$get_quiz_option_value();
+
 		// replace mustache var if necessary
 		if($replace_mustache === true) {
 			$content = $this->replace_mustache_variable($content);

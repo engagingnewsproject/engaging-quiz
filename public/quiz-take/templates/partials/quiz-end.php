@@ -16,7 +16,7 @@
               <span class="enp-screen-reader-text">Facebook: Link opens in new window</span>
             </svg>
         </a></li>
-        <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--twitter" target="_blank" href="http://twitter.com/intent/tweet?text=<?php echo  $qt_end->get_share_content('twitter_text_end');?>&url=<?php echo ENP_QUIZ_URL.$qt_end->quiz->get_quiz_id();?>">
+        <li class="enp-results__share__item"><a class="enp-results__share__link enp-results__share__item--twitter" target="_blank" href="http://twitter.com/intent/tweet?text=<?php echo  $qt_end->get_share_content('tweet_end');?>&url=<?php echo ENP_QUIZ_URL.$qt_end->quiz->get_quiz_id();?>">
             <svg class="enp-icon enp-icon--twitter enp-results__share__item__icon enp-results__share__item__icon--twitter">
               <use xlink:href="#icon-twitter" />
             </svg>
