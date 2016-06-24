@@ -56,6 +56,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // Alrighty!
         // actually save the quiz
         $this->save_quiz();
+
         // if we are trying to move to preview, check
         // for error messages (like, not enough mc_options, no correct option set, no questions, etc...)
         if(self::$user_action_action === 'next') {
@@ -327,13 +328,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     * @return response array of quiz_id, action, status, and errors (if any)
     */
     private function save_quiz() {
+
         // check for the quiz_title real quick
         if(self::$quiz['quiz_title'] === '') {
             // You had ONE job...
             self::$response_obj->add_error('Please enter a quiz title.');
             return false;
         }
-
 
         //  If the quiz_obj doesn't exist the quiz object will set the quiz_id as null
         if(self::$quiz_obj->get_quiz_id() === null) {

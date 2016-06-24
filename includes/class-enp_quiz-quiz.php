@@ -15,7 +15,6 @@ class Enp_quiz_Quiz {
             $quiz_updated_by,
             $quiz_updated_at,
             $questions,
-            $quiz_title_display,
             $quiz_options,
             $quiz_views,
             $quiz_starts,
@@ -403,14 +402,27 @@ class Enp_quiz_Quiz {
     }
 
     /**
+    * Get a quiz option from our Quiz Object
+    * @param $key (string) key from the $this->quiz_option array
+    * @return (Mixed) $value of the item in the array if found, null if not found
+    */
+    public function get_quiz_option($key) {
+        $value = null;
+        if(array_key_exists($key, $this->quiz_options)) {
+            $value = $this->quiz_options[$key];
+        }
+        return $value;
+    }
+
+    /**
     * Get the quiz_title_display for our Quiz Object
     * @param $quiz = quiz object
     * @return (string) 'show' or 'hide'
     */
     public function get_quiz_title_display() {
-        $quiz_title_display = $this->quiz_title_display;
-        return $quiz_title_display;
+        return $this->get_quiz_option('quiz_title_display');
     }
+
 
     /**
     * Get the quiz_width for our Quiz Object
@@ -418,7 +430,7 @@ class Enp_quiz_Quiz {
     * @return (string) %, px, em, or rem value (100%, 800px, 20rem, etc)
     */
     public function get_quiz_width() {
-        return $this->quiz_options['quiz_width'];
+        return $this->get_quiz_option('quiz_width');
     }
 
     /**
@@ -427,7 +439,7 @@ class Enp_quiz_Quiz {
     * @return #hex code
     */
     public function get_quiz_bg_color() {
-        return $this->quiz_options['quiz_bg_color'];
+        return $this->get_quiz_option('quiz_bg_color');
     }
 
     /**
@@ -436,7 +448,7 @@ class Enp_quiz_Quiz {
     * @return #hex code
     */
     public function get_quiz_text_color() {
-        return $this->quiz_options['quiz_text_color'];
+        return $this->get_quiz_option('quiz_text_color');
     }
 
     /**
@@ -445,7 +457,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_facebook_title_start() {
-        return $this->quiz_options['facebook_title_start'];
+        return $this->get_quiz_option('facebook_title_start');
     }
 
     /**
@@ -454,7 +466,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_facebook_description_start() {
-        return $this->quiz_options['facebook_description_start'];
+        return $this->get_quiz_option('facebook_description_start');
     }
 
     /**
@@ -463,7 +475,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_facebook_title_end() {
-        return $this->quiz_options['facebook_title_end'];
+        return $this->get_quiz_option('facebook_title_end');
     }
 
     /**
@@ -472,7 +484,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_facebook_description_end() {
-        return $this->quiz_options['facebook_description_end'];
+        return $this->get_quiz_option('facebook_description_end');
     }
 
 
@@ -482,7 +494,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_subject_start() {
-        return $this->quiz_options['email_subject_start'];
+        return $this->get_quiz_option('email_subject_start');
     }
 
     /**
@@ -491,7 +503,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_body_start() {
-        return $this->quiz_options['email_body_start'];
+        return $this->get_quiz_option('email_body_start');
     }
 
     /**
@@ -500,7 +512,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_subject_end() {
-        return $this->quiz_options['email_subject_end'];
+        return $this->get_quiz_option('email_subject_end');
     }
 
     /**
@@ -509,7 +521,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_body_end() {
-        return $this->quiz_options['email_body_end'];
+        return $this->get_quiz_option('email_body_end');
     }
 
     /**
@@ -518,7 +530,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_tweet_start() {
-        return $this->quiz_options['tweet_start'];
+        return $this->get_quiz_option('tweet_start');
     }
 
     /**
@@ -527,7 +539,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_tweet_end() {
-        return $this->quiz_options['tweet_end'];
+        return $this->get_quiz_option('tweet_end');
     }
     /**
     * Get the questions for our Quiz Object

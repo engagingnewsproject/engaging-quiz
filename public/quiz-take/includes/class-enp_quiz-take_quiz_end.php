@@ -50,7 +50,7 @@ class Enp_quiz_Take_Quiz_end {
 		// set score circle dashoffset for SVG animation
 		$this->set_score_circle_dashoffset();
 		// set twitter share text
-		$this->set_share_content();
+		// $this->set_share_content();
 	}
 
 
