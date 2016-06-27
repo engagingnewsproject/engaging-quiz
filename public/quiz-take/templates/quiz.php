@@ -79,6 +79,7 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
     echo $qt->load_quiz_styles();?>
     <header class="enp-quiz__header" role="banner">
         <h3 class="enp-quiz__title <?php echo 'enp-quiz__title--'. $qt->quiz->get_quiz_title_display();?>"><?php echo $qt->quiz->get_quiz_title();?></h3>
+        <a href="#" title="<?php echo $qt->quiz->get_facebook_description_start();?>">test</a>
         <div class="enp-quiz__progress">
             <div class="enp-quiz__progress__bar"
                 role="progressbar"

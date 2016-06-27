@@ -122,13 +122,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $facebook_title_end = $this->set_quiz_value('facebook_title_end', $quiz_title.' - I got {{score_percentage}}% right.');
         $facebook_description_end = $this->set_quiz_value('facebook_description_end', 'How well can you do?');
         // email
-        $email_subject_start = $this->set_email_text_value('email_subject_start', $facebook_title_start);
-        $email_body_start = $this->set_email_text_value('email_body_start', $facebook_description_start);
-        $email_subject_end = $this->set_email_text_value('email_subject_end', $facebook_title_end);
-        $email_body_end = $this->set_email_text_value('email_body_end', $facebook_description_end);
+        $email_subject_start = $facebook_title_start;
+        $email_body_start = $facebook_description_start;
+        $email_subject_end = $facebook_title_end;
+        $email_body_end = $facebook_description_end;
         // twitter
-        $tweet_start = $this->set_tweet_value('tweet_start', 'How well can you do on our quiz?', true, false);
-        $tweet_end = $this->set_tweet_value('tweet_end', 'I got {{score_percentage}}% right on this quiz. How many can you get right?', true, true);
+        $tweet_start = $this->set_quiz_value('tweet_start', 'How well can you do on our quiz?');
+        $tweet_end = $this->set_quiz_value('tweet_end', 'I got {{score_percentage}}% right on this quiz. How many can you get right?');
 
         $default_quiz = array(
             'quiz_id' => $quiz_id,
@@ -728,62 +728,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $css_measurement;
     }
 
-    /**
-    * Check to see if a value was passed in self::$quiz array
-    * If it was, set it as the value (after validating). If it wasn't, set the value
-    * from self::$quiz_obj or default
-    *
-    * @param $key = key that should be set in the quiz array.
-    * @param $default = int or string of default value if nothing is found
-    * @param $include_url (BOOLEAN) URLs count as 21 characters. Set true if
-    *                               you will be using a URL with the tweet
-    * @param $mustache (BOOLEAN) checks for {{score_percentage}} and replaces
-    *                            it with '100' if found
-    * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
-    */
-    public function set_tweet_value($key, $default, $include_url = false, $mustache = false) {
-        // set it with what they submitted
-        $tweet = $this->set_quiz_value($key, $default);
-        // decode it in case it got set from the object
-        $tweet = urldecode($tweet);
-        // validate it
-        $valid_tweet = $this->validate_tweet($tweet, $include_url, $mustache);
-        // check it
-        if($valid_tweet === false) {
-            // generate a good error message
-            self::$response_obj->add_error('Text for '.$key.' must be less than 140 characters. The {{score_percentage}} tag counts as 3 characters.');
-            // if it's not a valid tweet, try to get the old value from the object
-            // and fallback to default if necessary
-            $tweet = $this->validate_quiz_value_from_object($key, $default, 'tweet');
-        }
-        // re-encode it
-        $tweet = $this->encode_content($tweet, 'url');
-        return $tweet;
-    }
-
-    /**
-    * Check to see if a value was passed in self::$quiz array
-    * If it was, set it as the value (after validating). If it wasn't, set the value
-    * from self::$quiz_obj or default
-    *
-    * @param $key = key that should be set in the quiz array.
-    * @param $default = int or string of default value if nothing is found
-    * @param $include_url (BOOLEAN) URLs count as 21 characters. Set true if
-    *                               you will be using a URL with the tweet
-    * @param $mustache (BOOLEAN) checks for {{score_percentage}} and replaces
-    *                            it with '100' if found
-    * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
-    */
-    public function set_email_text_value($key, $default) {
-        // set it with what they submitted
-        $email = $this->set_quiz_value($key, $default);
-        // decode it in case it got set from the object
-        $email = rawurldecode($email);
-        // re-encode it
-        $email = $this->encode_content($email, 'rawurl');
-        // return it
-        return $email;
-    }
 
 
 }
