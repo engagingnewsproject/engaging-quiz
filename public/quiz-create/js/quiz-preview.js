@@ -20,7 +20,6 @@ jQuery( document ).ready( function( $ ) {
         $('.enp-btn--next-step').trigger('click');
     });
 
-
     $('.enp-quiz-styles__input--color').each(function() {
         // set-up the new HTML
         $(this).wrap('<div class="enp-quiz-styles__iris-wrapper"></div>');
@@ -100,5 +99,14 @@ jQuery( document ).ready( function( $ ) {
             $('#'+id).wpColorPicker('color', '#444444');
         }
     }
+
+    // set-up a character counter on our twitter fields
+    tweetField = document.getElementsByClassName('enp-quiz-share__textarea--tweet');
+
+    for(k = 0; k < tweetField.length; k++) {
+        // set up the limitedChars
+        limitedChars(tweetField[k]);
+    }
+
 
 });

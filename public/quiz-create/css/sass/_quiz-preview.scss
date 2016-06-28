@@ -74,8 +74,6 @@
         }
     }
 
-
-
     .enp-tooltip__description {
         display: none;
         position: absolute;
@@ -106,6 +104,15 @@
     }
 
     @include radio-inline(enp-title-display);
+
+    .enp-quiz-share__textarea {
+        min-height: 4.6rem;
+        margin-bottom: 2rem;
+
+        @include breakpoint('large') {
+            min-height: 7.6rem;
+        }
+    }
 
     .enp-preview-form__submit {
         margin-top: 1.6rem;

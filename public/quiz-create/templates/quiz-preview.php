@@ -76,7 +76,7 @@
                         <label class="enp-label enp-quiz-share__label" for="enp-tweet-start">
                             Tweet - Before
                         </label>
-                        <textarea id="enp-tweet-start" class="enp-textarea enp-quiz-share__textarea" maxlength="140" name="enp_quiz[tweet_start]" aria-describedby="enp-share-start__description"><?php echo urldecode($quiz->get_tweet_start());?></textarea>
+                        <textarea id="enp-tweet-start" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet" maxlength="255" name="enp_quiz[tweet_start]" aria-describedby="enp-share-start__description"><?php echo urldecode($quiz->get_tweet_start());?></textarea>
 
                     </fieldset>
 
@@ -98,7 +98,7 @@
                         <label class="enp-label enp-quiz-share__label" for="enp-tweet-end">
                             Tweet - After
                         </label>
-                        <textarea id="enp-tweet-end" class="enp-textarea enp-quiz-share__textarea" maxlength="140" name="enp_quiz[tweet_end]" aria-describedby="enp-share-after__description"><?php echo urldecode($quiz->get_tweet_end());?></textarea>
+                        <textarea id="enp-tweet-end" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet enp-quiz-share__textarea--after" maxlength="255" name="enp_quiz[tweet_end]" aria-describedby="enp-share-after__description"><?php echo urldecode($quiz->get_tweet_end());?></textarea>
 
                     </fieldset>
                 </fieldset>
