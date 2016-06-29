@@ -194,8 +194,8 @@ class Enp_quiz_Take {
     <meta charset="UTF-8">
     <meta property="og:url" content="http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] .'/'. $_SERVER['REQUEST_URI'] .'" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="'.$this->quiz->get_facebook_title_start().'" />
-    <meta property="og:description" content="'.$this->quiz->get_facebook_description_start().'" />';
+    <meta property="og:title" content="'.$this->quiz->get_encoded('facebook_title_start', 'htmlspecialchars').'" />
+    <meta property="og:description" content="'.$this->quiz->get_encoded('facebook_description_start', 'htmlspecialchars').'" />';
 	}
 
 	public function set_nonce($quiz_id) {

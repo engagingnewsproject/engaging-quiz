@@ -106,12 +106,18 @@
     @include radio-inline(enp-title-display);
 
     .enp-quiz-share__textarea {
-        min-height: 4.6rem;
+        min-height: 7.6rem;
         margin-bottom: 2rem;
+
+        @include breakpoint('medium') {
+            min-height: 4.6rem;
+        }
 
         @include breakpoint('large') {
             min-height: 7.6rem;
         }
+
+
     }
 
     .enp-preview-form__submit {

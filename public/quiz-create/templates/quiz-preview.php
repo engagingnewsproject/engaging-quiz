@@ -65,18 +65,18 @@
                             Facebook Share Title - Before
                         </label>
 
-                        <textarea id="enp-facebook-title-start" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255"  aria-describedby="enp-share-start__description" name="enp_quiz[facebook_title_start]"><?php echo htmlspecialchars_decode($quiz->get_facebook_title_start());?></textarea>
+                        <textarea id="enp-facebook-title-start" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255"  aria-describedby="enp-share-start__description" name="enp_quiz[facebook_title_start]"><?php echo $quiz->get_facebook_title_start();?></textarea>
 
                         <label class="enp-label enp-quiz-share__label" for="enp-facebook-description-start">
                             Facebook Share Description - Before
                         </label>
-                        <textarea id="enp-facebook-description-start" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255" name="enp_quiz[facebook_description_start]" aria-describedby="enp-share-start__description"><?php echo htmlspecialchars_decode($quiz->get_facebook_description_start());?></textarea>
+                        <textarea id="enp-facebook-description-start" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255" name="enp_quiz[facebook_description_start]" aria-describedby="enp-share-start__description"><?php echo $quiz->get_facebook_description_start();?></textarea>
 
 
                         <label class="enp-label enp-quiz-share__label" for="enp-tweet-start">
                             Tweet - Before
                         </label>
-                        <textarea id="enp-tweet-start" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet" maxlength="255" name="enp_quiz[tweet_start]" aria-describedby="enp-share-start__description"><?php echo urldecode($quiz->get_tweet_start());?></textarea>
+                        <textarea id="enp-tweet-start" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet" maxlength="255" name="enp_quiz[tweet_start]" aria-describedby="enp-share-start__description"><?php echo $quiz->get_tweet_start();?></textarea>
 
                     </fieldset>
 
@@ -88,17 +88,17 @@
                             Facebook Share Title - After
                         </label>
 
-                        <textarea id="enp-facebook-title-end" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255"  aria-describedby="enp-share-after__description" name="enp_quiz[facebook_title_end]"><?php echo htmlspecialchars_decode($quiz->get_facebook_title_end());?></textarea>
+                        <textarea id="enp-facebook-title-end" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255"  aria-describedby="enp-share-after__description" name="enp_quiz[facebook_title_end]"><?php echo $quiz->get_facebook_title_end();?></textarea>
 
                         <label class="enp-label enp-quiz-share__label" for="enp-facebook-description-end">
                             Facebook Share Description - After
                         </label>
-                        <textarea id="enp-facebook-description-end" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255" name="enp_quiz[facebook_description_end]" aria-describedby="enp-share-after__description"><?php echo htmlspecialchars_decode($quiz->get_facebook_description_end());?></textarea>
+                        <textarea id="enp-facebook-description-end" class="enp-textarea enp-quiz-share__textarea enp-textarea" maxlength="255" name="enp_quiz[facebook_description_end]" aria-describedby="enp-share-after__description"><?php echo $quiz->get_facebook_description_end();?></textarea>
 
                         <label class="enp-label enp-quiz-share__label" for="enp-tweet-end">
                             Tweet - After
                         </label>
-                        <textarea id="enp-tweet-end" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet enp-quiz-share__textarea--after" maxlength="255" name="enp_quiz[tweet_end]" aria-describedby="enp-share-after__description"><?php echo urldecode($quiz->get_tweet_end());?></textarea>
+                        <textarea id="enp-tweet-end" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet enp-quiz-share__textarea--after" maxlength="255" name="enp_quiz[tweet_end]" aria-describedby="enp-share-after__description"><?php echo $quiz->get_tweet_end();?></textarea>
 
                     </fieldset>
                 </fieldset>

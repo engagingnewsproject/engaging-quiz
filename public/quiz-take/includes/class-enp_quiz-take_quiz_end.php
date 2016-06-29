@@ -215,18 +215,18 @@ class Enp_quiz_Take_Quiz_end {
 	* template values (if encoded)
 	* @param $key (str) key in $this->share_content array
 	*		('facebook_title_end', 'twitter_text_start', etc)
+	* @param $encoding = 'url', 'rawurl', 'htmlspecialchars'
 	* @param $replace_mustache (boolean) true = search_repace {{vars}}, false = nope
 	* @return (string) $this->share_content($key), if found.
 	*/
-	public function get_share_content($key = false, $replace_mustache = true) {
+	public function get_share_content($key = false, $encoding = 'url', $replace_mustache = true) {
 		// check if it's there
 		if($key === false ) {
 			// we're gonna need some more from you here...
 			return false;
 		}
-		$get_quiz_option_value = 'get_'.$key;
-		// get the content from the quiz getter functions
-		$content = $this->quiz->$get_quiz_option_value();
+		// get the content from the quiz get_encoded function
+		$content = $this->quiz->get_encoded($key, $encoding, $replace_mustache);
 
 		// replace mustache var if necessary
 		if($replace_mustache === true) {

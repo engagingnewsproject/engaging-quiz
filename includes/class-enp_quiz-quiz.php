@@ -457,7 +457,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_facebook_title_start() {
-        return htmlspecialchars($this->get_quiz_option('facebook_title_start'));
+        return $this->get_quiz_option('facebook_title_start');
     }
 
     /**
@@ -466,7 +466,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_facebook_description_start() {
-        return htmlspecialchars($this->get_quiz_option('facebook_description_start'));
+        return $this->get_quiz_option('facebook_description_start');
     }
 
     /**
@@ -494,11 +494,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_subject_start() {
-        $email_subject_start = $this->get_quiz_option('email_subject_start');
-        // find/replace mustache values?
-        $mustache = false;
-        $email_subject_start = $this->encode_content($email_subject_start, 'rawurl', $mustache);
-        return $email_subject_start;
+        return $this->get_quiz_option('email_subject_start');
     }
 
     /**
@@ -507,11 +503,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_body_start() {
-        $email_body_start = $this->get_quiz_option('email_body_start');
-        // find/replace mustache values?
-        $mustache = false;
-        $email_body_start = $this->encode_content($email_body_start, 'rawurl', $mustache);
-        return $email_body_start;
+        return $this->get_quiz_option('email_body_start');
     }
 
     /**
@@ -520,11 +512,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_subject_end() {
-        $email_subject_end = $this->get_quiz_option('email_subject_end');
-        // find/replace mustache values?
-        $mustache = true;
-        $email_subject_end = $this->encode_content($email_subject_end, 'rawurl', $mustache);
-        return $email_subject_end;
+        return $this->get_quiz_option('email_subject_end');
     }
 
     /**
@@ -533,11 +521,7 @@ class Enp_quiz_Quiz {
     * @return string
     */
     public function get_email_body_end() {
-        $email_body_end = $this->get_quiz_option('email_body_end');
-        // find/replace mustache values?
-        $mustache = true;
-        $email_body_end = $this->encode_content($email_body_end, 'rawurl', $mustache);
-        return $email_body_end;
+        return $this->get_quiz_option('email_body_end');
     }
 
     /**
@@ -547,9 +531,6 @@ class Enp_quiz_Quiz {
     */
     public function get_tweet_start() {
         $tweet = $this->get_quiz_option('tweet_start');
-        // find/replace mustache values?
-        $mustache = false;
-        $tweet = $this->encode_content($tweet, 'url', $mustache);
         return $tweet;
     }
 
@@ -561,9 +542,23 @@ class Enp_quiz_Quiz {
     public function get_tweet_end() {
         $tweet = $this->get_quiz_option('tweet_end');
         // find/replace mustache values?
-        $mustache = true;
-        $tweet = $this->encode_content($tweet, 'url', $mustache);
+        // $mustache = true;
+        // $tweet = $this->encode_content($tweet, 'url', $mustache);
         return $tweet;
+    }
+
+    /**
+    * Utility function for encoding content
+    * @param $key (string) of Object var ('tweet_end', 'email_body_start', etc)
+    * @param $encoding (string) 'rawurl','url','htmlspecialchars'
+    * @param $mustache BOOLEAN keep mustache variables decoded
+    * @return encoded string
+    */
+    public function get_encoded($key, $encoding = 'url', $mustache = false) {
+        $getter = 'get_'.$key;
+        $value = $this->$getter();
+        $value = $this->encode_content($value, $encoding, $mustache);
+        return $value;
     }
     /**
     * Get the questions for our Quiz Object
@@ -795,7 +790,7 @@ class Enp_quiz_Quiz {
     *
     * @param $content (string) the content you want encoded
     * @param $encoding (mixed - string or boolean).
-    *		 false = no encoding. rawurl = rawurlencode(). url = urlencode();
+    *		 false = no encoding. rawurl = rawurlencode(). url = urlencode(). htmlspecialchars = htmlspecialchars();
     * @param $mustache (BOOLEAN) Should we search the string to replace {{mustache}} strings?
     * @return STRING encoded and {{mustache}} replaced $content
     */
@@ -804,6 +799,8 @@ class Enp_quiz_Quiz {
             $content = urlencode($content);
         } elseif($encoding === 'rawurl') {
             $content = rawurlencode($content);
+        } elseif($encoding === 'htmlspecialchars') {
+            $content = htmlspecialchars($content);
         }
 
         if($mustache === true) {

@@ -728,6 +728,32 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         return $css_measurement;
     }
 
+    /**
+    * Check to see if a value was passed in self::$quiz array
+    * If it was, set it as the value (after validating). If it wasn't, set the value
+    * from self::$quiz_obj or default
+    *
+    * @param $key = key that should be set in the quiz array.
+    * @param $default = int or string of default value if nothing is found
+    * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
+    */
+    public function set_tweet_value($key, $default) {
+        // set it with what they submitted
+        $tweet = $this->set_quiz_value($key, $default);
+        // validate the tweet
+        $valid_tweet = $this->validate_tweet($tweet);
+        // check it
+
+        if($valid_tweet === false) {
+            // generate a good error message
+            self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
+            // if it's not a valid tweet, try to get the old value from the object
+            // and fallback to default if necessary
+            $tweet = $this->validate_quiz_value_from_object($key, $default, 'tweet');
+        }
+
+        return $tweet;
+    }
 
 
 }
