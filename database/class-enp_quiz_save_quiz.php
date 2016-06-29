@@ -127,8 +127,11 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $email_subject_end = $facebook_title_end;
         $email_body_end = $facebook_description_end;
         // twitter
-        $tweet_start = $this->set_quiz_value('tweet_start', 'How well can you do on our quiz?');
-        $tweet_end = $this->set_quiz_value('tweet_end', 'I got {{score_percentage}}% right on this quiz. How many can you get right?');
+        $include_url = true;
+        $do_not_replace_mustache = false;
+        $tweet_start = $this->set_tweet_value('tweet_start', 'How well can you do on our quiz?', $include_url, $do_not_replace_mustache);
+        $replace_mustache = true;
+        $tweet_end = $this->set_tweet_value('tweet_end', 'I got {{score_percentage}}% right on this quiz. How many can you get right?', $include_url, $replace_mustache);
 
         $default_quiz = array(
             'quiz_id' => $quiz_id,
@@ -735,18 +738,22 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     *
     * @param $key = key that should be set in the quiz array.
     * @param $default = int or string of default value if nothing is found
+    * @param $include_url (BOOLEAN) URLs count as 21 characters. Set true if
+    *                               you will be using a URL with the tweet
+    * @param $mustache (BOOLEAN) checks for {{score_percentage}} and replaces
+    *                            it with '100' if found
     * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
     */
-    public function set_tweet_value($key, $default) {
+    public function set_tweet_value($key, $default, $include_url, $mustache) {
         // set it with what they submitted
         $tweet = $this->set_quiz_value($key, $default);
         // validate the tweet
-        $valid_tweet = $this->validate_tweet($tweet);
+        $valid_tweet = $this->validate_tweet($tweet, $include_url, $mustache);
         // check it
 
         if($valid_tweet === false) {
             // generate a good error message
-            self::$response_obj->add_error('Hex Color value for '.$key.' was not valid. Hex Color Value must be a valid Hex value like #ffffff');
+            self::$response_obj->add_error('The tweet for '.$key.' has too many characters. It can\'t have more than 117 characters because sharing the URL for the quiz uses up 23 of the 140 available characters.');
             // if it's not a valid tweet, try to get the old value from the object
             // and fallback to default if necessary
             $tweet = $this->validate_quiz_value_from_object($key, $default, 'tweet');
