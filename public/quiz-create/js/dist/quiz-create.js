@@ -799,7 +799,7 @@ function removeSliderRange(sliderID) {
     // change the low correct label to Slider Answer (remove Low)
     $('.enp-slider-correct-low__label', container).text('Slider Answer');
     // Set the button content and classes
-    $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--remove-range').addClass('enp-slider-correct-answer-range--add-range').html('<span class="enp-screen-reader-text">Remove Answer Range</span><svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-add" /></svg> Answer Range');
+    $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--remove-range').addClass('enp-slider-correct-answer-range--add-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-add"><title>Add</title></use></svg> Answer Range');
 
     // Make Correct High value equal the Low value
     lowCorrectVal = lowCorrectInput.val();
@@ -822,7 +822,7 @@ function addSliderRange(sliderID) {
     $('.enp-slider-correct-low__label', container).text('Slider Answer Low');
     $('.enp-slider-correct__helper', container).removeClass('enp-slider-correct__helper--hidden').text('to');
     $('.enp-slider-correct-high__input-container', container).removeClass('enp-slider-correct-high__input-container--hidden');
-    $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--add-range').addClass('enp-slider-correct-answer-range--remove-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-close" /></svg>');
+    $('.enp-slider-correct-answer-range', container).removeClass('enp-slider-correct-answer-range--add-range').addClass('enp-slider-correct-answer-range--remove-range').html('<svg class="enp-icon enp-slider-correct-answer-range__icon"><use xlink:href="#icon-close"><title>Remove Answer Range</title></use></svg>');
     // Add one interval to the high value if it equals the low value
     highCorrectVal = parseFloat( highCorrectInput.val() );
     lowCorrectVal = parseFloat( lowCorrectInput.val() );
