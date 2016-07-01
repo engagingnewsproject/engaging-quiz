@@ -216,7 +216,7 @@ $('.enp-question-content').each(function(i) {
 $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
 
 // set-up our ajax response container for messages to get added to
-$('#enp-quiz').append('<section class="enp-quiz-message-ajax-container"></section>');
+$('#enp-quiz').append('<section class="enp-quiz-message-ajax-container" aria-live="assertive"></section>');
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
@@ -624,14 +624,15 @@ function addSlider(new_sliderID, questionID) {
 
 function createSliderTemplate(container) {
     var sliderData;
+    var slider_id = $('.enp-slider-id', container).val();
     // scrape the input values and create the template
-    sliderRangeLow = parseFloat($('.enp-slider-range-low__input', container).val());
-    sliderRangeHigh = parseFloat($('.enp-slider-range-high__input', container).val());
-    sliderIncrement = parseFloat($('.enp-slider-increment__input', container).val());
-    sliderStart = getSliderStart(sliderRangeLow, sliderRangeHigh, sliderIncrement);
+    var sliderRangeLow = parseFloat($('.enp-slider-range-low__input', container).val());
+    var sliderRangeHigh = parseFloat($('.enp-slider-range-high__input', container).val());
+    var sliderIncrement = parseFloat($('.enp-slider-increment__input', container).val());
+    var sliderStart = getSliderStart(sliderRangeLow, sliderRangeHigh, sliderIncrement);
 
     sliderData = {
-        'slider_id': $('.enp-slider-id', container).val(),
+        'slider_id': slider_id,
         'slider_range_low': sliderRangeLow,
         'slider_range_high': sliderRangeHigh,
         'slider_start': sliderStart,
@@ -646,8 +647,10 @@ function createSliderTemplate(container) {
     sliderExample = $('<div class="enp-slider-preview"></div>').html(slider);
     // insert it
     $(sliderExample).prependTo(container);
-
-    $('.enp-slider__label', container).text('Slider Preview');
+    // create a new label and insert it
+    $('.enp-slider__label', container).after('<label for="enp-slider-input__'+slider_id+'" class="enp-label enp-label--slider-preview">Slider Preview</label>');
+    // remove the old label
+    $('.enp-slider__label', container).remove();
     // create the jQuery slider
     createSlider($('.enp-slider-input__input', container), sliderData);
 }
