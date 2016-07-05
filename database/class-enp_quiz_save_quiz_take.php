@@ -44,7 +44,7 @@ class Enp_quiz_Save_quiz_take {
 
         // create our save quiz response class
         self::$save_response_quiz_obj = new Enp_quiz_Save_quiz_take_Response_quiz();
-        // create our save response class
+        // create our save response class for the question
         self::$save_response_question_obj = new Enp_quiz_Save_quiz_take_Response_question();
 
         // Check that they submitted a question on the form
@@ -68,6 +68,11 @@ class Enp_quiz_Save_quiz_take {
             // check to make sure whatever we saved returned a response
             if(!empty($save_response_question_response)) {
                 self::$return = array_merge(self::$return, $save_response_question_response);
+            }
+
+            // See if we need to increase our correctly_answered total
+            if((int) self::$return['response_correct'] === (int) 1) {
+                self::$return['correctly_answered']++;
             }
         }
 

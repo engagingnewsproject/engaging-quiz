@@ -4,6 +4,8 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+
 header('Content-type: text/html; charset=utf-8');
 
 
@@ -103,6 +105,9 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
         <form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action();?>">
             <?php $qt->nonce->outputKey();?>
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
+            <input type="hidden" name="enp-user-id" value="<? echo $qt->get_user_id();?>"/>
+            <input type="hidden" name="enp-response-quiz-id" value="<? echo $qt->get_response_quiz_id();?>"/>
+            <input type="hidden" name="enp-quiz-correctly-answered" value="<? echo $qt->get_correctly_answered();?>"/>
             <?php
             if($state === 'question' || $state === 'question_explanation') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');
