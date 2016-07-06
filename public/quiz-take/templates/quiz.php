@@ -43,7 +43,7 @@ if($state !== 'quiz_end') {
     $qt_question = new Enp_quiz_Take_Question($qt);
 }
 // create the quiz end object (so we have a template for it for the JS)
-$qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
+$qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 
 ?>
 
@@ -106,7 +106,7 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
             <input type="hidden" name="enp-quiz-id" value="<? echo $qt->quiz->get_quiz_id();?>"/>
             <input type="hidden" name="enp-user-id" value="<? echo $qt->get_user_id();?>"/>
             <input type="hidden" name="enp-response-quiz-id" value="<? echo $qt->get_response_quiz_id();?>"/>
-            <input type="hidden" name="enp-quiz-correctly-answered" value="<? echo $qt->get_correctly_answered();?>"/>
+            <input id="correctly-answered" type="hidden" name="enp-quiz-correctly-answered" value="<? echo $qt->get_correctly_answered();?>"/>
             <?php
             if($state === 'question' || $state === 'question_explanation') {
                 include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/question.php');

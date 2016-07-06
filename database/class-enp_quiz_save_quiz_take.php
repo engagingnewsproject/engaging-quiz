@@ -222,7 +222,7 @@ class Enp_quiz_Save_quiz_take {
     * Set the quiz_end data when the state or next_state is quiz_end
     */
     protected function set_quiz_end() {
-        $quiz_end = new Enp_quiz_Take_Quiz_end(self::$quiz);
+        $quiz_end = new Enp_quiz_Take_Quiz_end(self::$quiz, self::$return['correctly_answered']);
         self::$return['quiz_end'] = (array) $quiz_end;
     }
 

@@ -593,8 +593,8 @@ class Enp_quiz_Take {
 			$correctly_answered = $this->response->correctly_answered;
 		}
 		// try to set the state from the cookie
-		elseif(isset($_COOKIE['correctly_answered'])) {
-			$correctly_answered = $_COOKIE['correctly_answered'];
+		elseif(isset($_COOKIE['enp_correctly_answered'])) {
+			$correctly_answered = $_COOKIE['enp_correctly_answered'];
 		}
 		// probably a new quiz
 		else {
@@ -741,7 +741,11 @@ class Enp_quiz_Take {
 
 		// correctly answered
 		if($this->state === 'question_explanation' &&  !empty($this->response->correctly_answered)) {
+			// set the total questions gotten right
 			$this->set_cookie__correctly_answered( $this->response->correctly_answered);
+
+			// set a cookie for this individual question's response (correct/incorrect)
+			setcookie('enp_question_'.$this->current_question_id.'_is_correct', $this->response->response_correct, $twentythirtyeight, $this->cookie_path);
 		}
 
 	}
@@ -787,6 +791,9 @@ class Enp_quiz_Take {
 			$cookie_name = 'enp_question_'.$question_id.'_is_correct';
 			setcookie($cookie_name, '', time() - 3600, $this->cookie_path);
 		}
+
+		// unset the total correct
+		setcookie('enp_correctly_answered', '0', time() - 3600, $this->cookie_path);
 
 		// We don't need to unset the Response ID here because it gets regenerated on Quiz Reset
 
