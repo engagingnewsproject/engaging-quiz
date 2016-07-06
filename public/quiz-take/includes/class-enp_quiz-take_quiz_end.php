@@ -75,8 +75,7 @@ class Enp_quiz_Take_Quiz_end {
 	}
 
 	public function set_score() {
-		$question_ids = $this->quiz->questions;
-		$total_questions = count($question_ids);
+		$total_questions = $this->quiz->get_total_question_count();
 		// calculate the score
 		$this->score = $this->score_total_correct / $total_questions;
 	}

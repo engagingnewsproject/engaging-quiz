@@ -21,8 +21,6 @@ _.reformat_number = function(number, multiplier, places) {
 _.is_last_question = function(questionJSON) {
     questionNumber = parseInt(questionJSON.question_order) + 1;
     totalQuestions = _.get_total_questions();
-    console.log(questionNumber);
-    console.log(totalQuestions);
     if(questionNumber === totalQuestions) {
         return true;
     } else {
@@ -102,7 +100,7 @@ if($('#quiz_end_template').length) {
 // facebook share templates
 if(quiz_json.quiz_options.facebook_title_end) {
     var facebookTitleEndTemplate = _.template(quiz_json.quiz_options.facebook_title_end);
-} 
+}
 if(quiz_json.quiz_options.facebook_description_end) {
     var facebookDescriptionEndTemplate = _.template(quiz_json.quiz_options.facebook_description_end);
 }
@@ -505,7 +503,7 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
 
         // see if there's a next question
         qEndTemplate = generateQuizEnd(responseJSON.quiz_end);
-        
+
         $('.enp-question__form').append(qEndTemplate);
         $('.enp-results').addClass('enp-question--on-deck').addClass('enp-question--show').removeClass('enp-question--on-deck');
         // make progress bar the full width

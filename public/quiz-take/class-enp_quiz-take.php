@@ -26,7 +26,6 @@ class Enp_quiz_Take {
 		   $user_id,
 		   $response_quiz_id,
 		   $state = '',
-		   $total_questions,
 		   $correctly_answered,
 		   $current_question_id,
 		   $next_question_id,
@@ -90,7 +89,6 @@ class Enp_quiz_Take {
 		$this->set_state();
 
 		// set random vars we'll need
-		$this->set_total_questions();
 		$this->set_current_question_id();
 		$this->set_current_question_number();
 		// set how many they've gotten right so far
@@ -250,7 +248,7 @@ class Enp_quiz_Take {
 	*/
 	public function load_quiz_styles() {
 		// figure out the width of our progress bar
-		$progress_bar_width = $this->current_question_number/$this->total_questions;
+		$progress_bar_width = $this->current_question_number/$this->quiz->get_total_question_count();
 		// reduce the number a little if we're at the very end so it still looks like there's more to go
 		if($this->state !== 'quiz_end' && $progress_bar_width === 1) {
 			$progress_bar_width = .9;
@@ -526,10 +524,6 @@ class Enp_quiz_Take {
 		$this->set_cookie__state($state);
 	}
 
-	public function set_total_questions() {
-		$this->total_questions = count($this->quiz->get_questions());
-	}
-
 	public function set_current_question_id() {
 		$question = array();
 		$question_id = '';
@@ -565,7 +559,7 @@ class Enp_quiz_Take {
 		$current_question_number = 0;
 		// check state
 		if($this->state === 'quiz_end') {
-			$this->current_question_number = $this->total_questions;
+			$this->current_question_number = $this->quiz->get_total_question_count();
 		} else {
 			// find it off of the quiz array
 			$question_ids = $this->quiz->get_questions();
@@ -639,10 +633,6 @@ class Enp_quiz_Take {
 	// getters
 	public function get_state() {
 		return $this->state;
-	}
-
-	public function get_total_questions() {
-		return $this->total_questions;
 	}
 
 	public function get_current_question_number() {

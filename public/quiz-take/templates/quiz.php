@@ -5,7 +5,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 header('Content-type: text/html; charset=utf-8');
 
 
@@ -84,12 +83,12 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz);
         <div class="enp-quiz__progress">
             <div class="enp-quiz__progress__bar"
                 role="progressbar"
-                aria-valuetext="Question <?php echo  $qt->get_current_question_number();?> of <?php echo $qt->get_total_questions();?>"
+                aria-valuetext="Question <?php echo  $qt->get_current_question_number();?> of <?php echo $qt->quiz->get_total_question_count();?>"
                 aria-valuemin="1"
                 aria-valuenow="<?php echo  $qt->get_current_question_number();?>"
-                aria-valuemax="<?php echo $qt->get_total_questions();?>">
+                aria-valuemax="<?php echo $qt->quiz->get_total_question_count();?>">
 
-                <div class="enp-quiz__progress__bar__question-count"><span class="enp-quiz__progress__bar__question-count__current-number"><?php echo  $qt->get_current_question_number();?></span>/<span class="enp-quiz__progress__bar__question-count__total-questions"><?php echo $qt->get_total_questions();?></span></div>
+                <div class="enp-quiz__progress__bar__question-count"><span class="enp-quiz__progress__bar__question-count__current-number"><?php echo  $qt->get_current_question_number();?></span>/<span class="enp-quiz__progress__bar__question-count__total-questions"><?php echo $qt->quiz->get_total_question_count();?></span></div>
             </div>
         </div>
     </header>
