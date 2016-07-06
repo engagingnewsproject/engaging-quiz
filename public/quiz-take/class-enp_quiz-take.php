@@ -652,7 +652,6 @@ class Enp_quiz_Take {
 	}
 
 	public function set_user_id() {
-
 		// check off the response object
 		if(isset($this->response->user_id) && !empty($this->response->user_id)) {
 			$uuid = $this->response->user_id;
@@ -827,8 +826,8 @@ class Enp_quiz_Take {
 	protected function set_response_quiz_id($quiz_id) {
 
 		// check off the response object
-		if(isset($this->response->response_id) && !empty($this->response->response_id)) {
-			$this->response_quiz_id = $this->response->response_id;
+		if(isset($this->response->response_quiz_id) && !empty($this->response->response_quiz_id)) {
+			$this->response_quiz_id = $this->response->response_quiz_id;
 		}
 		// try setting from the cookie
 		elseif(isset($_COOKIE['enp_response_id'])) {

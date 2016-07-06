@@ -106,7 +106,6 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
     }
     // update correctly answered input with the response
     $('#correctly-answered').val(responseJSON.correctly_answered);
-
     // send the height of the new view
     sendBodyHeight();
 
