@@ -187,7 +187,7 @@ class Enp_quiz_Save_quiz_take {
     protected function set_next_question($current_question_id) {
         // get the questions for this quiz
         $question_ids = self::$quiz->get_questions();
-        $question_count = count($question_ids);
+        $question_count = self::$quiz->get_total_question_count();
         // see where we're at in the question cycle
         if(!empty($question_ids)) {
             $i = 0;
@@ -215,6 +215,7 @@ class Enp_quiz_Save_quiz_take {
                 $i++;
             }
         }
+
 
     }
 
@@ -253,7 +254,6 @@ class Enp_quiz_Save_quiz_take {
         // and create the next response
 		if(self::$return['state'] === 'question') {
 			$save_question_view = new Enp_quiz_Save_quiz_take_Question_view(self::$next_question->question_id);
-
 
             // create the next question response
             $data = self::$return;
