@@ -752,6 +752,8 @@ class Enp_quiz_Create {
 		unset($_COOKIE['enp_response_id']);
 		setcookie('enp_response_id', '', time() - 3600, $path);
 
+		// reset the amount they got correct
+		setcookie('enp_correctly_answered', '0', time() - 3600, $path);
 	}
 
 	public function dashboard_breadcrumb_link() {
