@@ -179,8 +179,8 @@ class Enp_quiz_Take {
         require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-mc_option.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-slider.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-ab_test.php';
-		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-cookies.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-nonce.php';
+		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-cookies.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-cookies_quiz_take.php';
 		// Quiz Take Classes
 		require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-take_quiz_end.php';
@@ -497,9 +497,8 @@ class Enp_quiz_Take {
 		// update our quiz restarted field in the response_quiz table
 		$this->response_quiz_restarted();
 
-		// clear the cookies
-		$this->cookie_manager->unset_quiz_cookies($this->quiz);
-		// set new states
+		// delete cookies and set new cookie states as if
+		// it just started (state = question, question_id = first)
 		$this->cookie_manager->reset_quiz_cookies($this->quiz);
 
 		// redirect them so if they reload the page, it doesn't think there's another quiz_restart being posted
