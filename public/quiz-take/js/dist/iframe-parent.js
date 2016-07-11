@@ -11,7 +11,9 @@ function receiveEnpIframeMessage(event) {
     var iframe,
         iframe_id;
 
-    if(!/dev/.test(event.origin) && !/engagingnewsproject/.test(event.origin)) {
+    // quit the postmessage loop if it's from a trusted site (engagingnewsproject.org or our dev sites)
+    // If you want to see what it matches/doesn't match, go here: http://regexr.com/3dpq2
+    if(!/https?:\/\/(?:dev\b(?!.)|(?:(?:local|dev|test)\.)?engagingnewsproject\.org)/.test(event.origin)) {
         return false;
     }
 
@@ -22,7 +24,7 @@ function receiveEnpIframeMessage(event) {
 
     // parse the JSON data
     data = JSON.parse(event.data);
-    // set the style on the height and store to localStorage
+    // set the style on the height
     if(/([0-9])px/.test(data.height)) {
         // get the quiz or ab_test based on ID
         // check if it's an ab test or not
