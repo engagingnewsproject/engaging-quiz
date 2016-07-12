@@ -48,18 +48,48 @@ function onLoadEnpIframe() {
     addEnpIframeStyles();
     // call each quiz and get its height
     getEnpQuizHeights();
+    // call each quiz and send the URL of the page its embedded on
+    sendEnpParentURL();
 }
 
 function getEnpQuizHeights() {
+    var quizzes,
+        quiz,
+        request;
     // check to see if we have valid height from our PostMessage
-    var quizzes = document.getElementsByClassName('enp-quiz-iframe');
+    quizzes = document.getElementsByClassName('enp-quiz-iframe');
 
     // for each quiz, send a message to that iframe so we can get its height
-    for (i = 0; i < quizzes.length; ++i) {
+    for (var i = 0; i < quizzes.length; ++i) {
         // get the stored iframeheight
         quiz = quizzes[i];
         // send a postMessage to get the correct height
         request = '{"status":"request","action":"sendBodyHeight"}';
+        console.log('sending '+request);
+        quiz.contentWindow.postMessage(request, quiz.src);
+    }
+}
+
+/**
+* Send the full URL and path of the current page (the parent page)
+* so it can be appended in the Share URLs
+*/
+function sendEnpParentURL() {
+    var quizzes,
+        quiz,
+        parentURL,
+        request;
+    // get all the embedded quizzes
+    quizzes = document.getElementsByClassName('enp-quiz-iframe');
+    parentURL = window.location.href;
+
+    // for each quiz, send a message to that iframe so we can get its height
+    for (var i = 0; i < quizzes.length; ++i) {
+        // get the stored iframeheight
+        quiz = quizzes[i];
+        // send a postMessage to get the correct height
+        request = '{"status":"request","action":"setShareURL","parentURL":"'+parentURL+'"}';
+        console.log('sending '+request);
         quiz.contentWindow.postMessage(request, quiz.src);
     }
 }

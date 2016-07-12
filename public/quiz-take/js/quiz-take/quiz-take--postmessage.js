@@ -39,6 +39,7 @@ function calculateBodyHeight() {
 
 function receiveMessage(event) {
     // check to make sure we received a string
+    console.log(event);
     if(typeof event.data !== 'string') {
         return false;
     }
@@ -47,10 +48,13 @@ function receiveMessage(event) {
 
     // see what they want to do
     if(data.status === 'request') {
+
         // they want us to send something... what do they want to send?
         // if they want the bodyHeight, then send the bodyHeight!
         if(data.action === 'sendBodyHeight') {
             sendBodyHeight();
+        } else if(data.action === 'setShareURL') {
+            setShareURL(data.parentURL);
         }
     }
 
