@@ -24,19 +24,28 @@ function receiveEnpIframeMessage(event) {
 
     // parse the JSON data
     data = JSON.parse(event.data);
-    // set the style on the height
-    if(/([0-9])px/.test(data.height)) {
-        // get the quiz or ab_test based on ID
-        // check if it's an ab test or not
-        if(data.ab_test_id === "0") {
-            iframe_id = 'enp-quiz-iframe-'+data.quiz_id;
-        } else {
-            iframe_id = 'enp-ab-test-iframe-'+data.ab_test_id;
-        }
-        iframe = document.getElementById(iframe_id);
-        // set the height on the style
-        iframe.style.height= data.height;
+
+    // get the quiz or ab_test iframe based on ID
+    // check if it's an ab test or not
+    if(data.ab_test_id === "0") {
+        iframe_id = 'enp-quiz-iframe-'+data.quiz_id;
+    } else {
+        iframe_id = 'enp-ab-test-iframe-'+data.ab_test_id;
     }
+    iframe = document.getElementById(iframe_id);
+
+    // find out what we need to do with it
+    if(data.action === 'setHeight') {
+        // Test the data
+        if(/([0-9])px/.test(data.height)) {
+            // set the height on the style
+            iframe.style.height= data.height;
+        }
+    } else if(data.action === 'sendURL') {
+        // send the url of the parent (that embedded the quiz)
+        sendEnpParentURL();
+    }
+
 
     // send a response sayin, yea, we got it!
     // event.source.postMessage("success!", event.origin);
@@ -65,7 +74,6 @@ function getEnpQuizHeights() {
         quiz = quizzes[i];
         // send a postMessage to get the correct height
         request = '{"status":"request","action":"sendBodyHeight"}';
-        console.log('sending '+request);
         quiz.contentWindow.postMessage(request, quiz.src);
     }
 }
@@ -89,7 +97,6 @@ function sendEnpParentURL() {
         quiz = quizzes[i];
         // send a postMessage to get the correct height
         request = '{"status":"request","action":"setShareURL","parentURL":"'+parentURL+'"}';
-        console.log('sending '+request);
         quiz.contentWindow.postMessage(request, quiz.src);
     }
 }

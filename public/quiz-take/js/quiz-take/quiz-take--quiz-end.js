@@ -11,7 +11,6 @@ function generateQuizEnd(quizEndJSON, callback) {
                     quiz_end_title: quizEndJSON.quiz_end_title,
                     quiz_end_content: quizEndJSON.quiz_end_content,
     };
-    console.log(quizEndTemplate);
     qEndTemplate = quizEndTemplate(quizEndData);
     if(typeof(callback) == "function") {
         callback(explanation);
@@ -75,6 +74,3 @@ function setShareURLTemplate(iframeURL, parentURL) {
     // WARNING! This is a global variable
     quizEndTemplate = _.template(qeTemplate.html());
 }
-
-// testing!
-setShareURL('http://jeremyjon.es/enp-new-quiz-iframe-test-TEST/');

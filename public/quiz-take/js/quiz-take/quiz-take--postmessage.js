@@ -12,7 +12,7 @@ function sendBodyHeight() {
     height = calculateBodyHeight();
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","height":"'+height+'"}';
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"setHeight","height":"'+height+'"}';
     parent.postMessage(json, "*");
 }
 /**
@@ -37,9 +37,18 @@ function calculateBodyHeight() {
     return height + "px";
 }
 
+/**
+* Send a request to the parent frame to request the URL
+*/
+function requestParentURL() {
+    // allow all domains to access this info (*)
+    // and send the message to the parent of the iframe
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"sendURL"}';
+    parent.postMessage(json, "*");
+}
+
 function receiveMessage(event) {
     // check to make sure we received a string
-    console.log(event);
     if(typeof event.data !== 'string') {
         return false;
     }

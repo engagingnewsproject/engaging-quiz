@@ -142,7 +142,7 @@ function sendBodyHeight() {
     height = calculateBodyHeight();
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","height":"'+height+'"}';
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"setHeight","height":"'+height+'"}';
     parent.postMessage(json, "*");
 }
 /**
@@ -167,9 +167,18 @@ function calculateBodyHeight() {
     return height + "px";
 }
 
+/**
+* Send a request to the parent frame to request the URL
+*/
+function requestParentURL() {
+    // allow all domains to access this info (*)
+    // and send the message to the parent of the iframe
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"sendURL"}';
+    parent.postMessage(json, "*");
+}
+
 function receiveMessage(event) {
     // check to make sure we received a string
-    console.log(event);
     if(typeof event.data !== 'string') {
         return false;
     }
@@ -923,7 +932,6 @@ function generateQuizEnd(quizEndJSON, callback) {
                     quiz_end_title: quizEndJSON.quiz_end_title,
                     quiz_end_content: quizEndJSON.quiz_end_content,
     };
-    console.log(quizEndTemplate);
     qEndTemplate = quizEndTemplate(quizEndData);
     if(typeof(callback) == "function") {
         callback(explanation);
@@ -988,9 +996,6 @@ function setShareURLTemplate(iframeURL, parentURL) {
     quizEndTemplate = _.template(qeTemplate.html());
 }
 
-// testing!
-setShareURL('http://jeremyjon.es/enp-new-quiz-iframe-test-TEST/');
-
 // on load, bind the initial question_json to the question id
 // check if the init_question_json variable exists
 if(typeof init_question_json !== 'undefined') {
@@ -1021,6 +1026,7 @@ function bindQuizData(quizJSON) {
 // The parent page will request the body height once its loaded.
 // This should cover either scenario.
 sendBodyHeight();
+requestParentURL();
 // after images are loaded, send the height again,
 // regardless if it's been sent or not so we know for sure that
 // the height is correct
