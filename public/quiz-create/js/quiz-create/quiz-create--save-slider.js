@@ -288,10 +288,14 @@ function setUpSliderTemplate(sliderOptionsContainer) {
     correctLow = parseFloat( lowCorrectInput.val() );
     correctHigh = parseFloat( highCorrectInput.val() );
 
-    if( correctLow === correctHigh ) {
-        removeSliderRange(sliderID);
-    } else {
-        addSliderRange(sliderID);
+    // see if the inputs are readonly or not.
+    // if they're readonly, then they're published, so don't edit them
+    if(!lowCorrectInput.is('[readonly]')) {
+        if( correctLow === correctHigh ) {
+            removeSliderRange(sliderID);
+        } else {
+            addSliderRange(sliderID);
+        }
     }
 
 
