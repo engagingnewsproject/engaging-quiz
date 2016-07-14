@@ -307,7 +307,7 @@ class Enp_quiz_Create {
 	public function quiz_published_redirect($quiz) {
 		if($quiz->get_quiz_status() === 'published') {
 			// add error message
-			self::$message['note'][] = "You can only make text changes to published quizzes. Please create a new quiz if you need to add questions or change answers.";
+			self::$message['note'][] = "You can only make text and image changes to published quizzes. Please create a new quiz if you need to add questions or change answers.";
             // uh oh, invalid quiz. Send them back to the create page to fix it.
             // $this->redirect_to_quiz_preview($quiz->get_quiz_id());
         }
