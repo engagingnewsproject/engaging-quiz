@@ -209,11 +209,14 @@
             fill: $green;
         }
 
-        &:disabled .enp-mc-option__icon--correct,
-        &:disabled .enp-mc-option__icon--correct {
-            cursor: default;
-            fill: #fff;
-            border: 2px solid transparent;
+        &:disabled {
+            opacity: 1;
+            
+            .enp-mc-option__icon--correct {
+                cursor: default;
+                fill: #fff;
+                border: 2px solid transparent;
+            }
         }
     }
 
