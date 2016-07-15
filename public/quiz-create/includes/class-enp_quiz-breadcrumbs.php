@@ -46,6 +46,9 @@ class Enp_quiz_Breadcrumbs {
         $this->set_classes();
     }
 
+    /**
+    * Sets the text names of the links based on if published or not
+    */
     protected function set_names() {
         if($this->quiz_status === 'published') {
             $this->preview_name = 'Settings';
@@ -58,6 +61,9 @@ class Enp_quiz_Breadcrumbs {
         }
     }
 
+    /**
+    * Sets the href values vased on current page and quiz status
+    */
     protected function set_urls() {
         $this->create_url = ENP_QUIZ_CREATE_URL;
         $this->create_url .= (!empty($this->quiz_id) ?  $this->quiz_id.'/' : 'new');
@@ -67,6 +73,9 @@ class Enp_quiz_Breadcrumbs {
         $this->publish_url = (!empty($this->quiz_id) ? ENP_QUIZ_PUBLISH_URL.$this->quiz_id.'/' : '#');
     }
 
+    /**
+    * Sets active and disaled class based on current page and quiz status
+    */
     protected function set_classes() {
         $this->create_class = '';
         $this->preview_class = '';
@@ -96,6 +105,10 @@ class Enp_quiz_Breadcrumbs {
             $this->publish_class = ' enp-quiz-breadcrumbs__link--active';
         }
     }
+
+    /**
+    * Getters!
+    */
 
     public function get_create_url() {
         return $this->create_url;
@@ -133,14 +146,26 @@ class Enp_quiz_Breadcrumbs {
         return $this->publish_class;
     }
 
+    /**
+    * Compiles HTML for the create link
+    * @return HTML
+    */
     public function get_create_link() {
         return '<a href="'.$this->get_create_url().'" class="enp-quiz-breadcrumbs__link'.$this->get_create_class().'">'.$this->get_create_name().'</a>';
     }
 
+    /**
+    * Compiles HTML for the preview link
+    * @return HTML
+    */
     public function get_preview_link() {
         return '<a class="enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--preview'.$this->get_preview_class().'" href="'.$this->get_preview_url().'">'.$this->get_preview_name().'</a>';
     }
 
+    /**
+    * Compiles HTML for the publish link
+    * @return HTML
+    */
     public function get_publish_link() {
         return '<a class="enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--publish'.$this->get_publish_class().'" href="'.$this->get_publish_url().'">'.$this->get_publish_name().'</a>';
     }
