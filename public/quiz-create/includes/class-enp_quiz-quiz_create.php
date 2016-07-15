@@ -52,9 +52,12 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         //Start the class
         $Quiz_create = $this;
         $quiz = $this->quiz;
+        $quiz_id = $quiz->get_quiz_id();
+        $quiz_status =  $quiz->get_quiz_status();
         $enp_quiz_nonce = parent::$nonce;
         $user_action = $this->load_user_action();
         $enp_current_page = 'create';
+
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/quiz-create.php' );
         $content = ob_get_contents();
         if (ob_get_length()) ob_end_clean();
@@ -278,6 +281,22 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     public function get_slider_increment_input($slider, $question_i) {
         return '<label class="enp-label enp-slider-increment__label" for="enp-slider-increment__'.$slider->get_slider_id().'">Slider Increment</label>
         <input id="enp-slider-increment__'.$slider->get_slider_id().'" class="enp-input enp-slider-increment__input" type="number" min="-9999999999999999.9999" max="9999999999999999.9999" name="enp_question['.$question_i.'][slider][slider_increment]" value="'.$slider->get_slider_increment().'" step="any"'.($this->quiz->get_quiz_status()==='published'? ' readonly' : '').'/>';
+    }
+
+    public function get_add_question_button() {
+        $add_question_btn = '';
+        if($this->quiz->get_quiz_status() !== 'published') {
+            $add_question_btn = '<button type="submit" class="enp-btn--add enp-quiz-submit enp-quiz-form__add-question" name="enp-quiz-submit" value="add-question"><svg class="enp-icon enp-icon--add enp-add-question__icon" role="presentation" aria-hidden="true">
+              <use xlink:href="#icon-add" />
+            </svg> Add Question</button>';
+        }
+        return $add_question_btn;
+    }
+
+    public function get_next_step_button() {
+        return '<button type="submit" id="enp-btn--next-step" class="enp-btn--submit enp-quiz-submit enp-btn--next-step enp-quiz-form__submit" name="enp-quiz-submit" value="quiz-preview">'.($this->quiz->quiz_status !== 'published' ? 'Preview' : 'Settings').' <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-quiz-form__submit__icon">
+          <use xlink:href="#icon-chevron-right" />
+        </svg></button>';
     }
 
     public function is_before_publish() {
