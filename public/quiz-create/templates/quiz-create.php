@@ -23,7 +23,6 @@
 //
 
 $quiz_id = $quiz->get_quiz_id();
-$quiz_status = $quiz->get_quiz_status();
 ?>
 <?php echo $Quiz_create->dashboard_breadcrumb_link();?>
 <section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
