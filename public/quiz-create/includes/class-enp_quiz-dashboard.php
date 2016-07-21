@@ -74,6 +74,12 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
         wp_register_script( $this->plugin_name.'-svg-class-shim', plugin_dir_url( __FILE__ ) . '../js/dist/svg-class-shim.min.js', array( 'jquery' ), ENP_QUIZ_VERSION, true );
 		wp_enqueue_script( $this->plugin_name.'-svg-class-shim' );
 
+        // localize scripts for use with JS
+        wp_localize_script( $this->plugin_name.'-dashboard','quizDashboard', array(
+    		'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'quiz_dashboard_url' => ENP_QUIZ_DASHBOARD_URL,
+    	));
+
 	}
 
     public function get_quiz_dashboard_item_title($quiz) {

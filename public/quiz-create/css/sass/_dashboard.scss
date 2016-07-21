@@ -58,11 +58,28 @@
         box-shadow: inset 4px 0 0 lighten($green, 25%), 0 1px 0 rgba(0,0,0,.1);
     }
 
+    .enp-dash-item--remove {
+        animation: removeElement .5s $fastInEaseOut forwards;
+    }
+
     .enp-dash-list--list-view {
         .enp-dash-item {
             margin: 0 0 0.8rem;
             flex-basis: 100%;
         }
+    }
+
+    .enp-dash-item__spinner {
+        @include _('flex-center');
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(245,216,216,0.8);
+        width: 100%;
+        z-index: 999;
+        animation: fadeIn .3s $fastInEaseOut;
     }
 
     .enp-dash-item__header {
@@ -132,7 +149,7 @@
         fill: #bbb;
         width: 20px;
         height: 20px;
-        
+
         &:focus,
         &:hover {
             fill: $red;
