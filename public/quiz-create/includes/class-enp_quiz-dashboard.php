@@ -21,6 +21,7 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Dashboard extends Enp_quiz_Create {
+
     public function __construct() {
         // temporary function while completing beta testing of quiz tool
         $this->first_visit();
@@ -48,6 +49,7 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
         ob_start();
         //Start the class
         $user = new Enp_quiz_User(get_current_user_id());
+        $nonce_input = $this->get_enp_quiz_nonce();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/dashboard.php' );
         $content = ob_get_contents();
         if (ob_get_length()) ob_end_clean();

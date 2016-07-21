@@ -10,9 +10,11 @@
                     echo '<li class="enp-dash-item__nav__item"><a href="'.$quiz_action['url'].'">'.$quiz_action['title'].'</a></li>';
                 }
             ?>
-            <!--<li class="enp-dash-item__nav__item">
-                <form>
-                    <button class="enp-dash-item__delete">
+            <li class="enp-dash-item__nav__item">
+                <form method="post" action="<?php echo htmlentities(ENP_QUIZ_DASHBOARD_URL.'user/'); ?>">
+                    <?php echo $nonce_input;?>
+                    <input type="hidden" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id()?>" />
+                    <button name="enp-quiz-submit" class="enp-dash-item__delete" value="delete-quiz">
                         <svg class="enp-dash-item__delete__icon enp-icon enp-icon--delete">
                           <use xlink:href="#icon-delete">
                               <title>Delete Quiz - <?php echo $quiz->get_quiz_title();?></title>
@@ -20,7 +22,7 @@
                         </svg>
                     </button>
                 </form>
-            </li>-->
+            </li>
         </ul>
     </div>
     <div class="enp-dash-item__content">
