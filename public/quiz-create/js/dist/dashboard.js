@@ -25,33 +25,60 @@ $(document).on('click', '.enp-view-toggle', function() {
 });
 
 // create the button element to show/hide the dah item nav
-$('.enp-dash-item__nav').addClass('enp-dash-item__nav--collapsible').before('<button class="enp-dash-item__menu-action" type="button"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--top"><use xlink:href="#icon-chevron-down" /></svg></button>');
+
+$('.enp-dash-item__nav').each(function() {
+    $(this).addClass('enp-dash-item__nav--collapsible')
+            .attr('aria-hidden', true)
+            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--top"><use xlink:href="#icon-chevron-down" /></svg></button>');
+});
 
 // show/hide the dash item nav
 $(document).on('click', '.enp-dash-item__menu-action', function() {
    var dashItem = $(this).closest('.enp-dash-item');
 
     if(dashItem.hasClass('enp-dash-item--menu-active')) {
-        dashItem.removeClass('enp-dash-item--menu-active');
-        $('#enp-quiz').removeClass('enp-dash-list--focus-one');
-
+        removeActiveMenuStates(dashItem);
     } else {
 
-        $('.enp-dash-item').removeClass('enp-dash-item--menu-active');
-        dashItem.addClass('enp-dash-item--menu-active');
-        $('#enp-quiz').addClass('enp-dash-list--focus-one');
-        // move focus to first item in menu
-        $('.enp-dash-item__nav__item:eq(0) a', dashItem).focus();
+        // remove states from any active menu item, if there is one
+       var previouslyActiveMenu = $('.enp-dash-item--menu-active');
+       if(0 < previouslyActiveMenu.length ) {
+           removeActiveMenuStates(previouslyActiveMenu);
+       }
+       // add in new active states
+       addActiveMenuStates(dashItem);
+       // move focus to first item in menu
+       $('.enp-dash-item__nav__item:eq(0) a', dashItem).focus();
     }
 });
+
+function addActiveMenuStates(dashItem) {
+    // add the new active states in
+    dashItem.addClass('enp-dash-item--menu-active');
+    // button to activate the menu
+    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', true);
+    // menu
+    $('.enp-dash-item__nav', dashItem).attr('aria-hidden', false);
+}
+
+function removeActiveMenuStates(dashItem) {
+    // dash item card
+    dashItem.removeClass('enp-dash-item--menu-active');
+    // button to activate the menu
+    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', false);
+    // menu
+    $('.enp-dash-item__nav', dashItem).attr('aria-hidden', true);
+}
 
 
 // delete a quiz click
 $('.enp-dash-item__delete').click(function(e) {
     e.preventDefault();
+    // get the dash item
+    var dashItem = $(this).closest('.enp-dash-item');
 
     // TODO This should be an "undo", not a confirm
-    var confirmDelete = confirm('Are you sure you want to delete this quiz?');
+    var confirmDelete = confirm('Are you sure you want to delete '+$('.enp-dash-item__title', dashItem).text()+'?');
     if(confirmDelete === false) {
         return false;
     }  else {
@@ -68,22 +95,10 @@ $('.enp-dash-item__delete').click(function(e) {
         setWait();
     }
 
-    // get the dash item
-    var dashItem = $(this).closest('.enp-dash-item');
     // add a little spinner to show we're working on deleting it
-    dashItem.addClass('enp-dash-item--delete-wait');
-    dashItem.append(waitSpinner('enp-dash-item__spinner'));
-    // get the quizID we want to delete
-    var quizID = $('.enp-dash-item__quiz-id', dashItem).val();
+    deleteQuizWait(dashItem);
 
-    // get the form we're submitting
-    var quizForm = document.getElementById("enp-delete-quiz-"+quizID);
-    // create formData object
-    var fd = new FormData(quizForm);
-    // set our submit button value
-    fd.append('enp-quiz-submit', 'delete-quiz');
-    // append our action for wordpress AJAX call (which function it will run in class-enp_quiz-create.php)
-    fd.append('action', 'save_quiz');
+    var fd = deleteFormData(dashItem);
 
     $.ajax( {
         type: 'POST',
@@ -126,23 +141,87 @@ function quizDeleteSuccess( response, textStatus, jqXHR ) {
     // see if we've created a new quiz
     if(response.status === 'success' && response.action === 'update') {
         // it worked! verify that we were deleting something
-        if(userActionAction === 'delete' && userActionElement === 'quiz') {
-            dashItem = $('#enp-dash-item-'+response.quiz_id);
-            // remove the dashboard item
-            dashItem.addClass('enp-dash-item--remove');
-            // remove the class that sets the focus on an individual item
-            $('#enp-quiz').removeClass('enp-dash-list--focus-one');
+        if(userActionAction === 'delete') {
+            // see if it's a quiz
+            if(userActionElement === 'quiz') {
+                dashItem = $('#enp-dash-item--'+response.quiz_id);
+            }
+            // see if it's an AB test
+            else if(userActionElement === 'ab_test') {
+                dashItem = $('#enp-dash-item--'+response.ab_test_id+'a'+response.quiz_id_a+'b'+response.quiz_id_b);
+            }
 
+            removeDashItem(dashItem);
 
-            // wait 300ms then actually remove it
-            setTimeout(
-                function() {
-                    dashItem.remove();
-                },
-                300
-            );
         }
+
     }
+}
+
+function deleteFormData(dashItem) {
+    var fd;
+    // determine if we're deleting a quiz or an AB test
+    var userAction = $('.enp-dash-item__delete', dashItem).val();
+    if(userAction === 'delete-quiz') {
+        fd = deleteQuizFormData(dashItem);
+    }
+    else if(userAction === 'delete-ab-test') {
+        fd = deleteABTestFormData(dashItem);
+    }
+    return fd;
+}
+
+function deleteQuizFormData(dashItem) {
+    // get the quizID we want to delete
+    var quizID = $('.enp-dash-item__quiz-id', dashItem).val();
+
+    // get the form we're submitting
+    var quizForm = document.getElementById("enp-delete-quiz-"+quizID);
+    // create formData object
+    var fd = new FormData(quizForm);
+    // set our submit button value
+    fd.append('enp-quiz-submit', 'delete-quiz');
+    // append our action for wordpress AJAX call (which function it will run in class-enp_quiz-create.php)
+    fd.append('action', 'save_quiz');
+
+    return fd;
+}
+
+function deleteABTestFormData(dashItem) {
+    // get the AB Test ID we want to delete
+    var abTestID = $('.enp-dash-item__ab-test-id', dashItem).val();
+    var quizIDA = $('.enp-dash-item__quiz-id-a', dashItem).val();
+    var quizIDB = $('.enp-dash-item__quiz-id-b', dashItem).val();
+
+    // get the form we're submitting
+    var abTestForm = document.getElementById("enp-delete-ab-test-"+abTestID+"a"+quizIDA+"b"+quizIDB);
+    // create formData object
+    var fd = new FormData(abTestForm);
+    // set our submit button value
+    fd.append('enp-ab-test-submit', 'delete-ab-test');
+    // append our action for wordpress AJAX call (which function it will run in class-enp_quiz-create.php)
+    fd.append('action', 'save_ab_test');
+
+    return fd;
+}
+
+
+function deleteQuizWait(dashItem) {
+    dashItem.addClass('enp-dash-item--delete-wait');
+    dashItem.append(waitSpinner('enp-dash-item__spinner'));
+}
+
+function removeDashItem(dashItem) {
+    // remove the dashboard item
+    dashItem.addClass('enp-dash-item--remove');
+
+    // wait 300ms then actually remove it
+    setTimeout(
+        function() {
+            dashItem.remove();
+        },
+        300
+    );
 }
 
 
