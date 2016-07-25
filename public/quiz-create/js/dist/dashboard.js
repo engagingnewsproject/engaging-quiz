@@ -77,8 +77,24 @@ $('.enp-dash-item__delete').click(function(e) {
     // get the dash item
     var dashItem = $(this).closest('.enp-dash-item');
 
+    // determine if we're deleting a quiz or an AB test
+    // off of the button value
+    var userAction = $(this).val();
+
     // TODO This should be an "undo", not a confirm
-    var confirmDelete = confirm('Are you sure you want to delete '+$('.enp-dash-item__title', dashItem).text()+'?');
+    if(userAction === 'delete-quiz') {
+        confirmDeleteText = 'Are you sure you want to delete this quiz? This will also delete any AB Tests you have set-up with this Quiz.';
+    }
+    else if(userAction === 'delete-ab-test') {
+        confirmDeleteText = 'Are you sure you want to delete this AB Test?';
+    } else {
+        // not sure what we're going to do here...
+        alert('Something went wrong. Please send us an email telling us how you reached this error message');
+    }
+
+    // show the confirm message
+    var confirmDelete = confirm(confirmDeleteText);
+
     if(confirmDelete === false) {
         return false;
     }  else {
@@ -98,7 +114,7 @@ $('.enp-dash-item__delete').click(function(e) {
     // add a little spinner to show we're working on deleting it
     deleteQuizWait(dashItem);
 
-    var fd = deleteFormData(dashItem);
+    var fd = deleteFormData(dashItem, userAction);
 
     $.ajax( {
         type: 'POST',
@@ -133,11 +149,11 @@ function quizDeleteSuccess( response, textStatus, jqXHR ) {
     }
 
     response = $.parseJSON(jqXHR.responseJSON);
-
+    console.log(response);
     displayMessages(response.message);
 
-    userActionAction = response.user_action.action;
-    userActionElement = response.user_action.element;
+    var userActionAction = response.user_action.action;
+    var userActionElement = response.user_action.element;
     // see if we've created a new quiz
     if(response.status === 'success' && response.action === 'update') {
         // it worked! verify that we were deleting something
@@ -145,6 +161,12 @@ function quizDeleteSuccess( response, textStatus, jqXHR ) {
             // see if it's a quiz
             if(userActionElement === 'quiz') {
                 dashItem = $('#enp-dash-item--'+response.quiz_id);
+                // check if an AB Test has been deleted along with the quiz delete
+                var isABTestDeleted = hasABTestDeleted(response.user_action);
+                if(isABTestDeleted === true) {
+                    // delete all the AB Tests
+                    deleteABTestsWithQuiz(response.user_action.secondary_action.ab_test_deleted);
+                }
             }
             // see if it's an AB test
             else if(userActionElement === 'ab_test') {
@@ -158,10 +180,8 @@ function quizDeleteSuccess( response, textStatus, jqXHR ) {
     }
 }
 
-function deleteFormData(dashItem) {
+function deleteFormData(dashItem, userAction) {
     var fd;
-    // determine if we're deleting a quiz or an AB test
-    var userAction = $('.enp-dash-item__delete', dashItem).val();
     if(userAction === 'delete-quiz') {
         fd = deleteQuizFormData(dashItem);
     }
@@ -222,6 +242,51 @@ function removeDashItem(dashItem) {
         },
         300
     );
+}
+
+/**
+* check to see if any AB Tests also got deleted when deleting
+* the quiz (because we don't want any lingering AB Tests that
+* have a deleted quiz on them)
+* @return (BOOLEAN) true if AB Test was also deleted, false if none
+*/
+function hasABTestDeleted(userActionJSON) {
+    var ABTestDeleted = false;
+    for(var prop in userActionJSON) {
+        if(prop === 'secondary_action') {
+            // loop this and see if we have an ab_test_deleted
+            for(var secondary_prop in userActionJSON.secondary_action) {
+                if(secondary_prop === 'ab_test_deleted') {
+                    ABTestDeleted = true;
+                    return ABTestDeleted;
+                }
+            }
+        }
+    }
+    return ABTestDeleted;
+}
+
+/**
+* If a quiz that was deleted also has an AB Test associated with
+* it, then we need to delete those AB Tests too.
+* This function removes all those AB Tests that were deleted from the view
+* @param abTestsDeleted (JSON) from server response on which AB Tests were deleted
+*/
+function deleteABTestsWithQuiz(abTestsDeleted) {
+    // we have AB Tests to remove. loop through them
+    for (var i = 0; i < abTestsDeleted.length; i++) {
+        // check to make sure it was deleted successfully
+        if(abTestsDeleted[i].user_action.action === 'delete' && abTestsDeleted[i].status === 'success') {
+            // get all the info we'll need to find the right AB Test to remove from the page
+            var abTestID = abTestsDeleted[i].ab_test_id;
+            var quizIDA = abTestsDeleted[i].quiz_id_a;
+            var quizIDB = abTestsDeleted[i].quiz_id_b;
+            // get the ab test dash item
+            var abTestDashItem = $("#enp-dash-item--"+abTestID+"a"+quizIDA+"b"+quizIDB);
+            // remove it
+            removeDashItem(abTestDashItem);
+        }
+    }
 }
 
 
