@@ -11,6 +11,7 @@
  /*
  $user = new Enp_quiz_User();
  object containing user quizzes and ab_tests
+ $quizzes = quizzes available to this view);
  */
 ?>
 <?php do_action('enp_quiz_display_messages'); ?>
@@ -54,7 +55,7 @@
             </a>
         </li>
         <?php
-        $quizzes = $user->get_quizzes();
+
         if(!empty($quizzes)) {
             foreach($quizzes as $quiz) {
                 $quiz = new Enp_quiz_Quiz($quiz);

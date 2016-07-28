@@ -21,10 +21,15 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Dashboard extends Enp_quiz_Create {
+    public $user,
+           $quizzes;
 
     public function __construct() {
         // temporary function while completing beta testing of quiz tool
         $this->first_visit();
+
+        $this->user = new Enp_quiz_User(get_current_user_id());
+        $this->quizzes = $this->set_quizzes();
         // we're including this as a fallback for the other pages.
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_template' ));
@@ -48,13 +53,22 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
     public function load_template() {
         ob_start();
         //Start the class
-        $user = new Enp_quiz_User(get_current_user_id());
+        $user = $this->user;
+        $quizzes = $this->quizzes;
         $nonce_input = $this->get_enp_quiz_nonce();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/dashboard.php' );
         $content = ob_get_contents();
         if (ob_get_length()) ob_end_clean();
 
         return $content;
+    }
+
+    public function set_quizzes() {
+        $quizzes = new Enp_quiz_Search_quizzes();
+        // build the search from the URL
+        $quizzes->set_variables_from_url_query();
+        // return the selected quizzes
+        return $quizzes->select_quizzes();
     }
 
     public function enqueue_styles() {
