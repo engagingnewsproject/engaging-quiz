@@ -3,20 +3,26 @@
 * A little utility class for searching quizzes
 */
 class Enp_quiz_Search_quizzes {
-    private $_type;
-    public $search = '', // string
-           $include = 'user', // 'all_users'
-           $order_by = 'quiz_created_at',
-           $status = '',
-           $order = 'DESC',
-           $page = '1',
-           $limit = '30',
-           $deleted = '0';
+    private    $_type; // admin or user
+
+    protected  $search = '', // string
+               $include = 'user', // 'all_users'
+               $order_by = 'quiz_created_at',
+               $status = '',
+               $order = 'DESC',
+               $page = '1',
+               $limit = '30',
+               $deleted = '0';
 
     public function __construct() {
+
         $this->_type = $this->set_type();
     }
 
+    /**
+    * Set if we're in admin or user mode for searches.
+    * Admins can search ALL quizzes. Users can only search their own.
+    */
     private function set_type() {
         if(current_user_can('manage_options')) {
             $_type = 'admin';
@@ -27,13 +33,46 @@ class Enp_quiz_Search_quizzes {
         return $_type;
     }
 
-    public function set_order_by($str) {
+    /**
+    * Which column you want to order results by
+    * @param $order (string) Options: 'quiz_created_at', 'quiz_updated_at', 'quiz_views', 'quiz_starts', 'quiz_finishes', 'quiz_score_average'
+    */
+    public function set_order_by($order_by) {
+        $order_by_whitelist = array('quiz_created_at',
+                                    'quiz_updated_at',
+                                    'quiz_views',
+                                    'quiz_starts',
+                                    'quiz_finishes',
+                                    'quiz_score_average');
+        // set a default
+        $this->order_by = 'quiz_created_at';
+
+        // special ones first
+        if($order_by === 'quiz_completion_rate') {
+            $this->order_by = 'quiz_finishes / quiz_views';
+        }
+
+        // see if what they submitted is in our whitelist
+        else if(in_array($order_by, $order_by_whitelist)) {
+            // if it's in the whitelist, let it be set
+            $this->order_by = $order_by;
+        }
+
+    }
+
+    /**
+    * Sets if we want ascending or descending order for results
+    * @param $str (string) 'ASC' or 'DESC'
+    */
+    public function set_order($order) {
         $this->order = 'ASC';
-        if($str === 'DESC') {
+        if($order === 'DESC') {
             $this->order = 'DESC';
         }
     }
-
+    /**
+    * Limit the setting of an include to 'user' or 'all_users' IF admin
+    */
     public function set_include($str) {
         $this->include = 'user';
         if($str === 'all_users' && $this->_type === 'admin') {
@@ -41,9 +80,44 @@ class Enp_quiz_Search_quizzes {
         }
     }
 
+    /**
+    * Set a search to be the string.
+    * @param $str (string) string you want to set as the search
+    * @note Make sure to always quote this before doing a select query
+    */
     public function set_search($str) {
+        // set it as the search
         $this->search = $str;
     }
+
+    /**
+    * Set the page number you want to view
+    */
+    public function set_page($str) {
+        // set the string to an integer
+        $this->page = (int) $str;
+    }
+
+    /**
+    * Set the limit for the number of results you want to return
+    */
+    public function set_limit($str) {
+        // set the string to an integer
+        $this->limit = (int) $str;
+    }
+
+    /**
+    * Set if you want to see deleted or active results
+    * 0 = not deleted, 1 = deleted
+    */
+    public function set_deleted($str) {
+        $this->deleted = '0';
+        // if the string is '1', then set it.
+        if($str === '1') {
+            $this->deleted = 1;
+        }
+    }
+
 
     public function set_variables_from_url_query() {
         // check for variables
@@ -52,14 +126,38 @@ class Enp_quiz_Search_quizzes {
             $this->set_include('all_users');
         }
 
-        // get search variable
-        if(isset($_GET['search']) && $_GET['search'] !== '') {
-            $this->set_search($_GET['search']);
+        $accepted_params = array('search',
+                                 'order',
+                                 'order_by',
+                                 'status',
+                                 'page',
+                                 'limit',
+                                 'deleted');
+
+        // check each $_GET key, and if it's in our accepted_params list
+        // check the $val and set it if it's not empty
+        foreach($_GET as $key => $val) {
+            if(in_array($key, $accepted_params)) {
+                // check to make sure it's really set (it should be)
+                // and that it's not empty
+                if($val !== '') {
+                    // pass the value to our setter
+                    $set_value = "set_$key";
+                    $this->$set_value($val);
+                }
+            }
         }
 
     }
 
+    /**
+    * The main function that people will call in order to actual
+    * find results
+    * @return ARRAY of quiz_ids
+    */
     public function select_quizzes() {
+
+        // make a pdo connection
         $pdo = new enp_quiz_Db();
 
         $status_sql = $this->get_status_sql();
@@ -78,7 +176,10 @@ class Enp_quiz_Search_quizzes {
         return $quiz_ids;
     }
 
-    public function get_status_sql() {
+    /**
+    * Build the status sql query
+    */
+    protected function get_status_sql() {
         $status_sql = '';
         if($this->status !=='') {
             $status_sql =  " AND quiz_status = '$this->status'";
@@ -86,21 +187,27 @@ class Enp_quiz_Search_quizzes {
         return $status_sql;
     }
 
-    public function get_search_sql($pdo) {
+    /**
+    * Build the search sql query
+    */
+    protected function get_search_sql($pdo) {
         $search_sql = '';
 
         if($this->search !== '') {
             // make it a wildcard string
-            $search_string = '%'.$this->search.'%';
-            // quote it
-            $quoted_string = $pdo->quote($search_string);
+            $search_str = '%'.$this->search.'%';
+            // quote it for security
+            $quoted_str = $pdo->quote($search_str);
             // build the sql
-            $search_sql = " AND quiz_title LIKE $quoted_string";
+            $search_sql = " AND quiz_title LIKE $quoted_str";
         }
 
         return $search_sql;
     }
 
+    /**
+    * Build the include sql query
+    */
     protected function get_include_sql() {
         if($this->_type === 'admin' && $this->include === 'all_users') {
             $include_sql = '';

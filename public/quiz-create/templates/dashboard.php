@@ -54,8 +54,36 @@
                 New Quiz
             </a>
         </li>
-        <?php
 
+        <form id="enp-search-quizzes" method="get" action="<?php echo htmlentities(ENP_QUIZ_DASHBOARD_URL.'user/'); ?>">
+            <?php
+            // set our variables for the search
+            $order_by = (isset($_GET['order_by']) ? $_GET['order_by'] : '');
+            $search = (isset($_GET['search']) ? $_GET['search'] : '');
+            $include = (isset($_GET['include']) ? $_GET['include'] : '');
+            ;?>
+            <label for="enp-quiz-search">Search Quizzes</label>
+            <input id="enp-quiz-search" type="search" name="search" value="<?php echo $search;?>"/>
+            <?php
+            if(current_user_can('manage_options')) {
+                echo '<label for="enp-quiz-include">Include';
+                echo '<select id="enp-quiz_include" name="include">
+                <option '.selected( $include, "user", false ).' value="user">My Quizzes</option>
+                <option '.selected( $include, "all_users", false ).' value="all_users">All User\'s Quizzes</option>
+                </select>';
+            }?>
+
+            <label for="enp-quiz-order-by">Order Quizzes By</label>
+            <select id="enp-quiz-order-by" name="order_by">
+                <option <?php selected( $order_by, "quiz_created_at" ); ?> value="quiz_created_at">Created at</option>
+                <option <?php selected( $order_by, "quiz_score_average" ); ?> value="quiz_score_average">Average Score</option>
+                <option <?php selected( $order_by, "quiz_views"); ?> value="quiz_views">Views</option>
+                <option <?php selected( $order_by, "quiz_completion_rate" ); ?> value="quiz_completion_rate">Completion Rate</option>
+            </select>
+            <button>Search</button>
+
+        </form>
+        <?php
         if(!empty($quizzes)) {
             foreach($quizzes as $quiz) {
                 $quiz = new Enp_quiz_Quiz($quiz);
