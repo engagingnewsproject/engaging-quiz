@@ -173,6 +173,45 @@ class Enp_quiz_Search_quizzes {
         $stmt = $pdo->query($sql);
         $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
+        if($this->_type === 'admin' && $this->include === 'all_users') {
+            $quiz_ids_by_user = $this->get_quizzes_by_user();
+            if(!empty($quiz_ids_by_user)) {
+                $quiz_ids = array_merge($quiz_ids, $quiz_ids_by_user);
+            }
+        }
+
+        return $quiz_ids;
+    }
+
+    public function get_quizzes_by_user() {
+
+        // access global wpdb
+        global $wpdb;
+
+        $quiz_ids = array();
+
+        // Do a search of all users by email address and see if it matches anyone
+        $users = $wpdb->get_col(
+            $wpdb->prepare("SELECT ID FROM $wpdb->users WHERE user_email LIKE %s", '%'.$this->search.'%')
+        );
+
+        if(!empty($users)) {
+            // do another query to get those user/s quizzes
+            $pdo = new enp_quiz_Db();
+
+            $status_sql = $this->get_status_sql();
+            $include_sql = $this->get_include_sql();
+
+            $sql = "SELECT quiz_id from $pdo->quiz_table
+                    WHERE quiz_is_deleted = $this->deleted
+                    AND quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")
+                    $status_sql
+                    $include_sql
+                    ORDER BY $this->order_by $this->order";
+            $stmt = $pdo->query($sql);
+            $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        }
+
         return $quiz_ids;
     }
 
