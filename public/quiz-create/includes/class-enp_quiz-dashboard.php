@@ -42,10 +42,10 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
     // temporary function while completing beta testing of quiz tool
     public function first_visit() {
         if(!isset($_COOKIE['enp_quiz_creator_first_visit'])) {
-            setcookie('enp_quiz_creator_first_visit', '1', 1481743941);
+            setcookie('enp_quiz_creator_first_visit', '1', 1481743941, ENP_QUIZ_DASHBOARD_URL);
             $_COOKIE['enp_quiz_creator_first_visit'] = '1';
         } elseif($_COOKIE['enp_quiz_creator_first_visit'] === '1') {
-            setcookie('enp_quiz_creator_first_visit', '0', 1481743941);
+            setcookie('enp_quiz_creator_first_visit', '0', 1481743941, ENP_QUIZ_DASHBOARD_URL);
             $_COOKIE['enp_quiz_creator_first_visit'] = '0';
         }
     }
@@ -180,6 +180,23 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
             $score_average = round($quiz->get_quiz_score_average() * 100);
         }
         return $score_average;
+    }
+
+    public function get_clear_search_url() {
+        $query = $_SERVER['QUERY_STRING'];
+        if(!empty($query)) {
+            // regex to strip out the search query string
+            // matches
+            // ex1: search followed by & (& included in result)
+            // search=test&order_by=quiz_created_at&include=user
+            // ex2: search at end of url
+            // search=test2test
+            // ex3: search followed by / (/ not included in result)
+            // search=test/
+            $query = preg_replace('/(?:search=)(?:[\w])+((&|(?=\/)|$))/', '', $query);
+        }
+
+        return ENP_QUIZ_DASHBOARD_URL.'user/?'.$query;
     }
 
 }
