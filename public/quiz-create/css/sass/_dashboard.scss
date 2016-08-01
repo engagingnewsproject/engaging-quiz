@@ -49,6 +49,22 @@
         padding: 0.2rem 0.8rem;
     }
 
+    .enp-search-results-description {
+        font-size: 0.85rem;
+    }
+
+    .enp-search-results-description__link {
+        white-space: nowrap;
+    }
+
+    .enp-search-results-description__icon {
+        width: 1.3em;
+        height: 1.3em;
+        position: relative;
+        top: 4px;
+        left: 2px;
+    }
+
     .enp-dash__section-title {
         @include _(flex-vertical-center);
         @include _(small-uppercase);

@@ -193,7 +193,9 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
             // search=test2test
             // ex3: search followed by / (/ not included in result)
             // search=test/
-            $query = preg_replace('/(?:search=)(?:[\w])+((&|(?=\/)|$))/', '', $query);
+            //$query = preg_replace('/(?:search=)(?:[\S])+((&|(?=\/)|$))/', '', $query);
+            $query = preg_replace('/search=\S*?(&|(?=\/)|$)/', '', $query);
+
         }
 
         return ENP_QUIZ_DASHBOARD_URL.'user/?'.$query;
