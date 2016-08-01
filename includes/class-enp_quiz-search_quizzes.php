@@ -11,12 +11,15 @@ class Enp_quiz_Search_quizzes {
                $status = '',
                $order = 'DESC',
                $page = '1',
-               $limit = '30',
-               $deleted = '0';
+               $offset = '0',
+               $limit = '10',
+               $deleted = '0',
+               $total;
 
     public function __construct() {
 
         $this->_type = $this->set_type();
+
     }
 
     /**
@@ -43,7 +46,9 @@ class Enp_quiz_Search_quizzes {
                                     'quiz_views',
                                     'quiz_starts',
                                     'quiz_finishes',
-                                    'quiz_score_average');
+                                    'quiz_score_average',
+                                    'published',
+                                    'draft');
         // set a default
         $this->order_by = 'quiz_created_at';
 
@@ -58,6 +63,13 @@ class Enp_quiz_Search_quizzes {
             $this->order_by = $order_by;
         }
 
+        // check to see if want to see published or draft quizzes
+        if($this->order_by === 'published' || $this->order_by === 'draft') {
+            $this->set_status($this->order_by);
+            // order it by created
+            $this->set_order_by('quiz_created_at');
+        }
+
     }
 
     /**
@@ -70,6 +82,18 @@ class Enp_quiz_Search_quizzes {
             $this->order = 'DESC';
         }
     }
+
+    /**
+    * Sets the status
+    * @param $str (string) ('published',or 'draft')
+    */
+    public function set_status($status) {
+        $this->status = '';
+        if($status === 'published' || $status === 'draft') {
+            $this->status = $status;
+        }
+    }
+
     /**
     * Limit the setting of an include to 'user' or 'all_users' IF admin
     */
@@ -104,6 +128,13 @@ class Enp_quiz_Search_quizzes {
     public function set_limit($str) {
         // set the string to an integer
         $this->limit = (int) $str;
+    }
+
+    /**
+    * Set the offset for the PDO query off of page * limit
+    */
+    protected function set_offset() {
+        $this->offset = $this->page * $this->limit - $this->limit;
     }
 
     /**
@@ -163,15 +194,28 @@ class Enp_quiz_Search_quizzes {
         $status_sql = $this->get_status_sql();
         $search_sql = $this->get_search_sql($pdo);
         $include_sql = $this->get_include_sql();
+        // set our offset
+        $this->set_offset();
 
         $sql = "SELECT quiz_id from $pdo->quiz_table
                 WHERE quiz_is_deleted = $this->deleted
                 $status_sql
                 $search_sql
                 $include_sql
-                ORDER BY $this->order_by $this->order";
+                ORDER BY $this->order_by $this->order
+                LIMIT $this->limit
+                OFFSET $this->offset";
         $stmt = $pdo->query($sql);
         $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        $total_sql = "SELECT COUNT(*) from $pdo->quiz_table
+                WHERE quiz_is_deleted = $this->deleted
+                $status_sql
+                $search_sql
+                $include_sql";
+        $total_stmt = $pdo->query($total_sql);
+        $this->total = $total_stmt->fetchColumn();
+
 
         if($this->_type === 'admin' && $this->include === 'all_users') {
             $quiz_ids_by_user = $this->get_quizzes_by_user();
@@ -179,6 +223,8 @@ class Enp_quiz_Search_quizzes {
                 $quiz_ids = array_merge($quiz_ids, $quiz_ids_by_user);
             }
         }
+
+
 
         return $quiz_ids;
     }
@@ -207,7 +253,9 @@ class Enp_quiz_Search_quizzes {
                     AND quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")
                     $status_sql
                     $include_sql
-                    ORDER BY $this->order_by $this->order";
+                    ORDER BY $this->order_by $this->order
+                    LIMIT $this->limit
+                    OFFSET $this->offset";
             $stmt = $pdo->query($sql);
             $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
         }
@@ -258,4 +306,15 @@ class Enp_quiz_Search_quizzes {
     }
 
 
+    public function get_total() {
+        return $this->total;
+    }
+
+    public function get_page() {
+        return $this->page;
+    }
+
+    public function get_limit() {
+        return $this->limit;
+    }
 }

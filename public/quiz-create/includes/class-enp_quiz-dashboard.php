@@ -22,7 +22,8 @@
  */
 class Enp_quiz_Dashboard extends Enp_quiz_Create {
     public $user,
-           $quizzes;
+           $quizzes,
+           $paginate;
 
     public function __construct() {
         // temporary function while completing beta testing of quiz tool
@@ -55,6 +56,7 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
         //Start the class
         $user = $this->user;
         $quizzes = $this->quizzes;
+        $paginate = $this->paginate;
         $nonce_input = $this->get_enp_quiz_nonce();
         include_once( ENP_QUIZ_CREATE_TEMPLATES_PATH.'/dashboard.php' );
         $content = ob_get_contents();
@@ -67,8 +69,13 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
         $quizzes = new Enp_quiz_Search_quizzes();
         // build the search from the URL
         $quizzes->set_variables_from_url_query();
+
         // return the selected quizzes
-        return $quizzes->select_quizzes();
+        $the_quizzes = $quizzes->select_quizzes();
+
+        $this->paginate = new Enp_quiz_Paginate($quizzes->get_total(), $quizzes->get_page(), $quizzes->get_limit(), ENP_QUIZ_DASHBOARD_URL.'user/?'.$_SERVER['QUERY_STRING']);
+
+        return $the_quizzes;
     }
 
     public function enqueue_styles() {

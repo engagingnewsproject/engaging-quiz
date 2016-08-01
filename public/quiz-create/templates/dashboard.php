@@ -42,9 +42,10 @@
             <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-quiz-sort.php');?>
         </div>
     </header>
+
     <?php if($search !== '') {
 
-        echo '<p class="enp-search-results-description">Showing search results for "<strong>'.$_GET['search'].'</strong>". <a class="enp-search-results-description__link" href="'.$this->get_clear_search_url().'"><svg role="presentation" aria-hidden="true" class="enp-icon enp-search-results-description__icon"><use xlink:href="#icon-close" /></svg> Clear Search</a></p>';
+        echo '<p class="enp-search-results-description"> '.$paginate->total.' results found for "<strong>'.$_GET['search'].'</strong>". <a class="enp-search-results-description__link" href="'.$this->get_clear_search_url().'"><svg role="presentation" aria-hidden="true" class="enp-icon enp-search-results-description__icon"><use xlink:href="#icon-close" /></svg> Clear Search</a></p>';
     }?>
     <ul class="enp-dash-list enp-dash-list--quiz">
         <li class="enp-dash-item enp-dash-item--add-new">
@@ -65,6 +66,7 @@
         }
         ?>
     </ul>
+    <?php echo $paginate->get_pagination_links();?>
 </section>
 
 <section class="enp-dash-container">
