@@ -109,7 +109,7 @@
         </div>
     </header>
     <?php
-    if(count($quizzes) < 2) : ?>
+    if($user->get_published_quizzes() < 2) : ?>
         <div class="enp-dash__ab-test-helper enp-dash__ab-test-helper--not-enough-quizzes">
             <p>To create an A/B Test, create at least two quizzes.</p>
         </div>
