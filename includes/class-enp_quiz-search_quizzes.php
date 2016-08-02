@@ -216,11 +216,10 @@ class Enp_quiz_Search_quizzes {
         $total_stmt = $pdo->query($total_sql);
         $this->total = $total_stmt->fetchColumn();
 
-
         if($this->_type === 'admin' && $this->include === 'all_users') {
-            $quiz_ids_by_user = $this->get_quizzes_by_user();
+            $quiz_ids_by_user = $this->include_quizzes_by_user($quiz_ids);
             if(!empty($quiz_ids_by_user)) {
-                $quiz_ids = array_merge($quiz_ids, $quiz_ids_by_user);
+                $quiz_ids = $quiz_ids_by_user;
             }
         }
 
@@ -229,12 +228,10 @@ class Enp_quiz_Search_quizzes {
         return $quiz_ids;
     }
 
-    public function get_quizzes_by_user() {
+    public function include_quizzes_by_user($quiz_ids) {
 
         // access global wpdb
         global $wpdb;
-
-        $quiz_ids = array();
 
         // Do a search of all users by email address and see if it matches anyone
         $users = $wpdb->get_col(
@@ -247,21 +244,45 @@ class Enp_quiz_Search_quizzes {
 
             $status_sql = $this->get_status_sql();
             $include_sql = $this->get_include_sql();
+            $quiz_ids_sql = $this->get_quiz_ids_sql($quiz_ids);
 
             $sql = "SELECT quiz_id from $pdo->quiz_table
                     WHERE quiz_is_deleted = $this->deleted
                     AND quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")
                     $status_sql
                     $include_sql
+                    $quiz_ids_sql
                     ORDER BY $this->order_by $this->order
                     LIMIT $this->limit
                     OFFSET $this->offset";
             $stmt = $pdo->query($sql);
             $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+
+            $total_sql = "SELECT COUNT(*) from $pdo->quiz_table
+                    WHERE quiz_is_deleted = $this->deleted
+                    AND quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")
+                    $status_sql
+                    $include_sql
+                    $quiz_ids_sql";
+            $total_stmt = $pdo->query($total_sql);
+            $this->total = $total_stmt->fetchColumn();
         }
 
         return $quiz_ids;
     }
+
+    /**
+    * Include all quizzes already found in the sql query
+    */
+    protected function get_quiz_ids_sql($quiz_ids) {
+        $quiz_ids_sql = '';
+        if(!empty($quiz_ids)) {
+            $quiz_ids_sql =  " OR quiz_id IN (" . implode(',', array_map('intval', $quiz_ids)) . ")";
+        }
+        return $quiz_ids_sql;
+    }
+
 
     /**
     * Build the status sql query
