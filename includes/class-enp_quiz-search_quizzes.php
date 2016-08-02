@@ -181,12 +181,22 @@ class Enp_quiz_Search_quizzes {
 
     }
 
+    public function select_quizzes() {
+        if($this->_type === 'admin' && $this->include === 'all_users' && $this->search !== '') {
+            // get the complex/slower query that includes user searches
+            $quiz_ids = $this->search_include_quizzes_all_users();
+        } else {
+            $quiz_ids = $this->select_quizzes_one_user();
+        }
+        return $quiz_ids;
+    }
+
     /**
     * The main function that people will call in order to actual
     * find results
     * @return ARRAY of quiz_ids
     */
-    public function select_quizzes() {
+    public function select_quizzes_one_user() {
 
         // make a pdo connection
         $pdo = new enp_quiz_Db();
@@ -216,58 +226,69 @@ class Enp_quiz_Search_quizzes {
         $total_stmt = $pdo->query($total_sql);
         $this->total = $total_stmt->fetchColumn();
 
-        if($this->_type === 'admin' && $this->include === 'all_users') {
-            $quiz_ids_by_user = $this->include_quizzes_by_user($quiz_ids);
-            if(!empty($quiz_ids_by_user)) {
-                $quiz_ids = $quiz_ids_by_user;
-            }
-        }
-
-
-
         return $quiz_ids;
     }
 
-    public function include_quizzes_by_user($quiz_ids) {
+    /**
+    * Include searching user emails when an admin is using the search field
+    * Right now this is a finicky function. Ideally we'd join the user ids
+    * from the wp tables to our quiz_id table, but we need to make sure
+    * we can do that using our PDO and $wp_global tables. 
+    */
+    public function search_include_quizzes_all_users() {
 
         // access global wpdb
         global $wpdb;
+
+        // query to get any possible quiz match
+        $pdo = new enp_quiz_Db();
+
+        $status_sql = $this->get_status_sql();
+        $include_sql = $this->get_include_sql();
+        $search_sql = $this->get_search_sql($pdo);
+
+        // get all possible quiz IDs for this query (no limit or offset)
+        $sql = "SELECT quiz_id from $pdo->quiz_table
+                WHERE quiz_is_deleted = $this->deleted
+                $status_sql
+                $search_sql
+                $include_sql
+                ORDER BY $this->order_by $this->order";
+        $stmt = $pdo->query($sql);
+
+        $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         // Do a search of all users by email address and see if it matches anyone
         $users = $wpdb->get_col(
             $wpdb->prepare("SELECT ID FROM $wpdb->users WHERE user_email LIKE %s", '%'.$this->search.'%')
         );
 
-        if(!empty($users)) {
-            // do another query to get those user/s quizzes
-            $pdo = new enp_quiz_Db();
+        $users_sql = $this->get_users_sql($users);
+        $quiz_ids_sql = $this->get_quiz_ids_sql($quiz_ids);
 
-            $status_sql = $this->get_status_sql();
-            $include_sql = $this->get_include_sql();
-            $quiz_ids_sql = $this->get_quiz_ids_sql($quiz_ids);
-
-            $sql = "SELECT quiz_id from $pdo->quiz_table
-                    WHERE quiz_is_deleted = $this->deleted
-                    AND quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")
-                    $status_sql
-                    $include_sql
-                    $quiz_ids_sql
-                    ORDER BY $this->order_by $this->order
-                    LIMIT $this->limit
-                    OFFSET $this->offset";
-            $stmt = $pdo->query($sql);
-            $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-
-            $total_sql = "SELECT COUNT(*) from $pdo->quiz_table
-                    WHERE quiz_is_deleted = $this->deleted
-                    AND quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")
-                    $status_sql
-                    $include_sql
-                    $quiz_ids_sql";
-            $total_stmt = $pdo->query($total_sql);
-            $this->total = $total_stmt->fetchColumn();
+        $AND_sql = $users_sql . $status_sql . $include_sql;
+        if($AND_sql !== '' && $quiz_ids_sql !== '') {
+            $AND_sql = "($AND_sql) OR $quiz_ids_sql";
+        } elseif($quiz_ids_sql !== '') {
+            $AND_sql =  $quiz_ids_sql;
         }
+        if($AND_sql !== '') {
+            $AND_sql = 'AND '.$AND_sql;
+        }
+
+        $sql = "SELECT quiz_id from $pdo->quiz_table
+                WHERE quiz_is_deleted = $this->deleted
+                $AND_sql
+                ORDER BY $this->order_by $this->order
+                LIMIT $this->limit
+                OFFSET $this->offset";
+        $stmt = $pdo->query($sql);
+        $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $total_sql = "SELECT COUNT(*) from $pdo->quiz_table
+                WHERE quiz_is_deleted = $this->deleted
+                $AND_sql";
+        $total_stmt = $pdo->query($total_sql);
+        $this->total = $total_stmt->fetchColumn();
 
         return $quiz_ids;
     }
@@ -278,7 +299,7 @@ class Enp_quiz_Search_quizzes {
     protected function get_quiz_ids_sql($quiz_ids) {
         $quiz_ids_sql = '';
         if(!empty($quiz_ids)) {
-            $quiz_ids_sql =  " OR quiz_id IN (" . implode(',', array_map('intval', $quiz_ids)) . ")";
+            $quiz_ids_sql =  " quiz_id IN (" . implode(',', array_map('intval', $quiz_ids)) . ")";
         }
         return $quiz_ids_sql;
     }
@@ -324,6 +345,14 @@ class Enp_quiz_Search_quizzes {
         }
 
         return $include_sql;
+    }
+
+    protected function get_users_sql($users) {
+        $user_sql = '';
+        if(!empty($users)) {
+            $user_sql = "quiz_created_by IN (" . implode(',', array_map('intval', $users)) . ")";
+        }
+        return $user_sql;
     }
 
 

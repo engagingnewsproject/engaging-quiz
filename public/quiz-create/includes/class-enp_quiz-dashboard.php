@@ -72,7 +72,7 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
 
         // return the selected quizzes
         $the_quizzes = $quizzes->select_quizzes();
-
+        
         $this->paginate = new Enp_quiz_Paginate($quizzes->get_total(), $quizzes->get_page(), $quizzes->get_limit(), ENP_QUIZ_DASHBOARD_URL.'user/?'.$_SERVER['QUERY_STRING']);
 
         return $the_quizzes;
