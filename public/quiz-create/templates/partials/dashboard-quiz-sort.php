@@ -19,8 +19,12 @@
             <option <?php selected( $order_by, "quiz_score_average" ); ?> value="quiz_score_average">Average Score</option>
             <option <?php selected( $order_by, "quiz_views"); ?> value="quiz_views">Views</option>
             <option <?php selected( $order_by, "quiz_completion_rate" ); ?> value="quiz_completion_rate">Completion Rate</option>
-            <option <?php selected( $order_by, "draft" ); ?> value="draft">Draft</option>
-            <option <?php selected( $order_by, "published" ); ?> value="published">Published</option>
+            <?php
+            $include_draft_published = $this->include_draft_published_option($include);
+            if( $include_draft_published === true  ) { ?>
+                <option <?php selected( $order_by, "draft" ); ?> value="draft">Draft</option>
+                <option <?php selected( $order_by, "published" ); ?> value="published">Published</option>
+            <?php } ?>
         </select>
     </div>
     <?php
