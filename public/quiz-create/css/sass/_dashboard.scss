@@ -431,11 +431,41 @@
 
     .enp-paginate__link {
         margin: 0 0.2rem;
-        padding: 0.2rem 0.4rem;
+        padding: 0 0.4rem;
         border-radius: 3px;
+        @include _('flex-center');
     }
 
     .enp-paginate__link--current-page {
         border: 2px solid $blue;
+    }
+
+    .enp-paginate__item--last-page,
+    .enp-paginate__item--first-page {
+        display: flex;
+    }
+
+    .enp-paginate__item--first-page:after,
+    .enp-paginate__item--last-page:before {
+        content: '...';
+        font-size: 1rem;
+        position: relative;
+        bottom: 0.2rem;
+        opacity: 0.6;
+    }
+
+    .enp-paginate__item--no-gap {
+        &:before,
+        &:after {
+            content:'';
+        }
+    }
+
+    .enp-paginate__item--next-page {
+        margin-left: 0.2rem;
+    }
+
+    .enp-paginate__item--previous-page {
+        margin-right: 0.2rem;
     }
 }
