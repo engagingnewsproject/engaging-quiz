@@ -18,6 +18,7 @@
             <option <?php selected( $order_by, "quiz_created_at" ); ?> value="quiz_created_at">Created at</option>
             <option <?php selected( $order_by, "quiz_score_average" ); ?> value="quiz_score_average">Average Score</option>
             <option <?php selected( $order_by, "quiz_views"); ?> value="quiz_views">Views</option>
+            <option <?php selected( $order_by, "quiz_start_rate" ); ?> value="quiz_start_rate">Start Rate</option>
             <option <?php selected( $order_by, "quiz_completion_rate" ); ?> value="quiz_completion_rate">Completion Rate</option>
             <?php
             $include_draft_published = $this->include_draft_published_option($include);
