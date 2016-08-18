@@ -192,8 +192,8 @@ class Enp_quiz_Take_Question {
 		}
 
 		foreach($qt_question as $key => $value) {
-			// we don't want to unset our question object
-			if($key !== 'question') {
+			// we don't want to unset our qt or question object
+			if($key !== 'question' && $key !== 'qt') {
 				$qt_question->$key = '{{'.$key.'}}';
 			}
 		}
