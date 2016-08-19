@@ -33,6 +33,4 @@ $current_url = new Enp_quiz_Current_URL();?>
     <div class="enp-quiz-restart__container">
         <button type="submit" class="enp-btn enp-quiz-restart" name="enp-quiz-restart" value="enp-quiz-restart">Restart Quiz</button>
     </div>
-
-    <footer class="enp-callout enp-callout--quiz-end">Powered by the <a href="<?php echo $current_url->get_root();?>/quiz-creator/?iframe_referral=true&amp;quiz_state=quiz_end&amp;quiz_id=<?php echo $qt_end->quiz->get_quiz_id();?>" target="_blank">Engaging News Project<span class="enp-screen-reader-text"> Link opens in a new window</span></a></footer>
 </section>

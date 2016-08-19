@@ -16,4 +16,3 @@ $current_url = new Enp_quiz_Current_URL();?>
       <use xlink:href="#icon-chevron-right" />
     </svg></button>
 </section>
-<footer class="enp-callout enp-callout--quiz-answer">Powered by the <a href="<?php echo $current_url->get_root();?>/quiz-creator/?iframe_referral=true&amp;quiz_state=question_explanation&amp;quiz_id=<?php echo $qt_question->qt->quiz->get_quiz_id();?>&amp;question_id=<?php echo $qt_question->question->get_question_id();?>" target="_blank">Engaging News Project<span class="enp-screen-reader-text"> Link opens in a new window</span></a></footer>

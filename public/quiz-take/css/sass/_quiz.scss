@@ -3,11 +3,12 @@
 // -------------------------//
 
 #enp-quiz {
+    background: transparent;
 
     .enp-quiz__container {
         position: relative;
         padding: 0;
-        background: #888;
+        background: #fff;
         border: 1px solid #ddd;
     }
 
@@ -450,7 +451,7 @@
     .enp-callout {
         font-size: 10px;
         font-size: 0.8rem;
-        text-align: center;
-        margin-top: 0.6rem;
+        text-align: right;
+        padding: 0.4rem;
     }
 }
