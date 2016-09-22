@@ -76,8 +76,8 @@
                     <label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--custom-css" for="enp-quiz-custom-css">
                         Custom CSS
                     </label>
-                    <p id="enp-quiz-styles__custom-css" class="enp-textarea-description enp-textarea-description--before"><strong>Advanced. Entered values could break your quiz.</strong> CSS will be sanitized and minified</p>
-                    <textarea id="enp-quiz-custom-css" class="enp-textarea enp-quiz-styles__textarea enp-quiz-styles__textarea--css" type="text" name="enp_quiz[quiz_custom_css]" aria-describedby="enp-quiz-styles__custom-css"><?php echo $quiz->get_quiz_custom_css();?></textarea>
+                    <p id="enp-quiz-styles__custom-css" class="enp-textarea-description enp-textarea-description--before"><strong>Advanced.</strong> Entered CSS could break your quiz, and is sanitized on save.</p>
+                    <textarea id="enp-quiz-custom-css" class="enp-textarea enp-quiz-styles__textarea enp-quiz-styles__textarea--custom-css" type="text" name="enp_quiz[quiz_custom_css]" aria-describedby="enp-quiz-styles__custom-css"><?php echo $quiz->get_quiz_custom_css();?></textarea>
 
                 </fieldset>
 
