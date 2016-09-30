@@ -220,7 +220,11 @@ class Enp_quiz_Save_quiz_take {
     * Set the next question array for our response
     */
     protected function set_next_question($question_id) {
-        self::$next_question = new Enp_quiz_Question($question_id);
+        // check if we need to randomize mc options or not
+        $quiz_mc_options_order = self::$quiz->get_quiz_mc_options_order();
+        $options = array('mc_options_order'=>$quiz_mc_options_order);
+
+        self::$next_question = new Enp_quiz_Question($question_id, $options);
         self::$return['next_question'] = self::$next_question->get_take_question_array();
     }
 

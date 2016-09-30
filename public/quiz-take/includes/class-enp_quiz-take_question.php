@@ -42,7 +42,7 @@ class Enp_quiz_Take_Question {
 	public function set_question() {
 		// if we have a question id, get the question data for it
 		if(!empty($this->qt->current_question_id)) {
-			$options = array('randomize_mc_options'=>true);
+			$options = array('mc_options_order'=>$this->qt->quiz->get_quiz_mc_options_order());
 			$question = new Enp_quiz_Question($this->qt->current_question_id, $options);
 		}
 		$question_type = $question->get_question_type();

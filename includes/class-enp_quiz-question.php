@@ -32,11 +32,11 @@ class Enp_quiz_Question {
     /**
     * Build the question object
     * @param $options = array() for passing various options on how to set the question objet
-    * 'randomize_mc_options'=> (BOOLEAN) if you want the mc_options order to be randomized or not;
+    * 'mc_options_order'=> 'user_order'||'random' if you want the mc_options order to be randomized or not;
     */
     public function __construct($question_id, $options = array()) {
         $default_options = array(
-                                'randomize_mc_options' => false,
+                                'mc_options_order' => 'user_order',
                             );
         // merge default options with passed options
         self::$options = array_merge($default_options, $options);
@@ -272,7 +272,7 @@ class Enp_quiz_Question {
         }
 
         // see if we should randomize the order of the options
-        if(self::$options['randomize_mc_options'] === true) {
+        if(self::$options['mc_options_order'] === 'random') {
             // we could use RAND() in the query, but people warn against using RAND() for performance issues.
             shuffle($mc_options);
         }
