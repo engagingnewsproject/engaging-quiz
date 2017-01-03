@@ -40,6 +40,8 @@
         position: relative;
         // this will be calculated on load
         width: 0;
+        // to prevent 30 question quizzes from having a width of 3.33% and not being wide enough to display the question count
+        min-width: 2rem;
         height: 3px;
         background: $green;
         transition: all .5s $fastInEaseOut;
