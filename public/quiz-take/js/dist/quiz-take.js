@@ -145,6 +145,18 @@ function sendBodyHeight() {
     json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"setHeight","height":"'+height+'"}';
     parent.postMessage(json, "*");
 }
+
+/**
+* Sends a postMessage to the parent container of the iframe
+*/
+function sendScrollToMessage() {
+    // allow all domains to access this info (*)
+    // and send the message to the parent of the iframe
+    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"scrollToQuiz"}';
+    parent.postMessage(json, "*");
+}
+
+
 /**
 * Function for caluting the container height of the iframe
 * @return (int)
@@ -212,7 +224,7 @@ function setCalloutURL(parentURL) {
         // set the href
         link.attr('href', href);
     }
-    
+
 }
 
 /**
@@ -597,6 +609,8 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
 
     // send the height of the new view
     sendBodyHeight();
+    // scroll to top of next question
+    sendScrollToMessage();
 }
 
 /**
