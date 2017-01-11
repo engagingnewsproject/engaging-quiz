@@ -24,7 +24,6 @@ function receiveEnpIframeMessage(event) {
 
     // parse the JSON data
     data = JSON.parse(event.data);
-    console.log(data);
     // get the quiz or ab_test iframe based on ID
     // check if it's an ab test or not
     if(data.ab_test_id === "0") {
