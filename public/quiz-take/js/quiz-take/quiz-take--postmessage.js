@@ -3,16 +3,38 @@
 */
 // add an event listener for receiving postMessages
 _.add_event('message', window, receiveMessage);
+/**
+* Build the json message to send to the parent
+* @param action (string) required
+* @param options (object) extras
+*/
+function buildPostMessageAction(theAction, options) {
+    var message,
+        messageJSON;
+
+    message = {
+                quiz_id: _.get_quiz_id(),
+                ab_test_id: _.get_ab_test_id(),
+                action: theAction
+            };
+
+    if((typeof options === "object") && (options !== null)) {
+        // append the objects
+        message = Object.assign(message, options);
+    }
+    messageJSON = JSON.stringify(message);
+    return messageJSON;
+}
 
 /**
 * Sends a postMessage to the parent container of the iframe
 */
 function sendBodyHeight() {
     // calculate the height
-    height = calculateBodyHeight();
+    bodyHeight = calculateBodyHeight();
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"setHeight","height":"'+height+'"}';
+    json = buildPostMessageAction("setHeight", {height: bodyHeight});
     parent.postMessage(json, "*");
 }
 
@@ -22,7 +44,7 @@ function sendBodyHeight() {
 function sendScrollToMessage() {
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"scrollToQuiz"}';
+    json = buildPostMessageAction('scrollToQuiz');
     parent.postMessage(json, "*");
 }
 
@@ -55,7 +77,7 @@ function calculateBodyHeight() {
 function requestParentURL() {
     // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = '{"quiz_id":"'+_.get_quiz_id()+'","ab_test_id":"'+_.get_ab_test_id()+'","action":"sendURL"}';
+    json = buildPostMessageAction("sendURL");
     parent.postMessage(json, "*");
 }
 
