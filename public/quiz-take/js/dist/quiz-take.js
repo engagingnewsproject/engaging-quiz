@@ -122,7 +122,7 @@ if($('#quiz_end_template').length) {
 // facebook share templates
 if(quiz_json.quiz_options.facebook_title_end) {
     var facebookTitleEndTemplate = _.template(quiz_json.quiz_options.facebook_title_end);
-}
+} 
 if(quiz_json.quiz_options.facebook_description_end) {
     var facebookDescriptionEndTemplate = _.template(quiz_json.quiz_options.facebook_description_end);
 }
@@ -311,7 +311,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
     // show the explanation by generating the question explanation template
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
-
+    
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
     // focus it
@@ -1063,8 +1063,11 @@ function setShareURLTemplate(iframeURL, parentURL) {
 * Click listener for restarting a quiz.
 */
 $(document).on('click', '.enp-quiz-restart', function(e){
+    e.preventDefault();
     // send a message to the parent frame that a restart was initiated
     sendPostMessageAction('quizRestarted');
+
+    //$(this).submit();
 });
 
 // on load, bind the initial question_json to the question id
