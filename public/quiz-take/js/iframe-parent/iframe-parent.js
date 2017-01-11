@@ -24,7 +24,7 @@ function receiveEnpIframeMessage(event) {
 
     // parse the JSON data
     data = JSON.parse(event.data);
-
+    console.log(data);
     // get the quiz or ab_test iframe based on ID
     // check if it's an ab test or not
     if(data.ab_test_id === "0") {
@@ -37,7 +37,7 @@ function receiveEnpIframeMessage(event) {
     // find out what we need to do with it
     if(data.action === 'setHeight') {
         setEnpQuizHeight(iframe, data.height);
-    } else if(data.action === 'scrollToQuiz') {
+    } else if(data.action === 'scrollToQuiz' || data.action === 'quizRestarted') {
         enpScrollToQuiz(iframe);
     }
     else if(data.action === 'sendURL') {

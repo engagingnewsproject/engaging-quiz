@@ -27,25 +27,34 @@ function buildPostMessageAction(theAction, options) {
 }
 
 /**
+* Build and send the json message to send to the parent
+* @param action (string) required
+* @param options (object) extras
+*/
+function sendPostMessageAction(theAction, options) {
+    json = buildPostMessageAction(theAction, options);
+    // allow all domains to access this info (*)
+    parent.postMessage(json, "*");
+    // if you want to see what was sent
+    return json;
+}
+
+/**
 * Sends a postMessage to the parent container of the iframe
 */
 function sendBodyHeight() {
     // calculate the height
     bodyHeight = calculateBodyHeight();
-    // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = buildPostMessageAction("setHeight", {height: bodyHeight});
-    parent.postMessage(json, "*");
+    sendPostMessageAction("setHeight", {height: bodyHeight});
 }
 
 /**
 * Sends a postMessage to the parent container of the iframe
 */
 function sendScrollToMessage() {
-    // allow all domains to access this info (*)
-    // and send the message to the parent of the iframe
-    json = buildPostMessageAction('scrollToQuiz');
-    parent.postMessage(json, "*");
+    // send the message to the parent of the iframe
+    sendPostMessageAction('scrollToQuiz');
 }
 
 
@@ -75,10 +84,8 @@ function calculateBodyHeight() {
 * Send a request to the parent frame to request the URL
 */
 function requestParentURL() {
-    // allow all domains to access this info (*)
-    // and send the message to the parent of the iframe
-    json = buildPostMessageAction("sendURL");
-    parent.postMessage(json, "*");
+    // send the message to the parent of the iframe
+    sendPostMessageAction("sendURL");
 }
 
 function receiveMessage(event) {

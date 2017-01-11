@@ -122,7 +122,7 @@ if($('#quiz_end_template').length) {
 // facebook share templates
 if(quiz_json.quiz_options.facebook_title_end) {
     var facebookTitleEndTemplate = _.template(quiz_json.quiz_options.facebook_title_end);
-} 
+}
 if(quiz_json.quiz_options.facebook_description_end) {
     var facebookDescriptionEndTemplate = _.template(quiz_json.quiz_options.facebook_description_end);
 }
@@ -157,25 +157,34 @@ function buildPostMessageAction(theAction, options) {
 }
 
 /**
+* Build and send the json message to send to the parent
+* @param action (string) required
+* @param options (object) extras
+*/
+function sendPostMessageAction(theAction, options) {
+    json = buildPostMessageAction(theAction, options);
+    // allow all domains to access this info (*)
+    parent.postMessage(json, "*");
+    // if you want to see what was sent
+    return json;
+}
+
+/**
 * Sends a postMessage to the parent container of the iframe
 */
 function sendBodyHeight() {
     // calculate the height
     bodyHeight = calculateBodyHeight();
-    // allow all domains to access this info (*)
     // and send the message to the parent of the iframe
-    json = buildPostMessageAction("setHeight", {height: bodyHeight});
-    parent.postMessage(json, "*");
+    sendPostMessageAction("setHeight", {height: bodyHeight});
 }
 
 /**
 * Sends a postMessage to the parent container of the iframe
 */
 function sendScrollToMessage() {
-    // allow all domains to access this info (*)
-    // and send the message to the parent of the iframe
-    json = buildPostMessageAction('scrollToQuiz');
-    parent.postMessage(json, "*");
+    // send the message to the parent of the iframe
+    sendPostMessageAction('scrollToQuiz');
 }
 
 
@@ -205,10 +214,8 @@ function calculateBodyHeight() {
 * Send a request to the parent frame to request the URL
 */
 function requestParentURL() {
-    // allow all domains to access this info (*)
-    // and send the message to the parent of the iframe
-    json = buildPostMessageAction("sendURL");
-    parent.postMessage(json, "*");
+    // send the message to the parent of the iframe
+    sendPostMessageAction("sendURL");
 }
 
 function receiveMessage(event) {
@@ -304,7 +311,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
     // show the explanation by generating the question explanation template
     var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
-    
+
     // add the Question Explanation Template into the DOM
     $('.enp-question__submit').before(qExplanationTemplate);
     // focus it
@@ -1051,6 +1058,14 @@ function setShareURLTemplate(iframeURL, parentURL) {
     // WARNING! This is a global variable
     quizEndTemplate = _.template(qeTemplate.html());
 }
+
+/**
+* Click listener for restarting a quiz.
+*/
+$(document).on('click', '.enp-quiz-restart', function(e){
+    // send a message to the parent frame that a restart was initiated
+    sendPostMessageAction('quizRestarted');
+});
 
 // on load, bind the initial question_json to the question id
 // check if the init_question_json variable exists
