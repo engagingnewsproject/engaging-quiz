@@ -258,7 +258,7 @@
     .enp-option__input--slide-hide + .enp-option__label{
         margin: 0;
         height: 0;
-        animation: removeAnswers .5s $fastInEaseOut forwards;
+        animation: removeAnswers 0.6s $easeInPauseFastOut forwards;
     }
 
     .enp-explanation {
@@ -356,7 +356,7 @@
     }
 
     .enp-question--show {
-        animation: showNextQuestion .5s $fastInEaseOut forwards;
+        animation: showNextQuestion .6s $fastInEaseOut forwards;
     }
 
     .enp-question--remove {
