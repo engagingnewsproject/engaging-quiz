@@ -1063,11 +1063,9 @@ function setShareURLTemplate(iframeURL, parentURL) {
 * Click listener for restarting a quiz.
 */
 $(document).on('click', '.enp-quiz-restart', function(e){
-    e.preventDefault();
     // send a message to the parent frame that a restart was initiated
     sendPostMessageAction('quizRestarted');
 
-    //$(this).submit();
 });
 
 // on load, bind the initial question_json to the question id

@@ -24,6 +24,7 @@ function receiveEnpIframeMessage(event) {
 
     // parse the JSON data
     data = JSON.parse(event.data);
+
     // get the quiz or ab_test iframe based on ID
     // check if it's an ab test or not
     if(data.ab_test_id === "0") {
@@ -131,7 +132,7 @@ function enpScrollToQuiz(iframe) {
         // Question likely within viewport. Do not scroll.
     } else {
         // let's scroll them to the top of the next question (some browsers like iPhone Safari jump them way down the page)
-        scrollBy(0, distanceFromTopOfViewport);
+        scrollBy(0, (distanceFromTopOfViewport - 10));
     }
 }
 
