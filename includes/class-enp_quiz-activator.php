@@ -278,6 +278,52 @@ class Enp_quiz_Activator {
 					FOREIGN KEY  (ab_test_id) REFERENCES $ab_test_table_name (ab_test_id)
 				) $charset_collate;";
 
+		$this->embed_site_table_name = $wpdb->prefix . 'enp_embed_site';
+		$embed_site_table_name = $this->embed_site_table_name;
+		$embed_site_sql = "CREATE TABLE $embed_site_table_name (
+					embed_site_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					embed_site_name VARCHAR(50) NOT NULL,
+					embed_site_url VARCHAR(510) NOT NULL,
+					embed_site_created_at DATETIME NOT NULL,
+					embed_site_updated_at DATETIME NOT NULL,
+					embed_site_is_dev BOOLEAN DEFAULT 0,
+					PRIMARY KEY  (embed_site_id)
+				) $charset_collate;";
+
+		$this->embed_site_type_table_name = $wpdb->prefix . 'enp_embed_site_type';
+		$embed_site_type_table_name = $this->embed_site_type_table_name;
+		$embed_site_type_sql = "CREATE TABLE $embed_site_type_table_name (
+					embed_site_type_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					embed_site_type VARCHAR(50) NOT NULL,
+					PRIMARY KEY  (embed_site_type_id)
+				) $charset_collate;";
+
+		$this->embed_site_br_site_type_table_name = $wpdb->prefix . 'enp_embed_site_br_site_type';
+		$embed_site_br_site_type_table_name = $this->embed_site_br_site_type_table_name;
+		$embed_site_br_site_type_sql = "CREATE TABLE $embed_site_br_site_type_table_name (
+					embed_site_br_site_type_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					embed_site_id BIGINT(20) NOT NULL,
+					embed_site_type_id BIGINT(20) NOT NULL,
+					PRIMARY KEY  (embed_site_br_site_type_id),
+					FOREIGN KEY  (embed_site_id) REFERENCES $embed_site_table_name (embed_site_id),
+					FOREIGN KEY  (embed_site_type_id) REFERENCES $embed_site_type_table_name (embed_site_type_id)
+				) $charset_collate;";
+
+		$this->embed_quiz_table_name = $wpdb->prefix . 'enp_embed_quiz';
+		$embed_quiz_table_name = $this->embed_quiz_table_name;
+		$embed_quiz_sql = "CREATE TABLE $embed_quiz_table_name (
+					embed_quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+					embed_site_id BIGINT(20) NOT NULL,
+					embed_quiz_url VARCHAR(510) NOT NULL,
+					embed_quiz_loads BIGINT(20) NOT NULL DEFAULT '0',
+					embed_quiz_views BIGINT(20) NOT NULL DEFAULT '0',
+					embed_quiz_created_at DATETIME NOT NULL,
+					embed_quiz_updated_at DATETIME NOT NULL,
+					embed_quiz_is_dev BOOLEAN DEFAULT 0,
+					PRIMARY KEY  (embed_quiz_id),
+					FOREIGN KEY  (embed_site_id) REFERENCES $embed_site_table_name (embed_site_id)
+				) $charset_collate;";
+
 		// create a tables array,
 		// store all the table names and queries
 		$tables = array(
@@ -324,6 +370,22 @@ class Enp_quiz_Activator {
 					array(
 						'name'=>$this->ab_test_response_table_name,
 		 				'sql'=>$ab_test_response_sql
+					),
+					array(
+						'name'=>$this->embed_site_table_name,
+		 				'sql'=>$embed_site_sql
+					),
+					array(
+						'name'=>$this->embed_site_type_table_name,
+		 				'sql'=>$embed_site_type_sql
+					),
+					array(
+						'name'=>$this->embed_site_br_site_type_table_name,
+		 				'sql'=>$embed_site_br_site_type_sql
+					),
+					array(
+						'name'=>$this->embed_quiz_table_name,
+		 				'sql'=>$embed_quiz_sql
 					),
 				);
 
