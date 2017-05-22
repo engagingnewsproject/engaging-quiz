@@ -88,6 +88,7 @@ add_action('init', 'check_for_enp_quiz_upgrade');
  * classes to run
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-slugify.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-quiz.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-question.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-mc_option.php';
@@ -104,6 +105,9 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-ab_test.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-quiz_ab_test_result.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-question_ab_test_result.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-mc_option_ab_test_result.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-site.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-site-type.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-site-bridge.php';
 
 // Database
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_db.php';

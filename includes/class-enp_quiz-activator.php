@@ -346,8 +346,10 @@ class Enp_quiz_Activator {
 		$embed_site_type_table_name = $this->embed_site_type_table_name;
 		$embed_site_type_sql = "CREATE TABLE $embed_site_type_table_name (
 					embed_site_type_id BIGINT(20) NOT NULL AUTO_INCREMENT,
-					embed_site_type VARCHAR(50) NOT NULL,
-					PRIMARY KEY  (embed_site_type_id)
+					embed_site_type_slug VARCHAR(50) NOT NULL,
+					embed_site_type_name VARCHAR(50) NOT NULL,
+					PRIMARY KEY  (embed_site_type_id),
+					UNIQUE KEY  (embed_site_type_slug)
 				) $charset_collate;";
 
 

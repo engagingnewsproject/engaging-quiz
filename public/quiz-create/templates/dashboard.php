@@ -16,6 +16,13 @@
 ?>
 <?php do_action('enp_quiz_display_messages'); ?>
 <?php
+$embed_site = new Enp_quiz_Embed_site('jeremyjon.es');
+// var_dump($embed_site);
+echo '<br/><br/>';
+//$embed_site_type = new Enp_quiz_Embed_site_type('blog');
+//var_dump($embed_site_type);
+
+var_dump($embed_site->get_embed_site_types());
 
 ?>
 <section class="enp-container enp-dash-container">
