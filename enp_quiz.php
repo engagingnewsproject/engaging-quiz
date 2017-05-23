@@ -108,6 +108,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-mc_option_ab_test
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-site.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-site-type.php';
 require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-site-bridge.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-enp_embed-quiz.php';
 
 // Database
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_db.php';

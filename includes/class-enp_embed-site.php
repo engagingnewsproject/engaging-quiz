@@ -10,6 +10,8 @@ class Enp_quiz_Embed_site {
     public  $embed_site_id,
             $embed_site_name,
             $embed_site_url,
+            $embed_site_type_ids = array(),
+            $embed_site_quiz_ids = array(),
             $embed_site_created_at,
             $embed_site_updated_at,
             $embed_site_is_dev;
@@ -89,6 +91,27 @@ class Enp_quiz_Embed_site {
     }
 
     /**
+    *   For using PDO to select all a site's rows
+    *
+    *   @param  $site_id = embed_quiz_site that you want to get quizzes on that site
+    *   @return rows from database table if found, false if not found
+    **/
+    public function select_embed_quizzes_by_site_id($site_id) {
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":embed_site_id" => $site_id
+        );
+
+        $sql = "SELECT embed_quiz_id from ".$pdo->embed_quiz_table." WHERE
+                embed_site_id = :embed_site_id";
+        $stmt = $pdo->query($sql, $params);
+        $embed_quiz_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // return the found site row
+        return $embed_quiz_row;
+    }
+
+    /**
     * Sets all object variables
     */
     protected function set_embed_site_object_values($embed_site) {
@@ -98,6 +121,8 @@ class Enp_quiz_Embed_site {
          $this->set_embed_site_created_at($embed_site['embed_site_created_at']);
          $this->set_embed_site_updated_at($embed_site['embed_site_updated_at']);
          $this->set_embed_site_is_dev($embed_site['embed_site_is_dev']);
+         $this->set_embed_site_type_ids();
+         $this->set_embed_site_quiz_ids();
     }
 
     protected function set_embed_site_id($embed_site_id) {
@@ -128,6 +153,26 @@ class Enp_quiz_Embed_site {
     protected function set_embed_site_is_dev($embed_site_is_dev) {
         $this->embed_site_is_dev = $embed_site_is_dev;
         return $this->embed_site_is_dev;
+    }
+
+    protected function set_embed_site_type_ids() {
+        $embed_site_id = $this->get_embed_site_id();
+        $types = new Enp_quiz_Embed_site_bridge('site', $embed_site_id);
+        $this->embed_site_type_ids = $types->get_esb_type();
+        return $this->embed_site_type_ids;
+    }
+
+    protected function set_embed_site_quiz_ids() {
+        $embed_site_id = $this->get_embed_site_id();
+        $embed_quizzes = $this->select_embed_quizzes_by_site_id($embed_site_id);
+        $eqs = array();
+        if(is_array($embed_quizzes)) {
+            foreach($embed_quizzes as $eq) {
+                $eqs[] = $eq['embed_quiz_id'];
+            }
+        }
+        $this->embed_site_quiz_ids = $eqs;
+        return $this->embed_site_quiz_ids;
     }
 
     public function get_embed_site_id() {
