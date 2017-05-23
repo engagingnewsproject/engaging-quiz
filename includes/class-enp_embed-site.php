@@ -14,8 +14,11 @@ class Enp_quiz_Embed_site {
             $embed_site_updated_at,
             $embed_site_is_dev;
 
-    public function __construct($url) {
-        $this->get_embed_site_by_url($url);
+    /**
+    * @param $query STRING can be ID or URL
+    */
+    public function __construct($query) {
+        return $this->get_embed_site($query);
     }
 
     /**
@@ -24,11 +27,22 @@ class Enp_quiz_Embed_site {
     *   @param  $url = url that you want to select from embed_site_url
     *   @return embed_site object, false if not found
     **/
-    public function get_embed_site_by_url($url) {
-        $embed_site = $this->select_embed_site_by_url($url);
+    public function get_embed_site($query) {
+        $embed_site = false;
+
+        $slugify = new Enp_quiz_Slugify();
+        $is_id = $slugify->is_id($query);
+        // see if it's an ID or URL
+        if($is_id === true) {
+            $embed_site = $this->select_embed_site_by_id($query);
+        } else {
+            $embed_site = $this->select_embed_site_by_url($query);
+        }
+
         if($embed_site !== false) {
             $embed_site = $this->set_embed_site_object_values($embed_site);
         }
+
         return $embed_site;
     }
 
@@ -47,6 +61,27 @@ class Enp_quiz_Embed_site {
 
         $sql = "SELECT * from ".$pdo->embed_site_table." WHERE
                 embed_site_url = :embed_site_url";
+        $stmt = $pdo->query($sql, $params);
+        $embed_site_row = $stmt->fetch();
+        // return the found site row
+        return $embed_site_row;
+    }
+
+    /**
+    *   For using PDO to select one site row
+    *
+    *   @param  $url = url that you want to select
+    *   @return row from database table if found, false if not found
+    **/
+    public function select_embed_site_by_id($embed_site_id) {
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":embed_site_id" => $embed_site_id
+        );
+
+        $sql = "SELECT * from ".$pdo->embed_site_table." WHERE
+                embed_site_id = :embed_site_id";
         $stmt = $pdo->query($sql, $params);
         $embed_site_row = $stmt->fetch();
         // return the found site row

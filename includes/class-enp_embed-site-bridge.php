@@ -7,33 +7,55 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Embed_site_bridge {
-    public  $embed_site_bridge_site,
-            $embed_site_bridge_type;
+    public  $esb_site = array(), // array if getting sites by a type
+            $esb_type = array(); // array if getting types/categories assigned to a site
 
-    public function __construct($type, $id) {
-        $this->get_embed_site_bridge_by($type, $id);
+    /**
+    *   If you have the 'news' type/category and want all the sites in the
+    *   'news' category, then do:
+    *   $bridge_from = 'type', $id = $news_id
+    *
+    *   If you have the site http://jeremyjon.es and want all the categories assigned
+    *   to it, then do:
+    *   $bridge_from = 'site', $id = $site_id
+    *
+    *   @param  $bridge_from (MIXED: STRING/INT) $id
+    *                        pass the ID you want to select from
+    *                        so if you want to get all the types of a site,
+    *                        pass the site ID. If you want all sites assigned
+    *                        to a type (like 'news'), then pass the ID
+    *   @param $id The ID you're wanting to get the results for
+    *   @return embed_site_type object, false if not found
+    **/
+    public function __construct($bridge_from, $id) {
+        return $this->get_esb_by($bridge_from, $id);
     }
 
     /**
     *   Build embed_site object by slug or id
     *
-    *   @param  $selector (MIXED: STRING/INT) $slug or $id
+    *   @param  $bridge_from (MIXED: STRING/INT) $id
+    *                        pass the ID you want to select from
+    *                        so if you want to get all the types of a site,
+    *                        pass the site ID. If you want all sites assigned
+    *                        to a type (like 'news'), then pass the ID
+    *   @param $id The ID you're wanting to get the results for
     *   @return embed_site_type object, false if not found
     **/
-    public function get_embed_site_bridge_by($type, $id) {
+    public function get_esb_by($bridge_from, $id) {
 
-        $embed_site_bridge = false;
+        $esb = false;
         // if it's one of our allowed types, get it!
-        if($type === 'site') {
-            $embed_site_bridge = $this->select_embed_site_bridge_by_site($id);
-        } else if($type === 'type') {
-            $embed_site_bridge = $this->select_embed_site_bridge_by_type($id);
+        if($bridge_from === 'site') {
+            $esb = $this->select_embed_site_bridge_by_site($id);
+        } else if($bridge_from === 'type') {
+            $esb = $this->select_embed_site_bridge_by_type($id);
         }
 
-        if($embed_site_bridge !== false) {
-            $embed_site_bridge = $this->set_embed_site_bridge_object_values_by($type, $embed_site_bridge);
+        if($esb !== false) {
+            $esb = $this->set_esb_object_values_by($bridge_from, $esb);
         }
-        return $embed_site_bridge;
+        return $esb;
     }
 
     /**
@@ -83,17 +105,20 @@ class Enp_quiz_Embed_site_bridge {
     /**
     * Sets all object variables
     */
-    protected function set_embed_site_bridge_object_values_by($type, $embed_bridge_rows) {
-
-        if($type === 'site') {
-            $site_id = $embed_bridge_rows[0]['embed_site_id'];
-            $type_id = $this->extract_values_from_rows('embed_site_type_id', $embed_bridge_rows);
-        } else if($type === 'type') {
-            $type_id = $embed_bridge_rows[0]['embed_site_type_id'];
-            $site_id = $this->extract_values_from_rows('embed_site_id', $embed_bridge_rows);
+    protected function set_esb_object_values_by($bridge_from, $esb_rows) {
+        if(empty($esb_rows)) {
+            return false;
         }
-        $this->set_embed_site_bridge_site($site_id);
-        $this->set_embed_site_bridge_type($type_id);
+
+        if($bridge_from === 'site') {
+            $site_id = $esb_rows[0]['embed_site_id'];
+            $type_id = $this->extract_values_from_rows('embed_site_type_id', $esb_rows);
+        } else if($bridge_from === 'type') {
+            $type_id = $esb_rows[0]['embed_site_type_id'];
+            $site_id = $this->extract_values_from_rows('embed_site_id', $esb_rows);
+        }
+        $this->set_esb_site($site_id);
+        $this->set_esb_type($type_id);
     }
 
     /**
@@ -114,31 +139,31 @@ class Enp_quiz_Embed_site_bridge {
     }
 
 
-    protected function set_embed_site_bridge_site($embed_site_bridge_site) {
-        $this->embed_site_bridge_site = $embed_site_bridge_site;
-        return $this->embed_site_bridge_site;
+    protected function set_esb_site($esb_site) {
+        $this->esb_site = $esb_site;
+        return $this->esb_site;
     }
 
-    protected function set_embed_site_bridge_type($embed_site_bridge_type) {
-        $this->embed_site_bridge_type = $embed_site_bridge_type;
-        return $this->embed_site_bridge_type;
+    protected function set_esb_type($esb_type) {
+        $this->esb_type = $esb_type;
+        return $this->esb_type;
     }
 
-    public function get_embed_site_bridge_site() {
-        return $this->embed_site_bridge_site;
+    public function get_esb_site() {
+        return $this->esb_site;
     }
 
-    public function get_embed_site_bridge_type() {
-        return $this->embed_site_bridge_type;
+    public function get_esb_type() {
+        return $this->esb_type;
     }
 
     // helper functions
     public function get_sites() {
-        return $this->get_embed_site_bridge_site();
+        return $this->get_esb_site();
     }
 
     public function get_types() {
-        return $this->get_embed_site_bridge_type();
+        return $this->get_esb_type();
     }
 
 }

@@ -129,4 +129,26 @@ class Enp_quiz_Embed_site_type {
         return $this->embed_site_type_name;
     }
 
+    /**
+    * Get all sites attached to a site type
+    */
+    public function get_embed_sites($embed_site_type_id = false) {
+        // if none was passed, use the current one
+        if($embed_site_type_id === false) {
+            $embed_site_type_id = $this->get_embed_site_type_id();
+        }
+        // get the types attached to this site
+        $type = new Enp_quiz_Embed_site_bridge('type', $embed_site_type_id);
+        $sites = array();
+        foreach($type->get_sites() as $site_id) {
+            // build a new type object
+            $site = new Enp_quiz_Embed_site($site_id);
+            if($site->get_embed_site_id() !== null) {
+                $sites[] = $site;
+            }
+        }
+        return $sites;
+    }
+
+
 }
