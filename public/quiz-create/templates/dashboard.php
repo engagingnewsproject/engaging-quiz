@@ -15,8 +15,6 @@
  */
 ?>
 <?php do_action('enp_quiz_display_messages');
-$types = new Enp_quiz_Embed_site(1);
-var_dump($types);
 ?>
 
 <section class="enp-container enp-dash-container">

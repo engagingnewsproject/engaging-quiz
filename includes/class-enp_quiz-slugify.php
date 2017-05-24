@@ -49,18 +49,8 @@ class Enp_quiz_Slugify {
     * @return  BOOLEAN
     */
     public function is_slug($string) {
-        // check for disallowed characters and strings that starts or ends in a dash (-)
-        // $has_disallowed_chars = ;
-        // if it has matches, then it's not a slug
-        $matches = preg_match('/[^A-Za-z0-9-]+|^-|-$/', $string);
-        // if there's more than one match, it's not a slug
-        if($matches !== 0) {
-            $is_slug = false;
-        } else {
-            // no matches, it's a slug
-            $is_slug = true;
-        }
-        return $is_slug;
+        $validation = new Enp_quiz_Save();
+        return $validation->is_slug();
     }
 
     /**
@@ -72,16 +62,7 @@ class Enp_quiz_Slugify {
     * @return BOOLEAN
     */
     public function is_id($string) {
-        // cast to string
-        $string = (string) $string;
-        $matches = preg_match('/[^0-9]/', $string);
-        // if preg_match returns false (0), then it's an ID
-        if($matches === 0) {
-            $is_id = true;
-        } else {
-            // matches, it's a slug
-            $is_id = false;
-        }
-        return $is_id;
+        $validation = new Enp_quiz_Save();
+        return $validation->is_id();
     }
 }

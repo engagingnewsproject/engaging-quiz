@@ -120,6 +120,9 @@ require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_mc_option.ph
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_slider.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz_response.php';
 require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_ab_test.php';
+require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_embed_quiz.php';
+require plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_embed_site.php';
+
 
 // Database for Quiz Take side (only need it to reset data)
 require_once plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz_take.php';

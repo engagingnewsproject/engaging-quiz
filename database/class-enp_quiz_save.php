@@ -181,4 +181,155 @@ class Enp_quiz_Save {
         return $valid;
     }
 
+    /**
+    * Sets a new error to our error response array
+    *
+    * @since 1.1.0
+    * @param string = message you want to add
+    * @return response object array
+    */
+    public function add_error($error) {
+        $this->response['error'][] = $error;
+    }
+
+    /**
+    * Adds multiple errors from an array
+    *
+    * @since 1.1.0
+    * @param $errors ARRAY of error message you want to add
+    * @return response object array
+    */
+    public function add_errors($errors) {
+        // join the errors together without overwriting any of them
+        $this->response['error'] = $this->response['error'] + $errors;
+    }
+
+    /**
+    * Sets a new success to our success response array
+    *
+    * @since 1.1.0
+    * @param string = message you want to add
+    * @return response object array
+    */
+    public function add_success($success) {
+        $this->response['success'][] = $success;
+    }
+
+    /**
+    * Checks to see if there are any errors in our response
+    *
+    * @since 1.1.0
+    * @return BOOLEAN
+    */
+    public function has_errors() {
+        $has_errors = true;
+        // if the array is empty, then there are no errors
+        if(empty($this->response['error'])) {
+            $has_errors = false;
+        }
+        return $has_errors;
+    }
+
+    /**
+    * Is the url a valid url?
+    *
+    * @since 1.1.0
+    * @param $url STRING
+    * @return BOOLEAN
+    */
+    protected function is_valid_url($url) {
+        $valid = false;
+
+        if(filter_var($url, FILTER_VALIDATE_URL) === true) {
+            $valid = true;
+        }
+
+        return $valid;
+    }
+
+    /**
+    * Checks to see if it's a slug or not
+    * Allowed characters are A-Z, a-z, 0-9, and dashes (-)
+    *
+    * @param $string (STRING)
+    * @return  BOOLEAN
+    */
+    public function is_slug($string) {
+        $is_slug = false;
+        // check for disallowed characters and strings that starts or ends in a dash (-)
+        // if matches === 1, then it's a slug
+        $matches = preg_match('/[^A-Za-z0-9-]+|^-|-$/', $string);
+
+        // check to make sure it's not null/empty
+        // if there's a match, it's not a slug
+        if(!empty($string) && $matches === 1) {
+            $is_slug = true;
+        }
+
+        return $is_slug;
+    }
+
+    /**
+    * Checks if a string is probably an ID (contains only numbers)
+    * This could likely live in a better locale, but don't have a good place for it
+    * and it makes sense that you'd be doing this alongside slugs
+    *
+    * @param $string (MIXED String/Integer)
+    * @return BOOLEAN
+    */
+    public function is_id($string) {
+        $is_id = false;
+        // cast to string
+        $string = (string) $string;
+        // Regex check where the only allowed characters are 0-9
+        // if a match is found, then it's not an ID
+        $matches = preg_match('/[^0-9]/', $string);
+        // if preg_match returns false (0) & it's not null/empty then it's an ID
+        if($matches === 0 && !empty($string)) {
+            $is_id = true;
+        }
+
+        return $is_id;
+    }
+
+    /**
+    * Checks to see if a quiz exists or not
+    *
+    * @param $quiz_id (String/Integer)
+    * @return BOOLEAN
+    */
+    public function does_quiz_exist($quiz_id) {
+        $quiz = new Enp_quiz_Quiz($quiz_id);
+        $quiz_id = $quiz->get_quiz_id();
+
+        return $this->is_id($quiz_id);
+    }
+
+    /**
+    * Checks to see if a embed site exists or not
+    *
+    * @param $site_id (String/Integer)
+    * @return BOOLEAN
+    */
+    public function does_embed_site_exist($site_id) {
+
+        $site = new Enp_quiz_Embed_site($site_id);
+        $site_id = $site->get_embed_site_id();
+
+        return $this->is_id($site_id);
+    }
+
+    /**
+    * Checks to see if a embed quiz exists or not
+    *
+    * @param $embed_quiz_query (URL || Integer)
+    * @return BOOLEAN
+    */
+    public function does_embed_quiz_exist($embed_quiz_query) {
+        $embed_quiz = new Enp_quiz_Embed_quiz($embed_quiz_query);
+        $id = $embed_quiz->get_embed_quiz_id();
+
+        return $this->is_id($id);
+    }
+
 }
