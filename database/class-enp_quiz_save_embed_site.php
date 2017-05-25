@@ -11,33 +11,90 @@
  */
 
 class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
-    public  $embed_site = false, // object
-            $response = array('success'=>array(),
+    public $response = array('success'=>array(),
                               'error'=>array()
                              );
 
-    public function __construct() {
-
+    public function __construct($action, $embed_site) {
+        // call $this->save_embed_site($action, $embed_site) to save
     }
 
     public function save_embed_site($action, $embed_site) {
-        // get the quiz if we can
-        if($embed_site !== false) {
-            $this->embed_site = new Enp_quiz_Embed_site($embed_site['embed_site_id']);
-        }
+        // sanitize it
+        $embed_site = $this->sanitize_embed_site($embed_site);
 
         // decide what we need to do
-        if($action === 'insert' && $this->embed_site === false) {
+        if($action === 'insert') {
             // try to insert
             $this->insert_embed_site($embed_site);
+        } else {
+            $this->add_error('Invalid action.');
         }
 
         return $this->response;
     }
 
-    protected function validate_before_insert($embed_site) {
-        // try to find the site embed
+    protected function sanitize_embed_site($embed_site) {
 
+        if(isset($embed_site['embed_site_name'])) {
+            $embed_site['embed_site_name'] = sanitize_text_field($embed_site['embed_site_name']);
+        }
+
+        if(isset($embed_site['embed_site_url'])) {
+            // remove the s from https:// part from the url so we don't have
+            // two sites for http and https:// sites
+            $embed_site['embed_site_url'] = preg_replace('/^https:\/\//', 'http://', $embed_site['embed_site_url']);
+        }
+
+        return $embed_site;
+    }
+
+    /**
+    * Validation to make sure we're allowed to insert. Checks on
+    * and adds items to $this->response[errors]
+    * array if any validations fails.
+    *
+    * @param $embed_site (ARRAY)
+    *        array(embed_site_url, embed_site_updated_at)
+    * @
+    */
+    protected function validate_before_insert($embed_site) {
+        $required = array(
+                        'embed_site_url',
+                        'embed_site_name',
+                        'embed_site_updated_at'
+                    );
+        foreach($required as $require) {
+            if(!array_key_exists($require, $embed_site)) {
+                $this->add_error($require.' is not set in the array.');
+            } else if(empty($embed_site[$require])) {
+                $this->add_error($require.' is empty.');
+            }
+        }
+
+        // if we already have errors, then return early
+        if($this->has_errors() === true) {
+            return false;
+        }
+
+        $url = $embed_site['embed_site_url'];
+        $site_name = $embed_site['embed_site_name'];
+
+        // check that we have a valid url
+        if($this->is_valid_url($url) === false) {
+            $this->add_error('Invalid URL');
+        }
+
+        if(empty($site_name)) {
+            $this->add_error('No site name');
+        }
+
+        if(!is_string($site_name)) {
+            $this->add_error('Invalid site name');
+        }
+
+        // try to find the site embed
+        return $this->is_valid();
     }
 
     /**
@@ -47,11 +104,12 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
     */
     protected function insert_embed_site($embed_site) {
         // validate
-        $is_valid = $this->validate_before_insert($embed_quiz);
+        $valid = $this->validate_before_insert($embed_quiz);
         // check if there are any errors
-        if($this->has_errors() === true || $is_valid === false) {
-            return false;
+        if($valid !== true) {
+            return $this->response;
         }
+
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready

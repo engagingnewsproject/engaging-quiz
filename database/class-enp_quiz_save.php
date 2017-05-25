@@ -231,6 +231,17 @@ class Enp_quiz_Save {
     }
 
     /**
+    * Checks if there are any errors set in the error array
+    *
+    * @return BOOLEAN
+    */
+    public function is_valid() {
+        // if the response has errors, then it's invalid
+        // if the response does not have errors, then it's valid
+        return !$this->has_errors();
+    }
+
+    /**
     * Is the url a valid url?
     *
     * @since 1.1.0
@@ -332,4 +343,20 @@ class Enp_quiz_Save {
         return $this->is_id($id);
     }
 
+    /**
+    *
+    */
+    public function is_date($date) {
+        $is_date = false;
+
+        $dateTime = DateTime::createFromFormat('m/d/Y', $date);
+
+        $errors = DateTime::getLastErrors();
+        if (empty($errors['warning_count'])) {
+            $is_date = true;;
+        }
+
+        return $is_date;
+
+    }
 }

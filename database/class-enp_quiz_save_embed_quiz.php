@@ -20,28 +20,45 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
 
     }
 
+    /**
+    * Kick off the save process for the enp_embed_quiz table
+    *
+    * @param $embed_quiz (ARRAY) of values depending on what you want to save
+    *                   see the actual PDO queries to see what values are required
+    * @return $response (ARRAY) that looks like
+    *                            array('success'=>array(),'error'=>array())
+    */
     public function save_embed_quiz($action, $embed_quiz) {
-        // get the quiz if we can
-        if($embed_quiz !== false && array_key_exists('embed_quiz_id', $embed_quiz)) {
-            $this->embed_quiz = new Enp_quiz_Embed_quiz($embed_quiz['embed_quiz_id']);
-        }
 
         // decide what we need to do
-        if($action === 'insert' && $this->embed_quiz === false) {
+        if($action === 'insert') {
             // try to insert
             $this->insert_embed_quiz($embed_quiz);
         } else if($action === 'save_load') {
             // try to save a load
             $this->update_embed_quiz_loads($embed_quiz);
+        } else {
+            $this->add_error('Invalid action.');
         }
 
         return $this->response;
     }
 
+    /**
+    * Validation to make sure we're allowed to insert. Checks on
+    *  and adds items to $this->response[errors]
+    * array if any validations fails.
+    *
+    * @param $embed_quiz (ARRAY)
+    *        array(embed_quiz_url, quiz_id, embed_site_id, embed_site_updated_at)
+    * @
+    */
     public function validate_before_insert($embed_quiz) {
+
         $url = $embed_quiz['embed_quiz_url'];
         $quiz_id = $embed_quiz['quiz_id'];
         $site_id = $embed_quiz['embed_site_id'];
+        $date = $embed_quiz['embed_site_updated_at'];
 
         // check that we have a valid url
         if($this->is_valid_url($url) === false) {
@@ -63,28 +80,43 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
             $this->add_error('Embed Site doesn\'t exist');
         }
 
+        // check that we have a valid date
+        if($this->is_date($date) === false) {
+            $this->add_error('Updated At date invalid');
+        }
+
+        return $this->is_valid();
     }
 
     public function validate_before_save_load($embed_quiz) {
+
         $id = $embed_quiz['embed_quiz_id'];
+        $date = $embed_quiz['embed_site_updated_at'];
         // check to see if we have one
         if($this->does_embed_quiz_exist($id) === false) {
             $this->add_error('Embed Quiz doesn\'t exist. Add the embed quiz first.');
         }
 
+        // check that we have a valid date
+        if($this->is_date($date) === false) {
+            $this->add_error('Updated at date invalid');
+        }
+
+        return $this->is_valid();
     }
 
 
     /**
     * Connects to DB and inserts a new embed quiz
     * @param $embed_quiz (array) data we'll be saving to the embed_quiz table
+    *         must have array('embed_site_id', 'quiz_id', 'embed_quiz_updated_at')
     * @return builds and returns a response message
     */
     public function insert_embed_quiz($embed_quiz) {
         // validate
-        $this->validate_before_insert($embed_quiz);
+        $valid = $this->validate_before_insert($embed_quiz);
         // check if there are any errors
-        if($this->has_errors() === true) {
+        if($valid !== true) {
             return $this->response;
         }
 
@@ -93,6 +125,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
         // Get our Parameters ready
         $params = array(':quiz_id'      => $embed_quiz['quiz_id'],
                         ':embed_site_id'      => $embed_quiz['embed_site_id'],
+                        ':embed_quiz_url'  => $embed_quiz['embed_quiz_url'],
                         ':embed_quiz_loads'  => 1,
                         ':embed_quiz_views'  => 1,
                         ':embed_quiz_created_at' => $embed_quiz['embed_quiz_updated_at'],
@@ -102,6 +135,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
         $sql = "INSERT INTO ".$pdo->embed_quiz_table." (
                                             quiz_id,
                                             embed_site_id,
+                                            embed_quiz_url,
                                             embed_quiz_loads,
                                             embed_quiz_views,
                                             embed_quiz_created_at,
@@ -110,6 +144,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                                         VALUES(
                                             :quiz_id,
                                             :embed_site_id,
+                                            :embed_quiz_url,
                                             :embed_quiz_loads,
                                             :embed_quiz_views,
                                             :embed_quiz_created_at,
@@ -141,16 +176,18 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     /**
     * Connects to DB and adds one to the number of quiz loads
     * @param $embed_quiz (array) data we'll be saving to the embed quiz table
+    *        must have array('embed_quiz_id'=>$id, 'embed_quiz_updated_at'=>$time)
     * @return builds and returns a response message
     */
     protected function update_embed_quiz_loads($embed_quiz) {
 
-        $this->validate_before_save_load($embed_quiz);
+        $valid = $this->validate_before_save_load($embed_quiz);
 
         // check if there are any errors
-        if($this->has_errors() === true) {
+        if($valid !== true) {
             return $this->response;
         }
+
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
