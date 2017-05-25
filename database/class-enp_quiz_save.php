@@ -251,7 +251,7 @@ class Enp_quiz_Save {
     protected function is_valid_url($url) {
         $valid = false;
 
-        if(filter_var($url, FILTER_VALIDATE_URL) === true) {
+        if(filter_var($url, FILTER_VALIDATE_URL) !== false) {
             $valid = true;
         }
 

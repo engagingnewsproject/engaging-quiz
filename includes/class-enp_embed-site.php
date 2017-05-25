@@ -32,13 +32,11 @@ class Enp_quiz_Embed_site {
     public function get_embed_site($query) {
         $embed_site = false;
 
-        $slugify = new Enp_quiz_Slugify();
-        $is_id = $slugify->is_id($query);
         // see if it's an ID or URL
-        if($is_id === true) {
-            $embed_site = $this->select_embed_site_by_id($query);
-        } else {
+        if(filter_var($query, FILTER_VALIDATE_URL) !== false) {
             $embed_site = $this->select_embed_site_by_url($query);
+        } else {
+            $embed_site = $this->select_embed_site_by_id($query);
         }
 
         if($embed_site !== false) {

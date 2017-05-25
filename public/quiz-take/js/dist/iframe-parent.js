@@ -10,12 +10,12 @@ window.addEventListener('message', receiveEnpIframeMessage, false);
 function receiveEnpIframeMessage(event) {
     var iframe,
         iframe_id;
-
-    // quit the postmessage loop if it's from a trusted site (engagingnewsproject.org or our dev sites)
+    // quit the postmessage loop if it's NOT from a trusted site (engagingnewsproject.org or our dev sites)
     // If you want to see what it matches/doesn't match, go here: http://regexr.com/3dpq2
-    if(!/https?:\/\/(?:dev\b(?!.)|(?:(?:local|dev|test)\.)?engagingnewsproject\.org|engagingnews\.(?:staging\.)?wpengine\.com)/.test(event.origin)) {
+    if(/https?:\/\/(?:dev\b(?!.)|(?:(?:local|dev|test)\.)?engagingnewsproject\.org|engagingnews\.(?:staging\.)?wpengine\.com)/.test(event.origin)) {
         return false;
     }
+
 
     // make sure we got a string as our message
     if(typeof event.data !== 'string') {
@@ -43,6 +43,8 @@ function receiveEnpIframeMessage(event) {
     else if(data.action === 'sendURL') {
         // send the url of the parent (that embedded the quiz)
         sendEnpParentURL();
+        // log embed
+        saveEnpEmbedSite(event.origin, data);
     }
 
 
@@ -58,6 +60,29 @@ function onLoadEnpIframe() {
     getEnpQuizHeights();
     // call each quiz and send the URL of the page its embedded on
     sendEnpParentURL();
+
+}
+
+function saveEnpEmbedSite(origin, data) {
+
+    parentURL = window.location.href;
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST', origin+'/wp-content/plugins/enp-quiz/database/class-enp_quiz_save_embed.php');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            // alert('Something went wrong.  Name is now ' + xhr.responseText);
+            // xhr.send(encodeURI('log=' +logContent ));
+        }
+        else if (xhr.status !== 200) {
+            alert('Request failed.  Returned status of ' + xhr.status);
+        }
+    };
+
+
+    xhr.send(encodeURI('action=insert&embed_site_url='+parentURL+'&embed_site_name='+parentURL+'&quiz_id='+data.quiz_id+'&doing_ajax=true'));
 }
 
 function getEnpQuizHeights() {
@@ -114,6 +139,7 @@ function sendEnpParentURL() {
 * Sets the height of the iframe on the page
 */
 function setEnpQuizHeight(iframe, height) {
+    console.log(height);
     // Test the data
     if(/([0-9])px/.test(height)) {
         // set the height on the style

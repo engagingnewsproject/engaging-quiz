@@ -15,13 +15,21 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
                               'error'=>array()
                              );
 
-    public function __construct($action, $embed_site) {
+    public function __construct() {
         // call $this->save_embed_site($action, $embed_site) to save
     }
 
     public function save_embed_site($action, $embed_site) {
         // sanitize it
         $embed_site = $this->sanitize_embed_site($embed_site);
+        // Most likely, this site already exists. Check it and return the ID if it exists.
+        $embed_site_obj = new Enp_quiz_Embed_site($embed_site['embed_site_url']);
+        $embed_site_id = $embed_site_obj->get_embed_site_id();
+        if($this->is_id($embed_site_id)) {
+            $this->response['embed_site_id'] = $embed_site_id;
+            return $this->response;
+        }
+
 
         // decide what we need to do
         if($action === 'insert') {
@@ -37,13 +45,12 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
     protected function sanitize_embed_site($embed_site) {
 
         if(isset($embed_site['embed_site_name'])) {
-            $embed_site['embed_site_name'] = sanitize_text_field($embed_site['embed_site_name']);
+            $embed_site['embed_site_name'] = filter_var($embed_site['embed_site_name'], FILTER_SANITIZE_STRING);
         }
 
         if(isset($embed_site['embed_site_url'])) {
-            // remove the s from https:// part from the url so we don't have
-            // two sites for http and https:// sites
-            $embed_site['embed_site_url'] = preg_replace('/^https:\/\//', 'http://', $embed_site['embed_site_url']);
+            // get the host www.whatever.com from the url
+            $embed_site['embed_site_url'] = 'http://'.parse_url($embed_site['embed_site_url'], PHP_URL_HOST);
         }
 
         return $embed_site;
@@ -82,7 +89,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
 
         // check that we have a valid url
         if($this->is_valid_url($url) === false) {
-            $this->add_error('Invalid URL');
+            $this->add_error('Invalid URL: '.$url);
         }
 
         if(empty($site_name)) {
@@ -91,6 +98,11 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
 
         if(!is_string($site_name)) {
             $this->add_error('Invalid site name');
+        }
+
+        // check that we have a valid date
+        if($this->is_date($date) === false) {
+            $this->add_error('Updated At date invalid');
         }
 
         // try to find the site embed
@@ -104,7 +116,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
     */
     protected function insert_embed_site($embed_site) {
         // validate
-        $valid = $this->validate_before_insert($embed_quiz);
+        $valid = $this->validate_before_insert($embed_site);
         // check if there are any errors
         if($valid !== true) {
             return $this->response;
@@ -113,23 +125,19 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
         // connect to PDO
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
-        $params = array(':embed_site_id'      => $embed_site['embed_site_id'],
-                        ':embed_site_name'  => $embed_site['embed_site_name'],
+        $params = array(':embed_site_name'  => $embed_site['embed_site_name'],
                         ':embed_site_url'  => $embed_site['embed_site_url'],
                         ':embed_site_created_at' => $embed_site['embed_site_updated_at'],
                         ':embed_site_updated_at' => $embed_site['embed_site_updated_at']
                     );
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->embed_site_table." (
-                                            embed_site_id,
                                             embed_site_name,
                                             embed_site_url,
                                             embed_site_created_at,
                                             embed_site_updated_at
                                         )
                                         VALUES(
-                                            :quiz_id,
-                                            :embed_site_id,
                                             :embed_site_name,
                                             :embed_site_url,
                                             :embed_site_created_at,
