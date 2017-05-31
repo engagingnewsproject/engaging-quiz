@@ -19,7 +19,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
         // call $this->save_embed_site($action, $embed_site) to save
     }
 
-    public function save_embed_site($action, $embed_site) {
+    public function save_embed_site($embed_site) {
         // sanitize it
         $embed_site = $this->sanitize_embed_site($embed_site);
         // Most likely, this site already exists. Check it and return the ID if it exists.
@@ -32,7 +32,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
 
 
         // decide what we need to do
-        if($action === 'insert') {
+        if($embed_site['action'] === 'insert') {
             // try to insert
             $this->insert_embed_site($embed_site);
         } else {
@@ -98,11 +98,6 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
 
         if(!is_string($site_name)) {
             $this->add_error('Invalid site name');
-        }
-
-        // check that we have a valid date
-        if($this->is_date($date) === false) {
-            $this->add_error('Updated At date invalid');
         }
 
         // try to find the site embed

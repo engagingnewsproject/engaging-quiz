@@ -5,6 +5,8 @@
 * 3. Repeat x10(?) Until get a correct response.
 */
 window.addEventListener('message', receiveEnpIframeMessage, false);
+// get current url
+var parentURL = window.location.href;
 
 // What to do when we receive a postMessage
 function receiveEnpIframeMessage(event) {
@@ -63,27 +65,8 @@ function onLoadEnpIframe() {
 
 }
 
-function saveEnpEmbedSite(origin, data) {
-
-    parentURL = window.location.href;
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.open('POST', origin+'/wp-content/plugins/enp-quiz/database/class-enp_quiz_save_embed.php');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            // alert('Something went wrong.  Name is now ' + xhr.responseText);
-            // xhr.send(encodeURI('log=' +logContent ));
-        }
-        else if (xhr.status !== 200) {
-            alert('Request failed.  Returned status of ' + xhr.status);
-        }
-    };
 
 
-    xhr.send(encodeURI('action=insert&embed_site_url='+parentURL+'&embed_site_name='+parentURL+'&quiz_id='+data.quiz_id+'&doing_ajax=true'));
-}
 
 function getEnpQuizHeights() {
     var quizzes,
@@ -109,10 +92,8 @@ function getEnpQuizHeights() {
 function sendEnpParentURL() {
     var quizzes,
         quiz,
-        parentURL,
         request;
-    // get current url
-    parentURL = window.location.href;
+
 
     // first, check to make sure we're not on the quiz preview page.
     // If we are, we shouldn't send the URL because we don't want
@@ -135,11 +116,13 @@ function sendEnpParentURL() {
 }
 
 
+
+
+
 /**
 * Sets the height of the iframe on the page
 */
 function setEnpQuizHeight(iframe, height) {
-    console.log(height);
     // Test the data
     if(/([0-9])px/.test(height)) {
         // set the height on the style
@@ -209,4 +192,14 @@ function setTimeoutLoadCheck() {
     if (!alreadyrunflag) {
         onLoadEnpIframe();
     }
+}
+
+function enpSerialize(data) {
+  var result = '';
+
+  for(var key in data) {
+      result += key + '=' + data[key] + '&';
+  }
+  result = result.slice(0, result.length - 1);
+  return result;
 }

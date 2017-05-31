@@ -344,7 +344,7 @@ class Enp_quiz_Save {
     }
 
     /**
-    *
+    * Not working right now...
     */
     public function is_date($date) {
         $is_date = false;
@@ -353,7 +353,7 @@ class Enp_quiz_Save {
 
         $errors = DateTime::getLastErrors();
         if (empty($errors['warning_count'])) {
-            $is_date = true;;
+            $is_date = true;
         }
 
         return $is_date;

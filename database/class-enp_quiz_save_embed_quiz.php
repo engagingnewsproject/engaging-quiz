@@ -28,13 +28,12 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     * @return $response (ARRAY) that looks like
     *                            array('success'=>array(),'error'=>array())
     */
-    public function save_embed_quiz($action, $embed_quiz) {
-
+    public function save_embed_quiz($embed_quiz) {
         // decide what we need to do
-        if($action === 'insert') {
+        if($embed_quiz['action'] === 'insert') {
             // try to insert
             $this->insert_embed_quiz($embed_quiz);
-        } else if($action === 'save_load') {
+        } else if($embed_quiz['action'] === 'save_load') {
             // try to save a load
             $this->update_embed_quiz_loads($embed_quiz);
         } else {
@@ -50,7 +49,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     * array if any validations fails.
     *
     * @param $embed_quiz (ARRAY)
-    *        array(embed_quiz_url, quiz_id, embed_site_id, embed_site_updated_at)
+    *        array(embed_quiz_url, quiz_id, embed_site_id, embed_site_quiz_at)
     * @
     */
     public function validate_before_insert($embed_quiz) {
@@ -58,7 +57,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
         $url = $embed_quiz['embed_quiz_url'];
         $quiz_id = $embed_quiz['quiz_id'];
         $site_id = $embed_quiz['embed_site_id'];
-        $date = $embed_quiz['embed_site_updated_at'];
+        $date = $embed_quiz['embed_quiz_updated_at'];
 
         // check that we have a valid url
         if($this->is_valid_url($url) === false) {
@@ -80,26 +79,16 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
             $this->add_error('Embed Site doesn\'t exist');
         }
 
-        // check that we have a valid date
-        if($this->is_date($date) === false) {
-            $this->add_error('Updated At date invalid');
-        }
-
         return $this->is_valid();
     }
 
     public function validate_before_save_load($embed_quiz) {
 
         $id = $embed_quiz['embed_quiz_id'];
-        $date = $embed_quiz['embed_site_updated_at'];
+        $date = $embed_quiz['embed_quiz_updated_at'];
         // check to see if we have one
         if($this->does_embed_quiz_exist($id) === false) {
             $this->add_error('Embed Quiz doesn\'t exist. Add the embed quiz first.');
-        }
-
-        // check that we have a valid date
-        if($this->is_date($date) === false) {
-            $this->add_error('Updated at date invalid');
         }
 
         return $this->is_valid();

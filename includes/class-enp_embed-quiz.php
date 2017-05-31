@@ -15,8 +15,8 @@ class Enp_quiz_Embed_quiz {
             $embed_quiz_updated_at,
             $embed_quiz_is_dev;
 
-    public function __construct($id) {
-        return $this->get_embed_quiz($id);
+    public function __construct($query) {
+        return $this->get_embed_quiz($query);
     }
 
     /**
