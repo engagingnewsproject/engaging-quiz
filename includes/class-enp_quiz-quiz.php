@@ -920,7 +920,7 @@ class Enp_quiz_Quiz {
         // get where it's been embedded
         $embed_quiz_ids = $this->selected_embed_quizzes();
         // process the results
-    } 
+    }
 
 
 }

@@ -11,6 +11,11 @@ final class Enp_quiz_SaveTest extends TestCase
     protected function setUp()
     {
         self::$enp_save = new Enp_quiz_Save();
+        $_SERVER["DOCUMENT_ROOT"] = "/Users/jj/Dropbox/mamp/sites/quiz";
+    }
+
+    public function tearDown() {
+      unset($_SERVER["DOCUMENT_ROOT"]);
     }
 
     public function evaluateAssert($val, $shouldReturn) {
@@ -22,6 +27,7 @@ final class Enp_quiz_SaveTest extends TestCase
     }
 
     /**
+     * @covers Enp_quiz_Save->is_id()
      * @dataProvider testValidateIDProvider
      */
     public function testValidateID($id, $shouldReturn) {
@@ -38,17 +44,15 @@ final class Enp_quiz_SaveTest extends TestCase
                 'invalid-1'=>['0', false],
                 'invalid-2'=>['h123', false],
                 'invalid-3'=>['!12', false],
-                'invalid-4'=>['', false]
+                'invalid-4'=>['', false],
+                'invalid-5'=>[true, false],
+                'invalid-6'=>[false, false]
         ];
     }
 
-    public function testInvalidID() {
-        $id = '123hi';
-        $valid = self::$enp_save->is_id($id);
-        $this->assertFalse($valid);
-    }
 
     /**
+     * @covers Enp_quiz_Save->validate_hex()
      * @dataProvider testValidateHexProvider
      */
     public function testValidateHex($hex, $shouldReturn) {
@@ -70,6 +74,7 @@ final class Enp_quiz_SaveTest extends TestCase
 
 
     /**
+     * @covers Enp_quiz_Save->has_errors()
      * @dataProvider testHasErrorsProvider
      */
     public function testHasErrors($response, $shouldReturn) {
@@ -82,6 +87,114 @@ final class Enp_quiz_SaveTest extends TestCase
                 'no-errors' => [array('error'=>array()), false],
                 'has-errors' => [array('error'=>array('hi! I am an error')), true],
             ];
+    }
+
+    /**
+     * @covers Enp_quiz_Save->does_quiz_exist()
+     * @dataProvider testQuizExistsProvider
+     */
+    public function testQuizExists($id, $shouldReturn) {
+        $valid = self::$enp_save->does_quiz_exist($id);
+        $this->evaluateAssert($valid, $shouldReturn);
+    }
+
+    public function testQuizExistsProvider() {
+        return [
+                'valid-1'=>['1', true],
+                'valid-2'=>[2, true],
+                'valid-3'=>['3', true],
+                'invalid-1'=>['99999999999999', false],
+                'invalid-2'=>['hi', false],
+                'invalid-3'=>[false, false],
+                'invalid-4'=>[999999999999999, false]
+        ];
+    }
+
+    /**
+     * @covers Enp_quiz_Save->is_valid_url()
+     * @dataProvider testIsValidURLProvider
+     */
+    public function testIsValidURL($url, $shouldReturn) {
+        $valid = self::$enp_save->is_valid_url($url);
+        $this->evaluateAssert($valid, $shouldReturn);
+    }
+
+    public function testIsValidURLProvider() {
+        return [
+                'valid-1'=>['http://jeremyjon.es', true],
+                'valid-2'=>['https://www.engagingnewsproject.org', true],
+                'valid-3'=>['http://nytimes.com', true],
+                'invalid-1'=>['99999999999999', false],
+                'invalid-2'=>['dev.dev.dev', false],
+                'invalid-3'=>['www.fail.com', false],
+        ];
+    }
+
+    /**
+     * @covers Enp_quiz_Save->is_slug()
+     * @dataProvider testIsSlugProvider
+     */
+    public function testIsSlug($slug, $shouldReturn) {
+        $valid = self::$enp_save->is_slug($slug);
+        $this->evaluateAssert($valid, $shouldReturn);
+    }
+
+    public function testIsSlugProvider() {
+        return [
+                'valid-1'=>['yes', true],
+                'valid-2'=>['wut-up-dawg', true],
+                'valid-3'=>['of-curze-123', true],
+                'invalid-1'=>['NoPe', false],
+                'invalid-2'=>['notaslug!!!!', false],
+                'invalid-3'=>[0, false],
+                'invalid-4'=>[1, false],
+                'invalid-5'=>['', false],
+                'invalid-6'=>[true, false],
+                'invalid-7'=>['-hi', false],
+                'invalid-8'=>['hi-', false],
+        ];
+    }
+
+    /**
+     * @dataProvider testDoesEmbedSiteExistProvider
+     * @covers Enp_quiz_Save->does_embed_site_exist()
+     */
+    public function testDoesEmbedSiteExist($query, $shouldReturn) {
+        $valid = self::$enp_save->does_embed_site_exist($query);
+        $this->evaluateAssert($valid, $shouldReturn);
+    }
+
+    public function testDoesEmbedSiteExistProvider() {
+        return [
+                'valid-1'=>['http://local.quiz', true],
+                'valid-2'=>['1', true],
+                'valid-3'=>['http://jeremyjon.es', true],
+                'invalid-1'=>['99999999999999', false],
+                'invalid-2'=>['http://newyorktimes.com', false],
+                'invalid-3'=>[false, false],
+                'invalid-4'=>[true, false]
+        ];
+    }
+
+    /**
+     * @dataProvider testDoesEmbedQuizExistProvider
+     * @covers Enp_quiz_Save->does_embed_quiz_exist()
+     */
+    public function testDoesEmbedQuizExist($query, $shouldReturn) {
+        $valid = self::$enp_save->does_embed_quiz_exist($query);
+        $this->evaluateAssert($valid, $shouldReturn);
+    }
+
+    public function testDoesEmbedQuizExistProvider() {
+        return [
+                'valid-1'=>['https://jeremyjon.es/quizzes', true],
+                'valid-2'=>['1', true],
+                'valid-3'=>['http://localhost:3000/2017/05/25/sample-quiz/', true],
+                'invalid-1'=>['99999999999999', false],
+                'invalid-2'=>['http://newyorktimes.com', false],
+                'invalid-3'=>[false, false],
+                'invalid-4'=>[true, false]
+        ];
     }
 
 

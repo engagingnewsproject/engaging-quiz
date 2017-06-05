@@ -248,7 +248,7 @@ class Enp_quiz_Save {
     * @param $url STRING
     * @return BOOLEAN
     */
-    protected function is_valid_url($url) {
+    public function is_valid_url($url) {
         $valid = false;
 
         if(filter_var($url, FILTER_VALIDATE_URL) !== false) {
@@ -269,11 +269,12 @@ class Enp_quiz_Save {
         $is_slug = false;
         // check for disallowed characters and strings that starts or ends in a dash (-)
         // if matches === 1, then it's a slug
-        $matches = preg_match('/[^A-Za-z0-9-]+|^-|-$/', $string);
+        preg_match('/[^a-z0-9-]+|^-|-$/', $string, $matches);
 
         // check to make sure it's not null/empty
         // if there's a match, it's not a slug
-        if(!empty($string) && $matches === 1) {
+        // also make sure $string !== boolean
+        if(is_bool($string) === false && is_int($string) !== true && !empty($string) && empty($matches)) {
             $is_slug = true;
         }
 
@@ -290,15 +291,20 @@ class Enp_quiz_Save {
     */
     public function is_id($string) {
         $is_id = false;
-        // cast to string
-        $string = (string) $string;
-        // Regex check where the only allowed characters are 0-9
-        // if a match is found, then it's not an ID
-        $matches = preg_match('/[^0-9]/', $string);
-        // if preg_match returns false (0) & it's not null/empty then it's an ID
-        if($matches === 0 && !empty($string)) {
-            $is_id = true;
+
+        // make sure it's a valid string
+        if(is_bool($string) === false && !empty($string)) {
+            $string = (string) $string;
+            // Regex check where the only allowed characters are 0-9
+            // if a match is found, then it's not an ID
+            $matches = null;
+            preg_match('/[^0-9]/', $string, $matches);
+            // if preg_match returns false (0) & it's not null/empty then it's an ID
+            if(empty($matches)) {
+                $is_id = true;
+            }
         }
+
 
         return $is_id;
     }
@@ -326,7 +332,6 @@ class Enp_quiz_Save {
 
         $site = new Enp_quiz_Embed_site($site_id);
         $site_id = $site->get_embed_site_id();
-
         return $this->is_id($site_id);
     }
 

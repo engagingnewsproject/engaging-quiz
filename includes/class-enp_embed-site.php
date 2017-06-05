@@ -74,6 +74,12 @@ class Enp_quiz_Embed_site {
     *   @return row from database table if found, false if not found
     **/
     public function select_embed_site_by_id($embed_site_id) {
+        // make sure id isn't a boolean
+        if(is_bool($embed_site_id)) {
+            return false;
+        }
+        
+        // make sure the query is valid
         $pdo = new enp_quiz_Db();
         // Do a select query to see if we get a returned row
         $params = array(

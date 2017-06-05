@@ -50,7 +50,7 @@ class Enp_quiz_Slugify {
     */
     public function is_slug($string) {
         $validation = new Enp_quiz_Save();
-        return $validation->is_slug();
+        return $validation->is_slug($string);
     }
 
     /**
@@ -63,6 +63,6 @@ class Enp_quiz_Slugify {
     */
     public function is_id($string) {
         $validation = new Enp_quiz_Save();
-        return $validation->is_id();
+        return $validation->is_id($string);
     }
 }
