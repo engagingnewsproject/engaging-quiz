@@ -221,10 +221,10 @@ class Enp_quiz_Save {
     * @since 1.1.0
     * @return BOOLEAN
     */
-    public function has_errors() {
+    public function has_errors($response) {
         $has_errors = true;
         // if the array is empty, then there are no errors
-        if(empty($this->response['error'])) {
+        if(empty($response['error'])) {
             $has_errors = false;
         }
         return $has_errors;
@@ -235,10 +235,10 @@ class Enp_quiz_Save {
     *
     * @return BOOLEAN
     */
-    public function is_valid() {
+    public function is_valid($response) {
         // if the response has errors, then it's invalid
         // if the response does not have errors, then it's valid
-        return !$this->has_errors();
+        return !$this->has_errors($response);
     }
 
     /**

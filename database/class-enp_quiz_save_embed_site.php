@@ -80,7 +80,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
         }
 
         // if we already have errors, then return early
-        if($this->has_errors() === true) {
+        if($this->has_errors($this->response) === true) {
             return false;
         }
 
@@ -101,7 +101,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
         }
 
         // try to find the site embed
-        return $this->is_valid();
+        return $this->is_valid($this->response);
     }
 
     /**

@@ -28,7 +28,6 @@ require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_embed_site.php';
 
 class Enp_quiz_Save_embed extends Enp_quiz_Save {
     public $date,
-           $embed_data = array(),
            $response = array('success'=>array(),
                               'error'=>array()
                              );

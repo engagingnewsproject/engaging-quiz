@@ -79,7 +79,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
             $this->add_error('Embed Site doesn\'t exist');
         }
 
-        return $this->is_valid();
+        return $this->is_valid($this->response);
     }
 
     public function validate_before_save_load($embed_quiz) {
@@ -91,7 +91,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
             $this->add_error('Embed Quiz doesn\'t exist. Add the embed quiz first.');
         }
 
-        return $this->is_valid();
+        return $this->is_valid($this->response);
     }
 
 
@@ -152,7 +152,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                                 );
 
             // merge the response arrays
-            $this->add_success(array_merge($embed_quiz, $response));
+            return array_merge($embed_quiz, $response);
 
         } else {
             // handle errors
@@ -202,8 +202,8 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                                 );
 
             // merge the response arrays
-            $this->add_success(array_merge($embed_quiz, $response));
-
+            $response = array_merge($embed_quiz, $response);
+            return $response;
         } else {
             // handle errors
             $this->add_error('Save quiz embed loads failed.');
