@@ -86,6 +86,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
 
         $url = $embed_site['embed_site_url'];
         $site_name = $embed_site['embed_site_name'];
+        $date = $embed_site['embed_site_updated_at'];
 
         // check that we have a valid url
         if($this->is_valid_url($url) === false) {
@@ -98,6 +99,11 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
 
         if(!is_string($site_name)) {
             $this->add_error('Invalid site name');
+        }
+
+        // check if the date is valid
+        if($this->is_date($date) === false) {
+            $this->add_error('Invalid date.');
         }
 
         // try to find the site embed

@@ -79,6 +79,11 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
             $this->add_error('Embed Site doesn\'t exist');
         }
 
+        // check if the date is valid
+        if($this->is_date($date) === false) {
+            $this->add_error('Invalid date.');
+        }
+
         return $this->is_valid($this->response);
     }
 
@@ -89,6 +94,11 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
         // check to see if we have one
         if($this->does_embed_quiz_exist($id) === false) {
             $this->add_error('Embed Quiz doesn\'t exist. Add the embed quiz first.');
+        }
+
+        // check if the date is valid
+        if($this->is_date($date) === false) {
+            $this->add_error('Invalid date.');
         }
 
         return $this->is_valid($this->response);

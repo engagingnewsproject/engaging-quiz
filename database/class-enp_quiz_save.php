@@ -353,13 +353,31 @@ class Enp_quiz_Save {
     */
     public function is_date($date) {
         $is_date = false;
+        $parsed_date = date_parse($date);
+        // check if valid gegorian calendar date
+        // ie- 2017-04-31 should be invalid
+        $is_gregorian = checkdate ( $parsed_date['month'], $parsed_date['day'], $parsed_date['year'] );
 
-        $dateTime = DateTime::createFromFormat('m/d/Y', $date);
+        if($is_gregorian === true) {
+            // passed the gregorian check!
 
-        $errors = DateTime::getLastErrors();
-        if (empty($errors['warning_count'])) {
-            $is_date = true;
+            // make sure it matches our format
+            preg_match('/2[0-9]{3}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}/', $date, $matches);
+
+            if(!empty($matches)) {
+                // passed the regex test!
+                // check if it's in the right format
+                $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+
+                $errors = DateTime::getLastErrors();
+                var_dump($dateTime);
+                if (empty($errors['warning_count'])) {
+                    $is_date = true;
+                }
+            }
+
         }
+
 
         return $is_date;
 

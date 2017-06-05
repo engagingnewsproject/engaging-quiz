@@ -197,5 +197,28 @@ final class Enp_quiz_SaveTest extends TestCase
         ];
     }
 
+    /**
+     * @covers Enp_quiz_Save->is_date()
+     * @dataProvider testValidateDateProvider
+     */
+    public function testValidateDate($date, $shouldReturn) {
+        // $enp_save = new Enp_quiz_Save();
+        $valid = self::$enp_save->is_date($date);
+        $this->evaluateAssert($valid, $shouldReturn);
+    }
+
+    public function testValidateDateProvider() {
+        return [
+                'valid-1'=>['2017-05-31 21:33:50', true],
+                'valid-2'=>['2018-05-31 00:00:00', true],
+                'invalid-1'=>['0', false],
+                'invalid-2'=>['2016-04-31', false],
+                'invalid-3'=>['2019/12/01 00:00:00', false],
+                'invalid-4'=>['2018.05.31 00:00:00', false],
+                'invalid-5'=>['2018-05-31 25:00:00', false],
+                'invalid-6'=>[true, false],
+                'invalid-7'=>[false, false]
+        ];
+    }
 
 }
