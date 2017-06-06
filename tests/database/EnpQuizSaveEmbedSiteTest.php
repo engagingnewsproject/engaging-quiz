@@ -25,20 +25,19 @@ final class EnpQuizSaveEmbedSiteTest extends EnpTestCase
      * @covers Enp_quiz_Save_embed_site->insert_embed_site()
      * @dataProvider saveEmbedSiteProvider
      */
-    public function testSaveEmbedSiteInsert($embed_save, $shouldReturn) {
+    public function testSaveEmbedSiteInsert($embed_save, $expected) {
         $response = self::$save_embed_site->save_embed_site($embed_save);
 
         // if $response['embed_site_id'] exists
         // && $response['embed_site_id'] is a valid ID
         // && there are no errors
         // then it's valid = true
-        var_dump($response);
         if( array_key_exists('embed_site_id', $response) && self::$save_embed_site->is_id($response['embed_site_id']) && empty(self::$save_embed_site->has_errors($response)) ) {
             $valid = true;
         } else {
             $valid = false;
         }
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function saveEmbedSiteProvider() {

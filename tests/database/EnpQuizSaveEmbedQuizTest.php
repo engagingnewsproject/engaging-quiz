@@ -23,7 +23,7 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
      * @covers Enp_quiz_Save_embed_quiz->insert_embed_quiz()
      * @dataProvider saveEmbedQuizProvider
      */
-    public function testSaveEmbedQuizInsert($embed_save, $shouldReturn) {
+    public function testSaveEmbedQuizInsert($embed_save, $expected) {
         $response = self::$save_embed_quiz->save_embed_quiz($embed_save);
 
         // if $response['embed_quiz_id'] exists
@@ -36,16 +36,16 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
         } else {
             $valid = false;
         }
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     /**
      * @covers Enp_quiz_Save_embed_quiz->validate_before_insert()
      * @dataProvider saveEmbedQuizProvider
      */
-    public function testValidateBeforeInsert($embed_save, $shouldReturn) {
-        $valid = self::$save_embed_quiz->validate_before_insert($embed_save);
-        $this->evaluateAssert($valid, $shouldReturn);
+    public function testValidateBeforeInsert($embed_quiz, $expected) {
+        $valid = self::$save_embed_quiz->validate_before_insert($embed_quiz);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function saveEmbedQuizProvider() {
@@ -109,7 +109,7 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
      * @covers Enp_quiz_Save_embed_quiz->update_embed_quiz_loads()
      * @dataProvider updateEmbedQuizProvider
      */
-    public function testUpdateEmbedQuizLoadsInsert($embed_save, $shouldReturn) {
+    public function testUpdateEmbedQuizLoadsInsert($embed_save, $expected) {
         $response = self::$save_embed_quiz->save_embed_quiz($embed_save);
 
         // if $response['embed_quiz_id'] exists
@@ -122,7 +122,7 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
         } else {
             $valid = false;
         }
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     /**
@@ -130,9 +130,9 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
      * @covers Enp_quiz_Save_embed_quiz->validate_before_save_load()
      * @dataProvider updateEmbedQuizProvider
      */
-    public function testValidateBeforeSaveLoad($embed_save, $shouldReturn) {
+    public function testValidateBeforeSaveLoad($embed_save, $expected) {
         $valid = self::$save_embed_quiz->validate_before_save_load($embed_save);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function updateEmbedQuizProvider() {

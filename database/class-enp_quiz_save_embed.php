@@ -28,7 +28,7 @@ require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_embed_site.php';
 
 class Enp_quiz_Save_embed extends Enp_quiz_Save {
     public $date,
-           $response = array('success'=>array(),
+           $response = array(
                               'error'=>array()
                              );
 
@@ -49,7 +49,6 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
 
     protected function save_embed_site($embed_data) {
         // load required files
-
         $embed_data['embed_site_updated_at'] = $this->date;
 
         // start our embed save
@@ -95,13 +94,19 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
     }
 }
 
-if(isset($_POST['doing_ajax'])) {
+
+if(isset($_POST['save'])) {
     $embed_save = new Enp_quiz_Save_embed($_POST);
 
-    header('Content-type: application/json');
-    echo json_encode($embed_save->get_response());
-    // don't produce anymore HTML or render anything else
-    // otherwise the server keeps going and sends us all
-    // the HTML of the page too, but we just want the JSON data
-    die();
+    $response = $embed_save->get_response();
+
+    if(isset($_POST['doing_ajax'])) {
+        header('Content-type: application/json');
+        echo json_encode($response);
+        // don't produce anymore HTML or render anything else
+        // otherwise the server keeps going and sends us all
+        // the HTML of the page too, but we just want the JSON data
+        die();
+    }
+    return $response;
 }

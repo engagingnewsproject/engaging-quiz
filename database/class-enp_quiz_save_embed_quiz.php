@@ -54,6 +54,20 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     */
     public function validate_before_insert($embed_quiz) {
 
+        $required = array(
+                        'embed_quiz_url',
+                        'quiz_id',
+                        'embed_site_id',
+                        'embed_quiz_updated_at'
+                    );
+        foreach($required as $require) {
+            if(!array_key_exists($require, $embed_quiz)) {
+                $this->add_error($require.' is not set in the array.');
+            } else if(empty($embed_quiz[$require])) {
+                $this->add_error($require.' is empty.');
+            }
+        }
+
         $url = $embed_quiz['embed_quiz_url'];
         $quiz_id = $embed_quiz['quiz_id'];
         $site_id = $embed_quiz['embed_site_id'];

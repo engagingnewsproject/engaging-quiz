@@ -7,8 +7,8 @@ use PHPUnit\Framework\TestCase;
 class EnpTestCase extends TestCase
 {
 
-    public function evaluateAssert($val, $shouldReturn) {
-        if($shouldReturn === false) {
+    public function evaluateAssert($val, $expected) {
+        if($expected === false) {
             $this->assertFalse($val);
         } else {
             $this->assertTrue($val);

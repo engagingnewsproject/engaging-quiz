@@ -22,10 +22,10 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->is_id()
      * @dataProvider testValidateIDProvider
      */
-    public function testValidateID($id, $shouldReturn) {
+    public function testValidateID($id, $expected) {
         // $enp_save = new Enp_quiz_Save();
         $valid = self::$enp_save->is_id($id);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testValidateIDProvider() {
@@ -47,9 +47,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->validate_hex()
      * @dataProvider testValidateHexProvider
      */
-    public function testValidateHex($hex, $shouldReturn) {
+    public function testValidateHex($hex, $expected) {
         $valid = self::$enp_save->validate_hex($hex);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testValidateHexProvider() {
@@ -69,9 +69,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->has_errors()
      * @dataProvider testHasErrorsProvider
      */
-    public function testHasErrors($response, $shouldReturn) {
+    public function testHasErrors($response, $expected) {
         $valid = self::$enp_save->has_errors($response);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testHasErrorsProvider() {
@@ -85,9 +85,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->does_quiz_exist()
      * @dataProvider testQuizExistsProvider
      */
-    public function testQuizExists($id, $shouldReturn) {
+    public function testQuizExists($id, $expected) {
         $valid = self::$enp_save->does_quiz_exist($id);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testQuizExistsProvider() {
@@ -106,9 +106,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->is_valid_url()
      * @dataProvider testIsValidURLProvider
      */
-    public function testIsValidURL($url, $shouldReturn) {
+    public function testIsValidURL($url, $expected) {
         $valid = self::$enp_save->is_valid_url($url);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testIsValidURLProvider() {
@@ -127,9 +127,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->is_slug()
      * @dataProvider testIsSlugProvider
      */
-    public function testIsSlug($slug, $shouldReturn) {
+    public function testIsSlug($slug, $expected) {
         $valid = self::$enp_save->is_slug($slug);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testIsSlugProvider() {
@@ -152,9 +152,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @dataProvider testDoesEmbedSiteExistProvider
      * @covers Enp_quiz_Save->does_embed_site_exist()
      */
-    public function testDoesEmbedSiteExist($query, $shouldReturn) {
+    public function testDoesEmbedSiteExist($query, $expected) {
         $valid = self::$enp_save->does_embed_site_exist($query);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testDoesEmbedSiteExistProvider() {
@@ -173,9 +173,9 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @dataProvider testDoesEmbedQuizExistProvider
      * @covers Enp_quiz_Save->does_embed_quiz_exist()
      */
-    public function testDoesEmbedQuizExist($query, $shouldReturn) {
+    public function testDoesEmbedQuizExist($query, $expected) {
         $valid = self::$enp_save->does_embed_quiz_exist($query);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testDoesEmbedQuizExistProvider() {
@@ -194,10 +194,10 @@ final class EnpQuizSaveTest extends EnpTestCase
      * @covers Enp_quiz_Save->is_date()
      * @dataProvider testValidateDateProvider
      */
-    public function testValidateDate($date, $shouldReturn) {
+    public function testValidateDate($date, $expected) {
         // $enp_save = new Enp_quiz_Save();
         $valid = self::$enp_save->is_date($date);
-        $this->evaluateAssert($valid, $shouldReturn);
+        $this->evaluateAssert($valid, $expected);
     }
 
     public function testValidateDateProvider() {
