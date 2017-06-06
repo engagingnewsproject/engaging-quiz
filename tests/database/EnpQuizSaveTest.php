@@ -113,9 +113,10 @@ final class EnpQuizSaveTest extends EnpTestCase
 
     public function testIsValidURLProvider() {
         return [
-                'valid-1'=>['http://jeremyjon.es', true],
-                'valid-2'=>['https://www.engagingnewsproject.org', true],
-                'valid-3'=>['http://nytimes.com', true],
+                'valid-root'=>['http://jeremyjon.es', true],
+                'valid-org-https'=>['https://www.engagingnewsproject.org', true],
+                'valid-subdomain'=>['http://subdomain.nytimes.com', true],
+                'valid-subdomain-paths'=>['https://subdomain.nytimes.com/with-path/and-more/', true],
                 'invalid-1'=>['99999999999999', false],
                 'invalid-2'=>['dev.dev.dev', false],
                 'invalid-3'=>['www.fail.com', false],

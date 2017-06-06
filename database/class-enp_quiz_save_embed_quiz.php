@@ -12,7 +12,7 @@
 
 class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     public  $embed_quiz = false, // object
-            $response = array('success'=>array(),
+            $response = array(
                               'error'=>array()
                              );
 
@@ -64,14 +64,27 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
             $this->add_error('Invalid URL');
         }
 
-        // check that it exists
-        if($this->does_embed_quiz_exist($url) === true) {
-            $this->add_error('URL already exists');
-        }
+
 
         // check if the quiz exists
         if($this->does_quiz_exist($quiz_id) === false) {
             $this->add_error('Quiz doesn\'t exist');
+        }
+
+        // check that it exists && if the quiz matches
+        // we want to allow multiple quizzes on one page,
+        // but want each quiz on a page to be unique entry
+        // ie, we don't want two entries for
+        // $url = jeremyjon.es/dev
+        // $quiz_id = 1
+        if($this->does_embed_quiz_exist($url) === true && $this->does_quiz_exist($quiz_id) === true) {
+            // check if the quiz_id matches with it
+            $embed_quiz = new Enp_quiz_Embed_quiz($url);
+            $embed_quiz_id = $embed_quiz->get_embed_quiz_id();
+
+            if((int) $embed_quiz->get_quiz_id() === (int) $quiz_id) {
+                $this->add_error('This URL and Quiz ID row already exists');
+            }
         }
 
         // check if the site id exists
@@ -111,7 +124,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     *         must have array('embed_site_id', 'quiz_id', 'embed_quiz_updated_at')
     * @return builds and returns a response message
     */
-    public function insert_embed_quiz($embed_quiz) {
+    protected function insert_embed_quiz($embed_quiz) {
         // validate
         $valid = $this->validate_before_insert($embed_quiz);
         // check if there are any errors
@@ -162,7 +175,8 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                                 );
 
             // merge the response arrays
-            return array_merge($embed_quiz, $response);
+            $success = array_merge($embed_quiz, $response);
+            $this->response = array_merge($this->response, $success);
 
         } else {
             // handle errors
@@ -212,8 +226,9 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                                 );
 
             // merge the response arrays
-            $response = array_merge($embed_quiz, $response);
-            return $response;
+            $success = array_merge($embed_quiz, $response);
+            $this->response = array_merge($this->response, $success);
+
         } else {
             // handle errors
             $this->add_error('Save quiz embed loads failed.');

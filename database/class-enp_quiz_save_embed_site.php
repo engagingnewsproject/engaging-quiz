@@ -11,14 +11,17 @@
  */
 
 class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
-    public $response = array('success'=>array(),
-                              'error'=>array()
+    public $response = array(
+                             'error'=>array()
                              );
 
     public function __construct() {
         // call $this->save_embed_site($action, $embed_site) to save
     }
 
+    /**
+    * @return $response (ARRAY) 'embed_site_id'. If it doesn't exist, it insterts it. If it does exist, it returns the existing embed_site_id.
+    */
     public function save_embed_site($embed_site) {
         // sanitize it
         $embed_site = $this->sanitize_embed_site($embed_site);
@@ -157,14 +160,14 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
                                 );
 
             // merge the response arrays
-            $return = array_merge($embed_site, $return);
-
+            $success = array_merge($embed_site, $return);
+            $this->response = array_merge($this->response, $success);
         } else {
             // handle errors
-            $return['error'] = 'Insert embed quiz failed.';
+            $this->add_error('Insert embed quiz failed.');
         }
         // return response
-        return $return;
+        return $this->response;
     }
 
 }
