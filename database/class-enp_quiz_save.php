@@ -370,7 +370,6 @@ class Enp_quiz_Save {
                 $dateTime = DateTime::createFromFormat('Y-m-d H:i:s', $date);
 
                 $errors = DateTime::getLastErrors();
-                var_dump($dateTime);
                 if (empty($errors['warning_count'])) {
                     $is_date = true;
                 }

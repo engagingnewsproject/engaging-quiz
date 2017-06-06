@@ -4,26 +4,18 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers Enp_quiz_Save
  */
-final class Enp_quiz_SaveTest extends TestCase
+final class EnpQuizSaveTest extends EnpTestCase
 {
     protected static $enp_save;
 
     protected function setUp()
     {
+        $this->enpSetUp();
         self::$enp_save = new Enp_quiz_Save();
-        $_SERVER["DOCUMENT_ROOT"] = "/Users/jj/Dropbox/mamp/sites/quiz";
     }
 
     public function tearDown() {
-      unset($_SERVER["DOCUMENT_ROOT"]);
-    }
-
-    public function evaluateAssert($val, $shouldReturn) {
-        if($shouldReturn === false) {
-            $this->assertFalse($val);
-        } else {
-            $this->assertTrue($val);
-        }
+      $this->enpTearDown();
     }
 
     /**

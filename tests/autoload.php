@@ -46,3 +46,6 @@ require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_embed_site.php';
 // Database for Quiz Take side (only need it to reset data)
 require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take.php';
 require_once ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_take_quiz_data.php';
+
+// Test Functions
+require ENP_QUIZ_PLUGIN_DIR .'tests/EnpTestCase.php';
