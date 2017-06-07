@@ -1,5 +1,4 @@
-var assert = require('assert');
-var iframeParent = require('../public/quiz-take/dist/iframe-parent.min.js');
+var assert = chai.assert;
 
 describe('iframeParent', function() {
 
