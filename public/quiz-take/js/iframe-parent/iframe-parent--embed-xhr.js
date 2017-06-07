@@ -49,7 +49,20 @@ function saveEnpEmbedQuiz(data) {
 
     xhr.open('POST', data.origin+'/wp-content/plugins/enp-quiz/database/class-enp_quiz_save_embed.php');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = saveEnpEmbedQuizReadyState();
+    xhr.onreadystatechange = function () {
+        if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            saveEmbedQuizComplete = true;
+            response = JSON.parse(xhr.responseText);
+            if(response.status === 'success') {
+                enpHandleEmbedQuizResponse(response);
+            } else {
+                console.log('XHR request for saveEnpEmbedQuiz successful but returned response error: '+JSON.stringify(response));
+            }
+
+        } else if (xhr.status !== 200) {
+            console.log('Request failed.  Returned status of ' + xhr.status);
+        }
+    };
 
     embed_quiz = {
         'save': 'embed_quiz',
@@ -59,28 +72,7 @@ function saveEnpEmbedQuiz(data) {
         'doing_ajax': 'true',
     };
 
-
-    return xhr.send(encodeURI(enpSerialize(embed_quiz)));
-    console.log(response);
-    return response;
-}
-
-function saveEnpEmbedQuizReadyState() {
-
-    console.log(xhr.status);
-    if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-        saveEmbedQuizComplete = true;
-        response = JSON.parse(xhr.responseText);
-        if(response.status === 'success') {
-            console.log('success!');
-            return enpHandleEmbedQuizResponse(response);
-        } else {
-            console.log('XHR request for saveEnpEmbedQuiz successful but returned response error: '+JSON.stringify(response));
-        }
-
-    } else if (xhr.status !== 200) {
-        console.log('saveEnpEmbedQuizReadyState request failed.  Returned status of ' + xhr.status);
-    }
+    xhr.send(encodeURI(enpSerialize(embed_quiz)));
 }
 
 /**
