@@ -11,7 +11,10 @@ var parentURL = window.location.href;
 // What to do when we receive a postMessage
 function receiveEnpIframeMessage(event) {
     var iframe,
-        iframe_id;
+        iframe_id,
+        response;
+
+    response = {};
     // quit the postmessage loop if it's NOT from a trusted site (engagingnewsproject.org or our dev sites)
     // If you want to see what it matches/doesn't match, go here: http://regexr.com/3dpq2
     if(/https?:\/\/(?:dev\b(?!.)|(?:(?:local|dev|test)\.)?engagingnewsproject\.org|engagingnews\.(?:staging\.)?wpengine\.com)/.test(event.origin)) {
@@ -35,23 +38,22 @@ function receiveEnpIframeMessage(event) {
         iframe_id = 'enp-ab-test-iframe-'+data.ab_test_id;
     }
     iframe = document.getElementById(iframe_id);
-
     // find out what we need to do with it
     if(data.action === 'setHeight') {
-        setEnpQuizHeight(iframe, data.height);
+        response.setEnpQuizHeight = setEnpQuizHeight(iframe, data.height);
     } else if(data.action === 'scrollToQuiz' || data.action === 'quizRestarted') {
-        enpScrollToQuiz(iframe);
+         response.enpScrollToQuozResponse = enpScrollToQuiz(iframe);
     }
     else if(data.action === 'sendURL') {
         // send the url of the parent (that embedded the quiz)
-        sendEnpParentURL();
+        response.sendEnpParentURLResponse = sendEnpParentURL();
         // log embed
-        saveEnpEmbedSite(event.origin, data);
+        response.saveEnpEmbedSiteResponse = saveEnpEmbedSite(event.origin, data);
     }
-
 
     // send a response sayin, yea, we got it!
     // event.source.postMessage("success!", event.origin);
+    return response;
 }
 
 // what to do on load of an iframe
@@ -123,26 +125,33 @@ function sendEnpParentURL() {
 * Sets the height of the iframe on the page
 */
 function setEnpQuizHeight(iframe, height) {
+    var response = false;
     // Test the data
     if(/([0-9])px/.test(height)) {
         // set the height on the style
         iframe.style.height= height;
+        response = height;
     }
+    return response;
 }
 
 /**
 * Snaps the quiz to the top of the viewport, if needed
 */
 function enpScrollToQuiz(iframe) {
+    var response = false;
     // this will get the current quiz distance from the top of the viewport
     var distanceFromTopOfViewport = iframe.getBoundingClientRect().top;
     // see if we're within -20px and 100px of the question (negative numbers means we've scrolled PAST (down) the quiz)
     if( -20 < distanceFromTopOfViewport && distanceFromTopOfViewport < 100) {
         // Question likely within viewport. Do not scroll.
+        response = 'noScroll';
     } else {
         // let's scroll them to the top of the next question (some browsers like iPhone Safari jump them way down the page)
         scrollBy(0, (distanceFromTopOfViewport - 10));
+        response = 'scrolledTop';
     }
+    return response;
 }
 
 function addEnpIframeStyles() {

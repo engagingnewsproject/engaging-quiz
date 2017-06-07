@@ -30,6 +30,8 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
         $embed_site_id = $embed_site_obj->get_embed_site_id();
         if($this->is_id($embed_site_id)) {
             $this->response['embed_site_id'] = $embed_site_id;
+            $this->response['status'] = 'success';
+            $this->response['action'] = 'found embed site id';
             return $this->response;
         }
 
