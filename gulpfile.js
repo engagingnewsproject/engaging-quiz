@@ -2,7 +2,6 @@ var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
@@ -234,9 +233,6 @@ function compressJS(path) {
 
 function processSASS(path) {
     return gulp.src(path+'sass/*.{scss,sass}')
-      // Initializes sourcemaps
-      // Uncomment this and the other sourcemaps line to add sourcemaps back in
-      //////////// .pipe(sourcemaps.init())
 
       // Converts Sass into CSS with Gulp Sass
       .pipe(sass({
@@ -247,10 +243,6 @@ function processSASS(path) {
 
       // minify the CSS
       .pipe(minifyCss())
-
-      // Writes sourcemaps into the CSS file
-      // Uncomment this and the other sourcemaps line to add sourcemaps back in
-      ///////////// .pipe(sourcemaps.write())
 
       // rename to add .min
       .pipe(rename({
