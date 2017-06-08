@@ -180,8 +180,8 @@ gulp.task('quizTakeIframeParentJS', function(callback) {
 
 gulp.task('concatQuizTakeIframeParentJS', function() {
     rootPath = "public/quiz-take/js/iframe-parent/";
-    src = [rootPath+"iframe-parent.js",
-           rootPath+"iframe-parent--embed-xhr.js",
+    src = [rootPath+"enpIframeQuiz.js",
+           rootPath+"iframe-parent--listener.js",
           ];
     filename = 'iframe-parent';
     dist = 'public/quiz-take/js/dist/';

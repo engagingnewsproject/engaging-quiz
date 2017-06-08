@@ -2,7 +2,6 @@ var assert = chai.assert;
 var expect = chai.expect;
 
 describe('iframeParent', function() {
-
     before(function() {
         // runs before all tests in this block
     });
@@ -34,8 +33,7 @@ describe('iframeParent', function() {
         };
 
         describe('setEnpQuizHeight', function() {
-
-            var setHeightSpy = sinon.spy(enpIframe, 'setEnpQuizHeight');
+            var setHeightSpy = sinon.spy(enpIframes[0], 'setQuizHeight');
             var height = '123px';
             var response = '';
             // set our extra event options
@@ -47,7 +45,7 @@ describe('iframeParent', function() {
                 event.data = JSON.stringify(event.data);
 
                 // make a fake event call
-                response = enpIframe.receiveEnpIframeMessage(event);
+                response = enpIframes[0].receiveEnpIframeMessage(event);
 
                 // delay it a bit so we can wait for the response
                 setTimeout(function(){
@@ -75,30 +73,30 @@ describe('iframeParent', function() {
 
 
         it('should set saveEnpEmbedSite equal to false initially', function() {
-            expect(enpIframe.getSaveEmbedSiteComplete()).to.equal(false);
+            expect(enpIframes[0].getSaveEmbedSiteComplete()).to.equal(false);
         });
 
         it('should set saveEnpEmbedQuiz to false initially', function() {
-            expect(enpIframe.getSaveEmbedQuizComplete()).to.equal(false);
+            expect(enpIframes[0].getSaveEmbedQuizComplete()).to.equal(false);
         });
 
         it('should set embedSiteID equal to false initially', function() {
-            expect(enpIframe.getEmbedSiteID()).to.equal(false);
+            expect(enpIframes[0].getEmbedSiteID()).to.equal(false);
         });
 
         it('should set embedQuizID equal to false initially', function() {
-            expect(enpIframe.getEmbedQuizID()).to.equal(false);
+            expect(enpIframes[0].getEmbedQuizID()).to.equal(false);
         });
 
         describe('saveEnpEmbedSite', function() {
             // Save Embed Site
-            var saveEnpEmbedSiteSpy = sinon.spy(enpIframe, 'saveEnpEmbedSite');
-            var enpHandleEmbedSiteResponseSpy = sinon.spy(enpIframe, 'enpHandleEmbedSiteResponse');
+            var saveEnpEmbedSiteSpy = sinon.spy(enpIframes[0], 'saveEnpEmbedSite');
+            var enpHandleEmbedSiteResponseSpy = sinon.spy(enpIframes[0], 'enpHandleEmbedSiteResponse');
             // Save Embed Quiz
-            var saveEnpEmbedQuizSpy = sinon.spy(enpIframe, 'saveEnpEmbedQuiz');
-            var enpHandleEmbedQuizResponseSpy = sinon.spy(enpIframe, 'enpHandleEmbedQuizResponse');
-            console.log(enpIframe.getEmbedSiteID());
-            console.log(enpIframe.getEmbedQuizID());
+            var saveEnpEmbedQuizSpy = sinon.spy(enpIframes[0], 'saveEnpEmbedQuiz');
+            var enpHandleEmbedQuizResponseSpy = sinon.spy(enpIframes[0], 'enpHandleEmbedQuizResponse');
+            console.log(enpIframes[0].getEmbedSiteID());
+            console.log(enpIframes[0].getEmbedQuizID());
 
             before(function(done){
                 // setup a valid event on the request
@@ -106,7 +104,7 @@ describe('iframeParent', function() {
 
                 event.data = JSON.stringify(event.data);
                 // make a fake event call
-                enpIframe.receiveEnpIframeMessage(event);
+                enpIframes[0].receiveEnpIframeMessage(event);
 
                 // delay it a half second so we can wait for the response
                 setTimeout(function(){
@@ -156,19 +154,19 @@ describe('iframeParent', function() {
             });
 
             it('should set saveEnpEmbedSite to true', function() {
-                expect(enpIframe.getSaveEmbedSiteComplete()).to.equal(true);
+                expect(enpIframes[0].getSaveEmbedSiteComplete()).to.equal(true);
             });
 
             it('should set saveEnpEmbedQuiz to true', function() {
-                expect(enpIframe.getSaveEmbedQuizComplete()).to.equal(true);
+                expect(enpIframes[0].getSaveEmbedQuizComplete()).to.equal(true);
             });
 
             it('should set embedSiteID equal to 2', function() {
-                expect(enpIframe.getEmbedSiteID()).to.equal('2');
+                expect(enpIframes[0].getEmbedSiteID()).to.equal('2');
             });
 
             it('should set embedQuizID equal to 77', function() {
-                expect(enpIframe.getEmbedQuizID()).to.equal('77');
+                expect(enpIframes[0].getEmbedQuizID()).to.equal('77');
             });
         });
 
