@@ -45,18 +45,18 @@ final class EnpQuizSaveEmbedTest extends EnpTestCase
 
         $response = json_decode($response);
         $response = (array) $response;
-        $response[$type.'_url'] = urldecode($response[$type.'_url']);
 
         // quick check to make sure everything is OK
         $validate = new Enp_quiz_Save();
-        if($validate->is_id($response[$type.'_id']) === false ) {
-            // assert true = false to throw an error
-            $this->assertEquals(true, false);
+
+        if(!$validate->has_errors($response)) {
+            $response[$type.'_url'] = urldecode($response[$type.'_url']);
+            // unset the variables we can't control
+            unset($response[$type.'_updated_at']);
+            unset($response[$type.'_id']);
         }
 
-        // unset the variables we can't control
-        unset($response[$type.'_updated_at']);
-        unset($response[$type.'_id']);
+
         $this->assertEquals($response, $expected);
     }
 
@@ -82,6 +82,17 @@ final class EnpQuizSaveEmbedTest extends EnpTestCase
                                 'embed_site_url'=> $embed_site_url,
                                 'doing_ajax' => 'true',
                                 'error'=>array(),
+                            )],
+                'invalid_embed_site_url'=>[
+                            array(
+                                'save' => 'embed_site',
+                                'action'=>'insert',
+                                'embed_site_name'=>'Test Case',
+                                'embed_site_url'=> urlencode('applewebdata://'.$embed_site_url),
+                                'doing_ajax' => 'true'
+                            ),
+                            array(
+                                'error'=>array('Invalid Site URL.'),
                             )],
                 'valid_embed_quiz_insert'=>[
                             array(
@@ -114,6 +125,17 @@ final class EnpQuizSaveEmbedTest extends EnpTestCase
                                 'doing_ajax' => 'true',
                                 'status' => 'success',
                                 'error'=>array(),
+                            )],
+                'invalid_embed_quiz_url'=>[
+                            array(
+                                'save' => 'embed_quiz',
+                                'quiz_id'=>'1',
+                                'embed_site_id'=>'1',
+                                'embed_quiz_url'=> urlencode('applewebdata://'.$embed_quiz_url),
+                                'doing_ajax' => 'true'
+                            ),
+                            array(
+                                'error'=>array('Invalid Quiz URL.'),
                             )],
             ];
     }
