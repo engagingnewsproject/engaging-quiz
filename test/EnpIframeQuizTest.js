@@ -14,7 +14,6 @@ var enpIframe = new EnpIframeQuiz(newIframe);
 describe('EnpIframeQuiz', function() {
     before(function() {
 
-
     });
 
     after(function() {
@@ -49,6 +48,33 @@ describe('EnpIframeQuiz', function() {
 
     });
 
+    describe('setSiteName', function() {
+
+        it('should set the site name to "Mocha Test"', function() {
+            expect(enpIframe.getSiteName()).to.equal('Mocha Test');
+        });
+
+        it('should set the site name to "Wut"', function() {
+            enpIframe.setSiteName('Wut');
+            expect(enpIframe.getSiteName()).to.equal('Wut');
+        });
+
+        it('should set the blank site name to parentURL', function() {
+            enpIframe.setSiteName('');
+            expect(enpIframe.getSiteName()).to.equal(enpIframe.parentURL);
+        });
+
+        it('should set the null site name to parentURL', function() {
+            enpIframe.setSiteName('');
+            expect(enpIframe.getSiteName()).to.equal(enpIframe.parentURL);
+        });
+
+        it('should set the integer site name to parentURL', function() {
+            enpIframe.setSiteName(0);
+            expect(enpIframe.getSiteName()).to.equal(enpIframe.parentURL);
+        });
+    });
+
     var event = {
         origin: 'http://local.quiz',
         data: {
@@ -68,7 +94,7 @@ describe('EnpIframeQuiz', function() {
 
         before(function(done){
             // setup a valid event on the request
-            event.data.action = 'sendURL';
+            event.data.action = 'saveSite';
 
             // make a fake event call
             enpIframe.receiveIframeMessage(event.origin, event.data);
@@ -121,11 +147,11 @@ describe('EnpIframeQuiz', function() {
         });
 
         it('should set saveEmbedSite to true', function() {
-            expect(enpIframe.saveEmbedSiteComplete).to.equal(true);
+            expect(enpIframe.getSaveEmbedSiteComplete()).to.equal(true);
         });
 
         it('should set saveEmbedQuiz to true', function() {
-            expect(enpIframe.saveEmbedQuizComplete).to.equal(true);
+            expect(enpIframe.getSaveEmbedQuizComplete()).to.equal(true);
         });
 
         it('should set embedSiteID equal to 2', function() {
