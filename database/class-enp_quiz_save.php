@@ -297,6 +297,36 @@ class Enp_quiz_Save {
     }
 
     /**
+    * Remove a query string from a url.
+    * So, http://www.test.com/?param=value
+    * becomes http://www.test.com/?param=value
+    *
+    * @since 1.1.0
+    * @param $url STRING
+    * @return STRING
+    */
+    public function remove_url_query($url) {
+        // remove the ? and everything after it
+        $url = preg_replace('/\?.+/', '', $url);
+        return $url;
+    }
+
+    /**
+    * Remove a hash from a url.
+    * So, http://www.test.com/#top
+    * becomes http://www.test.com/
+    *
+    * @since 1.1.0
+    * @param $url STRING
+    * @return STRING
+    */
+    public function remove_url_hash($url) {
+        // remove the ? and everything after it
+        $url = preg_replace('/\#.+/', '', $url);
+        return $url;
+    }
+
+    /**
     * Checks to see if it's a slug or not
     * Allowed characters are A-Z, a-z, 0-9, and dashes (-)
     *

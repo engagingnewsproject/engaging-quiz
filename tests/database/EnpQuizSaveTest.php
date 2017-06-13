@@ -115,6 +115,10 @@ final class EnpQuizSaveTest extends EnpTestCase
         return [
                 'valid-root'=>['http://jeremyjon.es', true],
                 'valid-org-https'=>['https://www.engagingnewsproject.org', true],
+                'valid-org-query'=>['https://www.engagingnewsproject.org?hi=there', true],
+                'valid-org-query-and-hash'=>['https://www.engagingnewsproject.org?hi=there#top', true],
+                'valid-org-hash'=>['https://www.engagingnewsproject.org/#top', true],
+                'valid-org-hash-2'=>['https://www.engagingnewsproject.org#top', true],
                 'valid-subdomain'=>['http://subdomain.nytimes.com', true],
                 'valid-subdomain-paths'=>['https://subdomain.nytimes.com/with-path/and-more/', true],
                 'invalid-1'=>['99999999999999', false],
@@ -133,7 +137,7 @@ final class EnpQuizSaveTest extends EnpTestCase
     }
 
     /**
-     * @covers Enp_quiz_Save->starts_with_http()
+     * @covers Enp_quiz_Save->is_valid_http_url()
      * @dataProvider testIsValidHTTPURLProvider
      */
     public function testIsValidHTTPURL($url, $expected) {
@@ -151,6 +155,46 @@ final class EnpQuizSaveTest extends EnpTestCase
                 'invalid-2'=>['dev.dev.dev', false],
                 'invalid-3'=>['www.fail.com', false],
                 'invalid-4'=>['applewebdata://what.com', false],
+        ];
+    }
+
+    /**
+     * @covers Enp_quiz_Save->remove_url_query()
+     * @dataProvider testRemoveURLQueryProvider
+     */
+    public function testRemoveURLQuery($url, $expected) {
+        $url = self::$enp_save->remove_url_query($url);
+        $this->assertEquals($url, $expected);
+    }
+
+    public function testRemoveURLQueryProvider() {
+        return [
+                ['http://jeremyjon.es', 'http://jeremyjon.es'],
+                ['http://www.test.com/path/', 'http://www.test.com/path/'],
+                ['http://www.test.com/path/?hi=there', 'http://www.test.com/path/'],
+                ['http://www.test.com/path?hi=there#wut', 'http://www.test.com/path'],
+                ['http://www.te?st.com', 'http://www.te'],
+        ];
+    }
+
+    /**
+     * @covers Enp_quiz_Save->remove_url_query()
+     * @dataProvider testRemoveURLHashProvider
+     */
+    public function testRemoveURLHash($url, $expected) {
+        $url = self::$enp_save->remove_url_hash($url);
+        $this->assertEquals($url, $expected);
+    }
+
+    public function testRemoveURLHashProvider() {
+        return [
+                ['http://jeremyjon.es', 'http://jeremyjon.es'],
+                ['https://www.test.com/path/', 'https://www.test.com/path/'],
+                ['http://www.test.com/path/?hi=there#hi', 'http://www.test.com/path/?hi=there'],
+                ['http://www.test.com/path?hi=there', 'http://www.test.com/path?hi=there'],
+                ['http://www.te#st.com', 'http://www.te'],
+                ['http://www.test.com#top', 'http://www.test.com'],
+                ['http://www.test.com/#top', 'http://www.test.com/'],
         ];
     }
 
