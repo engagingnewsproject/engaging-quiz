@@ -44,13 +44,13 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
         if($save === 'embed_site') {
 
             // check the URL. If it doesn't start with http we don't want it
-            if(substr( $embed_data['embed_site_url'], 0, 7 ) === "http://" || substr( $embed_data['embed_site_url'], 0, 8 ) === "https://") {
+            if($this->is_valid_http_url($embed_data['embed_site_url'])) {
                 $this->save_embed_site($embed_data);
             } else {
                 $this->add_error('Invalid Site URL.');
             }
         } else if($save === 'embed_quiz') {
-            if(substr( $embed_data['embed_quiz_url'], 0, 7 ) === "http://" || substr( $embed_data['embed_quiz_url'], 0, 8 ) === "https://") {
+            if($this->is_valid_http_url($embed_data['embed_quiz_url'])) {
                 $this->save_embed_quiz($embed_data);
             } else {
                 $this->add_error('Invalid Quiz URL.');
