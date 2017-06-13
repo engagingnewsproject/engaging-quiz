@@ -93,7 +93,7 @@ document.onreadystatechange = function () {
         // for each quiz, send a message to that iframe so we can get its height
         for (var i = 0; i < enpIframeOnloadQuizzes.length; ++i) {
             // get the stored iframeheight
-            // send a postMessage to get the correct height
+            // send a postMessage to get the correct height (and kick off the proces to grab all the iframes)
             request = '{"status":"request","action":"sendBodyHeight"}';
             enpIframeOnloadQuizzes[i].contentWindow.postMessage(request, enpIframeOnloadQuizzes[i].src);
         }
