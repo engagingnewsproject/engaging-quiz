@@ -124,6 +124,37 @@ final class EnpQuizSaveTest extends EnpTestCase
     }
 
     /**
+     * @covers Enp_quiz_Save->starts_with_http()
+     * @dataProvider testIsValidHTTPURLProvider
+     */
+    public function testStartsWithHTTP($url, $expected) {
+        $valid = self::$enp_save->starts_with_http($url);
+        $this->evaluateAssert($valid, $expected);
+    }
+
+    /**
+     * @covers Enp_quiz_Save->starts_with_http()
+     * @dataProvider testIsValidHTTPURLProvider
+     */
+    public function testIsValidHTTPURL($url, $expected) {
+        $valid = self::$enp_save->is_valid_http_url($url);
+        $this->evaluateAssert($valid, $expected);
+    }
+
+    public function testIsValidHTTPURLProvider() {
+        return [
+                'valid-root'=>['http://jeremyjon.es', true],
+                'valid-org-https'=>['https://www.engagingnewsproject.org', true],
+                'valid-subdomain'=>['http://subdomain.nytimes.com', true],
+                'valid-subdomain-paths'=>['https://subdomain.nytimes.com/with-path/and-more/', true],
+                'invalid-1'=>['99999999999999', false],
+                'invalid-2'=>['dev.dev.dev', false],
+                'invalid-3'=>['www.fail.com', false],
+                'invalid-4'=>['applewebdata://what.com', false],
+        ];
+    }
+
+    /**
      * @covers Enp_quiz_Save->is_slug()
      * @dataProvider testIsSlugProvider
      */
@@ -180,13 +211,16 @@ final class EnpQuizSaveTest extends EnpTestCase
 
     public function testDoesEmbedQuizExistProvider() {
         return [
-                'valid-1'=>['https://jeremyjon.es/quizzes', true],
+                'valid-1'=>[array('embed_quiz_url'=>'https://jeremyjon.es/quizzes', 'quiz_id'=>'44'), true],
                 'valid-2'=>['1', true],
-                'valid-3'=>['http://localhost:3000/2017/05/25/sample-quiz/', true],
+                'valid-3'=>[array('embed_quiz_url'=>'http://localhost:3000/2017/05/25/sample-quiz/', 'quiz_id'=>'64'), true],
                 'invalid-1'=>['99999999999999', false],
                 'invalid-2'=>['http://newyorktimes.com', false],
-                'invalid-3'=>[false, false],
-                'invalid-4'=>[true, false]
+                'invalid-3'=>[array('quiz_id'=>'1', 'embed_quiz_url'=>'http://newyorktimes.com'), false],
+                'invalid-4'=>[false, false],
+                'invalid-5'=>[true, false],
+                'invalid-6'=>[array('quiz_id'=>'1', 'embed_quiz_url'=>'appledata://newyorktimes.com'), false],
+                'invalid-7'=>[array('embed_quiz_url'=>'https://jeremyjon.es/quizzes', 'quiz_id'=>'472873827387234'), false],
         ];
     }
 

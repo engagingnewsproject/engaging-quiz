@@ -25,14 +25,12 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
      */
     public function testSaveEmbedQuizInsert($embed_save, $expected) {
         $response = self::$save_embed_quiz->save_embed_quiz($embed_save);
-
         // if $response['embed_quiz_id'] exists
         // && $response['embed_quiz_id'] is a valid ID
         // && there are no errors
         // then it's valid = true
         if( array_key_exists('embed_quiz_id', $response) && self::$save_embed_quiz->is_id($response['embed_quiz_id']) && empty(self::$save_embed_quiz->has_errors($response)) ) {
             $valid = true;
-
         } else {
             $valid = false;
         }

@@ -116,12 +116,14 @@ final class EnpQuizSaveEmbedTest extends EnpTestCase
                             array(
                                 'save' => 'embed_quiz',
                                 'embed_quiz_url'=> urlencode('https://jeremyjon.es/quizzes'),
+                                'quiz_id'=>'44',
                                 'doing_ajax' => 'true'
                             ),
                             array(
                                 'save' => 'embed_quiz',
                                 'action'=>'updated_quiz_embed_loads',
                                 'embed_quiz_url'=> 'https://jeremyjon.es/quizzes',
+                                'quiz_id'=>'44',
                                 'doing_ajax' => 'true',
                                 'status' => 'success',
                                 'error'=>array(),
