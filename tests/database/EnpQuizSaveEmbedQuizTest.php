@@ -68,6 +68,17 @@ final class EnpQuizSaveEmbedQuizTest extends EnpTestCase
                                 'valid_insert'=>true,
                                 'embed_quiz_url'=>'http://jeremyjon.es/'.$guid.'hash',
                             )],
+                'valid_https_to_http'=>[array(
+                                'action'=>'insert',
+                                'quiz_id'=>'1',
+                                'embed_site_id'=>'1',
+                                'embed_quiz_url'=>'https://jeremyjon.es/'.$guid.'https',
+                                'embed_quiz_updated_at'=>$date
+                            ),
+                            array(
+                                'valid_insert'=>true,
+                                'embed_quiz_url'=>'http://jeremyjon.es/'.$guid.'https',
+                            )],
                 'valid_with_param'=>[array(
                                 'action'=>'insert',
                                 'quiz_id'=>'1',
