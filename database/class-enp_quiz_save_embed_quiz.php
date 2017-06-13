@@ -29,6 +29,8 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
     *                            array('success'=>array(),'error'=>array())
     */
     public function save_embed_quiz($embed_quiz) {
+        // sanitize it
+        $embed_quiz = $this->sanitize_embed_quiz($embed_quiz);
         // decide what we need to do
         if($embed_quiz['action'] === 'insert') {
             // try to insert
@@ -42,6 +44,21 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
 
         return $this->response;
     }
+
+    public function sanitize_embed_quiz($embed_quiz) {
+
+        if(isset($embed_quiz['embed_quiz_url'])) {
+            // remove the query string and hash, if any
+            $url = $embed_quiz['embed_quiz_url'];
+            $url = $this->remove_url_hash($url);
+            $url =  $this->remove_url_query($url);
+            // set our new $url
+            $embed_quiz['embed_quiz_url'] = $url;
+        }
+
+        return $embed_quiz;
+    }
+
 
     /**
     * Validation to make sure we're allowed to insert. Checks on
