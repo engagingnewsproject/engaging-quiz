@@ -154,12 +154,12 @@ describe('EnpIframeQuiz', function() {
             expect(enpIframe.getSaveEmbedQuizComplete()).to.equal(true);
         });
 
-        it('should set embedSiteID equal to 2', function() {
-            expect(enpIframe.embedSiteID).to.equal('2');
+        it('should set embedSiteID equal to 354', function() {
+            expect(enpIframe.embedSiteID).to.equal('354');
         });
 
-        it('should set embedQuizID equal to 77', function() {
-            expect(enpIframe.embedQuizID).to.equal('77');
+        it('should set embedQuizID equal to 286', function() {
+            expect(enpIframe.embedQuizID).to.equal('286');
         });
     });
 
