@@ -15,7 +15,7 @@ var reload  = browserSync.reload;
 gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashboardJS', 'quizResultsJS', 'quizTakeJS', 'quizTakeIframeParentJS', 'quizTakeUtilityJS'], function() {
 
     browserSync({
-        proxy: "quiz.dev"
+        proxy: "https://quiz.test"
     });
 
     // quiz create
