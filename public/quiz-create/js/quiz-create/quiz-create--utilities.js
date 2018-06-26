@@ -87,10 +87,7 @@ function setUpAccordion(obj) {
         question_content;
     // get the value for the title
     question_title = $('.enp-question-title__textarea', obj).val();
-    // if it's empty, set it as an empty string
-    if(question_title === undefined || question_title === '') {
-        question_title = 'Question';
-    }
+    question_title = processAccordionTitle(question_title)
     // set-up question_content var
     question_content = obj;
     // create the title and content accordion object so our headings can get created
@@ -101,6 +98,20 @@ function setUpAccordion(obj) {
     enp_accordion__setup(accordion);
 }
 
+function processAccordionTitle(accordion_title) {
+    // if it's empty, set it as an empty string
+    if(accordion_title === undefined || accordion_title === '') {
+        accordion_title = 'Question';
+    }
+    else if(accordion_title.length > 200) {
+        // limit the length to 200 characters
+        accordion_title = accordion_title.slice(0, 200)
+        // add in an ellipse
+        accordion_title += '…'
+    }
+
+    return accordion_title;
+}
 /**
 * Replace all attributes with regex replace/string of an element
 * and its children

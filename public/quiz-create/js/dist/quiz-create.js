@@ -87,10 +87,7 @@ function setUpAccordion(obj) {
         question_content;
     // get the value for the title
     question_title = $('.enp-question-title__textarea', obj).val();
-    // if it's empty, set it as an empty string
-    if(question_title === undefined || question_title === '') {
-        question_title = 'Question';
-    }
+    question_title = processAccordionTitle(question_title)
     // set-up question_content var
     question_content = obj;
     // create the title and content accordion object so our headings can get created
@@ -101,6 +98,20 @@ function setUpAccordion(obj) {
     enp_accordion__setup(accordion);
 }
 
+function processAccordionTitle(accordion_title) {
+    // if it's empty, set it as an empty string
+    if(accordion_title === undefined || accordion_title === '') {
+        accordion_title = 'Question';
+    }
+    else if(accordion_title.length > 200) {
+        // limit the length to 200 characters
+        accordion_title = accordion_title.slice(0, 200)
+        // add in an ellipse
+        accordion_title += '…'
+    }
+
+    return accordion_title;
+}
 /**
 * Replace all attributes with regex replace/string of an element
 * and its children
@@ -253,7 +264,8 @@ if($('.enp-message__item--error').length !== 0) {
 // set titles as the values are being typed
 $(document).on('keyup', '.enp-question-title__textarea', function() {
     // get the value of the textarea we're typing in
-    question_title = $(this).val();
+    question_title = processAccordionTitle($(this).val())
+    
     // find the accordion header it goes with and add in the title
     $(this).closest('.enp-question-content').prev('.enp-accordion-header').find('.enp-accordion-header__title').text(question_title);
 });
@@ -275,7 +287,6 @@ function showSaveButton() {
     $('.enp-btn--next-step').show().addClass('enp-btn--next-step--reveal');
     $('.enp-quiz-breadcrumbs__link--preview').removeClass('enp-quiz-breadcrumbs__link--disabled');
 }
-
 // set-up our ajax response container for messages to get added to
 $('#enp-quiz').append('<section class="enp-quiz-message-ajax-container" aria-live="assertive"></section>');
 
