@@ -95,4 +95,6 @@ function removeQuestion(questionID) {
     $('#enp-question--'+questionID).prev('.enp-accordion-header').remove();
     // remove question
     $('#enp-question--'+questionID).remove();
+    // update the indexes
+    updateQuestionIndexes()
 }

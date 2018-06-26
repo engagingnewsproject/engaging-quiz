@@ -15,6 +15,15 @@ function getQuestionIndex(questionID) {
     return questionIndex;
 }
 
+// returns the question ID based on the question jQuery object in the DOM
+function getQuestionID($question) {
+    return parseInt($('.enp-question-id', $question).val())
+}
+
+function getQuestionByMCOptionID(mcOptionID) {
+    return $('#enp-mc-option--'+mcOptionID).closest('.enp-question-content');
+}
+
 // find the newly inserted mc_option_id
 function getNewMCOption(questionID, question) {
     for (var prop in question) {
@@ -169,11 +178,12 @@ function replaceAttributes(el, pattern, replace) {
         att = atts[i];
         newAttrVal = att.nodeValue.replace(pattern, replace);
 
+
         // if the new val and the old val match, then nothing was replaced,
         // so we can skip it
         if(newAttrVal !== att.nodeValue) {
-
             if(att.nodeName === 'value') {
+                
                 // I heard value was trickier to track and update cross-browser,
                 // so use jQuery til further notice...
                 $(el).val(newAttrVal);
@@ -331,6 +341,62 @@ function removeErrorMessages() {
 
 }
 
+/*
+* Create utility functions for use across quiz-create.js
+*/
+
+function updateQuestionIndex(questionID, newQuestionIndex) {
+   
+    // find out if we need to update this index or not.
+    var $question = $('#enp-question--'+questionID)
+    var $questionOrder = $('.enp-question-order', $question)
+    var currentIndex = $questionOrder.val();
+    if(parseInt(currentIndex) !== newQuestionIndex) {
+        console.log('replacing '+currentIndex+ ' to '+newQuestionIndex)
+        // evaluates to /enp_question\[currentIndex\]/
+        // not sure why you need the double \\ instead of just one like normal
+        var pattern = new RegExp("enp_question\\["+currentIndex+"\\]")
+        console.log(pattern)
+        findReplaceDomAttributes(document.getElementById('enp-question--'+questionID), pattern, 'enp_question['+newQuestionIndex+']')
+        $questionOrder.val(newQuestionIndex)
+    }
+}
+
+
+function updateQuestionIndexes() {
+    $('.enp-question-content').each(function(i) {
+        console.log('updating '+getQuestionID($(this))+' index to '+i)
+        updateQuestionIndex(getQuestionID($(this)), i)
+    });
+}
+
+
+function updateMCIndex($mcOption, newMCOptionIndex) {
+   
+    // find out if we need to update this index or not.
+    var $mcOrder = $('.enp-mc-option-order', $mcOption)
+    var currentIndex = $mcOrder.val();
+    if(currentIndex === undefined) {
+        console.log($mcOrder)
+    }
+    if(parseInt(currentIndex) !== newMCOptionIndex) {
+        console.log('replacing '+currentIndex+ ' to '+newMCOptionIndex)
+
+        var pattern = new RegExp("\\]\\[mc_option\\]\\["+currentIndex+"\\]\\[")
+        console.log(pattern)
+        findReplaceDomAttributes(document.getElementById($mcOption.attr('id')), pattern, '][mc_option]['+newMCOptionIndex+'][')
+        $mcOrder.val(newMCOptionIndex)
+    }
+}
+
+
+function updateMCIndexes($question) {
+    // get all options and loop throught them
+    $('.enp-mc-option--inputs', $question).each(function(i) {
+        updateMCIndex($(this), i)
+    });
+}
+
 function temp_addQuestion() {
 
     templateParams = {question_id: 'newQuestionTemplateID',
@@ -428,6 +494,8 @@ function removeQuestion(questionID) {
     $('#enp-question--'+questionID).prev('.enp-accordion-header').remove();
     // remove question
     $('#enp-question--'+questionID).remove();
+    // update the indexes
+    updateQuestionIndexes()
 }
 
 function temp_addQuestionImage(question_id) {
@@ -533,8 +601,13 @@ function temp_removeMCOption(mcOptionID) {
 }
 
 function removeMCOption(mcOptionID) {
-    // actually remove it
+    var $question
+    // grab the question object
+    $question = getQuestionByMCOptionID(mcOptionID)
+    // actually remove the mc option
     $('#enp-mc-option--'+mcOptionID).remove();
+    // reindex MC options for this question
+    updateMCIndexes($question)
 }
 
 function temp_unsetRemoveMCOption(mcOptionID) {

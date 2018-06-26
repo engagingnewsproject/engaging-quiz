@@ -15,6 +15,15 @@ function getQuestionIndex(questionID) {
     return questionIndex;
 }
 
+// returns the question ID based on the question jQuery object in the DOM
+function getQuestionID($question) {
+    return parseInt($('.enp-question-id', $question).val())
+}
+
+function getQuestionByMCOptionID(mcOptionID) {
+    return $('#enp-mc-option--'+mcOptionID).closest('.enp-question-content');
+}
+
 // find the newly inserted mc_option_id
 function getNewMCOption(questionID, question) {
     for (var prop in question) {
@@ -169,11 +178,12 @@ function replaceAttributes(el, pattern, replace) {
         att = atts[i];
         newAttrVal = att.nodeValue.replace(pattern, replace);
 
+
         // if the new val and the old val match, then nothing was replaced,
         // so we can skip it
         if(newAttrVal !== att.nodeValue) {
-
             if(att.nodeName === 'value') {
+                
                 // I heard value was trickier to track and update cross-browser,
                 // so use jQuery til further notice...
                 $(el).val(newAttrVal);
