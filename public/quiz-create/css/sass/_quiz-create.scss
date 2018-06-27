@@ -429,6 +429,41 @@
             fill: $red;
         }
     }
+
+    .enp-question__move {
+        position: absolute;
+        left: 15px;
+
+        @include breakpoint(medium) {
+            left: -40px;
+        }
+    }
+
+    .enp-question__button--move {
+        @include btn--reset;
+        position: absolute;
+        fill: #bbb;
+        cursor: pointer;
+
+        &:hover, &:focus {
+            fill: #333;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+        }
+    }
+
+    .enp-question__button--move--up {
+        top: 0px;
+        left: -9px;
+    }
+
+    .enp-question__button--move--down {
+        top: 3px;
+        right: -9px;
+    }
+
     .enp-quiz-form__add-question {
         @include btn--icon;
         @include btn--dashed;

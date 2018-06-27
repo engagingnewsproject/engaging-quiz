@@ -14,8 +14,14 @@
     <input class="enp-question-id" type="hidden" name="enp_question[<?php echo $question_i;?>][question_id]" value="<?php echo $question_id;?>" />
     <input class="enp-question-order" type="hidden" name="enp_question[<?php echo $question_i;?>][question_order]" value="<?php echo $question_i;?>" />
 
-    <?php echo $Quiz_create->get_question_delete_button($question_id); ?>
-
+    <?php echo $Quiz_create->get_question_delete_button($question_id);
+     ?>
+    <div class="enp-question__move">
+        <?php 
+        echo $Quiz_create->get_question_move_button($question_id, $question_i, 'up', $question_ids);
+        echo $Quiz_create->get_question_move_button($question_id, $question_i, 'down', $question_ids);
+        ?>
+    </div>
 
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title-<?php echo $question_id;?>">
