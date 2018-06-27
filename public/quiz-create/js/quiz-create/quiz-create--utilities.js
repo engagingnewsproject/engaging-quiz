@@ -1,7 +1,14 @@
+function getQuestions() {
+    return $('.enp-question-content')
+}
+
+function getQuestion(questionID) {
+    return $('#enp-question--'+questionID)
+}
+
 /*
 * Create utility functions for use across quiz-create.js
 */
-
 function getQuestionIndex(questionID) {
     $('.enp-question-content').each(function(i) {
         if(parseInt($('.enp-question-id', this).val()) === parseInt(questionID)) {
@@ -22,6 +29,10 @@ function getQuestionID($question) {
 
 function getQuestionByMCOptionID(mcOptionID) {
     return $('#enp-mc-option--'+mcOptionID).closest('.enp-question-content');
+}
+
+function getQuestionAccordionButton(questionID) {
+    return getQuestion(questionID).prev('.enp-accordion-header');
 }
 
 // find the newly inserted mc_option_id
