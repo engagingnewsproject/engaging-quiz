@@ -443,46 +443,18 @@
         }
     }
 
-    .enp-question__sort {
-        @include btn--reset;
-        position: absolute;
-        left: -25px;
-        z-index: 1;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        width: 100%;
-        display: block;
-
-        &:hover {
-            cursor: move;
-            cursor: grab;
-            cursor: -webkit-grab;
-        }
-    }
-
-    .enp-icon--sort {
-        position: absolute;
-        top: 0.6rem;
-        width: 0.95rem;
-        fill: #aaa;
-    }
-
-    .enp-question__icon--sort-down {
-        top: 1.2rem;
-    }
-
     .enp-sort__placeholder {
         background: #ddd;
         height: 60px;
         width: 100%;
+        max-height: 120px;
         margin-bottom: 1.6rem;
     }
 
-    .ui-sortable-helper {
-        .enp-accordion-header{
-            animation: none;
-        }
+    .ui-sortable .ui-sortable-helper .ui-sortable-handle {
+        cursor: move;
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
     }
 
     .enp-question__button--move {
@@ -601,8 +573,6 @@
     .enp-btn--next-step--reveal {
         animation: slideInTop .3s $fastInEaseOut;
     }
-
-
 
 
     // UX interactions
