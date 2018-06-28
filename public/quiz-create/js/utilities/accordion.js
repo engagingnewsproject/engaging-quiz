@@ -62,6 +62,12 @@ jQuery( document ).ready( function( $ ) {
         // add the classes to our accordion content area
         accordion.content.addClass('enp-accordion-content enp-accordion-content--closed');
         accordion.content.attr('aria-hidden', true);
+
+        // add a temporary loading class
+        accordion.header.addClass('enp-accordion-header--inserting');
+        setTimeout(function() {
+            accordion.header.removeClass('enp-accordion-header--inserting');
+        }, 600);
     };
 
 

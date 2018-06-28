@@ -101,6 +101,9 @@ function waitSpinner(waitClass) {
     return '<div class="spinner '+waitClass+'"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>';
 }
 
+function triggerSave() {
+    $('.enp-quiz-form__save').trigger('click')
+}
 /** set-up accordions for questions
 * @param obj: $('#jqueryObj') of the question you want to turn into an accordion
 */

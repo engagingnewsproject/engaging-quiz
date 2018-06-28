@@ -4,8 +4,6 @@
 
 // ready the questions as accordions and add in swanky button template
 $('.enp-question-content').each(function(i) {
-    // remove move/reorder arrows
-    $('.enp-question__move').remove()
     // set up accordions
     setUpAccordion($(this));
     // add in image upload button template if it doesn't have an image
@@ -13,6 +11,8 @@ $('.enp-question-content').each(function(i) {
         $('.enp-question-image__input', this).after(questionImageUploadButtonTemplate());
     }
 });
+
+
 
 // hide descriptions
 $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();

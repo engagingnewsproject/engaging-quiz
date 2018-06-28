@@ -1,27 +1,62 @@
-/*
-* Create utility functions for use across quiz-create.js
-*/
+// set-up sortable
+function setUpSortable() {
+    // setup our move buttons
+    $('.enp-question__move').remove()
+    // move arrows to new position
+    //$('.enp-accordion-container').prepend('<div class="enp-question__sort"><svg class="enp-icon enp-icon--sort enp-question__icon--sort-up"><use xlink:href="#icon-arrow-up"></use></svg><svg class="enp-icon enp-icon--sort enp-question__icon--sort-down"><use xlink:href="#icon-arrow-down"></use></svg></div>')
 
+    // set-up sortable questions
+    $( '.enp-quiz-create__questions' ).sortable({
+            handle: '.enp-accordion-header',
+            placeholder: 'enp-sort__placeholder',
+            cancel: ''
+    });
+}
+setUpSortable();
+
+$( '.enp-quiz-create__questions' ).on( 'sortstart', function( event, ui ) {
+    // set the placeholder to be the height of the accordion button
+    $(ui.placeholder).css('height', $(ui.item).height())
+});
+
+$( '.enp-quiz-create__questions' ).on( 'sortupdate', function( event, ui ) {
+    // var questionID = $('.enp-question-id', ui.item).val()
+    // var newQuestionIndex = getQuestionIndexes(questionID)
+    // we don't need to do any checks here. updateQuestionIndex handles it for us
+    updateQuestionIndexes()
+    // trigger a generic save
+    triggerSave()
+});
+
+
+/**
+ * Updates all question form arrays to match their current order in the DOM
+ */
+function updateQuestionIndexes() {
+    $('.enp-question-content').each(function(i) {
+        // update each question index/array order to match its spot in the DOM
+        updateQuestionIndex(getQuestionID($(this)), i)
+    });
+}
+
+/**
+ * Updates question form array and order value to match its current place in the DOM
+ */
 function updateQuestionIndex(questionID, newQuestionIndex) {
    
     // find out if we need to update this index or not.
     var $question = $('#enp-question--'+questionID)
     var $questionOrder = $('.enp-question-order', $question)
     var currentIndex = $questionOrder.val();
+    // if the index doesn't match the desired spot, update it
     if(parseInt(currentIndex) !== newQuestionIndex) {
+        console.log('updating '+questionID+' from '+currentIndex+' to '+newQuestionIndex)
         // evaluates to /enp_question\[currentIndex\]/
         // not sure why you need the double \\ instead of just one like normal
         var pattern = new RegExp("enp_question\\["+currentIndex+"\\]")
         findReplaceDomAttributes(document.getElementById('enp-question--'+questionID), pattern, 'enp_question['+newQuestionIndex+']')
         $questionOrder.val(newQuestionIndex)
     }
-}
-
-
-function updateQuestionIndexes() {
-    $('.enp-question-content').each(function(i) {
-        updateQuestionIndex(getQuestionID($(this)), i)
-    });
 }
 
 /**
