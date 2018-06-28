@@ -6,6 +6,9 @@ function getQuestion(questionID) {
     return $('#enp-question--'+questionID)
 }
 
+function getQuestionContainer(questionID) {
+    return $('#enp-question--'+questionID+'__accordion-container')
+}
 /*
 * Create utility functions for use across quiz-create.js
 */
@@ -111,9 +114,16 @@ function setUpAccordion(obj) {
     // set-up question_content var
     question_content = obj;
     // create the title and content accordion object so our headings can get created
-    accordion = {title: question_title, content: question_content, baseID: obj.attr('id')};
+    accordion = {
+        title: question_title, 
+        content: question_content, 
+        baseID: obj.attr('id'), 
+        container: true
+    };
     //returns an accordion object with the header object and content object
     accordion = enp_accordion__create_headers(accordion);
+    // wrap the accordion in a class
+
     // set-up all the accordion classes and start classes (so they're closed by default)
     enp_accordion__setup(accordion);
 }
@@ -233,6 +243,8 @@ var sliderRangeHelpersTemplate = _.template($('#slider_take_range_helpers_templa
 
 // ready the questions as accordions and add in swanky button template
 $('.enp-question-content').each(function(i) {
+    // remove move/reorder arrows
+    $('.enp-question__move').remove()
     // set up accordions
     setUpAccordion($(this));
     // add in image upload button template if it doesn't have an image
@@ -455,7 +467,7 @@ function temp_addQuestion() {
             question_position: 'newQuestionPosition'};
 
     // add the template in
-    $('.enp-quiz-form__add-question').before(questionTemplate(templateParams));
+    $('.enp-quiz-create__questions').append(questionTemplate(templateParams));
 
     newQuestion = $('#enp-question--newQuestionTemplateID');
     questionImageUpload = questionImageUploadTemplate(templateParams);
@@ -495,11 +507,8 @@ function unset_tempAddQuestion() {
 // clone question, clear values, delete mc_options except one, add questionID, add MC option ID
 function addQuestion(questionID, mcOptionID, sliderID) {
 
-    // find/replace all attributes and values on this question
-    findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID'), /newQuestionTemplateID/, questionID);
-    // find replace on accordion
-    findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID__accordion-header'), /newQuestionTemplateID/, questionID);
-
+    // find replace on container
+    findReplaceDomAttributes(document.getElementById('enp-question--newQuestionTemplateID__accordion-container'), /newQuestionTemplateID/, questionID);
     // find/replace all array index attributes
     findReplaceDomAttributes(document.getElementById('enp-question--'+questionID), /newQuestionPosition/, getQuestionIndex(questionID));
 
@@ -512,40 +521,40 @@ function addQuestion(questionID, mcOptionID, sliderID) {
 
 
 function temp_removeQuestion(questionID) {
-    var accordionButton,
+    var accordionContainer,
         question;
     // move the keyboard focus to the element BEFORE? the accordion
-    // find the button
-    accordionButton = $('#enp-question--'+questionID).prev('.enp-accordion-header');
-    // remove the accordion button
-    accordionButton.addClass('enp-question--remove');
+    // find the container
+    accordionContainer = getQuestionContainer(questionID)
+    // remove the accordion container
+    accordionContainer.addClass('enp-question--remove');
     // find the question
     question = $('#enp-question--'+questionID);
     // move the keyboard focus to the element AFTER? the accordion
-    question.next().focus();
+    accordionContainer.next().find('enp-question-content').focus();
     // remove the question
-    question.addClass('enp-question--remove');
+    // question.addClass('enp-question--remove');
 }
 
 function temp_unsetRemoveQuestion(questionID) {
-    var accordionButton,
+    var accordionContainer,
         question;
     // move the keyboard focus to the element BEFORE? the accordion
     // find the button
-    accordionButton = $('#enp-question--'+questionID).prev('.enp-accordion-header');
-    // remove the accordion button
-    accordionButton.removeClass('enp-question--remove');
+    accordionContainer = getQuestionContainer(questionID)
+    // remove the accordion container remove class
+    accordionContainer.removeClass('enp-question--remove');
     // find the question
-    $('#enp-question--'+questionID).removeClass('enp-question--remove');
+    // $('#enp-question--'+questionID).removeClass('enp-question--remove');
 
     appendMessage('Question could not be deleted. Please reload the page and try again.', 'error');
 }
 
 function removeQuestion(questionID) {
     // remove accordion
-    $('#enp-question--'+questionID).prev('.enp-accordion-header').remove();
+    getQuestionContainer(questionID).remove();
     // remove question
-    $('#enp-question--'+questionID).remove();
+    // $('#enp-question--'+questionID).remove();
     // update the indexes
     updateQuestionIndexes()
 }

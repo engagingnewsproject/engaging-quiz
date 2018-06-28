@@ -6,6 +6,9 @@ function getQuestion(questionID) {
     return $('#enp-question--'+questionID)
 }
 
+function getQuestionContainer(questionID) {
+    return $('#enp-question--'+questionID+'__accordion-container')
+}
 /*
 * Create utility functions for use across quiz-create.js
 */
@@ -111,9 +114,16 @@ function setUpAccordion(obj) {
     // set-up question_content var
     question_content = obj;
     // create the title and content accordion object so our headings can get created
-    accordion = {title: question_title, content: question_content, baseID: obj.attr('id')};
+    accordion = {
+        title: question_title, 
+        content: question_content, 
+        baseID: obj.attr('id'), 
+        container: true
+    };
     //returns an accordion object with the header object and content object
     accordion = enp_accordion__create_headers(accordion);
+    // wrap the accordion in a class
+
     // set-up all the accordion classes and start classes (so they're closed by default)
     enp_accordion__setup(accordion);
 }
