@@ -92,7 +92,11 @@ class Enp_quiz_Embed_domain {
 
         foreach($sites as $site) {
             $site_ids[] = $site->get_embed_site_id();
-            $quiz_ids[] = $site->get_embed_site_quiz_ids();
+            $site_quiz_ids = $site->get_embed_site_quiz_ids();
+           
+            foreach($site_quiz_ids as $quiz_id) {
+                $quiz_ids[] = $quiz_id;
+            }
         }
 
 
