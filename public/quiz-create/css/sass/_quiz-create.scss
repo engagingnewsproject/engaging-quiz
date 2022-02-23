@@ -209,8 +209,8 @@
         &:focus .enp-mc-option__icon--correct,
         &:hover .enp-mc-option__icon--correct {
             background: #fff;
-            border-color: $green;
-            fill: $green;
+            border-color: $cme_blue;
+            fill: $cme_blue;
         }
 
         &:disabled {
@@ -226,16 +226,16 @@
 
     .enp-mc-option--correct {
         .enp-mc-option__input {
-            box-shadow: inset 0 0 3px $green;
-            border: 1px solid $green;
+            box-shadow: inset 0 0 3px $cme_blue;
+            border: 1px solid $cme_blue;
         }
 
         .enp-mc-option__button--correct:focus .enp-mc-option__icon--correct,
         .enp-mc-option__button--correct:hover .enp-mc-option__icon--correct,
         .enp-mc-option__icon--correct {
             fill: #fff;
-            border-color: $green;
-            background: $green;
+            border-color: $cme_blue;
+            background: $cme_blue;
         }
     }
 
@@ -342,7 +342,7 @@
     .enp-slider-correct__helper--hidden {
         &:before {
             width: 0;
-            background: $green;
+            background: $cme_blue;
         }
     }
 

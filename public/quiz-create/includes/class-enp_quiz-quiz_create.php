@@ -80,10 +80,12 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         wp_register_script( $plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'underscore' ), ENP_QUIZ_VERSION, true );
 		wp_enqueue_script( $plugin_name.'-accordion' );
 
+        // add tinymce editor scripts
+        wp_register_script( $plugin_name.'-tinymce', plugin_dir_url( __FILE__ ) . '../js/utilities/tinymce.min.js', array( 'jquery', 'underscore' ), ENP_QUIZ_VERSION, false );
+		wp_enqueue_script( $plugin_name.'-tinymce' );
 
         /*wp_register_script( $plugin_name.'-sticky-header', plugin_dir_url( __FILE__ ) . '../js/utilities/sticky-header.js', array( 'jquery', 'underscore' ), ENP_QUIZ_VERSION, true );
 		wp_enqueue_script( $plugin_name.'-sticky-header' );*/
-
 
         // quiz create script.
         // Mama Mia that's alotta dependencies!
@@ -97,7 +99,8 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
                 'jquery-ui-sortable',
                 'jquery-touch-punch',
                 //$plugin_name.'-sticky-header',
-                $plugin_name.'-accordion'
+                $plugin_name.'-accordion',
+                $plugin_name.'-tinymce'
             ),
             ENP_QUIZ_VERSION, true
         );
@@ -108,8 +111,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
             'quiz_create_url' => ENP_QUIZ_CREATE_URL,
             'quiz_image_url' => ENP_QUIZ_IMAGE_URL,
     	));
-
-
 
 	}
 

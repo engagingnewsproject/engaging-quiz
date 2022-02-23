@@ -125,7 +125,7 @@
     }
 
     .enp-dash-item--published {
-        box-shadow: inset 4px 0 0 $green, 0 1px 0 rgba(0,0,0,.1);
+        box-shadow: inset 4px 0 0 $cme_blue, 0 1px 0 rgba(0,0,0,.1);
     }
 
     .enp-dash-item--draft {
@@ -346,7 +346,7 @@
     }
 
     .enp-quiz-results__number--average-score {
-        color: darken($green, 8);
+        color: darken($cme_blue, 8);
 
         &:after {
             content: '%';

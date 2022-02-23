@@ -46,6 +46,8 @@
 
 
         include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc.php');
+        // add tinymce selector configuration, a PHP file because the selector needs to get the question ID
+        include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-tinymce.php');
 
         $slider_id = $question->get_slider();
         $slider = new Enp_quiz_Slider($slider_id);

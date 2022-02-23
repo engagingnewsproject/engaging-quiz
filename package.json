@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "wordpress plugin for creating and taking quizzes",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "tinymce": "^5.10.3"
+  },
   "scripts": {
     "test": "mocha"
   },
@@ -26,5 +28,16 @@
     "run-sequence": "^2.2.1",
     "sinon": "^5.0.7",
     "sinon-chai": "^3.0.0"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/engagingnewsproject/engaging-quiz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/engagingnewsproject/engaging-quiz/issues"
+  },
+  "homepage": "https://github.com/engagingnewsproject/engaging-quiz#readme"
 }
