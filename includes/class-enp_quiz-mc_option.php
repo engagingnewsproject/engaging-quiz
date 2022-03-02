@@ -49,7 +49,7 @@ class Enp_quiz_MC_option {
         $sql = "SELECT * from ".$pdo->question_mc_option_table." WHERE
                 mc_option_id = :mc_option_id
                 AND mc_option_is_deleted = 0";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $mc_option_row = $stmt->fetch();
         // return the found mc_option row
         return $mc_option_row;
