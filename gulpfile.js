@@ -16,8 +16,8 @@ var reload  = browserSync.reload;
 gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashboardJS', 'quizResultsJS', 'quizTakeJS', 'quizTakeIframeParentJS', 'quizTakeUtilityJS'], function() {
 
     browserSync({
-        proxy: "https://quiz.test"
-    });
+		proxy: "localhost:10044",
+	});
 
     // quiz create
     gulp.watch('public/quiz-create/css/sass/*.{scss,sass}', ['sassQuizCreate']);

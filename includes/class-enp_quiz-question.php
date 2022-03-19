@@ -488,6 +488,8 @@ class Enp_quiz_Question {
     */
     public function get_question_explanation() {
         $question_explanation = $this->question_explanation;
+        // ? TODO: perfect the target attribute add. kindof buggy.
+        $question_explanation = preg_replace('/(<a\b[^><]*)>/i', '$1 target="_blank">', $question_explanation);
         return $question_explanation;
     }
 
