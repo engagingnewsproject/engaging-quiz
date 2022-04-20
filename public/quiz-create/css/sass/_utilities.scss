@@ -326,7 +326,7 @@
 }
 
 @mixin small-uppercase {
-    font-size: 0.85rem;
+    font-size: 1.5rem;
     text-transform: uppercase;
 }
 
@@ -700,6 +700,10 @@
     &.enp-sticky--fixed {
         position: fixed;
     }
+}
+
+.enp-breadcrumb-link__container {
+    background-color: #fff;
 }
 
 .enp-breadcrumb-link {

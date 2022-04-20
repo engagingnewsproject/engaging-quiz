@@ -1,9 +1,13 @@
 #enp-quiz {
 
+    &.enp-quiz__main {
+        background: $really_light_gray;
+    }
+
     .enp-dash-container {
         @include container--wide;
         @include xpadding-vertical;
-        background: $really_light_gray;
+        // background: $really_light_gray;
         transition: all .25s $fastInEaseOut;
     }
 
@@ -50,6 +54,10 @@
     .enp-search-quizzes__label {
         margin-bottom: 0;
         @include screen-reader-text ;
+    }
+
+    .enp-search-quizzes__select {
+        padding: .3rem;
     }
 
     .enp-quiz-search__input {
@@ -122,14 +130,15 @@
         align-content: flex-end;
         justify-content: flex-end;
         border: none;
+        border-radius: 3px;
     }
 
     .enp-dash-item--published {
-        box-shadow: inset 4px 0 0 $green, 0 1px 0 rgba(0,0,0,.1);
+        box-shadow: inset 4px 0 0 $blue, 0 1px 0 rgba(0,0,0,.1);
     }
 
     .enp-dash-item--draft {
-        box-shadow: inset 4px 0 0 lighten($green, 25%), 0 1px 0 rgba(0,0,0,.1);
+        box-shadow: inset 4px 0 0 lighten($blue, 45%), 0 1px 0 rgba(0,0,0,.1);
     }
 
     .enp-dash-item--remove {
