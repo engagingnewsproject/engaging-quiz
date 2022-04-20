@@ -27,6 +27,10 @@
     .enp-quiz-title__textarea {
         @include input--xl;
     }
+    
+    textarea {
+        color: #000;
+    }
 
     .enp-accordion-container {
         margin-bottom: 1.6rem;
@@ -415,6 +419,7 @@
 
     .enp-answer-explanation__label {
         @include label--bold;
+
     }
 
     .enp-question__button--delete {

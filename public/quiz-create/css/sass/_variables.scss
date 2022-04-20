@@ -4,7 +4,7 @@ $fontTitle : "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
 //colors
 $font : #444;
 $title : #5D5E5F;
-$blue: #5887C0;
+$blue: #333f48;
 $dark_blue: #242f42;
 $light_blue: #EAF4FF;
 $light_gray: #F5F5F5;
@@ -12,12 +12,12 @@ $gray: #bbb;
 $dark_gray: #666;
 $darker_gray: #444;
 $really_light_gray: #F8F8F8;
-$link : darken($blue, 6);
+$link: $blue;
 $khaki: #CCA562;
 $green: darken(#58C88F, 10);
 $dark_green: darken($green, 8);
-$red: #f14021;
-$dark_red: darken(#f14021, 8);
+$red: #bf5700;
+$dark_red: darken($red, 8);
 $fade_red: #E97763;
 $link_hover: darken($link, 8);
 // animation
