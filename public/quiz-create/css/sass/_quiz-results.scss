@@ -283,6 +283,7 @@
 
     .enp-results-question__content {
         padding: 2rem 1.2rem 1.2rem;
+        @include border-radius;
     }
 
     .enp-results-question__deep-stats {

@@ -33,10 +33,10 @@
 		echo $Quiz_create->hidden_fields();?>
 
 		<fieldset class="enp-fieldset enp-quiz-title">
-			<label class="enp-label enp-quiz-title__label" for="quiz-title">
+			<label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
 				Quiz Title
 			</label>
-			<textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="My Engaging Quiz Title"/><?php echo $quiz->get_value('quiz_title') ?></textarea>
+			<textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ."/><?php echo $quiz->get_value('quiz_title') ?></textarea>
 		</fieldset>
 
 		<section class="enp-quiz-create__questions">

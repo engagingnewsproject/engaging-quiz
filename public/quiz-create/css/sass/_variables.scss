@@ -1,24 +1,34 @@
 //fonts
-$fontBody : "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
-$fontTitle : "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
-//colors
-$font : #444;
+$fontBody : Arial,monospace, helvetica, arial, sans-serif;
+$fontTitle : Arial,monospace, helvetica, arial, sans-serif;
+
+// // // colors
+$font : #1d1c25;
+$background: #FAF9FB;
 $title : #5D5E5F;
-$blue: #333f48;
+
+// Blues
+$blue: #1E1C26;
 $dark_blue: #242f42;
-$light_blue: #EAF4FF;
-$light_gray: #F5F5F5;
-$gray: #bbb;
-$dark_gray: #666;
-$darker_gray: #444;
+$light_blue: lighten($blue, 100);
+
+// Grays
+$light_gray: #FAF9FB;
 $really_light_gray: #F8F8F8;
-$link: $blue;
+$gray: darken($light_gray, 2);
+$dark_gray: darken($gray, 5);
+$darker_gray: darken($dark_gray, 20);
+
+// Other colors
 $khaki: #CCA562;
-$green: darken(#58C88F, 10);
+$green: #60AAAD;
 $dark_green: darken($green, 8);
 $red: #bf5700;
 $dark_red: darken($red, 8);
-$fade_red: #E97763;
+$fade_red: #C1893E;
+
+// Elements
+$link: #bf5700;
 $link_hover: darken($link, 8);
 // animation
 $fastInEaseOut: cubic-bezier(0.000, 0, .3, 1);

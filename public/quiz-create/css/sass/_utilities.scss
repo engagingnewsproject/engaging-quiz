@@ -81,16 +81,20 @@
     }
 }
 
+@mixin box-shadow {
+    box-shadow: 0 2px 2px rgba(0,0,0,.2);
+}
+
 @mixin btn--dashed {
     @include btn;
-    border: 3px dashed $dark_gray;
+    border: 1px dashed $dark_gray;
     background: none;
     color: #545454;
     box-shadow: none;
 
     &:hover,
     &:focus {
-        border: 3px dashed $darker_gray;
+        border: 1px dashed $darker_gray;
         color: $darker_gray;
         background: rgba(255,255,255,.9);
     }
@@ -281,6 +285,10 @@
     fill: #fff;
 }
 
+@mixin border-radius {
+    border-radius: 3px;
+}
+
 @mixin icon--circle--pad {
     @include icon--circle ;
     padding: 0.05em;
@@ -326,7 +334,7 @@
 }
 
 @mixin small-uppercase {
-    font-size: 1.5rem;
+    font-size: 1rem;
     text-transform: uppercase;
 }
 
@@ -700,10 +708,6 @@
     &.enp-sticky--fixed {
         position: fixed;
     }
-}
-
-.enp-breadcrumb-link__container {
-    background-color: #fff;
 }
 
 .enp-breadcrumb-link {
