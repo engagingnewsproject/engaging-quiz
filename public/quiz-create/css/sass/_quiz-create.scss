@@ -1,7 +1,6 @@
 #enp-quiz {
     .enp-publish-page-container,
-    .enp-preview-page-container,
-    .enp-quiz-form-container {
+    .enp-preview-page-container {
         @include container--wide;
         position: relative;
         padding-top: 6rem;
@@ -14,8 +13,23 @@
         }
     }
 
+    .enp-quiz-form-container {
+        display: grid;
+        grid-column: 2/-1;
+        width: 100%;
+        justify-items: center;
+        @include xpadding-vertical;
+        background: $really_light_gray;
+    }
+    .enp-breadcrumb-link__container {
+        display: grid;
+        grid-column: 1/span 1;
+        justify-content: center;
+        align-items: flex-start;
+        @include xpadding-vertical;
+    }
     .enp-quiz-form {
-        @include container--form;
+        display: grid;
         padding-left: 0;
         padding-right: 0;
     }

@@ -1,54 +1,68 @@
 #enp-quiz {
 
     &.enp-quiz__main {
-        background: $background;
+        @include container;
+        background: $fade_red;
+        display: grid;
+        gap: 1em;
+        min-height: 70vh;
+        
+        @include breakpoint(large) {
+            @include container--wide;
+            grid-template-columns: 1fr 4fr;
+        }
     }
 
     .enp-dash-container {
-        @include container--wide;
         @include xpadding-vertical;
-        // background: $really_light_gray;
+        @include xpadding-horizontal;
+        background: $really_light_gray;
         transition: all .25s $fastInEaseOut;
     }
 
-    .enp-dash__section-header {
-        display: block;
-        margin-bottom: 0.325rem;
-
+    .enp-dash__section-aside {
+        background-color: $green;
+        
         @include breakpoint(medium) {
-            display: flex;
-            @include flex-bottom;
-            justify-content: space-between;
+            padding-top: 10rem;
+            @include xpadding-horizontal;
         }
 
     }
 
     .enp-search-quizzes {
-        display: block;
-        @include breakpoint(small) {
-            display: flex;
-            @include flex-bottom;
-        }
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 1em;
 
+        @include breakpoint(medium) {
+            padding: 0.2rem 0.8rem;
+            flex-wrap: nowrap;
+        }
+        @include breakpoint(large) {
+            @include flex-spread-vertical;
+        }
     }
 
     .enp-search-quizzes__form-item {
         margin-bottom: 0.6rem;
-        display: block;
+        flex: 0 1 48%;
 
-        @include breakpoint('small') {
+        @include breakpoint(small) {
             margin-bottom: 0;
             margin-right: 1rem;
-
-            &:last-of-type {
-                margin-right: 0;
-            }
+            flex: 1 0 auto;
         }
 
     }
 
     .enp-quiz-search {
+        flex: 1 0 100%;
         position: relative;
+         @include breakpoint(medium) {
+            flex: 1 0 auto;
+        }
     }
 
     .enp-search-quizzes__label {
@@ -59,13 +73,20 @@
     .enp-search-quizzes__select {
         padding: .3rem;
         border-radius: 3px;
+        width: 100%;
+        @include breakpoint(large) {
+            min-width: 200px;
+        }
     }
 
     .enp-quiz-search__input {
-        max-width: 160px;
+        width: 100%;
         margin: 0 0 0.1rem;
         padding: .3rem .3rem .3rem 26px;
         font-size: 0.85rem;
+        @include breakpoint(medium) {
+            max-width: 200px;
+        }
     }
 
     .enp-quiz-search__icon {
@@ -99,6 +120,11 @@
     .enp-dash__section-title {
         @include small-uppercase;
         margin-bottom: 0.325rem;
+        border-bottom: 1px solid $dark-gray;
+    }
+
+    .enp-dash__ab-test-helper--not-enough-quizzes {
+        color: $darker-gray;
     }
 
     .enp-view-toggle {
@@ -400,7 +426,21 @@
 
 
     .enp-quiz-list__view {
-        @include flex-bottom;
+        // @include flex-bottom;
+    }
+
+    .enp-dash-item--add-new__wrap {
+        display: grid;
+        gap: 1em;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .enp-dash-list--quiz__container {
+        display: grid;
+        gap: 1em;
+        @include breakpoint(large) {
+            grid-template-columns: 1fr 1fr;
+        }
     }
 
     .enp-dash-item--add-new {
@@ -408,11 +448,7 @@
         border: none;
         padding: 0;
         position: relative;
-
-        @include breakpoint(medium) {
-            min-height: 7rem;
-        }
-
+        @include header-space;
     }
 
     .enp-dash-link--add-new {
