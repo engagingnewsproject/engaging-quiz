@@ -1,11 +1,15 @@
+// TEMP for dev theme
+#headerimg h1 {
+    text-align: center;
+    font-size: 40px !important;
+}
 #enp-quiz {
 
     &.enp-quiz__main {
         @include container;
-        background: $fade_red;
         display: grid;
         gap: 1em;
-        min-height: 70vh;
+        min-height: 85vh;
         
         @include breakpoint(large) {
             @include container--wide;
@@ -16,18 +20,19 @@
     .enp-dash-container {
         @include xpadding-vertical;
         @include xpadding-horizontal;
-        background: $really_light_gray;
         transition: all .25s $fastInEaseOut;
     }
 
     .enp-dash__section-aside {
-        background-color: $green;
-        
+        background-color: $background;
         @include breakpoint(medium) {
-            padding-top: 10rem;
+            @include xpadding-vertical;
             @include xpadding-horizontal;
         }
+    }
 
+    .enp-breadcrumb-link__container {
+        padding-bottom: 2rem;
     }
 
     .enp-search-quizzes {
@@ -166,7 +171,7 @@
     }
 
     .enp-dash-item--draft {
-        box-shadow: inset 4px 0 0 lighten($blue, 45%), 0 1px 0 rgba(0,0,0,.1);
+        box-shadow: inset 4px 0 0 $blue, 0 1px 0 rgba(0,0,0,.1);
     }
 
     .enp-dash-item--remove {

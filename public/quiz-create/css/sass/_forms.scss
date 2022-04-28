@@ -83,13 +83,14 @@
 
     @include breakpoint(medium) {
         padding: 0.8rem;
+        width: 100%;
     }
 }
 
 @mixin input--large {
     @include input;
     padding: 1rem 1.2rem;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 
 @mixin input--xl {
@@ -106,7 +107,6 @@
 @mixin textarea {
     @include input;
     line-height: 1.5;
-    width: 100%;
 
     &:focus {
         @include focus--glow;
@@ -264,9 +264,8 @@
 
     .enp-embed-code {
         @include textarea;
-        width: 100%;
         padding: 1.6rem;
-        font-size: 0.9rem;
+        font-size: 0.7rem;
         font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
 
         @include media(max-medium) {

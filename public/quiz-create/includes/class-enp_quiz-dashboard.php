@@ -138,6 +138,7 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
 			$quiz_actions[] = array(
 									'title'=>'Edit',
 									'url' => ENP_QUIZ_CREATE_URL.$quiz_id,
+									'icon' => 'edit',
 							);
 
 			// see if the quiz is valid. If it is, allow a preview for it
@@ -147,6 +148,7 @@ class Enp_quiz_Dashboard extends Enp_quiz_Create {
 				$quiz_actions[] = array(
 										'title'=>'Preview',
 										'url' => ENP_QUIZ_PREVIEW_URL.$quiz_id,
+										'icon' => 'preview',
 								);
 			}
 		}

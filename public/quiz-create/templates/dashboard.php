@@ -17,7 +17,7 @@
 <?php do_action('enp_quiz_display_messages');
 ?>
 <aside class="enp-dash__section-aside">
-	<h2 class="enp-dash__section-title">Quizzes</h2>
+	<h2 class="enp-dash__section-title">Search Quizzes</h2>
 	<div class="enp-quiz-list__view">
 		<?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-quiz-sort.php');?>
 	</div>

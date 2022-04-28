@@ -4,17 +4,17 @@
     .enp-quiz-settings-container {
 
         @include breakpoint(large) {
-            margin: 0;
-            width: 40%;
-            float: left;
+            // margin: 0;
+            // width: 40%;
+            // float: left;
         }
     }
 
     .enp-quiz-preview-container {
 
         @include breakpoint(large) {
-            width: 60%;
-            float: left;
+            // width: 60%;
+            // float: left;
         }
 
     }
@@ -29,7 +29,7 @@
 
     .enp-quiz-settings__form {
         margin-bottom: 3rem;
-
+        overflow: visible;
         @include breakpoint(large) {
             padding: 0;
             margin-bottom: 0;
@@ -147,7 +147,7 @@
         @include breakpoint(large) {
             position: absolute;
             top: -4px;
-            left: 104%;
+            left: 0;
         }
 
         &:last-of-type {

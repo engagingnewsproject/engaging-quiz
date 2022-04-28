@@ -8,16 +8,17 @@ $background: #FAF9FB;
 $title : #5D5E5F;
 
 // Blues
-$blue: #1E1C26;
-$dark_blue: #242f42;
+$blue: #00A9B7;
+$dark_blue: #333F48;
 $light_blue: lighten($blue, 100);
 
 // Grays
 $light_gray: #FAF9FB;
-$really_light_gray: #F8F8F8;
+$really_light_gray: lighten($light_gray, 1);
 $gray: darken($light_gray, 2);
 $dark_gray: darken($gray, 5);
 $darker_gray: darken($dark_gray, 20);
+$darkest_gray: darken($dark_gray, 50);
 
 // Other colors
 $khaki: #CCA562;

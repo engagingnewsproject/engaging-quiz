@@ -1,4 +1,4 @@
-<aside class="enp-aside enp-share-quiz__container">
+<div class="enp-aside enp-share-quiz__container">
 	<h3 class="enp-aside__title enp-share-quiz__title">Share Your Quiz</h3>
 	<p><a class="enp-share-quiz__url" href="<?php echo ENP_QUIZ_URL.$quiz->get_quiz_id();?>"><?php echo ENP_QUIZ_URL.$quiz->get_quiz_id();?></a></p>
 	<ul class="enp-share-quiz">
@@ -18,20 +18,4 @@
 			</svg>
 		</a></li>
 	</ul>
-	<!-- Feeback form -->
-	<!-- TODO: Submit feedback to database -->
-	<p>Thanks for using our quiz tool!</p>
-	<form action="" method="get" class="form-example">
-		<?php
-		// $enp_quiz_nonce->outputKey();
-		// echo $Quiz_create->hidden_fields();
-		?>
-		<input id="enp-quiz-id" type="hidden" name="enp_quiz[quiz_id]" value="enp-quiz-feedback-<?php echo $quiz->get_quiz_id();?>" />
-		<fieldset class="enp-fieldset enp-quiz-title">
-			<label for="enp-quiz-feedback-<?php echo $quiz->get_quiz_id();?>" class="enp-label enp-quiz-title__label">How can we improve this product?</label>
-			<textarea id="enp-quiz-feedback-<?php echo $quiz->get_quiz_id();?>" name="enp-quiz-feedback-<?php echo $quiz->get_quiz_id();?>" rows="5" cols="50" placeholder="Enter your feeback here..."></textarea>
-		</fieldset>
-		<button type="submit" class="enp-btn--save enp-quiz-submit enp-quiz-form__save" name="enp-quiz-submit" value="save">Submit</button>
-	</form>
-
-</aside>
+</div>

@@ -41,7 +41,7 @@
 
 @mixin container--thin {
     @include container;
-    max-width: 512px;
+    // max-width: 512px;
 }
 
 @mixin container--really-thin {

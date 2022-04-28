@@ -1,37 +1,53 @@
 #enp-quiz {
-    .enp-publish-page-container,
-    .enp-preview-page-container {
-        @include container--wide;
-        position: relative;
-        padding-top: 6rem;
-        padding-bottom: 4rem;
-        background: $really_light_gray;
+    // .enp-publish-page-container,
+    // .enp-preview-page-container {
+    //     @include container--wide;
+    //     position: relative;
+    //     @include xpadding-vertical;
+    //     background: $really_light_gray;
 
+
+    // }
+
+    .enp-publish-page-container,
+    .enp-quiz-form-container,
+    .enp-preview-page-container {
+        display: grid;
+        grid-column: 2/-1;
+        gap: 1rem;;
+        width: 100%;
+        justify-items: center;
+        
         @include media(max-small) {
             padding-left: 8px;
             padding-right: 8px;
         }
     }
-
-    .enp-quiz-form-container {
-        display: grid;
-        grid-column: 2/-1;
-        width: 100%;
-        justify-items: center;
-        @include xpadding-vertical;
-        background: $really_light_gray;
-    }
-    .enp-breadcrumb-link__container {
-        display: grid;
-        grid-column: 1/span 1;
-        justify-content: center;
-        align-items: flex-start;
-        @include xpadding-vertical;
-    }
+    // .enp-breadcrumb-link__container {
+    //     display: grid;
+    //     grid-column: 1/span 1;
+    //     justify-content: center;
+    //     align-items: flex-start;
+    //     @include xpadding-vertical;
+    // }
     .enp-quiz-form {
         display: grid;
         padding-left: 0;
         padding-right: 0;
+        @include breakpoint(medium) {
+            width: 100%;
+            max-width: 40rem;
+        }
+    }
+
+    .enp-preview-page-flex-container {
+        display: grid;
+        gap: 1rem;
+
+        @include breakpoint(medium) {
+            grid-template-columns: 1fr 3fr;
+            padding: 0 2rem;
+        }
     }
 
     .enp-quiz-title__label {
@@ -526,6 +542,12 @@
         }
     }
 
+    .enp-btn--save__btns {
+        @include flex;
+        align-items: center;
+        align-items: flex-start;
+    }
+
     .enp-quiz-form__save {
         @include btn;
         width: 100%;
@@ -543,16 +565,7 @@
             width: 27%;
             margin-right: 3%;
             position: relative;
-            top: -2px;
-            margin-top: 1.6rem;
         }
-
-        /*@include breakpoint(medium) {
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            margin-top: 1.6rem;
-            margin-bottom: 2rem;
-        }*/
     }
 
     .enp-quiz-form__save--reveal {
@@ -562,15 +575,23 @@
     @include btn--icon--circle(enp-btn--next-step);
 
     .enp-btn--next-step {
+        // @include btn;
         width: 100%;
         padding:  1rem 1.4rem 1rem;
 
-        @include breakpoint(small) {
-            width: 68%;
+        @include breakpoint(medium) {
+            padding: 1.2rem 1.8rem 1.1rem;
         }
+        .enp-btn--next-step__icon {
+            width: 1rem;
+            height: 1rem;
+        }
+        // @include breakpoint(small) {
+        //     width: auto;
+        // }
 
         /*
-        * AFTER we have remove the Save button,
+        * AFTER we have removed the Save button,
         * use this code to add the preview button into the
         * header
         @include media(max-medium) {
