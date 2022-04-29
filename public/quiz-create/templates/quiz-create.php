@@ -1,10 +1,11 @@
 <?php
+
 /**
  * The template for a user to create their quiz
  * and add questions to the quiz.
  *
- * @since             0.0.1
- * @package           Enp_quiz
+ * @since   0.0.1
+ * @package Enp_quiz
  *
  * Data available to this view:
  * $quiz = quiz object (if exits), false if new quiz
@@ -18,54 +19,57 @@
  *                  );
  * for reference,
  * $this = $Quiz_create = Enp_quiz_Quiz_create class
- *
  */
 ?>
 <aside class="enp-dash__section-aside">
-    <?php echo $Quiz_create->dashboard_breadcrumb_link();?>
+	<?php echo $Quiz_create->dashboard_breadcrumb_link(); ?>
 </aside>
 <article class="enp-container enp-dash-container">
-    <section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
-        <?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-breadcrumbs.php');?>
+	<section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
+		<?php require_once ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-breadcrumbs.php'; ?>
 
-        <?php do_action('enp_quiz_display_messages'); ?>
+		<?php do_action('enp_quiz_display_messages'); ?>
 
-        <form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo $Quiz_create->get_quiz_action_url(); ?>" novalidate>
-            <?php
-            $enp_quiz_nonce->outputKey();
-            echo $Quiz_create->hidden_fields();?>
+		<form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo $Quiz_create->get_quiz_action_url(); ?>" novalidate>
+			<?php
+			$enp_quiz_nonce->outputKey();
+			echo $Quiz_create->hidden_fields(); ?>
 
-            <fieldset class="enp-fieldset enp-quiz-title">
-                <label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
-                    Quiz Title
-                </label>
-                <textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ."/><?php echo $quiz->get_value('quiz_title') ?></textarea>
-            </fieldset>
+			<fieldset class="enp-fieldset enp-quiz-title">
+				<label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
+					Quiz Title
+				</label>
+				<textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title') ?></textarea>
+				<textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title_test') ?></textarea>
 
-            <section class="enp-quiz-create__questions">
-                <?php
-                $question_i = 0;
-                // count the number of questions
-                $question_ids = $quiz->get_questions();
-                if(!empty($question_ids)){
-                    foreach($question_ids as $question_id) {
-                        include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question.php');
-                        $question_i++;
-                    }
-                }
-                ?>
-            </section>
+			</fieldset>
 
-            <?php echo $Quiz_create->get_add_question_button();?>
+			<section class="enp-quiz-create__questions">
+				<?php
+				$question_i = 0;
+				// count the number of questions
+				$question_ids = $quiz->get_questions();
+				if (!empty($question_ids)) {
+					foreach ($question_ids as $question_id) {
+						include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php';
+						$question_i++;
+					}
+				}
+				?>
+			</section>
 
-            <div class="enp-btn--save__btns">
+			<?php echo $Quiz_create->get_add_question_button(); ?>
 
-                <button type="submit" class="enp-btn--save enp-quiz-submit enp-quiz-form__save" name="enp-quiz-submit" value="save">Save</button>
+			<div class="enp-btn--save__btns">
 
-                <?php echo $Quiz_create->get_next_step_button();?>
+				<button type="submit" class="enp-btn--save enp-quiz-submit enp-quiz-form__save" name="enp-quiz-submit" value="save">Save</button>
 
-            </div>
+				<?php echo $Quiz_create->get_next_step_button(); ?>
 
-        </form>
-    </section>
+			</div>
+
+		</form>
+	</section>
 </article>
+<?php
+// var_dump(get_quiz_title_test($quiz_title_test));

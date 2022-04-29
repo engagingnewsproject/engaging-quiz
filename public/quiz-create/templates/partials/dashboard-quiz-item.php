@@ -3,7 +3,7 @@
 <li id="enp-dash-item--<?php echo $quiz->get_quiz_id();?>" class="enp-dash-item enp-dash-item--<?php echo $quiz->get_quiz_status();?>">
 	<div class="enp-dash-item__header">
 		<h3 class="enp-dash-item__title"><?php echo $this->get_quiz_dashboard_item_title($quiz);?></h3>
-		<nav>
+		<nav class="enp-dash-item__nav-wrap">
 			<ul id="enp-dash-item__nav--<?php echo $quiz->get_quiz_id();?>" class="enp-dash-item__nav">
 				<?php
 					$quiz_actions = $this->get_quiz_actions($quiz);
@@ -23,7 +23,7 @@
 					endforeach;
 				?>
 				<li class="enp-dash-item__nav__item">
-					<form id="enp-delete-quiz-<?php echo $quiz->get_quiz_id()?>" method="post" action="<?php echo htmlentities(ENP_QUIZ_DASHBOARD_URL.'user/'); ?>">
+					<form id="enp-delete-quiz-<?php echo $quiz->get_quiz_id()?>" class="enp-delete-quiz" method="post" action="<?php echo htmlentities(ENP_QUIZ_DASHBOARD_URL.'user/'); ?>">
 						<?php echo $nonce_input;?>
 						<input type="hidden" class="enp-dash-item__quiz-id" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id()?>" />
 						<button name="enp-quiz-submit" class="enp-quiz-submit enp-dash-item__delete" value="delete-quiz">

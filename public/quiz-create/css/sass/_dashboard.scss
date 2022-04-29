@@ -158,6 +158,7 @@
         @include flex-grid__item ;
         @include flex-spread-vertical;
         display: flex;
+        z-index: 1;
         flex-direction: column;
         align-content: flex-end;
         justify-content: flex-end;
@@ -255,7 +256,6 @@
         display: flex;
         margin: 0;
         width: 100%;
-        padding: 12px;
         align-items: center;
             &:hover {
                 background-color: $gray;
@@ -265,27 +265,40 @@
             }
         a {
             font-weight: normal;
-            color: $red;
+            color: $darker_gray;
             @include flex;
             align-items: center;
-
-            &:focus {
+            width: 100%;
+            padding: 12px;
+            &:focus,
+            &:hover {
+                color: $red;
                 outline: 1px dotted $link;
                 outline-offset: 1px;
             }
         }
-
-        &:last-of-type {
-            margin-right: 0;
+    }
+    .enp-delete-quiz {
+        width: 100%;
+        &:hover {
+            .enp-dash-item__delete {
+                color: $red;
+            }
+            .enp-icon {
+                fill: $red;
+            }
         }
     }
-
     .enp-dash-item__delete {
         @include btn--reset;
-        position: relative;
-        padding: 0;
-        cursor: pointer;
         @include flex;
+        padding: 12px;
+        align-items: center;
+        position: relative;
+        line-height: 1.6;
+        color: $darker_gray;
+        cursor: pointer;
+        width: 100%;
         .enp-icon {
             fill: $darker_gray;
         }
@@ -295,15 +308,14 @@
         width: 15px;
         height: 15px;
         margin-right: 10px;
-        // min-width: 15%;
     }
 
     .enp-dash-item__nav--collapsible {
         display: none;
         position: absolute;
         z-index: 2;
-        top: 53px;
-        right: 1.5rem;
+        top: 44px;
+        right: -17px;
         width: 195px;
         background-color: #fff;
         text-align: left;
@@ -311,7 +323,6 @@
         transition: all .2s $fastInEaseOut;
 
         .enp-dash-item__nav__item {
-            padding: 0.5rem 1rem;
             cursor: pointer;
         }
     }
@@ -348,6 +359,10 @@
 
     .enp-dash-item--menu-active {
         transform: translate3d(0,-3px,0);
+        z-index: 2;
+        .enp-dash-item__nav-wrap {
+            position: relative;
+        }
 
         &.enp-dash-item--published {
             box-shadow: inset 4px 0 0 $green, 0 2px 2px rgba(0,0,0,.2);
@@ -360,9 +375,6 @@
         .enp-dash-item__menu-action__icon--bottom {
             transform: rotateX(180deg);
         }
-        // .enp-dash-item__menu-action__icon--top {
-        //     transform: rotateX(-180deg) translateY(0px);
-        // }
 
         .enp-dash-item__nav--collapsible {
             display: block;
@@ -478,6 +490,7 @@
             @include icon--circle;
             @include icon--normal;
             margin-right: 5px;
+            background-color: $dark_blue;
 
             @include breakpoint(medium) {
                 width: 2rem;
