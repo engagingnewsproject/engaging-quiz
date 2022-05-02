@@ -22,6 +22,9 @@
             padding-left: 8px;
             padding-right: 8px;
         }
+        @include breakpoint(medium) {
+            justify-items: start;
+        }
     }
     // .enp-breadcrumb-link__container {
     //     display: grid;
@@ -46,7 +49,7 @@
 
         @include breakpoint(medium) {
             grid-template-columns: 1fr 3fr;
-            padding: 0 2rem;
+            // padding: 0 2rem;
         }
     }
 
@@ -260,16 +263,16 @@
 
     .enp-mc-option--correct {
         .enp-mc-option__input {
-            box-shadow: inset 0 0 3px $green;
-            border: 1px solid $green;
+            box-shadow: inset 0 0 3px $blue;
+            border: 1px solid $blue;
         }
 
         .enp-mc-option__button--correct:focus .enp-mc-option__icon--correct,
         .enp-mc-option__button--correct:hover .enp-mc-option__icon--correct,
         .enp-mc-option__icon--correct {
             fill: #fff;
-            border-color: $green;
-            background: $green;
+            border-color: $blue;
+            background: $blue;
         }
     }
 
@@ -442,7 +445,7 @@
     }
 
     .enp-answer-explanation {
-        background: $light_blue;
+        background: $light_gray;
         padding-top: 2rem;
         box-shadow: inset 1px 0px 0 #ccc, inset -1px -1px 0 #ccc, inset 0 1px 0 #ddd;
     }

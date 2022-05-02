@@ -61,24 +61,32 @@ $question_image = $question->get_question_image();
 			<label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id; ?>">Answer Explanation</label>
 			<?php
 			// ? TODO: Need to fix: >1 question added the toolbar wont show, user has to save & refresh or preview
-			if ($question_i < 1) { // ? prevent json error for $question_id with {{}}'s
-				$question_id = 0;
-			}
-			$input       = $question->get_question_explanation();
-			$editor_id   = "enp-question-explanation__$question_id";
-			$editor_name = 'enp_question[' . $question_i . '][question_explanation]';
-			$settings    = array(
-				'textarea_name' => $editor_name,
-				'media_buttons' => false, // ? no media upload option
-				'quicktags'     => true,
-				'tinymce'       => array(
-					'toolbar1' => 'link,unlink', // ? limit what shows on the toolbar
-					'toolbar2' => '',
-					'toolbar3' => '',
-				),
-			);
-			wp_editor($input, $editor_id, $settings);
+			// if ($question_i < 1) { // ? prevent json error for $question_id with {{}}'s
+			// 	$question_id = 0;
+			// }
+			// $input       = $question->get_question_explanation();
+			// $editor_id   = "enp-question-explanation__$question_id";
+			// $editor_name = 'enp_question[' . $question_i . '][question_explanation]';
+			// $settings    = array(
+			// 	'textarea_name' => $editor_name,
+			// 	'media_buttons' => false, // ? no media upload option
+			// 	'quicktags'     => true,
+			// 	'teeny'         => false,
+			// 	'tinymce'       => array(
+			// 		'toolbar1' => 'link,unlink', // ? limit what shows on the toolbar
+			// 		'toolbar2' => '',
+			// 		'toolbar3' => '',
+			// 	),
+			// );
+			// wp_editor($input, $editor_id, $settings);
+			
 			?>
+			<script>
+				tinymce.init({
+				selector: 'textarea',  // change this value according to your HTML
+				auto_focus: 'element1'
+				});
+				</script>
 		</fieldset>
 	</div>
 </section>

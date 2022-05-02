@@ -14,13 +14,6 @@
 ?>
 <aside class="enp-dash__section-aside">
 	<?php echo $this->dashboard_breadcrumb_link(); ?>
-	<form class="enp-form enp-quiz-settings__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_PREVIEW_URL . $quiz->get_quiz_id() . '/'); ?>">
-		<input type="hidden" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id(); ?>" />
-		<p class="enp-input-description">What did you think of our quiz tool?</p>
-		<textarea id="enp-quiz-feedback" class="enp-textarea enp-quiz-feedback__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_feedback]" placeholder="We would love to hear from you!"></textarea>
-		<button type="submit" class="enp-btn--submit enp-preview-form__submit" name="enp-quiz-submit" value="quiz-save">Save</button>
-
-	</form>
 </aside>
 
 <article class="enp-container enp-dash-container">

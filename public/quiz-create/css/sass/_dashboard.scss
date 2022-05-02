@@ -42,7 +42,7 @@
         padding: 1em;
 
         @include breakpoint(medium) {
-            padding: 0.2rem 0.8rem;
+            padding: 0.2rem 0;
             flex-wrap: nowrap;
         }
         @include breakpoint(large) {
@@ -81,6 +81,7 @@
         width: 100%;
         @include breakpoint(large) {
             min-width: 200px;
+            font-size: 0.85rem;
         }
     }
 
@@ -90,7 +91,7 @@
         padding: .3rem .3rem .3rem 26px;
         font-size: 0.85rem;
         @include breakpoint(medium) {
-            max-width: 200px;
+            // max-width: 200px;
         }
     }
 
@@ -126,6 +127,9 @@
         @include small-uppercase;
         margin-bottom: 0.325rem;
         border-bottom: 1px solid $dark-gray;
+        @include breakpoint(medium) {
+            padding: 1em 0;
+        }
     }
 
     .enp-dash__ab-test-helper--not-enough-quizzes {
@@ -172,7 +176,10 @@
     }
 
     .enp-dash-item--draft {
-        box-shadow: inset 4px 0 0 $blue, 0 1px 0 rgba(0,0,0,.1);
+        box-shadow: inset 4px 0 0 $light_blue, 0 1px 0 rgba(0,0,0,.1);
+        .enp-dash-item__title a {
+            color: $dark_blue;
+        }
     }
 
     .enp-dash-item--remove {
@@ -275,6 +282,9 @@
                 color: $red;
                 outline: 1px dotted $link;
                 outline-offset: 1px;
+                .enp-dash-item__icon {
+                    fill: $red;
+                }
             }
         }
     }
@@ -471,7 +481,7 @@
     .enp-dash-link--add-new {
         @include btn--dashed--light;
         justify-content: flex-start;
-        color: $link;
+        color: $light_blue;
         padding: 1rem 1.2rem;
 
 
@@ -490,7 +500,7 @@
             @include icon--circle;
             @include icon--normal;
             margin-right: 5px;
-            background-color: $dark_blue;
+            background-color: $light_blue;
 
             @include breakpoint(medium) {
                 width: 2rem;
@@ -500,11 +510,11 @@
         }
 
         &:hover {
-            color: $link_hover;
+            color: $dark_blue;
 
             .enp-dash-link__icon {
                 fill: #fff;
-                background: $link_hover;
+                background: $dark_blue;
             }
         }
 

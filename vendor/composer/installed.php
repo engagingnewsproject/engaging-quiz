@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '880c3376674ee9f0405cee18123ad22735ee7fde',
+        'reference' => '5bd22a41f85d90686768c0974642b4ecd693c9d6',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '880c3376674ee9f0405cee18123ad22735ee7fde',
+            'reference' => '5bd22a41f85d90686768c0974642b4ecd693c9d6',
             'dev_requirement' => false,
         ),
         'squizlabs/php_codesniffer' => array(
@@ -27,6 +27,15 @@
             'aliases' => array(),
             'reference' => '5e4e71592f69da17871dba6e80dd51bce74a351a',
             'dev_requirement' => true,
+        ),
+        'tinymce/tinymce' => array(
+            'pretty_version' => '6.0.2',
+            'version' => '6.0.2.0',
+            'type' => 'component',
+            'install_path' => __DIR__ . '/../tinymce/tinymce',
+            'aliases' => array(),
+            'reference' => '6eb0c53e09bd552740dee0ede369f6b97d6983d5',
+            'dev_requirement' => false,
         ),
     ),
 );

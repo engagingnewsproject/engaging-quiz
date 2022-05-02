@@ -25,6 +25,10 @@
         @include small-uppercase;
         font-weight: 600;
         padding-top: 0;
+
+        @include breakpoint(medium) {
+            padding: 1em 0;
+        }
     }
 
     .enp-quiz-settings__form {
@@ -106,6 +110,9 @@
     .enp-quiz-preview__title {
         @include small-uppercase;
         font-weight: 600;
+        @include breakpoint(medium) {
+            padding: 1em 0;
+        }
     }
 
     .enp-preview-form__submit {
