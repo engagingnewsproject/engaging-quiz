@@ -175,13 +175,10 @@ function run_enp_quiz() {
 /* For DEBUGGING
 *  creates log file with error output. Good for using on
 * The plugin generated xxxx characters of unexpected output messages
-
+*/
 add_action('activated_plugin','enp_log_error');
 function enp_log_error(){
 	file_put_contents(plugin_dir_path( __FILE__ ).'/error.txt', ob_get_contents());
 }
-*/
+
 run_enp_quiz();
-
-
-		

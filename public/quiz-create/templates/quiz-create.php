@@ -40,7 +40,36 @@
 					Quiz Title
 				</label>
 				<textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title') ?></textarea>
-				<textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title_test') ?></textarea>
+				<!-- Quiz title test: /quiz-create/ -->
+				<?php
+				/**
+				 * 
+				 * // // // AN DUPLICATE (commented out) INPUT ELEMENT TO SAVE US ALL! // // //
+				 * All of these files are part of the "quiz_title_test" example of how to replicate 
+				 * an input element that will save to the database, and display across the quiz:
+				 * 
+				 * 1) quiz-create.php, 
+				 * 2) quiz-preview.php, 
+				 * 3) quiz-results.php, 
+				 * 4) ab-test-fieldset.php
+				 * 5) dashboard-ab-item.php, 
+				 * 6) dashboard-quiz-item.php,  <-- Includes function: GET_QUIZ_DASHBOARD_ITEM_TITLE_TEST
+				 * 7) question-results-section.php,
+				 * 8) quiz.php, 
+				 * 9) class-enp_quiz_save_quiz_response.php, 
+				 * 10) class-enp_quiz_save_quiz.php,
+				 * 11) class-enp_quiz-quiz.php, 
+				 * 12) class-enp_quiz-dashboard.php, 
+				 * 13) ab-results.php
+				 * 14) class-enp_quiz-activator.php
+				 * 
+				 * 
+				 *
+				 * Not really in any particular order, it just looks nicer that way. 
+				 *
+				 */
+				?>
+				<!-- <textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php // echo $quiz->get_value('quiz_title_test') ?></textarea> -->
 
 			</fieldset>
 
@@ -71,5 +100,13 @@
 		</form>
 	</section>
 </article>
+<!-- <footer> -->
+			<!-- <form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php // echo $Quiz_create->get_quiz_action_url(); ?>" novalidate> -->
+			<?php
+			// $enp_quiz_nonce->outputKey();
+			// echo $Quiz_create->hidden_fields(); ?>
+				<!-- <textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php // echo $quiz->get_value('quiz_title_test') ?></textarea> -->
+
+			<!-- </form> -->
+<!-- </footer> -->
 <?php
-// var_dump(get_quiz_title_test($quiz_title_test));

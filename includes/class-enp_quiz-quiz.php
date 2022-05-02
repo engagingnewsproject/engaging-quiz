@@ -4,12 +4,13 @@
  * Create a quiz object
  * @param $quiz_id = the id of the quiz you want to get
  * @return quiz object
+ * $quiz_title_test,
  */
 class Enp_quiz_Quiz
 {
 	public  $quiz_id,
 		$quiz_title,
-		$quiz_title_test,
+		$quiz_feedback,
 		$quiz_status,
 		$quiz_finish_message,
 		$quiz_owner,
@@ -75,11 +76,13 @@ class Enp_quiz_Quiz
 	/**
 	 * Hook up all the values for the object
 	 * @param $quiz = row from the quiz_table
+	 * $this->quiz_title_test = $this->set_quiz_title_test();
 	 */
 	protected function set_quiz_object_values()
 	{
 		$this->quiz_id = $this->set_quiz_id();
 		$this->quiz_title = $this->set_quiz_title();
+		$this->quiz_feedback = $this->set_quiz_feedback();
 		$this->quiz_status = $this->set_quiz_status();
 		$this->quiz_finish_message = $this->set_quiz_finish_message();
 		$this->quiz_owner = $this->set_quiz_owner();
@@ -168,10 +171,21 @@ class Enp_quiz_Quiz
 	 * @param $quiz = quiz row from quiz database table
 	 * @return quiz_title_test field from the database
 	 */
-	protected function set_quiz_title_test()
+	// protected function set_quiz_title_test()
+	// {
+	// 	$quiz_title_test = stripslashes(self::$quiz['quiz_title_test']);
+	// 	return $quiz_title_test;
+	// }
+
+	/**
+	 * Set the quiz_feedback for our Quiz Object
+	 * @param $quiz = quiz row from quiz database table
+	 * @return quiz_feedback field from the database
+	 */
+	protected function set_quiz_feedback()
 	{
-		$quiz_title_test = stripslashes(self::$quiz['quiz_title_test']);
-		return $quiz_title_test;
+		$quiz_feedback = stripslashes(self::$quiz['quiz_feedback']);
+		return $quiz_feedback;
 	}
 
 	/**
@@ -386,10 +400,21 @@ class Enp_quiz_Quiz
 	 * @param $quiz = quiz object
 	 * @return quiz_title_test from the object
 	 */
-	public function get_quiz_title_test()
+	// public function get_quiz_title_test()
+	// {
+	// 	$quiz_title_test = $this->quiz_title_test;
+	// 	return $quiz_title_test;
+	// }
+
+	/**
+	 * Get the quiz_feedback for our Quiz Object
+	 * @param $quiz = quiz object
+	 * @return quiz_feedback from the object
+	 */
+	public function get_quiz_feedback()
 	{
-		$quiz_title_test = $this->quiz_title_test;
-		return $quiz_title_test;
+		$quiz_feedback = $this->quiz_feedback;
+		return $quiz_feedback;
 	}
 
 	/**
@@ -503,6 +528,16 @@ class Enp_quiz_Quiz
 	{
 		return $this->get_quiz_option('quiz_title_display');
 	}
+
+	/**
+	 * Get the quiz_title_test_display for our Quiz Object
+	 * @param $quiz = quiz object
+	 * @return (string) 'show' or 'hide'
+	 */
+	// public function get_quiz_title_test_display()
+	// {
+	// 	return $this->get_quiz_option('quiz_title_test_display');
+	// }
 
 
 	/**
@@ -625,6 +660,93 @@ class Enp_quiz_Quiz
 		return $this->get_quiz_option('facebook_description');
 	}
 
+	/**
+	 * Get the quiz_end_fail_title for our Quiz Object
+	 *
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_fail_title()
+	{
+		return $this->get_quiz_option('quiz_end_fail_title');
+	}
+
+	/**
+	 * Get the quiz_end_fail_description for our Quiz Object
+	 * 
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_fail_description()
+	{
+		return $this->get_quiz_option('quiz_end_fail_description');
+	}
+
+	/**
+	 * Get the quiz_end_average_title for our Quiz Object
+	 *
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_average_title()
+	{
+		return $this->get_quiz_option('quiz_end_average_title');
+	}
+
+	/**
+	 * Get the quiz_end_average_description for our Quiz Object
+	 * 
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_average_description()
+	{
+		return $this->get_quiz_option('quiz_end_average_description');
+	}
+
+	/**
+	 * Get the quiz_end_good_title for our Quiz Object
+	 *
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_good_title()
+	{
+		return $this->get_quiz_option('quiz_end_good_title');
+	}
+
+	/**
+	 * Get the quiz_end_good_description for our Quiz Object
+	 * 
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_good_description()
+	{
+		return $this->get_quiz_option('quiz_end_good_description');
+	}
+
+	/**
+	 * Get the quiz_end_perfect_title for our Quiz Object
+	 *
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_perfect_title()
+	{
+		return $this->get_quiz_option('quiz_end_perfect_title');
+	}
+
+	/**
+	 * Get the quiz_end_perfect_description for our Quiz Object
+	 * 
+	 * @param $quiz = quiz object
+	 * @return string
+	 */
+	public function get_quiz_end_perfect_description()
+	{
+		return $this->get_quiz_option('quiz_end_perfect_description');
+	}
 	/**
 	 * Get the facebook_quote_end for our Quiz Object
 	 * @param $quiz = quiz object

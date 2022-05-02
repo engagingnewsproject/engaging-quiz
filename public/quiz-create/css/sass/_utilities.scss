@@ -553,9 +553,14 @@
     .enp-accordion-header--open {
 
         .enp-accordion-header__icon {
-            transform: rotateX(180deg) translateY(2px);
+            transform: rotateX(180deg);
         }
 
+    }
+
+    .enp-quiz-settings__form .enp-accordion-header {
+        position: relative;
+        overflow-y: hidden;
     }
 
     .enp-accordion-content {

@@ -20,7 +20,8 @@
  * @subpackage Enp_quiz/public
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Create {
+class Enp_quiz_Create
+{
 
 	/**
 	 * The ID of this plugin.
@@ -33,9 +34,9 @@ class Enp_quiz_Create {
 
 
 	public static $message,
-				  $nonce,
-				  $saved_quiz_id,
-				  $user_action;
+		$nonce,
+		$saved_quiz_id,
+		$user_action;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -43,41 +44,44 @@ class Enp_quiz_Create {
 	 * @since    0.0.1
 	 * @param      string    $plugin_name       The name of the plugin.
 	 */
-	public function __construct( $plugin_name ) {
+	public function __construct($plugin_name)
+	{
 
 		// set-up class
 		$this->plugin_name = $plugin_name;
 
-		include_once(WP_CONTENT_DIR.'/enp-quiz-config.php');
+		include_once(WP_CONTENT_DIR . '/enp-quiz-config.php');
 
 		add_action('init', array($this, 'set_enp_quiz_nonce'), 1);
 		add_action('init', array($this, 'add_enp_quiz_rewrite_tags'));
 
 		// redirect to the page they should go to
-		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch' ));
+		add_action('template_redirect', array($this, 'enp_quiz_template_rewrite_catch'));
 
 		// add our ajax save to be available
-		add_action( 'wp_ajax_save_quiz', array($this, 'save_quiz'), 1 );
-		add_action( 'wp_ajax_save_ab_test', array($this, 'save_ab_test'), 1 );
+		add_action('wp_ajax_save_quiz', array($this, 'save_quiz'), 1);
+		add_action('wp_ajax_save_ab_test', array($this, 'save_ab_test'), 1);
 		// we're including this as a fallback for the other pages.
-        // process save, if necessary
-        // if the enp-quiz-submit is posted, then they probably want to try to
-        // save the quiz. Be nice, try to save the quiz.
-        if(isset($_POST['enp-quiz-submit'])) {
-            add_action('template_redirect', array($this, 'save_quiz'), 1);
-        } elseif(isset($_POST['enp-ab-test-submit'])) {
+		// process save, if necessary
+		// if the enp-quiz-submit is posted, then they probably want to try to
+		// save the quiz. Be nice, try to save the quiz.
+		if (isset($_POST['enp-quiz-submit'])) {
+			add_action('template_redirect', array($this, 'save_quiz'), 1);
+		} elseif (isset($_POST['enp-ab-test-submit'])) {
 			add_action('template_redirect', array($this, 'save_ab_test'), 1);
 		}
 	}
 
-	public function set_enp_quiz_nonce() {
+	public function set_enp_quiz_nonce()
+	{
 		//Start the session
-	   session_start();
-	   //Start the class
-	   self::$nonce = new Enp_quiz_Nonce();
+		session_start();
+		//Start the class
+		self::$nonce = new Enp_quiz_Nonce();
 	}
 
-	public function get_enp_quiz_nonce() {
+	public function get_enp_quiz_nonce()
+	{
 		$return = true;
 		return self::$nonce->outputKey($return);
 	}
@@ -87,15 +91,16 @@ class Enp_quiz_Create {
 	 *
 	 * @since    0.0.1
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles()
+	{
 
-		wp_register_style( $this->plugin_name.'-quiz-create', plugin_dir_url( __FILE__ ) . 'css/enp_quiz-create.min.css', array(), ENP_QUIZ_VERSION );
- 	  	wp_enqueue_style( $this->plugin_name.'-quiz-create' );
-
+		wp_register_style($this->plugin_name . '-quiz-create', plugin_dir_url(__FILE__) . 'css/enp_quiz-create.min.css', array(), ENP_QUIZ_VERSION);
+		wp_enqueue_style($this->plugin_name . '-quiz-create');
 	}
 
 	// if we're not an admin, override WP's margin-top reserved for the admin bar
-	public function override_wp_admin_bar_css() {
+	public function override_wp_admin_bar_css()
+	{
 		print_r('<style>html{margin-top:0!important;}</style>');
 	}
 
@@ -104,18 +109,17 @@ class Enp_quiz_Create {
 	 *
 	 * @since    0.0.1
 	 */
-	public function enqueue_scripts() {
-
-
-
+	public function enqueue_scripts()
+	{
 	}
 	/*
 	*	Adds a enp_quiz_template parameter for WordPress to look for
 	*   ?enp_quiz_template=dashboard
 	*/
-	public function add_enp_quiz_rewrite_tags(){
-		add_rewrite_tag( '%enp_quiz_template%', '([^/]+)' );
-		add_rewrite_tag( '%enp_quiz_id%', '([^/]+)' );
+	public function add_enp_quiz_rewrite_tags()
+	{
+		add_rewrite_tag('%enp_quiz_template%', '([^/]+)');
+		add_rewrite_tag('%enp_quiz_id%', '([^/]+)');
 	}
 
 	/*
@@ -127,28 +131,28 @@ class Enp_quiz_Create {
 	*
 	* @since    0.0.1
 	*/
-	public function enp_quiz_template_rewrite_catch() {
+	public function enp_quiz_template_rewrite_catch()
+	{
 		global $wp_query;
 		// see if enp_quiz_template is one of the query_vars posted
-		if ( array_key_exists( 'enp_quiz_template', $wp_query->query_vars ) ) {
+		if (array_key_exists('enp_quiz_template', $wp_query->query_vars)) {
 			// if it's there, then see what the value is
-			$this->template = $wp_query->get( 'enp_quiz_template' );
-			$this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH.'/'.$this->template.'.php';
+			$this->template = $wp_query->get('enp_quiz_template');
+			$this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH . '/' . $this->template . '.php';
 
 			// make sure we have a user
 			// and if they're accessing a quiz, that they own it
 			$this->validate_user();
 
 			// make sure there's something there
-			if(!empty($this->template)) {
+			if (!empty($this->template)) {
 				// convert the dashes (-) to underscores (_) so it will match a function
-				$this->template_underscored = str_replace('-','_',$this->template);
+				$this->template_underscored = str_replace('-', '_', $this->template);
 
 				// load all the resources we need
 				$this->load_quiz_create_resources();
 				// load the template
 				$this->load_template();
-
 			}
 		}
 	}
@@ -157,47 +161,49 @@ class Enp_quiz_Create {
 	* Load all the scripts, css, and any other filters/hooks that
 	* need to run on a quiz create page
 	*/
-	public function load_quiz_create_resources() {
+	public function load_quiz_create_resources()
+	{
 		// load take quiz styles
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
 		// load take quiz scripts
 		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 		// custom action hook for displaying messages
-		add_action( 'enp_quiz_display_messages', array($this, 'display_messages' ));
+		add_action('enp_quiz_display_messages', array($this, 'display_messages'));
 		// set title tag
-		add_filter( 'document_title_parts', array($this, 'set_title_tag'));
+		add_filter('document_title_parts', array($this, 'set_title_tag'));
 		// don't remove wp_admin bar for admins
-		$is_admin_user = current_user_can( 'manage_options' );
-		if ( $is_admin_user === false) {
+		$is_admin_user = current_user_can('manage_options');
+		if ($is_admin_user === false) {
 			add_filter('show_admin_bar', '__return_false');
 			add_action('wp_head', array($this, 'override_wp_admin_bar_css'));
 		}
-
 	}
 
 	/**
-	* Get the requested quiz_id from the URL
-	* @return	quiz_id if found, else false
-	* @since    0.0.1
-	**/
-	public function enp_quiz_id_rewrite_catch() {
+	 * Get the requested quiz_id from the URL
+	 * @return	quiz_id if found, else false
+	 * @since    0.0.1
+	 **/
+	public function enp_quiz_id_rewrite_catch()
+	{
 		global $wp_query;
 		$quiz_id = false;
 		// see if enp_quiz_template is one of the query_vars posted
-		if ( array_key_exists( 'enp_quiz_id', $wp_query->query_vars ) ) {
+		if (array_key_exists('enp_quiz_id', $wp_query->query_vars)) {
 			// if it's there, then see what the value is
-			$quiz_id = $wp_query->get( 'enp_quiz_id' );
+			$quiz_id = $wp_query->get('enp_quiz_id');
 		}
 
 		return $quiz_id;
 	}
 
 	/**
-	* Get the requested ab_test_id from the URL
-	* @return	quiz_id if found, else false
-	* @since    0.0.1
-	**/
-	public function enp_ab_test_id_rewrite_catch() {
+	 * Get the requested ab_test_id from the URL
+	 * @return	quiz_id if found, else false
+	 * @since    0.0.1
+	 **/
+	public function enp_ab_test_id_rewrite_catch()
+	{
 		// same as the quiz_id request right now
 		return $this->enp_quiz_id_rewrite_catch();
 	}
@@ -207,15 +213,16 @@ class Enp_quiz_Create {
 	* If it's not found, show the dashboard instead
 	* @since    0.0.1
 	*/
-	public function load_template() {
+	public function load_template()
+	{
 		// load our default page template instead of their theme template
 		add_filter('template_include', array($this, 'load_page_template'), 1, 1);
 		// add enp-quiz class to the body
 		add_filter('body_class', array($this, 'add_enp_quiz_body_class'));
 		// check to make sure the template file exists
-		if(file_exists($this->template_file)) {
+		if (file_exists($this->template_file)) {
 			// set our classname to load (ie - load_dashboard)
-			$load_template = 'load_'.$this->template_underscored;
+			$load_template = 'load_' . $this->template_underscored;
 			// load the template dynamically based on the template name
 			$this->$load_template();
 		} else {
@@ -227,10 +234,11 @@ class Enp_quiz_Create {
 	/*
 	* Sets Title Tag attribute based on template filename
 	*/
-	public function set_title_tag($title) {
+	public function set_title_tag($title)
+	{
 		// $title is an array returned by WP of all the pieces
 		// we just need to change the title attribute
-		$page_title = str_replace('-',' ',$this->template);
+		$page_title = str_replace('-', ' ', $this->template);
 		$page_title = ucwords($page_title);
 		$title['title'] = $page_title;
 
@@ -240,26 +248,28 @@ class Enp_quiz_Create {
 	/*
 	* Loads quiz object based on url query
 	*/
-	public function load_quiz() {
-        // prepare the quiz object
-        $quiz_id = $this->enp_quiz_id_rewrite_catch();
+	public function load_quiz()
+	{
+		// prepare the quiz object
+		$quiz_id = $this->enp_quiz_id_rewrite_catch();
 		// set-up variables
-        $quiz = new Enp_quiz_Quiz($quiz_id);
+		$quiz = new Enp_quiz_Quiz($quiz_id);
 		// check to see if the user owns this quiz
-        return $quiz;
-    }
+		return $quiz;
+	}
 
 	/*
 	* Loads quiz object based on url query
 	*/
-	public function load_ab_test_object() {
-        // prepare the quiz object
-        $ab_test_id = $this->enp_ab_test_id_rewrite_catch();
+	public function load_ab_test_object()
+	{
+		// prepare the quiz object
+		$ab_test_id = $this->enp_ab_test_id_rewrite_catch();
 		// set-up variables
-        $ab_test = new Enp_quiz_AB_test($ab_test_id);
+		$ab_test = new Enp_quiz_AB_test($ab_test_id);
 		// check to see if the user owns this quiz
-        return $ab_test;
-    }
+		return $ab_test;
+	}
 	/*
 	* Checks to see if a quiz is valid or not,
 	* then redirects to quiz create page if invalid
@@ -271,32 +281,32 @@ class Enp_quiz_Create {
 	* the publish button)
 	* It won't SAVE their previous settings, but they will still be able to edit them.
 	*/
-	public function validate_quiz_redirect($quiz, $publish = false) {
+	public function validate_quiz_redirect($quiz, $publish = false)
+	{
 		$response = new Enp_quiz_Save_quiz_Response();
-        $validate = $response->validate_quiz_and_questions($quiz);
-        if($validate === 'invalid') {
+		$validate = $response->validate_quiz_and_questions($quiz);
+		if ($validate === 'invalid') {
 			// combine the arrays
-			if(is_array(self::$message['error'])) {
+			if (is_array(self::$message['error'])) {
 				self::$message['error'] = array_merge(self::$message['error'], $response->get_error_messages());
 			} else {
 				self::$message['error'] = $response->get_error_messages();
 			}
 
 			// check to make sure there's actually a quiz...
-			if($quiz->get_quiz_id() === null) {
+			if ($quiz->get_quiz_id() === null) {
 				// nope... redirect to quiz create
 				$this->redirect_to_quiz_create('new');
 			} else {
 				// There's a quiz, it's just an invalid quiz.
 				// Send them back to the create page to fix it.
-	            $this->redirect_to_quiz_create($quiz->get_quiz_id());
+				$this->redirect_to_quiz_create($quiz->get_quiz_id());
 			}
-
-        } elseif($validate === 'valid' && $publish === 'publish') {
+		} elseif ($validate === 'valid' && $publish === 'publish') {
 
 			// let's just send them to the preview page if they're trying to
 			// access the publish URL on a NON-published quiz
-			if($quiz->get_quiz_status() !== 'published') {
+			if ($quiz->get_quiz_status() !== 'published') {
 				// add error message
 				// add error message
 				self::$message['error'][] = "Please use the Publish Button to publish a quiz instead of the Breadcrumb Publish link.";
@@ -310,124 +320,136 @@ class Enp_quiz_Create {
 	* If a quiz is published, we won't let them access the create page
 	* and redirect them to preview page
 	*/
-	public function quiz_published_redirect($quiz) {
-		if($quiz->get_quiz_status() === 'published') {
+	public function quiz_published_redirect($quiz)
+	{
+		if ($quiz->get_quiz_status() === 'published') {
 			// add error message
 			self::$message['note'][] = "You can only make text and image changes to published quizzes. Please create a new quiz if you need to add questions or change answers.";
-            // uh oh, invalid quiz. Send them back to the create page to fix it.
-            // $this->redirect_to_quiz_preview($quiz->get_quiz_id());
-        }
+			// uh oh, invalid quiz. Send them back to the create page to fix it.
+			// $this->redirect_to_quiz_preview($quiz->get_quiz_id());
+		}
 	}
 
 	/*
 	* for child classes to set the variable on the user_action
 	*/
-	public function load_user_action() {
-		if(!empty(self::$user_action)) {
+	public function load_user_action()
+	{
+		if (!empty(self::$user_action)) {
 			return self::$user_action;
-		} elseif(isset($_GET['enp_user_action'])) {
+		} elseif (isset($_GET['enp_user_action'])) {
 			return $_GET['enp_user_action'];
 		} else {
 			return false;
 		}
-
 	}
 
-	public function add_enp_quiz_body_class($classes) {
+	public function add_enp_quiz_body_class($classes)
+	{
 		$classes[] = 'enp-quiz';
-		$classes[] = 'enp-'.$this->template;
+		$classes[] = 'enp-' . $this->template;
 		return $classes;
 	}
 
-	public function load_page_template() {
+	public function load_page_template()
+	{
 		return ENP_QUIZ_CREATE_MAIN_TEMPLATE_PATH;
 	}
 
-	public function load_ab_test() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-ab_test_view.php');
+	public function load_ab_test()
+	{
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-ab_test_view.php');
 		new Enp_quiz_AB_test_view();
 	}
 
-	public function load_ab_results() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_results.php');
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-ab_results.php');
+	public function load_ab_results()
+	{
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-quiz_results.php');
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-ab_results.php');
 		new Enp_quiz_AB_results();
 	}
 
-	public function load_dashboard() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-dashboard.php');
+	public function load_dashboard()
+	{
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-dashboard.php');
 		new Enp_quiz_Dashboard();
 	}
 
-	public function load_quiz_create() {
+	public function load_quiz_create()
+	{
 		$this->load_breadcrumbs();
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_create.php');
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-quiz_create.php');
 
 		new Enp_quiz_Quiz_create();
 	}
 
-	public function load_quiz_preview() {
+	public function load_quiz_preview()
+	{
 		$this->load_breadcrumbs();
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_preview.php');
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-quiz_preview.php');
 		new Enp_quiz_Quiz_preview();
 	}
 
-	public function load_quiz_publish() {
+	public function load_quiz_publish()
+	{
 		$this->load_breadcrumbs();
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_publish.php');
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-quiz_publish.php');
 		new Enp_quiz_Quiz_publish();
 	}
 
-	public function load_quiz_results() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-quiz_results.php');
+	public function load_quiz_results()
+	{
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-quiz_results.php');
 		new Enp_quiz_Quiz_results();
 	}
 
-	public function load_breadcrumbs() {
-		include_once(dirname(__FILE__).'/includes/class-enp_quiz-breadcrumbs.php');
+	public function load_breadcrumbs()
+	{
+		include_once(dirname(__FILE__) . '/includes/class-enp_quiz-breadcrumbs.php');
 	}
 
 
-	public function save_quiz() {
+	public function save_quiz()
+	{
 		// make sure they're logged in and own this quiz
 		// returns current_user_id if valid
 		$user_id = $this->validate_user();
 
 		$params = array();
 
-	   if(isset($_POST['enp_quiz'])) {
-		   $posted_quiz = $_POST['enp_quiz'];
-		   if(isset($posted_quiz['new_quiz'])) {
-			   $new_quiz_flag = $posted_quiz['new_quiz'];
-		   } else {
-			    $new_quiz_flag = '0';
-		   }
-	   }
-	   if(isset($_POST['enp_question'])) {
-	   		$posted_question = $_POST['enp_question'];
+		if (isset($_POST['enp_quiz'])) {
+			$posted_quiz = $_POST['enp_quiz'];
+			if (isset($posted_quiz['new_quiz'])) {
+				$new_quiz_flag = $posted_quiz['new_quiz'];
+			} else {
+				$new_quiz_flag = '0';
+			}
+		}
+		if (isset($_POST['enp_question'])) {
+			$posted_question = $_POST['enp_question'];
 		}
 
-		if(isset($_POST['enp-quiz-submit'])) {
+		if (isset($_POST['enp-quiz-submit'])) {
 			$posted_user_action = $_POST['enp-quiz-submit'];
 		}
 
-		if(isset($_POST['enp_quiz_nonce'])) {
+		if (isset($_POST['enp_quiz_nonce'])) {
 			$posted_nonce = $_POST['enp_quiz_nonce'];
 		}
 
-	   //Is it a POST request?
- 	   if($_SERVER['REQUEST_METHOD'] === 'POST') {
+		//Is it a POST request?
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
- 		   //Validate the form key
- 		   if(!isset($posted_nonce) || !self::$nonce->validate($posted_nonce)) {
- 			   // Form key is invalid,
-			   // return them to the page (they're probably refreshing the page)
-			   self::$message['error'][] = 'Quiz was not resaved';
+			//Validate the form key
+			if (!isset($posted_nonce) || !self::$nonce->validate($posted_nonce)) {
+				// Form key is invalid,
+				// return them to the page (they're probably refreshing the page)
+				self::$message['error'][] = 'Quiz was not resaved';
 
-			   return false;
- 		   }
- 	   }
-	   // initiate the save_quiz object
+				return false;
+			}
+		}
+		// initiate the save_quiz object
 		// get access to wpdb
 		global $wpdb;
 		// set-up an empty array for our quiz submission
@@ -437,19 +459,19 @@ class Enp_quiz_Create {
 		// set the date_time to pass
 		$date_time = date("Y-m-d H:i:s");
 		// build our array to save
-		if(isset($posted_quiz)) {
+		if (isset($posted_quiz)) {
 			$quiz = array(
-						'quiz' => $posted_quiz,
-						'quiz_updated_by' => $user_id,
-						'quiz_updated_at' => $date_time,
-					);
+				'quiz' => $posted_quiz,
+				'quiz_updated_by' => $user_id,
+				'quiz_updated_at' => $date_time,
+			);
 		}
 
-		if(isset($posted_question) && !empty($posted_question)) {
+		if (isset($posted_question) && !empty($posted_question)) {
 			$quiz['question'] = $posted_question;
 		}
 
-		if(isset($posted_user_action) && !empty($posted_user_action)) {
+		if (isset($posted_user_action) && !empty($posted_user_action)) {
 			// get the value of the button they clicked
 			$quiz['user_action'] = $posted_user_action;
 		} else {
@@ -475,12 +497,12 @@ class Enp_quiz_Create {
 		// check to see if we have a successful save response from the save class
 		// REMEMBER: A successful save can still have an error message
 		// such as "Quiz Updated. Hey! You don't have any questions though!"
-		if($response->status !== 'success') {
+		if ($response->status !== 'success') {
 			// No successful save, so return them to the same page and display error messages
 			return false;
 		}
-		  //*************************//
-		 //  SUCCESS! Now what...?  //
+		//*************************//
+		//  SUCCESS! Now what...?  //
 		//*************************//
 
 		if (defined('DOING_AJAX') && DOING_AJAX) {
@@ -492,7 +514,7 @@ class Enp_quiz_Create {
 		}
 		// if they want to go to the preview page AND there are no errors,
 		// let them move on to the preview page
-		elseif(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
+		elseif (self::$user_action['action'] === 'next' && self::$user_action['element'] === 'preview' && empty(self::$message['error'])) {
 			// unset the cookies for the current quiz
 			// in case they deleted questions and just in general
 			// to make it feel as expected (starting quiz from beginning)
@@ -501,7 +523,7 @@ class Enp_quiz_Create {
 			$this->redirect_to_quiz_preview($quiz_id);
 		}
 		// if they want to move on to the quiz-publish page and there are no errors, let them
-		elseif(self::$user_action['action'] === 'next' && self::$user_action['element'] === 'publish' && empty(self::$message['error'])) {
+		elseif (self::$user_action['action'] === 'next' && self::$user_action['element'] === 'publish' && empty(self::$message['error'])) {
 			// unset the cookies for the current quiz
 			$published_quiz = new Enp_quiz_Quiz($quiz_id);
 			$this->unset_quiz_take_cookies($published_quiz);
@@ -509,39 +531,41 @@ class Enp_quiz_Create {
 			$this->redirect_to_quiz_publish($quiz_id);
 		}
 		// catch if we're just creating the new quiz, send them to the new quiz page
-		elseif($save_action === 'insert' || $new_quiz_flag === '1') {
+		elseif ($save_action === 'insert' || $new_quiz_flag === '1') {
 			// they don't want to move on yet, but they're inserting,
 			// so we need to send them to their newly created quiz create page
 			$this->redirect_to_quiz_create($quiz_id);
 		}
 		// we're just updating the same page, return false to send them back
-	 	else {
+		else {
 			// we have errors! Oh no! Send them back to fix it
 			return false;
 		}
-
 	}
 
-	protected function redirect_to_quiz_create($quiz_id) {
+	protected function redirect_to_quiz_create($quiz_id)
+	{
 		// set a messages array to pass to url on redirect
-		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
+		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => self::$user_action));
 		// they just created a new page (quiz) so we need to redirect them to it and post our messages
-		wp_redirect( ENP_QUIZ_CREATE_URL.$quiz_id.'/?'.$url_query );
+		wp_redirect(ENP_QUIZ_CREATE_URL . $quiz_id . '/?' . $url_query);
 		exit;
 	}
 
-	protected function redirect_to_quiz_preview($quiz_id) {
+	protected function redirect_to_quiz_preview($quiz_id)
+	{
 		// set a messages array to pass to url on redirect
-		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
+		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => self::$user_action));
 
-		wp_redirect( ENP_QUIZ_PREVIEW_URL.$quiz_id.'/?'.$url_query );
+		wp_redirect(ENP_QUIZ_PREVIEW_URL . $quiz_id . '/?' . $url_query);
 		exit;
 	}
 
-	protected function redirect_to_quiz_publish($quiz_id) {
+	protected function redirect_to_quiz_publish($quiz_id)
+	{
 		// set a messages array to pass to url on redirect
-		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
-		wp_redirect( ENP_QUIZ_PUBLISH_URL.$quiz_id.'/?'.$url_query );
+		$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => self::$user_action));
+		wp_redirect(ENP_QUIZ_PUBLISH_URL . $quiz_id . '/?' . $url_query);
 		exit;
 	}
 
@@ -551,29 +575,29 @@ class Enp_quiz_Create {
 		// returns current_user_id if valid
 		$user_id = $this->validate_user();
 
-		if(isset($_POST['enp_quiz_nonce'])) {
+		if (isset($_POST['enp_quiz_nonce'])) {
 			$posted_nonce = $_POST['enp_quiz_nonce'];
 		}
 
-	   	//Is it a POST request?
- 	   	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+		//Is it a POST request?
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
- 		   //Validate the form key
- 		   if(!isset($posted_nonce) || !self::$nonce->validate($posted_nonce)) {
- 			   // Form key is invalid,
-			   // return them to the page (they're probably refreshing the page)
-			   self::$message['error'][] = 'AB Test was not saved';
+			//Validate the form key
+			if (!isset($posted_nonce) || !self::$nonce->validate($posted_nonce)) {
+				// Form key is invalid,
+				// return them to the page (they're probably refreshing the page)
+				self::$message['error'][] = 'AB Test was not saved';
 
-			   return false;
- 		   }
- 	   	}
+				return false;
+			}
+		}
 
 		$params = $_POST;
 		$params['ab_test_updated_by'] = $user_id;
 		$save_ab_test = new Enp_quiz_Save_ab_test();
-		if($params['enp-ab-test-submit'] === 'enp-ab-test-create') {
+		if ($params['enp-ab-test-submit'] === 'enp-ab-test-create') {
 			$response = $save_ab_test->save($params);
-		} elseif($params['enp-ab-test-submit'] === 'delete-ab-test') {
+		} elseif ($params['enp-ab-test-submit'] === 'delete-ab-test') {
 			$response = $save_ab_test->delete($params);
 		} else {
 			self::$message['error'][] = 'We\'re not sure what you want to do. Please contact us and let us know how you got to this error message.';
@@ -589,26 +613,26 @@ class Enp_quiz_Create {
 			exit();
 		}
 		// if we're not doing AJAX, find out what we need to do
-		elseif(empty(self::$message['error']) && $response['status'] === 'success' && $response['action'] === 'insert' && isset($response['ab_test_id'])) {
+		elseif (empty(self::$message['error']) && $response['status'] === 'success' && $response['action'] === 'insert' && isset($response['ab_test_id'])) {
 			// successful insert, so redirect them to the embed code section of the results page
 			// set a messages array to pass to url on redirect
 			$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => 'ab_test_created'));
 			// they just created a new page (quiz) so we need to redirect them to it and post our messages
-			wp_redirect( ENP_AB_RESULTS_URL.$response['ab_test_id'].'/?'.$url_query );
+			wp_redirect(ENP_AB_RESULTS_URL . $response['ab_test_id'] . '/?' . $url_query);
 			exit;
 		}
 
 		return $response;
-
 	}
 
 	/**
-	* Set the success/error message(s) off of the response from quiz_save
-	* @param $response (object) response from quiz_save
-	* @return messages set
-	*/
-	public function set_message($response) {
-		if(isset($response->message)) {
+	 * Set the success/error message(s) off of the response from quiz_save
+	 * @param $response (object) response from quiz_save
+	 * @return messages set
+	 */
+	public function set_message($response)
+	{
+		if (isset($response->message)) {
 			return $response->message;
 		} else {
 			return false;
@@ -616,22 +640,23 @@ class Enp_quiz_Create {
 	}
 
 	/**
-	* Process any error/success messages and output
-	* them to the browser.
-	* @return false if message, HTML output with messages if found
-	* @usage Display in templates using an action hook
-	*   	 do_action('enp_quiz_display_messages');
-	*		 To set error messages from child classes, add
-	*		 parent::$messages['error'][] = 'error message';
-	*/
-	public function display_messages() {
+	 * Process any error/success messages and output
+	 * them to the browser.
+	 * @return false if message, HTML output with messages if found
+	 * @usage Display in templates using an action hook
+	 *   	 do_action('enp_quiz_display_messages');
+	 *		 To set error messages from child classes, add
+	 *		 parent::$messages['error'][] = 'error message';
+	 */
+	public function display_messages()
+	{
 		// try to get self::$message first bc they might
 		// have reloaded a page with a $_GET variable or something
 		// and we want our self::$message ones to override that
-		if(!empty(self::$message)) {
+		if (!empty(self::$message)) {
 			// check for self first
 			$messages = self::$message;
-		} elseif(isset($_GET['enp_messages'])) {
+		} elseif (isset($_GET['enp_messages'])) {
 			// check URL second
 			$messages = $_GET['enp_messages'];
 		} else {
@@ -639,38 +664,38 @@ class Enp_quiz_Create {
 			return false;
 		}
 
-        $message_content = '';
-        if(!empty($messages['error'])) {
-            $message_type = 'error';
+		$message_content = '';
+		if (!empty($messages['error'])) {
+			$message_type = 'error';
 			$message_content .= $this->display_message_html($messages['error'], $message_type);
-        }
-		if(!empty($messages['success'])) {
-            $message_type = 'success';
+		}
+		if (!empty($messages['success'])) {
+			$message_type = 'success';
 			$message_content .= $this->display_message_html($messages['success'], $message_type);
-        }
-		if(!empty($messages['note'])) {
+		}
+		if (!empty($messages['note'])) {
 			$message_type = 'note';
 			$message_content .= $this->display_message_html($messages['note'], $message_type);
 		}
 
-        if(!empty($message_content)) {
-            echo $message_content;
-        } else {
+		if (!empty($message_content)) {
+			echo $message_content;
+		} else {
 			return false;
 		}
+	}
 
-    }
-
-	public function display_message_html($messages, $message_type) {
+	public function display_message_html($messages, $message_type)
+	{
 		$message_html = '';
-		if(!empty($messages) && !empty($message_type)) {
-			$message_html .= '<section class="enp-quiz-message enp-quiz-message--'.$message_type.' enp-container">
-						<h2 class="enp-quiz-message__title enp-quiz-message__title--'.$message_type.'"> '.$message_type.'</h2>
-						<ul class="enp-message__list enp-message__list--'.$message_type.'">';
-				foreach($messages as $message) {
-					$message_html .= '<li class="enp-message__item enp-message__item--'.$message_type.'">'.stripslashes($message).'</li>';
-				}
-			$message_html .='</ul>
+		if (!empty($messages) && !empty($message_type)) {
+			$message_html .= '<section class="enp-quiz-message enp-quiz-message--' . $message_type . ' enp-container">
+						<h2 class="enp-quiz-message__title enp-quiz-message__title--' . $message_type . '"> ' . $message_type . '</h2>
+						<ul class="enp-message__list enp-message__list--' . $message_type . '">';
+			foreach ($messages as $message) {
+				$message_html .= '<li class="enp-message__item enp-message__item--' . $message_type . '">' . stripslashes($message) . '</li>';
+			}
+			$message_html .= '</ul>
 					</section>';
 		}
 
@@ -685,14 +710,15 @@ class Enp_quiz_Create {
 	 * @return   get_current_user_id(); OR Redirect to login page
 	 * @since    0.0.1
 	 */
-	public function validate_user() {
-		if(is_user_logged_in() === false) {
+	public function validate_user()
+	{
+		if (is_user_logged_in() === false) {
 			auth_redirect();
 		} else {
 			$current_user_id = get_current_user_id();
 
 			// see if user is admin or not
-			if(current_user_can('manage_options') === false) {
+			if (current_user_can('manage_options') === false) {
 				// do error checks for validation if the user isn't an admin
 				$this->validate_user__check_if_owner($current_user_id);
 			}
@@ -701,26 +727,27 @@ class Enp_quiz_Create {
 		}
 	}
 
-	public function validate_user__check_if_owner($current_user_id) {
+	public function validate_user__check_if_owner($current_user_id)
+	{
 
 		// if we're loading a template, find out which one and set the vars accordingly
-		if(!empty($this->template)) {
-			if($this->template === 'ab-test' || $this->template === 'ab-results') {
+		if (!empty($this->template)) {
+			if ($this->template === 'ab-test' || $this->template === 'ab-results') {
 				// load the ab_test_object
 				// they're logged in, but do they own this quiz?
 				// get the quiz, if any
 				$ab_test = $this->load_ab_test_object();
-				if(is_object($ab_test)) {
+				if (is_object($ab_test)) {
 					$ab_test_id = $ab_test->get_ab_test_id();
 					$ab_test_owner = $ab_test->get_ab_test_owner();
 					// looks like we have a real quiz
-					if($ab_test_id !== null && $ab_test_owner !== null) {
+					if ($ab_test_id !== null && $ab_test_owner !== null) {
 						// see if the owner matches the current user
-						if((int) $ab_test_owner !== $current_user_id) {
+						if ((int) $ab_test_owner !== $current_user_id) {
 							// Hey! Get outta here!
 							self::$message['error'][] = "You don't have permission to view this AB Test.";
-							$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
-							wp_redirect( ENP_QUIZ_DASHBOARD_URL.'user/?'.$url_query );
+							$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => self::$user_action));
+							wp_redirect(ENP_QUIZ_DASHBOARD_URL . 'user/?' . $url_query);
 							exit;
 						} else {
 							// valid!
@@ -732,17 +759,17 @@ class Enp_quiz_Create {
 				// they're logged in, but do they own this quiz?
 				// get the quiz, if any
 				$quiz = $this->load_quiz();
-				if(is_object($quiz)) {
+				if (is_object($quiz)) {
 					$quiz_id = $quiz->get_quiz_id();
 					$quiz_owner = $quiz->get_quiz_owner();
 					// looks like we have a real quiz
-					if($quiz_id !== null && $quiz_owner !== null) {
+					if ($quiz_id !== null && $quiz_owner !== null) {
 						// see if the owner matches the current user
-						if((int) $quiz_owner !== $current_user_id) {
+						if ((int) $quiz_owner !== $current_user_id) {
 							// Hey! Get outta here!
 							self::$message['error'][] = "You don't have permission to edit that quiz.";
-							$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
-							wp_redirect( ENP_QUIZ_DASHBOARD_URL.'user/?'.$url_query );
+							$url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action' => self::$user_action));
+							wp_redirect(ENP_QUIZ_DASHBOARD_URL . 'user/?' . $url_query);
 							exit;
 						} else {
 							// valid!
@@ -755,22 +782,23 @@ class Enp_quiz_Create {
 
 
 	/**
-	* Utility function for returning a percentage
-	* @param $part (int) The number you want to see what it's a percentage of
-	* @param $whole (int) The whole you want a percentage of
-	* @param $decimals (int) How many decimal places you want returned. Defaults to no modification.
-	*/
-	public function percentagize($part, $whole, $decimals = false) {
+	 * Utility function for returning a percentage
+	 * @param $part (int) The number you want to see what it's a percentage of
+	 * @param $whole (int) The whole you want a percentage of
+	 * @param $decimals (int) How many decimal places you want returned. Defaults to no modification.
+	 */
+	public function percentagize($part, $whole, $decimals = false)
+	{
 		$part = (int) $part;
 		$whole = (int) $whole;
 		// check to make sure it's valid
-		if($whole === 0) {
+		if ($whole === 0) {
 			return 0;
 		}
 		// percentage function
 		$percentage = ($part / $whole) * 100;
 		// if they want some decimals, round it to that amount of decimals
-		if($decimals !== false) {
+		if ($decimals !== false) {
 			$percentage = round($percentage, $decimals);
 		}
 		// return the percentage
@@ -778,23 +806,24 @@ class Enp_quiz_Create {
 	}
 
 	/**
-	* Reset all cookies for a quiz
-	*/
-	public function unset_quiz_take_cookies($quiz) {
+	 * Reset all cookies for a quiz
+	 */
+	public function unset_quiz_take_cookies($quiz)
+	{
 		// get the path that the cookies are set on
-		$path = parse_url(ENP_QUIZ_URL, PHP_URL_PATH).$quiz->get_quiz_id();
+		$path = parse_url(ENP_QUIZ_URL, PHP_URL_PATH) . $quiz->get_quiz_id();
 		// open the cookie manager for taking quizzes
 		$cookie_manager = new Enp_quiz_Cookies_Quiz_take($path);
 		// unset all the cookies for this quiz
 		$cookie_manager->unset_quiz_cookies($quiz);
 	}
 
-	public function dashboard_breadcrumb_link() {
-		return '<div class="enp-breadcrumb-link__container"><a class="enp-breadcrumb-link enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--active" href="'.ENP_QUIZ_DASHBOARD_URL.'/user">
-				    <svg class="enp-breadcrumb-link__icon enp-icon" role="presentation" aria-hidden="true">
-				      <use xlink:href="#icon-chevron-left" />
-				    </svg> Dashboard
+	public function dashboard_breadcrumb_link()
+	{
+		return '<div class="enp-breadcrumb-link__container"><a class="enp-breadcrumb-link enp-quiz-breadcrumbs__link enp-quiz-breadcrumbs__link--active" href="' . ENP_QUIZ_DASHBOARD_URL . '/user">
+					<svg class="enp-breadcrumb-link__icon enp-icon" role="presentation" aria-hidden="true">
+					  <use xlink:href="#icon-chevron-left" />
+					</svg> Dashboard
 				</a></div>';
 	}
-
 }

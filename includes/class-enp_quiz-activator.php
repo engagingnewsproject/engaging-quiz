@@ -155,12 +155,12 @@ class Enp_quiz_Activator
 		global $wpdb;
 		$charset_collate = $wpdb->get_charset_collate();
 		// quiz table name
-
+		// quiz_title_test VARCHAR(255) NOT NULL,
 		$quiz_table_name = $this->quiz_table_name;
-		$quiz_sql = "CREATE TABLE $quiz_table_name (
+		$quiz_sql        = "CREATE TABLE $quiz_table_name (
 					quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					quiz_title VARCHAR(255) NOT NULL,
-					quiz_title_test VARCHAR(255) NOT NULL,
+					quiz_feedback VARCHAR(255) NOT NULL,
 					quiz_status VARCHAR(11) NOT NULL,
 					quiz_finish_message VARCHAR(510) NOT NULL,
 					quiz_owner BIGINT(20) NOT NULL,
@@ -180,7 +180,7 @@ class Enp_quiz_Activator
 
 
 		$quiz_option_table_name = $this->quiz_option_table_name;
-		$quiz_option_sql = "CREATE TABLE $quiz_option_table_name (
+		$quiz_option_sql        = "CREATE TABLE $quiz_option_table_name (
 					quiz_option_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					quiz_id BIGINT(20) NOT NULL,
 					quiz_option_name VARCHAR(191) NOT NULL,

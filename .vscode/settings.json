@@ -1,3 +1,5 @@
 {
-	"phpsab.fixerEnable": false
+	"phpsab.fixerEnable": false,
+	"intelephense.format.enable": false,
+	"phpcbf.enable": false
 }

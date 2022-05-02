@@ -70,6 +70,7 @@ $question_image = $question->get_question_image();
 			$settings    = array(
 				'textarea_name' => $editor_name,
 				'media_buttons' => false, // ? no media upload option
+				'quicktags'     => true,
 				'tinymce'       => array(
 					'toolbar1' => 'link,unlink', // ? limit what shows on the toolbar
 					'toolbar2' => '',

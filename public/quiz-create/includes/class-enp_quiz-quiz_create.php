@@ -185,12 +185,9 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create
 	public function get_mc_option_correct_button($question_id, $mc_option_id)
 	{
 		$mc_option_correct_button = '';
-
-
 		$mc_option_correct_button = '<button class="enp-mc-option__button enp-quiz-submit enp-mc-option__button--correct"  name="enp-quiz-submit" value="mc-option--correct__question-' . $question_id . '__mc-option-' . $mc_option_id . '"' . ($this->is_quiz_fully_editable() === false ? ' disabled' : '') . '>
 			<svg class="enp-icon enp-icon--check enp-mc-option__icon enp-mc-option__icon--correct"><use xlink:href="#icon-check"><title>Mark Multiple Choice Option as Correct</title></use></svg>
 		</button>';
-
 		return $mc_option_correct_button;
 	}
 

@@ -219,15 +219,22 @@
 
     .enp-label {
         @include label;
+        &__sm {
+            font-size: small;
+        }
     }
 
     .enp-legend {
         @include legend;
+        padding-top: 0;
     }
 
     .enp-input {
         @include input;
-
+        &__sm {
+            padding: 5px;
+            margin-bottom: 5px;
+        }
         &.enp-input--has-description {
             margin-bottom: 0.2rem;
         }
