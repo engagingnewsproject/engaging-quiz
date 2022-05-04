@@ -1,4 +1,10 @@
 #enp-quiz {
+    .enp-share-quiz__container {
+        @include breakpoint(medium) {
+            padding: 0;
+            border: none;
+        }
+    }
     /* Removing flexbox layout temporarily
     * because it wasn't laying out correctly before content loading
     * It would snap into the correct layout after a resize or textarea highlight
@@ -66,7 +72,7 @@
 
     .enp-share-quiz__url {
         display: block;
-        font-size: 1.5rem;
+        font-size: 1rem;
         line-height: 1.4;
         word-wrap: break-word;
     }
@@ -76,5 +82,8 @@
     .enp-share-quiz {
         justify-content: space-around;
         margin-bottom: 0;
+        .enp-icon--mail {
+            background: $blue;
+        }
     }
 }

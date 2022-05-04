@@ -20,11 +20,13 @@
  * for reference,
  * $this = $Quiz_create = Enp_quiz_Quiz_create class
  */
+
 ?>
 <aside class="enp-dash__section-aside">
 	<?php echo $Quiz_create->dashboard_breadcrumb_link(); ?>
 </aside>
 <article class="enp-container enp-dash-container">
+	<?php //var_dump($mc_option_id); ?>
 	<section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
 		<?php require_once ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-breadcrumbs.php'; ?>
 
@@ -33,8 +35,12 @@
 		<form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo $Quiz_create->get_quiz_action_url(); ?>" novalidate>
 			<?php
 			$enp_quiz_nonce->outputKey();
-			echo $Quiz_create->hidden_fields(); ?>
-
+			echo $Quiz_create->hidden_fields(); 
+			// var_dump($quiz);
+			// $input       = $question->get_question_explanation();
+			// var_dump($input);
+			
+			?>
 			<fieldset class="enp-fieldset enp-quiz-title">
 				<label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
 					Quiz Title
@@ -44,7 +50,7 @@
 				<?php
 				/**
 				 * 
-				 * // // // AN DUPLICATE (commented out) INPUT ELEMENT TO SAVE US ALL! // // //
+				 * // // // A DUPLICATE (commented out) INPUT ELEMENT TO SAVE US ALL! // // //
 				 * All of these files are part of the "quiz_title_test" example of how to replicate 
 				 * an input element that will save to the database, and display across the quiz:
 				 * 
@@ -79,10 +85,12 @@
 				// count the number of questions
 				$question_ids = $quiz->get_questions();
 				if (!empty($question_ids)) {
-					foreach ($question_ids as $question_id) {
-						include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php';
-						$question_i++;
-					}
+					foreach ($question_ids as $question_id) :
+						?>
+						<?php include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php'; ?>
+						<?php $question_i++; ?>
+					<?php
+					endforeach;
 				}
 				?>
 			</section>
@@ -100,13 +108,4 @@
 		</form>
 	</section>
 </article>
-<!-- <footer> -->
-			<!-- <form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php // echo $Quiz_create->get_quiz_action_url(); ?>" novalidate> -->
-			<?php
-			// $enp_quiz_nonce->outputKey();
-			// echo $Quiz_create->hidden_fields(); ?>
-				<!-- <textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php // echo $quiz->get_value('quiz_title_test') ?></textarea> -->
-
-			<!-- </form> -->
-<!-- </footer> -->
 <?php

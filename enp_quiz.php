@@ -16,7 +16,7 @@
  * Plugin Name:       Engaging Quiz Creator
  * Plugin URI:        http://engagingnewsproject.org/quiz-tool
  * Description:       Create quizzes for embedding on websites
- * Version:           0.0.1
+ * Version:           0.0.2
  * Author:            Engaging News Project
  * Author URI:        http://engagingnewsproject.org
  * License:           GPL-3.0+

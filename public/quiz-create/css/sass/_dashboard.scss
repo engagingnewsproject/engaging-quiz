@@ -168,7 +168,6 @@
         justify-content: flex-end;
         border: none;
         border-radius: 3px;
-        background-color: $gray;
     }
 
     .enp-dash-item--published {
@@ -248,8 +247,8 @@
 
     .enp-dash-item__ab-quizzes {
         @include ul-no-style;
-        font-size: 0.85rem;
-        color: $dark_gray;
+        font-size: 0.75rem;
+        color: $darker_gray;
         margin-bottom: 0.8rem;
     }
 
@@ -309,6 +308,7 @@
         color: $darker_gray;
         cursor: pointer;
         width: 100%;
+        font-size: 0.85rem;
         .enp-icon {
             fill: $darker_gray;
         }
@@ -413,7 +413,7 @@
 
         margin: 0 2% 0 0;
         padding: 0;
-        color: #454545;
+        color: $title;
 
         @media (max-width:280px) {
             width: 100%;
@@ -448,7 +448,7 @@
         text-transform: uppercase;
         font-size: .7rem;
         font-weight: 300;
-        color: #888;
+        color: $darker_gray;
     }
 
 

@@ -153,7 +153,7 @@
 @mixin flex-grid__item  {
     flex-basis: 100%;
     padding: 1rem 1.2rem;
-    background: #fff;
+    background-color: $gray;
     border: 1px solid #eee;
     border-bottom: 1px solid #ddd;
     list-style: none;

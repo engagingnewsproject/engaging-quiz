@@ -10,14 +10,15 @@ $title : #5D5E5F;
 // Blues
 $blue: #00A9B7;
 $dark_blue: #333F48;
-$light_blue: lighten($blue, 100);
+$light_blue: lighten($dark_blue, 40);
 
 // Grays
-$light_gray: #F5F5F5;
-$really_light_gray: #F8F8F8;
+$light_gray: #FAF9FB;
+$really_light_gray: lighten($light_gray, 1);
 $gray: darken($light_gray, 2);
 $dark_gray: darken($gray, 5);
 $darker_gray: darken($dark_gray, 20);
+$darkest_gray: darken($dark_gray, 50);
 
 // Other colors
 $green: darken(#58C88F,10);

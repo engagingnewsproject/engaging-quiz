@@ -14,6 +14,11 @@
 ?>
 <aside class="enp-dash__section-aside">
 	<?php echo $this->dashboard_breadcrumb_link(); ?>
+
+	<section class="enp-container enp-aside-container enp-publish-page__aside-container">
+		<?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-share.php'); ?>
+
+	</section>
 </aside>
 
 <article class="enp-container enp-dash-container">
@@ -24,13 +29,6 @@
 			<section class="enp-container enp-publish-container">
 				<h1 class="enp-page-title enp-publish-page__title">Embed</h1>
 				<?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-embed-code.php'); ?>
-
-			</section>
-
-			<section class="enp-container enp-aside-container enp-publish-page__aside-container">
-
-				<?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-share.php'); ?>
-
 				<aside class="enp-aside enp-ab-ad__container">
 					<h3 class="enp-aside__title enp-ab-ad__title">A/B Test</h3>
 					<p class="enp-ab-ad__description">Test two quizzes against each other to see which one is more engaging.</p>

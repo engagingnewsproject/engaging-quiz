@@ -111,6 +111,7 @@ class Enp_quiz_Create
 	 */
 	public function enqueue_scripts()
 	{
+		    wp_enqueue_script( 'tinymce', 'https://cdn.tiny.cloud/1/tpynz31lszn8p1eu7c0q58q5ua138xorj80slits2knm9zao/tinymce/6/tinymce.min.js' );
 	}
 	/*
 	*	Adds a enp_quiz_template parameter for WordPress to look for

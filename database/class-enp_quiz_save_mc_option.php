@@ -45,14 +45,20 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 		// set the defaults/get the submitted values
 		$mc_option_id = $this->set_mc_option_value('mc_option_id', 0);
 		$mc_option_content = $this->set_mc_option_value('mc_option_content', '');
+		$mc_option_image_alt = $this->set_mc_option_value('mc_option_image_alt', '');
 		$mc_option_order = $mc_option['mc_option_order'];
 
 		// set our mc_option array
 		self::$mc_option = array(
 								'mc_option_id' => $mc_option_id,
 								'mc_option_content' => $mc_option_content,
+								'mc_option_image_alt' => $mc_option_image_alt,
 								'mc_option_order' => $mc_option_order,
 							);
+
+		self::$mc_option = array_merge(self::$mc_option, $mc_option);
+		// set the image
+		self::$mc_option['mc_option_image'] = $this->set_mc_option_image();
 		// add in if it's correct or not.
 		// we need this after setting the mc_option because set_mc_option_correct needs
 		// the mc_option_id
@@ -98,6 +104,85 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 
 		return $param_value;
 	}
+
+	/**
+	* Sets our mc image, uploads an image, or deletes it
+	*/
+	protected function set_mc_option_image() {
+		// set our default
+		$mc_option_image = $this->set_question_value('mc_option_image', '');
+		// see if the user is trying to delete the image
+		if(parent::$user_action_action === 'delete' && parent::$user_action_element === 'mc_option_image') {
+			// see if it matches this question
+			if(parent::$user_action_details['mc_option_id'] === (int)self::$mc_option['mc_option_id']) {
+				// they want to delete this image. I wonder what was so bad about it?
+				$mc_option_image = '';
+				parent::$response_obj->add_success('Image deleted for MC Option #'.(self::$mc_option['mc_option_order']+1).'.');
+			}
+		}
+
+		// process images if necessary
+		// See if there's an image trying to be uploaded for this question
+		if(!empty($_FILES)) {
+			// This is the name="" field for that question image in the form
+			$mc_option_image_file = 'mc_option_image_upload_'.self::$mc_option['mc_option_id'];
+			// some question has a file submitted, let's see if it's this one
+			// check for size being set and that the size is greater than 0
+			if( isset($_FILES[$mc_option_image_file]["size"]) && $_FILES[$mc_option_image_file]["size"] > 0 ) {
+				// we have a new image to upload!
+				// upload it
+				$new_mc_option_image = $this->upload_mc_option_image($mc_option_image_file);
+				// see if it worked
+				if($new_mc_option_image !== false) {
+					// if it worked, set it as the question_image
+					$mc_option_image = $new_mc_option_image;
+				}
+			}
+		}
+
+		return $mc_option_image;
+	}
+
+		/*
+	* Uploads an image to
+	* @param $question_image_file (string) name of "name" field in HTML form for that question
+	* @return (string) filename of image uploaded to save to DB
+	*/
+	protected function upload_mc_option_image($mc_option_image_file) {
+		$new_image_name = false;
+		$image_upload = wp_upload_bits( $_FILES[$mc_option_image_file]['name'], null, @file_get_contents( $_FILES[$mc_option_image_file]['tmp_name'] ) );
+		// check to make sure there are no errors
+		if($image_upload['error'] === false) {
+			// success! set the image
+			// set the URL to the image as our question_image
+			// create / delete our directory for these images
+			$this->prepare_quiz_image_dir();
+			$path = $this->prepare_mc_option_image_dir();
+
+			// now upload all the resized images we'll need
+			$new_image_name = $this->resize_image($image_upload, $path, null);
+			// we have the full path, but we just need the filename
+			$new_image_name = str_replace(ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$mc_option['mc_option_id'].'/', '', $new_image_name);
+			// resize all the other images
+			$this->resize_image($image_upload, $path, 1000);
+			$this->resize_image($image_upload, $path, 740);
+			$this->resize_image($image_upload, $path, 580);
+			$this->resize_image($image_upload, $path, 320);
+			$this->resize_image($image_upload, $path, 200);
+
+			// delete the image we initially uploaded from the wp-content dir
+			$this->delete_file($image_upload['file']);
+
+			// add a success message
+			parent::$response_obj->add_success('Image uploaded for Question #'.(self::$mc_option['mc_option_order']+1).'.');
+		} else {
+			// add an error message
+			parent::$response_obj->add_error('Image upload failed for Question #'.(self::$mc_option['mc_option_order']+1).'.');
+		}
+
+		return $new_image_name;
+	}
+
 	/**
 	* we need to check if an option is trying to be set as correct or not,
 	* and unset any other options that were set as correct (until we allow
@@ -193,16 +278,20 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 		// connect to PDO
 		$pdo = new enp_quiz_Db();
 		// Get our Parameters ready
-		$params = array(':question_id'      => parent::$question['question_id'],
-						':mc_option_content'=> self::$mc_option['mc_option_content'],
-						':mc_option_correct'=> self::$mc_option['mc_option_correct'],
-						':mc_option_order'  => self::$mc_option['mc_option_order'],
-						':mc_option_responses'  => 0
+		$params = array(':question_id'         => parent::$question['question_id'],
+						':mc_option_content'   => self::$mc_option['mc_option_content'],
+						':mc_option_image'     => self::$mc_option['mc_option_image'],
+						':mc_option_image_alt' => self::$mc_option['mc_option_image_alt'],
+						':mc_option_correct'   => self::$mc_option['mc_option_correct'],
+						':mc_option_order'     => self::$mc_option['mc_option_order'],
+						':mc_option_responses' => 0
 					);
 		// write our SQL statement
 		$sql = "INSERT INTO ".$pdo->question_mc_option_table." (
 											question_id,
 											mc_option_content,
+											mc_option_image,
+											mc_option_image_alt,
 											mc_option_correct,
 											mc_option_order,
 											mc_option_responses
@@ -210,6 +299,8 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 										VALUES(
 											:question_id,
 											:mc_option_content,
+											:mc_option_image,
+											:mc_option_image_alt,
 											:mc_option_correct,
 											:mc_option_order,
 											:mc_option_responses
@@ -250,6 +341,8 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 		// Get our Parameters ready
 		$params = array(':mc_option_id'     => self::$mc_option['mc_option_id'],
 						':mc_option_content'=> self::$mc_option['mc_option_content'],
+						':mc_option_image'   => self::$mc_option['mc_option_image'],
+						':mc_option_image_alt'   => self::$mc_option['mc_option_image_alt'],
 						':mc_option_correct'=> self::$mc_option['mc_option_correct'],
 						':mc_option_order'  => self::$mc_option['mc_option_order'],
 						':mc_option_is_deleted'  => self::$mc_option['mc_option_is_deleted'],
@@ -257,6 +350,8 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 		// write our SQL statement
 		$sql = "UPDATE ".$pdo->question_mc_option_table."
 				   SET  mc_option_content = :mc_option_content,
+						mc_option_image = :mc_option_image,
+						mc_option_image_alt = :mc_option_image_alt,
 						mc_option_correct = :mc_option_correct,
 						mc_option_order = :mc_option_order,
 						mc_option_is_deleted = :mc_option_is_deleted

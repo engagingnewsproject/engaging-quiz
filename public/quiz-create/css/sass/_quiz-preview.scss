@@ -70,6 +70,9 @@
 
     .enp-fieldset--section {
         padding: 1.6rem 1rem;
+        @include breakpoint(large) {
+            padding: 1rem;
+        }
 
         &.enp-accordion-content--open {
             margin-bottom: 0;
@@ -153,7 +156,7 @@
 
         @include breakpoint(large) {
             position: absolute;
-            top: -4px;
+            top: 50px;
             left: 0;
         }
 

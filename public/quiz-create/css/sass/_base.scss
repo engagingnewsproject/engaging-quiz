@@ -9,6 +9,7 @@
         @include well;
         @include container--thin;
         font-size: 1.2rem;
+        background: $light_gray;
     }
 
     .enp-aside__title {

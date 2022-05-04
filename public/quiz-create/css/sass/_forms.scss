@@ -220,7 +220,10 @@
     .enp-label {
         @include label;
         &__sm {
-            font-size: small;
+            font-size: 0.85rem;
+        }
+        &.enp-quiz-winlose__label {
+            padding: 1rem 0 0 0;
         }
     }
 

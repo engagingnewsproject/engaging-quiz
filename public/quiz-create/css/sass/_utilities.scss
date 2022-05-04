@@ -340,7 +340,7 @@
 @mixin hint {
     font-size: .7rem;
     font-weight: 300;
-    color: #565656;
+    color: $darker_gray;
 }
 
 @mixin green {
