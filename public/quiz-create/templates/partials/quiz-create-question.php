@@ -12,37 +12,36 @@
 ?>
 
 <section id="enp-question--<?php echo $question_id;?>" class="enp-question-content">
-	<input class="enp-question-id" type="hidden" name="enp_question[<?php echo $question_i;?>][question_id]" value="<?php echo $question_id;?>" />
-	<input class="enp-question-order" type="hidden" name="enp_question[<?php echo $question_i;?>][question_order]" value="<?php echo $question_i;?>" />
+	<input class="enp-question-id hide" name="enp_question[<?php echo $question_i;?>][question_id]" value="<?php echo $question_id;?>" />
+	<input class="enp-question-order hide" name="enp_question[<?php echo $question_i;?>][question_order]" value="<?php echo $question_i;?>" />
 
 	<?php echo $Quiz_create->get_question_delete_button($question_id);
-	 ?>
-	<div class="enp-question__move">
-		<?php 
-		echo $Quiz_create->get_question_move_button($question_id, $question_i, 'up', $question_ids);
-		echo $Quiz_create->get_question_move_button($question_id, $question_i, 'down', $question_ids);
-		?>
-	</div>
+
+	if(isset($question_ids)) : ?>
+		<div class="enp-question__move">
+			<?php 
+			echo $Quiz_create->get_question_move_button($question_id, $question_i, 'up', $question_ids);
+			echo $Quiz_create->get_question_move_button($question_id, $question_i, 'down', $question_ids);
+			?>
+		</div>
+    <?php endif;?>
 
 	<div class="enp-question-inner enp-question">
 		<label class="enp-label enp-question-title__label" for="question-title-<?php echo $question_id;?>">
 			Question
 		</label>
 		<textarea id="question-title-<?php echo $question_id;?>" class="enp-textarea enp-question-title__textarea" name="enp_question[<?php echo $question_i;?>][question_title]" maxlength="6120" placeholder="Why can't we tickle ourselves?"/><?php echo $question->get_question_title();?></textarea>
-
-		<input type="hidden" id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input" name="enp_question[<?echo $question_i;?>][question_image]" value="<?php echo $question_image;?>" />
+		<input id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input hide" name="enp_question[<?echo $question_i;?>][question_image]" value="<?php echo $question_image;?>" />
 
 		<?php
+			// get & Display the QUESTION image.
 			echo $Quiz_create->get_question_image_template($question, $question_id, $question_i, $question_image);
 		?>
 
 		<h4 class="enp-legend enp-question-type__legend">Question Type</h4>
-
-		<?php echo $Quiz_create->get_question_type_input($question, $question_id, $question_i);
-
-
+		<?php 
+		echo $Quiz_create->get_question_type_input($question, $question_id, $question_i);
 		include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc.php');
-
 		$slider_id = $question->get_slider();
 		$slider = new Enp_quiz_Slider($slider_id);
 		// don't add slider in for our js question_template
@@ -76,5 +75,19 @@
 		body_id: 'enp-question-explanation__<?php echo $question_id;?>',
 		body_class: 'enp-textarea enp-answer-explanation__textarea',
 		auto_focus : '#enp-question-explanation__<?php echo $question_id;?>',
+		strict_loading_mode : true
 	});
+tinymce.init({
+    selector: ".enp-textarea",
+    inline: true,
+    setup: function(editor) {
+        editor.on('focus', function(e) {
+            console.log("focus");
+        });
+
+        editor.on('blur', function(e) {
+            console.log("blur");
+        });
+    }
+});
 </script>

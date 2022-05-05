@@ -10,6 +10,8 @@ class Enp_quiz_Question {
 			$question_title,
 			$question_image,
 			$question_image_src,
+			$mc_option_image,
+			$mc_option_image_src,
 			$question_image_srcset,
 			$question_image_alt,
 			$question_type,
@@ -207,6 +209,37 @@ class Enp_quiz_Question {
 	protected function set_question_image_alt() {
 		$question_image_alt = stripslashes(self::$question['question_image_alt']);
 		return $question_image_alt;
+	}
+
+	// set_mc_option_image
+	// // // // // // // // 
+
+
+	/**
+	* Set the mc_option_image path for our Quiz Object
+	* @param $question = question row from question database table
+	* @return mc_option_image path from the database
+	*/
+	protected function set_mc_option_image() {
+		$mc_option_image = self::$mc_option_id['mc_option_image'];
+
+		return $mc_option_image;
+	}
+
+	/**
+	* Set the mc_option_image for our Quiz Object
+	* We want to set the url, but the question_image just sets the filename
+	* we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+	* @param $question = question object
+	* @return mc_option_image from the object
+	*/
+	public function set_mc_option_image_src() {
+		$mc_option_image_src = '';
+		$mc_option_image = $this->mc_option_image;
+		if(!empty($mc_option_image)) {
+			$mc_option_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$this->mc_option_id.'/'.$mc_option_image;
+		}
+		return $mc_option_image_src;
 	}
 
 	/**
@@ -451,6 +484,28 @@ class Enp_quiz_Question {
 	public function get_question_image_src() {
 		$question_image_src = $this->question_image_src;
 		return $question_image_src;
+	}
+
+	// get_mc_option_image
+
+		/**
+	* Get the mc_option_image for our Quiz Object
+	* @param $question = question object
+	* @return mc_option_image from the object
+	*/
+	public function get_mc_option_image() {
+		$mc_option_image = $this->mc_option_image;
+		return $mc_option_image;
+	}
+
+	/**
+	* Get the mc_option_image_src for our Quiz Object
+	* @param $question = question object
+	* @return mc_option_image_src from the object
+	*/
+	public function get_mc_option_image_src() {
+		$mc_option_image_src = $this->mc_option_image_src;
+		return $mc_option_image_src;
 	}
 
 	/**

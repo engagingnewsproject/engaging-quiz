@@ -20,13 +20,13 @@
  * for reference,
  * $this = $Quiz_create = Enp_quiz_Quiz_create class
  */
-
+// var_dump( $mc_option_image );
 ?>
 <aside class="enp-dash__section-aside">
 	<?php echo $Quiz_create->dashboard_breadcrumb_link(); ?>
 </aside>
 <article class="enp-container enp-dash-container">
-	<?php //var_dump($mc_option_id); ?>
+
 	<section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
 		<?php require_once ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-breadcrumbs.php'; ?>
 
@@ -35,11 +35,7 @@
 		<form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo $Quiz_create->get_quiz_action_url(); ?>" novalidate>
 			<?php
 			$enp_quiz_nonce->outputKey();
-			echo $Quiz_create->hidden_fields(); 
-			// var_dump($quiz);
-			// $input       = $question->get_question_explanation();
-			// var_dump($input);
-			
+			echo $Quiz_create->hidden_fields();
 			?>
 			<fieldset class="enp-fieldset enp-quiz-title">
 				<label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">

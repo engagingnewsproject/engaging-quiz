@@ -114,12 +114,14 @@ class Enp_quiz_MC_option {
 	* we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
 	* @param $question = question object
 	* @return mc_option_image from the object
+    *
+    * TODO: finish building the set the URL
 	*/
 	public function set_mc_option_image_src() {
 		$mc_option_image_src = '';
 		$mc_option_image = $this->mc_option_image;
 		if(!empty($mc_option_image)) {
-			$mc_option_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->mc_option_id.'/'.$mc_option_image;
+			$mc_option_image_src = ENP_QUIZ_IMAGE_URL.$this->question_id.'/'.$this->question_id.'/'.$mc_option_image;
 		}
 		return $mc_option_image_src;
 	}

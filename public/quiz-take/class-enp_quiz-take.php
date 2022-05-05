@@ -266,7 +266,7 @@ class Enp_quiz_Take
 	 */
 	public function get_session_id_input()
 	{
-		return '<input type="hidden" name="PHPSESSID" value="' . session_id() . '" />';
+		return '<input class="hide" name="PHPSESSID" value="' . session_id() . '" />';
 	}
 
 	/**

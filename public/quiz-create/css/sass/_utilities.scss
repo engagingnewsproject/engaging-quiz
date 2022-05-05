@@ -89,21 +89,21 @@
     @include btn;
     border: 1px dashed $darker_gray;
     background: none;
-    color: #545454;
+    color: $darker_gray;
     box-shadow: none;
 
     &:hover,
     &:focus {
         border: 1px dashed $darkest_gray;
         color: $darker_gray;
-        background: rgba(255,255,255,.9);
+        background: $light_gray;
     }
 }
 
 @mixin btn--dashed--light {
     @include btn--dashed;
     border: 2px dashed $darker-gray;
-    color: $dark_gray;
+    color: $darker_gray;
     transition: all .2s;
 
     &:hover,

@@ -25,7 +25,7 @@
 				<li class="enp-dash-item__nav__item">
 					<form id="enp-delete-quiz-<?php echo $quiz->get_quiz_id() ?>" class="enp-delete-quiz" method="post" action="<?php echo htmlentities(ENP_QUIZ_DASHBOARD_URL . 'user/'); ?>">
 						<?php echo $nonce_input; ?>
-						<input type="hidden" class="enp-dash-item__quiz-id" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id() ?>" />
+						<input class="hide enp-dash-item__quiz-id" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id() ?>" />
 						<button name="enp-quiz-submit" class="enp-quiz-submit enp-dash-item__delete" value="delete-quiz">
 							<svg class="enp-dash-item__icon enp-icon enp-icon--delete">
 								<use xlink:href="#icon-delete">

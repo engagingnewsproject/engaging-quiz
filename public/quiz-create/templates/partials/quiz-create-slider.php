@@ -1,6 +1,6 @@
 <fieldset class="enp-slider-options">
     <legend class="enp-legend enp-slider__legend">Slider Options</legend>
-    <input class="enp-slider-id" type="hidden" name="enp_question[<?php echo $question_i;?>][slider][slider_id]" value="<?php echo $slider->get_slider_id();?>" />
+    <input class="enp-slider-id hide" name="enp_question[<?php echo $question_i;?>][slider][slider_id]" value="<?php echo $slider->get_slider_id();?>" />
 
     <div class="enp-slider-range__container">
         <div class="enp-slider-range-low__container">

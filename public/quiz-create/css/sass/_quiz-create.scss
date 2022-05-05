@@ -94,7 +94,8 @@
         @include input--large;
     }
 
-    .enp-question-image-upload {
+    .enp-question-image-upload,
+    .enp-mc-option-image-upload {
         @include btn--dashed--light--alt-bg;
         @include small-uppercase;
         position: relative;
@@ -538,6 +539,9 @@
             @include icon--gray-bg;
             position: relative;
             top: 0.2rem;
+            &:hover {
+                background-color: $darker_gray;
+            }
         }
 
         &:hover .enp-add-question__icon {
