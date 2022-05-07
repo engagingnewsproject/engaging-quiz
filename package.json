@@ -5,7 +5,8 @@
   "main": "gulpfile.js",
   "dependencies": {},
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "debug": "node"
   },
   "author": "juryjowns",
   "license": "ISC",

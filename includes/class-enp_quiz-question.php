@@ -10,8 +10,6 @@ class Enp_quiz_Question {
 			$question_title,
 			$question_image,
 			$question_image_src,
-			$mc_option_image,
-			$mc_option_image_src,
 			$question_image_srcset,
 			$question_image_alt,
 			$question_type,
@@ -29,9 +27,8 @@ class Enp_quiz_Question {
 			$mc_options = array(),
 			$slider = '';
 
-	protected static 	$question,
-						$options,
-						$mc_option;
+	protected static $question,
+					 $options;
 	/**
 	* Build the question object
 	* @param $options = array() for passing various options on how to set the question objet
@@ -81,10 +78,6 @@ class Enp_quiz_Question {
 		// return the found question row
 		return $question_row;
 	}
-
-// // // // // // // //
-// SET SET SET SET
-// // // // // // // //
 
 	/**
 	* Hook up all the values for the object
@@ -211,37 +204,6 @@ class Enp_quiz_Question {
 		return $question_image_alt;
 	}
 
-	// set_mc_option_image
-	// // // // // // // // 
-
-
-	/**
-	* Set the mc_option_image path for our Quiz Object
-	* @param $question = question row from question database table
-	* @return mc_option_image path from the database
-	*/
-	protected function set_mc_option_image() {
-		$mc_option_image = self::$mc_option_id['mc_option_image'];
-
-		return $mc_option_image;
-	}
-
-	/**
-	* Set the mc_option_image for our Quiz Object
-	* We want to set the url, but the question_image just sets the filename
-	* we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
-	* @param $question = question object
-	* @return mc_option_image from the object
-	*/
-	public function set_mc_option_image_src() {
-		$mc_option_image_src = '';
-		$mc_option_image = $this->mc_option_image;
-		if(!empty($mc_option_image)) {
-			$mc_option_image_src = ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$this->mc_option_id.'/'.$mc_option_image;
-		}
-		return $mc_option_image_src;
-	}
-
 	/**
 	* Set the question_type for our Quiz Object
 	* @param $question = question row from question database table
@@ -258,9 +220,7 @@ class Enp_quiz_Question {
 	* @return question_explanation field from the database
 	*/
 	protected function set_question_explanation() {
-		// $question_explanation = stripslashes(self::$question['question_explanation']);
-		$question_explanation = self::$question['question_explanation'];
-
+		$question_explanation = stripslashes(self::$question['question_explanation']);
 		return $question_explanation;
 	}
 
@@ -283,7 +243,6 @@ class Enp_quiz_Question {
 		$question_is_deleted = self::$question['question_is_deleted'];
 		return $question_is_deleted;
 	}
-
 
 	/**
 	* Set the mc_options for our Questions Object
@@ -432,10 +391,6 @@ class Enp_quiz_Question {
 		return $question_time_spent_average;
 	}
 
-// // // // // // // //
-// GET GET GET GET
-// // // // // // // //
-
 	/**
 	* Get the question_id for our Quiz Object
 	* @param $question = question object
@@ -486,28 +441,6 @@ class Enp_quiz_Question {
 		return $question_image_src;
 	}
 
-	// get_mc_option_image
-
-		/**
-	* Get the mc_option_image for our Quiz Object
-	* @param $question = question object
-	* @return mc_option_image from the object
-	*/
-	public function get_mc_option_image() {
-		$mc_option_image = $this->mc_option_image;
-		return $mc_option_image;
-	}
-
-	/**
-	* Get the mc_option_image_src for our Quiz Object
-	* @param $question = question object
-	* @return mc_option_image_src from the object
-	*/
-	public function get_mc_option_image_src() {
-		$mc_option_image_src = $this->mc_option_image_src;
-		return $mc_option_image_src;
-	}
-
 	/**
 	* Get the question_image_srcset for our Quiz Object
 	* @param $question = question object
@@ -538,10 +471,6 @@ class Enp_quiz_Question {
 		return $question_image_alt;
 	}
 
-// Start get MC Image
-
-// END get MC Image
-
 	/**
 	* Get the question_type for our Quiz Object
 	* @param $question = question object
@@ -559,13 +488,6 @@ class Enp_quiz_Question {
 	*/
 	public function get_question_explanation() {
 		$question_explanation = $this->question_explanation;
-		// ? TODO: perfect the target attribute add. kindof buggy.
-		// var_dump($question_explanation);
-		// $question_explanation = html_entity_decode($question_explanation);
-		$question_explanation = preg_replace('/(<a\b[^><]*)>/i', '$1 target="_blank">', $question_explanation);
-		// $question_explanation = apply_filters( 'the_content', $question_explanation );
-		// $question_explanation = str_replace( ']]>', ']]&gt;', $question_explanation );
-		// = preg_replace('/(<a\b[^><]*)>/i', '$1 target="_blank">', $question_explanation);
 		return $question_explanation;
 	}
 
@@ -755,31 +677,31 @@ class Enp_quiz_Question {
 	* @return $value
 	*/
 	/* I don't think we need this anymore. Questions always have an ID now
-		public function get_value($key, $question_id) {
-			$value = '';
-			if(isset($_POST['enp_question'])) {
-				$posted_value = $_POST['enp_question'];
-				// find our question_id
-				foreach($posted_value as $question) {
-					// see if we matched our question_id
-					if($question['question_id'] === $question_id) {
-						$value = stripslashes($question[$key]);
-					}
-				}
-
-
-			}
-			// if the value didn't get set, try with our object
-			if($value === '') {
-				$get_obj_value = 'get_'.$key;
-				$obj_value = $this->$get_obj_value();
-				if($obj_value !== null) {
-					$value = $obj_value;
+	public function get_value($key, $question_id) {
+		$value = '';
+		if(isset($_POST['enp_question'])) {
+			$posted_value = $_POST['enp_question'];
+			// find our question_id
+			foreach($posted_value as $question) {
+				// see if we matched our question_id
+				if($question['question_id'] === $question_id) {
+					$value = stripslashes($question[$key]);
 				}
 			}
-			// send them back whatever the value should be
-			return $value;
+
+
 		}
+		// if the value didn't get set, try with our object
+		if($value === '') {
+			$get_obj_value = 'get_'.$key;
+			$obj_value = $this->$get_obj_value();
+			if($obj_value !== null) {
+				$value = $obj_value;
+			}
+		}
+		// send them back whatever the value should be
+		return $value;
+	}
 	*/
 }
 ?>

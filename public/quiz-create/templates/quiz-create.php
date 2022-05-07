@@ -41,8 +41,7 @@
 				<label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
 					Quiz Title
 				</label>
-				<textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title') ?></textarea>
-				<!-- Quiz title test: /quiz-create/ -->
+				<textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title') ?></textarea>
 				<?php
 				/**
 				 * 
@@ -71,7 +70,6 @@
 				 *
 				 */
 				?>
-				<!-- <textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php // echo $quiz->get_value('quiz_title_test') ?></textarea> -->
 
 			</fieldset>
 
@@ -104,4 +102,3 @@
 		</form>
 	</section>
 </article>
-<?php

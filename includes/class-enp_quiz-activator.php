@@ -562,6 +562,8 @@ define("ENP_QUIZ_URL", "' . $enp_take_url . '/quiz-embed/");
 define("ENP_TAKE_AB_TEST_URL", "' . $enp_take_url . '/ab-embed/");
 define("ENP_QUIZ_IMAGE_DIR", "' . $image_dir["basedir"] . '/enp-quiz/");
 define("ENP_QUIZ_IMAGE_URL", "' . $image_dir["baseurl"] . '/enp-quiz/");
+define("ENP_QUIZ_MC_IMAGE_DIR", "' . $image_dir["basedir"] . '/enp-quiz/");
+define("ENP_QUIZ_MC_IMAGE_URL", "' . $image_dir["baseurl"] . '/enp-quiz/");
 define("ENP_QUIZ_PLUGIN_DIR", "' . ENP_QUIZ_ROOT . '");
 define("ENP_QUIZ_PLUGIN_URL", "' . ENP_QUIZ_ROOT_URL . '/");
 ?>';

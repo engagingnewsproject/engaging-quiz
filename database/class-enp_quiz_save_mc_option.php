@@ -58,17 +58,152 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 								'mc_option_order' => $mc_option_order,
 							);
 
-        // add in if it's correct or not.
-        // we need this after setting the mc_option because set_mc_option_correct needs
-        // the mc_option_id
-        self::$mc_option['mc_option_correct'] = $this->set_mc_option_correct();
-        // see if we need to delete it or not
-        // we need this after setting the mc_option because set_mc_option_correct needs
-        // the mc_option_id
-        self::$mc_option['mc_option_is_deleted'] = $this->set_mc_option_is_deleted();
+		// $var = self::$mc_option['mc_option_image'] = $this->set_mc_option_image();
+
+		// add in if it's correct or not.
+		// we need this after setting the mc_option because set_mc_option_correct needs
+		// the mc_option_id
+		self::$mc_option['mc_option_correct'] = $this->set_mc_option_correct();
+		// see if we need to delete it or not
+		// we need this after setting the mc_option because set_mc_option_correct needs
+		// the mc_option_id
+		self::$mc_option['mc_option_is_deleted'] = $this->set_mc_option_is_deleted();
 
 
 		return self::$mc_option;
+	}
+
+	/**
+	* Sets our mc option image, uploads an image, or deletes it
+	*/
+	protected function set_mc_option_image() {
+		// set our default
+		$mc_option_image = $this->set_mc_option_value('mc_option_image', '');
+		// see if the user is trying to delete the image
+		if(parent::$user_action_action === 'delete' && parent::$user_action_element === 'mc_option_image') {
+			// see if it matches this mc option
+			if(parent::$user_action_details['mc_option_id'] === (int)self::$mc_option['mc_option_id']) {
+				// they want to delete this image. I wonder what was so bad about it?
+				$mc_option_image = '';
+				parent::$response_obj->add_success('Image deleted for Question #'.(self::$mc_option['mc_option_order']+1).'.');
+			}
+		}
+
+		// process images if necessary
+		// See if there's an image trying to be uploaded for this mc option
+		if(!empty($_FILES)) {
+			// This is the name="" field for that mc option image in the form
+			$mc_option_image_file = 'mc_option_image_upload_'.self::$mc_option['mc_option_id'];
+			// some mc option has a file submitted, let's see if it's this one
+			// check for size being set and that the size is greater than 0
+			if( isset($_FILES[$mc_option_image_file]["size"]) && $_FILES[$mc_option_image_file]["size"] > 0 ) {
+				// we have a new image to upload!
+				// upload it
+				$new_mc_option_image = $this->upload_mc_option_image($mc_option_image_file);
+				// see if it worked
+				if($new_mc_option_image !== false) {
+					// if it worked, set it as the mc_option_image
+					$mc_option_image = $new_mc_option_image;
+				}
+			}
+		}
+
+		return $mc_option_image;
+	}
+
+
+	/*
+	* Uploads an mc option image to
+	* @param $mc_option_image_file (string) name of "name" field in HTML form for that mc_option
+	* @return (string) filename of image uploaded to save to DB
+	*/
+	protected function upload_mc_option_image($mc_option_image_file) {
+		$new_image_name = false;
+		$image_upload = wp_upload_bits( $_FILES[$mc_option_image_file]['name'], null, @file_get_contents( $_FILES[$mc_option_image_file]['tmp_name'] ) );
+		// check to make sure there are no errors
+		if($image_upload['error'] === false) {
+			// success! set the image
+			// set the URL to the image as our question_image
+			// create / delete our directory for these images
+			$this->prepare_quiz_image_dir();
+			$path = $this->prepare_question_image_dir();
+
+			// now upload all the resized images we'll need
+			$new_image_name = $this->resize_image($image_upload, $path, null);
+			// we have the full path, but we just need the filename
+			$new_image_name = str_replace(ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/', '', $new_image_name);
+			// resize all the other images
+			$this->resize_image($image_upload, $path, 1000);
+			$this->resize_image($image_upload, $path, 740);
+			$this->resize_image($image_upload, $path, 580);
+			$this->resize_image($image_upload, $path, 320);
+			$this->resize_image($image_upload, $path, 200);
+
+			// delete the image we initially uploaded from the wp-content dir
+			$this->delete_file($image_upload['file']);
+
+			// add a success message
+			parent::$response_obj->add_success('Image uploaded for mc_option #'.(self::$mc_option['mc_option_order']+1).'.');
+		} else {
+			// add an error message
+			parent::$response_obj->add_error('Image upload failed for mc_option #'.(self::$mc_option['mc_option_order']+1).'.');
+		}
+
+		return $new_image_name;
+	}
+
+		/**
+	* Resizes images using wp_get_image_editor
+	* and appends the width to the filename
+	* @param $mc_option_image_upload (string) path to image
+	* @param $path (string) path to upload image to
+	* @param $width (int) maxwidth of image to resize it to
+	* @return path to saved resized image
+	*/
+	protected function resize_image($mc_option_image_upload, $path, $width) {
+		// Resize the image to fit the single goal's page dimensions
+		$image = wp_get_image_editor( $mc_option_image_upload['file']);
+		if ( ! is_wp_error( $image ) ) {
+			if($width !== null && is_int($width)) {
+				// make our height max out at 4x6 aspect ratio so we don't have a HUUUUGEly tall image
+				$height = $width * 1.666667;
+				$extension = $width.'w';
+				// Get the actual filename (rather than the directory + filename)
+				$image->resize( $width, $height, false );
+
+			} else {
+				$extension = '-original';
+			}
+
+			$filename = $image->generate_filename( $extension, $path, NULL );
+			$saved_image = $image->save($filename);
+			return $saved_image['path'];
+		}
+
+		return false;
+	}
+
+	/*
+	* Creates a new directory for the mc quiz images, if necessary
+	*/
+	protected function prepare_quiz_mc_image_dir() {
+		$path = ENP_QUIZ_MC_IMAGE_DIR . parent::$quiz['quiz_id'].'/';
+		$path = $this->build_dir($path);
+		return $path;
+	}
+
+	/*
+	* Creates a new directory for the question MC images, if necessary
+	* and DELETES all files in the directory if there are any
+	*/
+	protected function prepare_question_mc_image_dir() {
+		$path = ENP_QUIZ_MC_IMAGE_DIR . parent::$quiz['quiz_id'].'/'.self::$question['question_id'].'/';
+		$path = $this->build_dir($path);
+		$this->delete_files($path);
+
+		// check if directory exists
+		// check to see if our image question upload directory exists
+		return $path;
 	}
 
 	/**

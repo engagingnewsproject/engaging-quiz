@@ -1,10 +1,16 @@
 function temp_addQuestionImage(question_id) {
     $('#enp-question--'+questionID+' .enp-question-image-upload').hide();
     $('#enp-question--'+questionID+' .enp-question-image-upload').after(waitSpinner('enp-image-upload-wait'));
+
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').hide();
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').after(waitSpinner('enp-image-upload-wait'));
 }
 
 function unset_tempAddQuestionImage(question_id) {
     $('#enp-question--'+questionID+' .enp-question-image-upload').show();
+    $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
+
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').show();
     $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
 
     appendMessage('Image could not be uploaded. Please reload the page and try again.', 'error');
@@ -38,6 +44,7 @@ function addQuestionImage(question) {
 
 function temp_removeQuestionImage(questionID) {
     $('#enp-question--'+questionID+' .enp-question-image__container').addClass('enp-question__image--remove');
+    $('#enp-question--'+questionID+' .enp-mc_option-image__container').addClass('enp-question__image--remove');
     // set a temporary data attribute so we can get the value back if it doesn't save
     imageInput = $('#enp-question-image-'+questionID);
     imageFilename = imageInput.val();

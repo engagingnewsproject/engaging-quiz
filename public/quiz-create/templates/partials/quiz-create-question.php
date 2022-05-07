@@ -1,7 +1,8 @@
-
+<!-- <question> creation -->
 <?php
 	// get our question object
 	$question = new Enp_quiz_Question($question_id);
+
 	if($question_id === '{{question_id}}') {
 		$question_i = '{{question_position}}';
 	} else {
@@ -11,33 +12,47 @@
 	$question_image = $question->get_question_image();
 ?>
 
-<section id="enp-question--<?php echo $question_id;?>" class="enp-question-content">
+<section id="enp-question--<?php echo $question_id; ?>" class="enp-question-content">
+
+	<!-- Question order hidden inputs -->
 	<input class="enp-question-id hide" name="enp_question[<?php echo $question_i;?>][question_id]" value="<?php echo $question_id;?>" />
 	<input class="enp-question-order hide" name="enp_question[<?php echo $question_i;?>][question_order]" value="<?php echo $question_i;?>" />
 
-	<?php echo $Quiz_create->get_question_delete_button($question_id);
+	<!-- Question delete button -->
+	<?php echo $Quiz_create->get_question_delete_button($question_id); ?>
 
-	if(isset($question_ids)) : ?>
+	<!-- Question move buttons -->
+	<?php if( isset( $question_ids )) : ?>
 		<div class="enp-question__move">
 			<?php 
 			echo $Quiz_create->get_question_move_button($question_id, $question_i, 'up', $question_ids);
 			echo $Quiz_create->get_question_move_button($question_id, $question_i, 'down', $question_ids);
 			?>
 		</div>
-    <?php endif;?>
+	<?php endif; ?>
 
+	<!-- Question settings -->
 	<div class="enp-question-inner enp-question">
-		<label class="enp-label enp-question-title__label" for="question-title-<?php echo $question_id;?>">
-			Question
-		</label>
-		<textarea id="question-title-<?php echo $question_id;?>" class="enp-textarea enp-question-title__textarea" name="enp_question[<?php echo $question_i;?>][question_title]" maxlength="6120" placeholder="Why can't we tickle ourselves?"/><?php echo $question->get_question_title();?></textarea>
+		<label class="enp-label enp-question-title__label" for="question-title-<?php echo $question_id;?>">Question</label>
+		
+		<!-- Question title -->
+		<textarea id="question-title-<?php echo $question_id;?>" class="enp-textarea enp-question-title__textarea" name="enp_question[<?php echo $question_i;?>][question_title]" placeholder="Why can't we tickle ourselves?"/><?php echo $question->get_question_title();?></textarea>
+		
+		<!-- <input> question image -->
 		<input id="enp-question-image-<?echo $question_id;?>" class="enp-question-image__input hide" name="enp_question[<?echo $question_i;?>][question_image]" value="<?php echo $question_image;?>" />
-
+		
+		<!-- # GETS: <img> js template
+			via:		$question_image
+			$question: 	Enp_quiz_Question
+			$this: 		Enp_quiz_Quiz_create 
+		-->
 		<?php
-			// get & Display the QUESTION image.
 			echo $Quiz_create->get_question_image_template($question, $question_id, $question_i, $question_image);
+		// var_dump( $Quiz_create );
+		// die();
 		?>
 
+		<!-- Question type selector -->
 		<h4 class="enp-legend enp-question-type__legend">Question Type</h4>
 		<?php 
 		echo $Quiz_create->get_question_type_input($question, $question_id, $question_i);
@@ -52,6 +67,7 @@
 		?>
 	</div>
 
+	<!-- Question answer explanation -->
 	<div class="enp-question-inner enp-answer-explanation">
 		<fieldset class="enp-fieldset enp-answer-explanation__fieldset">
 			<label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id;?>">Answer Explanation</label>
@@ -59,6 +75,7 @@
 		</fieldset>
 	</div>
 </section>
+<!-- Question exlanation script -->
 <script>
 	// // // // // // 
 	// https://www.davidangulo.xyz/how-to-insert-data-into-wordpress-database/
@@ -77,17 +94,4 @@
 		auto_focus : '#enp-question-explanation__<?php echo $question_id;?>',
 		strict_loading_mode : true
 	});
-tinymce.init({
-    selector: ".enp-textarea",
-    inline: true,
-    setup: function(editor) {
-        editor.on('focus', function(e) {
-            console.log("focus");
-        });
-
-        editor.on('blur', function(e) {
-            console.log("blur");
-        });
-    }
-});
 </script>

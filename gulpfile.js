@@ -43,7 +43,7 @@ gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashb
 
 	// Watch for file changes
 	onChangeReload = ["public/quiz-create/css/enp_quiz-create.min.css",
-					"public/quiz-create/templates/*.php",
+					"public/quiz-create/templates/*",
 					"public/quiz-create/includes/*.php",
 					"public/quiz-create/js/dist/quiz-create.min.js",
 					"public/quiz-take/css/enp_quiz-take.min.css",
