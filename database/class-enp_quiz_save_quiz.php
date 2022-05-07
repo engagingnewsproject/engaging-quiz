@@ -46,7 +46,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 		self::$user_action_action = self::$response_obj->get_user_action_action();
 		self::$user_action_element = self::$response_obj->get_user_action_element();
 		self::$user_action_details = self::$response_obj->get_user_action_details();
-
 		// create our object
 		self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
 		// fill the quiz with all the values
@@ -1147,4 +1146,5 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 		// return the found quiz row
 		return $ab_test_row;
 	}
+
 }

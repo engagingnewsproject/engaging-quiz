@@ -12,6 +12,12 @@
 	$question_image = $question->get_question_image();
 ?>
 
+<?php 
+// $test = new Enp_quiz_Save_mc_option;
+// var_dump(get_object_vars($test->$mc_option));
+// die();
+?>
+
 <section id="enp-question--<?php echo $question_id; ?>" class="enp-question-content">
 
 	<!-- Question order hidden inputs -->
