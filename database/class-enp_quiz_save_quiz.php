@@ -18,21 +18,19 @@
  * @subpackage Enp_quiz/database
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Save_quiz extends Enp_quiz_Save
-{
+class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 	protected static $quiz,
-		$quiz_obj,
-		$response_obj,
-		$user_action_action,
-		$user_action_element,
-		$user_action_details;
+					 $quiz_obj,
+					 $response_obj,
+					 $user_action_action,
+					 $user_action_element,
+					 $user_action_details;
 
-	public function __construct()
-	{
+	public function __construct() {
+
 	}
 
-	public function save($quiz)
-	{
+	public function save($quiz) {
 		// first off, sanitize the whole submitted thang
 		self::$quiz = $this->sanitize_array($quiz);
 		// flatten it out to make it easier to work with
@@ -46,6 +44,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 		self::$user_action_action = self::$response_obj->get_user_action_action();
 		self::$user_action_element = self::$response_obj->get_user_action_element();
 		self::$user_action_details = self::$response_obj->get_user_action_details();
+
 		// create our object
 		self::$quiz_obj = new Enp_quiz_Quiz(self::$quiz['quiz_id']);
 		// fill the quiz with all the values
@@ -106,14 +105,13 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @return nicely formatted and value validated quiz array ready for saving
 	 * $quiz_title_test = $this->set_quiz_value('quiz_title_test', '');
 	 */
-	protected function prepare_submitted_quiz()
-	{
+	protected function prepare_submitted_quiz() {
 
 		$quiz_id = $this->set_quiz_value('quiz_id', 0);
 		$quiz_title = $this->set_quiz_value('quiz_title', '');
 		$quiz_feedback = $this->set_quiz_value('quiz_feedback', '');
 		$quiz_status = $this->set_quiz_value('quiz_status', 'draft');
-		$quiz_finish_message = $this->set_quiz_value('quiz_finish_message', 'Thanks A LOT for taking our quiz!');
+		$quiz_finish_message = $this->set_quiz_value('quiz_finish_message', 'Thanks for taking our quiz!');
 		$quiz_updated_by = $this->set_quiz_value('quiz_updated_by', 0);
 		$quiz_updated_at = $this->set_quiz_value('quiz_updated_at', date("Y-m-d H:i:s"));
 		$quiz_owner = $this->set_quiz_value__object_first('quiz_owner', $quiz_updated_by);
@@ -143,8 +141,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 		// email
 		$email_subject = $facebook_title;
 		$email_body_start = $facebook_description;
-		$email_body_end = $facebook_quote_end . ' ' . $facebook_description;
+		$email_body_end = $facebook_quote_end.'
 
+'.$facebook_description;
 		// twitter
 		$include_url = true;
 		$replace_mustache = true;
@@ -229,8 +228,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 *                    );
 	 * @return nicely formatted and value validated questions array ready for saving
 	 */
-	protected function prepare_submitted_questions()
-	{
+	protected function prepare_submitted_questions() {
 
 		$allow_question_save = $this->preprocess_questions();
 		if ($allow_question_save === 'no_questions') {
@@ -272,8 +270,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 		self::$quiz['question'] = $prepared_questions;
 	}
 
-	protected function preprocess_questions()
-	{
+	protected function preprocess_questions() {
 		// If user action is ADD QUESTION
 		// create a dummy question to insert in the DB
 		if (self::$user_action_action === 'add' && self::$user_action_element === 'question') {
@@ -328,8 +325,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $question (array) question submitted from form
 	 * @return $is_deleted (int) 1 = delete, 0 = not deleted
 	 */
-	protected function preprocess_deleted_question($question)
-	{
+	protected function preprocess_deleted_question($question) {
 		$is_deleted = 0;
 		// see if we're supposed to delete a question
 		if (self::$user_action_action === 'delete' && self::$user_action_element === 'question') {
@@ -351,8 +347,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * becomes
 	 * array('quiz_id'=>0, quiz_title' => 'Untitled'...)
 	 */
-	protected function flatten_quiz_array($submitted_quiz)
-	{
+	protected function flatten_quiz_array($submitted_quiz) {
 		$flattened_quiz = array();
 		if (array_key_exists('quiz', $submitted_quiz) && is_array($submitted_quiz['quiz'])) {
 			// Flatten the submitted arrays a bit to make it easier to understand
@@ -377,8 +372,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	/*
 	* Sanitize all keys and values of an array. Loops through ALL arrays (even nested)
 	*/
-	protected function sanitize_array($array)
-	{
+	protected function sanitize_array($array) {
 		$sanitized_array = array();
 		// check to make sure it's an array
 		if (!is_array($array) || !count($array)) {
@@ -409,8 +403,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 *
 	 * @return response array of quiz_id, action, status, and errors (if any)
 	 */
-	private function save_quiz()
-	{
+	private function save_quiz() {
 
 		// check for the quiz_title real quick
 		if (self::$quiz['quiz_title'] === '') {
@@ -418,13 +411,6 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 			self::$response_obj->add_error('Please enter a quiz title.');
 			return false;
 		}
-
-		// check for the quiz_title_test real quick
-		// if (self::$quiz['quiz_title_test'] === '') {
-		// 	// You had ONE job...
-		// 	self::$response_obj->add_error('Please enter a quiz test title.');
-		// 	return false;
-		// }
 
 		//  If the quiz_obj doesn't exist the quiz object will set the quiz_id as null
 		if (self::$quiz_obj->get_quiz_id() === null) {
@@ -498,8 +484,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @return   (BOOLEAN) true if we should allow the user
 	 *                     to update the quiz, false if not
 	 */
-	protected function allow_user_to_update_quiz()
-	{
+	protected function allow_user_to_update_quiz() {
 		$allow_save = false;
 		// see if user is admin or not
 		if (current_user_can('manage_options') === true) {
@@ -516,8 +501,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * Connects to DB and inserts the quiz.
 	 * @return builds and returns a response message
 	 */
-	protected function insert_quiz()
-	{
+	protected function insert_quiz() {
 		// connect to PDO
 		$pdo = new enp_quiz_Db();
 		// Get our Parameters ready
@@ -669,8 +653,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * Connects to DB and updates the quiz.
 	 * @return builds and returns a response message
 	 */
-	protected function pdo_publish_quiz()
-	{
+	protected function pdo_publish_quiz() {
 		// connect to PDO
 		$pdo = new enp_quiz_Db();
 
@@ -706,8 +689,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * Can be called from anywhere to publish a quiz
 	 *
 	 */
-	public function publish_quiz($quiz)
-	{
+	public function publish_quiz($quiz) {
 		if (is_object($quiz)) {
 			$quiz = (array) $quiz;
 		}
@@ -727,8 +709,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @since    0.0.1
 	 * ':quiz_title_test'    => self::$quiz['quiz_title_test'],
 	 */
-	protected function set_update_quiz_params()
-	{
+	protected function set_update_quiz_params() {
 		$params = array(
 			':quiz_id'            => self::$quiz_obj->get_quiz_id(),
 			':quiz_title'         => self::$quiz['quiz_title'],
@@ -750,8 +731,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param    $question = array(); of all $quiz['question'] data
 	 * @since    0.0.1
 	 */
-	protected function save_questions()
-	{
+	protected function save_questions() {
 		// loop through the questions and save each one
 		foreach (self::$quiz['question'] as $question) {
 			// save it! Yay!
@@ -771,8 +751,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $default = int or string of default value if nothing is found
 	 * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
 	 */
-	protected function set_quiz_value($key, $default)
-	{
+	protected function set_quiz_value($key, $default) {
 		$param_value = $default;
 		// see if the value is already in our submitted quiz
 		if (array_key_exists($key, self::$quiz) && self::$quiz[$key] !== "") {
@@ -796,8 +775,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $default = int or string of default value if nothing is found
 	 * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
 	 */
-	protected function set_quiz_value__allow_empty($key, $default)
-	{
+	protected function set_quiz_value__allow_empty($key, $default) {
 		$param_value = $default;
 		// see if the value is already in our submitted quiz
 		if (array_key_exists($key, self::$quiz)) {
@@ -820,8 +798,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $default = int or string of default value if nothing is found
 	 * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
 	 */
-	public function set_quiz_value__object_first($key, $default)
-	{
+	public function set_quiz_value__object_first($key, $default) {
 		// see if the value is already in our quiz object
 		$obj_value = $this->get_quiz_object_value($key);
 		if ($obj_value !== null) {
@@ -840,8 +817,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $key = the value you want to get 'quiz_title', 'quiz_id', etc.
 	 * @return $obj_value (mixed) value if found, null if not found
 	 */
-	protected function get_quiz_object_value($key)
-	{
+	protected function get_quiz_object_value($key) {
 		$obj_value = null;
 		// check to see if there's even an object
 		if (self::$quiz_obj->get_quiz_id() !== null) {
@@ -863,8 +839,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $validation = string of validation function 'css_measurement', 'hex', etc
 	 * @return $value (mixed) quiz object value if found and valid, $default value if not found in object/invalid object value
 	 */
-	protected function validate_quiz_value_from_object($key, $default, $validation)
-	{
+	protected function validate_quiz_value_from_object($key, $default, $validation) {
 		// try to get the value from the object
 		$obj_value = $this->get_quiz_object_value($key);
 		// build our validation function string
@@ -891,8 +866,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $default = int or string of default value if nothing is found
 	 * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
 	 */
-	public function set_quiz_hex_value($key, $default)
-	{
+	public function set_quiz_hex_value($key, $default) {
 		// set it with what they submitted
 		$hex = $this->set_quiz_value($key, $default);
 		// validate the hex
@@ -919,8 +893,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $default = int or string of default value if nothing is found
 	 * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
 	 */
-	public function set_quiz_css_measurement_value($key, $default)
-	{
+	public function set_quiz_css_measurement_value($key, $default) {
 		// set it with what they submitted
 		$css_measurement = $this->set_quiz_value($key, $default);
 		// validate the hex
@@ -944,8 +917,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $minify (BOOLEAN) if you want it minified or more readable
 	 * @return CSS Tidy formatted string
 	 */
-	public function set_quiz_css_value($key, $default = '', $minify = true)
-	{
+	public function set_quiz_css_value($key, $default = '', $minify = true) {
 		// set the value
 		$css = $this->set_quiz_value__allow_empty($key, $default);
 		// run it through css tidy
@@ -960,8 +932,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $css = submitted css
 	 * @return optimized css from css tidy
 	 */
-	public function optimize_css($css, $minify = true)
-	{
+	public function optimize_css($css, $minify = true) {
 		// it there isn't a value, return it
 		if (empty($css)) {
 			return '';
@@ -1006,8 +977,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 *                            it with '100' if found
 	 * @return value from either self::$quiz[$key] or self::$quiz_obj->get_quiz_$key()
 	 */
-	public function set_tweet_value($key, $default, $include_url, $mustache)
-	{
+	public function set_tweet_value($key, $default, $include_url, $mustache) {
 		// set it with what they submitted
 		$tweet = $this->set_quiz_value($key, $default);
 		// validate the tweet
@@ -1029,8 +999,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * In order to show the updated Facebook Share Title & Description,
 	 * we have to tell Facebook to rescrape the URL to grab the updated content
 	 */
-	public function facebook_api_rescrape()
-	{
+	public function facebook_api_rescrape() {
 		$rescrape = false;
 		$new_title = self::$quiz['facebook_title'];
 		$old_title = self::$quiz_obj->get_facebook_title();
@@ -1053,8 +1022,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * Sends a curl post request to FB to trigger a rescrape of the Quiz
 	 * $quiz_url (string) The Quiz url you want to update.
 	 */
-	public function facebook_curl_post($quiz_url)
-	{
+	public function facebook_curl_post($quiz_url) {
 		$graph_url = "https://graph.facebook.com";
 
 		$postData = "id=" . $quiz_url . "&scrape=true";
@@ -1085,8 +1053,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * Decide if a quiz should be deleted or not
 	 * @param self::$quiz
 	 */
-	protected function set_quiz_is_deleted()
-	{
+	protected function set_quiz_is_deleted() {
 		//get the current values (from submission or object)
 		$is_deleted = $this->set_quiz_value('quiz_is_deleted', '0');
 		// see if the user action is to delete a quiz
@@ -1106,8 +1073,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $quiz_id (string/int) of the id of the quiz
 	 * @return $ab_test_response (array) from deleting all the ab tests (which ids were deleted, if it was successful, etc)
 	 */
-	protected function delete_quiz_ab_tests($quiz_id, $quiz_owner)
-	{
+	protected function delete_quiz_ab_tests($quiz_id, $quiz_owner) {
 		// get all the ab test ids that this quiz is a part of
 		$ab_test_ids = $this->get_all_quiz_ab_tests($quiz_id);
 		// if there are any, loop through them and delete em!
@@ -1131,8 +1097,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save
 	 * @param $quiz_id
 	 * @return $ab_test_ids (array) of all AB Test IDs
 	 */
-	protected function get_all_quiz_ab_tests($quiz_id)
-	{
+	protected function get_all_quiz_ab_tests($quiz_id) {
 		$pdo = new enp_quiz_Db();
 		// Do a select query to see if we get a returned row
 		$params = array(

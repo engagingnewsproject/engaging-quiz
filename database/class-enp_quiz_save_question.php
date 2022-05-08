@@ -457,7 +457,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
 				 WHERE  question_id = :question_id";
 		// update the question in the database
-		$stmt =$pdo->query($sql, $params);
+		$stmt = $pdo->query($sql, $params);
 
 		// success!
 		if($stmt !== false) {
@@ -591,7 +591,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 	* Deletes files in a directory, restricted to ENP_QUIZ_IMG_DIR
 	*/
 	private function delete_files($path) {
-		if(strpos($path,  ENP_QUIZ_IMAGE_DIR) === false ) {
+		if(strpos($path,  ENP_QUIZ_IMAGE_DIR) === false || strpos($path,  ENP_QUIZ_MC_IMAGE_DIR) === false) {
 			// uh oh... someone is misusing this
 			return false;
 		}

@@ -112,7 +112,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
 
 	}
-
+	
 	public function set_quiz_action_url($quiz_id) {
 		if(is_numeric($quiz_id) || is_int($quiz_id)) {
 			$quiz_action_url = ENP_QUIZ_CREATE_URL.$quiz_id.'/';
@@ -360,6 +360,9 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 		$js_templates .= $this->question_image_upload_js_template($question_id);
 		$js_templates .= $this->question_image_upload_button_js_template($Quiz_create, $question_id, $question_i);
 		$js_templates .= $this->mc_option_js_template($Quiz_create, $question_id, $question_i);
+		$js_templates .= $this->mc_option_image_js_template($Quiz_create, $question, $question_id, $question_i);
+		$js_templates .= $this->mc_option_image_upload_js_template( $question_id );
+		$js_templates .= $this->mc_option_image_upload_button_js_template($Quiz_create, $question_id, $question_i);
 		$js_templates .= $this->slider_js_templates($Quiz_create, $question_id, $question_i);
 
 		echo $js_templates;
@@ -413,21 +416,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 		return $js_template;
 	}
 
-	public function mc_option_js_template($Quiz_create, $question_id, $question_i) {
-		$mc_option_id = '{{mc_option_id}}';
-		$mc_option_i = '{{mc_option_position}}';
-		// set-up our template
-		$js_template = '<script type="text/template" id="mc_option_template">';
-			ob_start();
-			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option.php');
-			// include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option-image.php');
-			$js_template .= ob_get_contents();
-			if (ob_get_length()) ob_end_clean();
-		// end our template
-		$js_template .= '</script>';
-		return $js_template;
-	}
-
 	public function slider_js_templates($Quiz_create, $question_id, $question_i) {
 		$slider = new Enp_quiz_Slider(0);
 		// foreach key, set it as a js template var
@@ -465,4 +453,87 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 		return $slider_js_templates;
 	}
 
+
+	// MC Option / Image / Upload / Button / Template
+	public function mc_option_image_upload_button_js_template($Quiz_create, $mc_option_id, $mc_option_i) {
+		$js_template = '<script type="text/template" id="mc_option_image_upload_button_template">
+			<button type="button" class="enp-btn--add enp-mc-option-image-upload"><svg class="enp-icon enp-icon--photo enp-mc-option-image-upload__icon--photo" role="presentation" aria-hidden="true">
+				<use xlink:href="#icon-photo" />
+			</svg>
+			<svg class="enp-icon enp-icon--add enp-mc-option-image-upload__icon--add" role="presentation" aria-hidden="true">
+				<use xlink:href="#icon-add" />
+			</svg> Add Image</button>
+		</script>';
+
+		return $js_template;
+	}
+
+	// MC Option / Image / GET / Template
+	public function get_mc_option_image_template( $Quiz_create, $mc_option_id, $mc_option_i, $mc_option_image ) {
+		ob_start();
+		if(!empty($mc_option_image)) {
+			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image.php');
+		} elseif($mc_option_id !== '') {
+			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image-upload.php');
+		}
+		$image_template = ob_get_contents();
+		// don't use ob_get_length first as this is a nested ob (output buffer)
+		// inside question template and messes up the JS template output
+		ob_end_clean();
+
+		return $image_template;
+	}
+
+	// MC Option / Image / Template
+	public function mc_option_image_js_template($Quiz_create, $question, $question_id, $question_i) {
+		$js_template = '<script type="text/template" id="mc_option_image_template">';
+			ob_start();
+			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image.php');
+			$js_template .= ob_get_contents();
+			if (ob_get_length()) ob_end_clean();
+		$js_template .= '</script>';
+		return $js_template;
+	}
+
+	// MC Option / Image / Upload / Template
+	public function mc_option_image_upload_js_template($mc_option_id) {
+		$js_template = '<script type="text/template" id="mc_option_image_upload_template">';
+			ob_start();
+			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image-upload.php');
+			$js_template .= ob_get_contents();
+			if (ob_get_length()) ob_end_clean();
+		$js_template .= '</script>';
+		return $js_template;
+	}
+
+	// MC Option / Image / Create
+	public function get_quiz_create_mc_option_image($mc_option, $mc_option_id) {
+		$mc_option_image = '';
+		if ($mc_option_id !== '{{mc_option_id}}') {
+            $mc_option_image = '<img
+				class="enp-mc-option-image"
+				src="'.$mc_option->get_mc_option_image_src().'"
+				srcset="'.$mc_option->get_mc_option_image_srcset().'"
+				alt="'.$mc_option->get_mc_option_image_alt().'"
+			/>';
+		}
+		return $mc_option_image;
+	}
+
+	// MC Option / Template
+	public function mc_option_js_template($Quiz_create, $question_id, $question_i) {
+		$mc_option_id = '{{mc_option_id}}';
+		$mc_option_i = '{{mc_option_position}}';
+		$mc_option_image = '{{mc_option_image}}';
+		// set-up our template
+		$js_template = '<script type="text/template" id="mc_option_template">';
+			ob_start();
+			include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option.php');
+			// echo $this->get_mc_option_image_template( $Quiz_create, $mc_option_id, $mc_option_i, $mc_option_image );
+			$js_template .= ob_get_contents();
+			if (ob_get_length()) ob_end_clean();
+		// end our template
+		$js_template .= '</script>';
+		return $js_template;
+	}
 }

@@ -1,3 +1,6 @@
+<?php // set-up the mc option
+$mc_option = new Enp_quiz_MC_option($mc_option_id);
+?>
 <!-- mc image upload -->
 <label for="enp-mc-option-image-upload-<?php echo $mc_option_id;?>" class="enp-label enp-image-upload__label enp-screen-reader-text">Add Image</label>
 

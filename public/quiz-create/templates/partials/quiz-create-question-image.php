@@ -1,17 +1,8 @@
 <!-- FRONT END <img> tag creation -->
 <div class="enp-question-image__container">
 
-	<!-- #
-		GETS:		<img> tag after upload
-		via:		$question_image
-		$question: 	Enp_quiz_Question
-		$this: 		Enp_quiz_Quiz_create 
-	-->
 	<?php echo $this->get_quiz_create_question_image( $question, $question_id ); ?>
-	<?php 
-		// var_dump( $this );
-		// die();
-	?>
+
 	<button class="enp-button enp-quiz-submit enp-button__question-image-delete" name="enp-quiz-submit" value="question-image--delete-<?php echo $question_id;?>"><svg class="enp-icon enp-icon--delete enp-question__icon--question-image-delete">
 		<use xlink:href="#icon-delete"><title>Delete Image</title></use></svg>
 	</button>

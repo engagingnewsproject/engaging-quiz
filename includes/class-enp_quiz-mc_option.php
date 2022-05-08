@@ -325,31 +325,14 @@ class Enp_quiz_MC_option {
 		return (array) $this;
 	}
 
-	// MC image SCRIPT TEMPLATE
-	public function get_mc_option_image_template( $mc_option, $mc_option_id, $mc_option_i, $mc_option_image ) {
-		// var_dump($mc_option);
-		// die();
-		ob_start();
-		if(!empty($mc_option_image)) {
-			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image.php');
-		} elseif($mc_option_id !== '{{mc_option_id}}') {
-			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image-upload.php');
-		}
-		$image_template = ob_get_contents();
-		// don't use ob_get_length first as this is a nested ob (output buffer)
-		// inside question template and messes up the JS template output
-		ob_end_clean();
-
-		return $image_template;
-	}
 	/**
-	* Get the value we should be saving on a mc_option
-	* get posted if present, if not, get object. This is so we give them their
-	* current entry if we don't *actually* save yet.
-	* @param $string = what you want to get ('mc_option_content', 'mc_option_explanation', whatever)
-	* @param $i = which mc_option you're trying to get a value from
-	* @return $value
-	*/
+	 * Get the value we should be saving on a mc_option
+	 * get posted if present, if not, get object. This is so we give them their
+	 * current entry if we don't *actually* save yet.
+	 * @param $i = which mc_option you're trying to get a value from
+	 * @param $string = what you want to get ('mc_option_content', 'mc_option_explanation', whatever)
+	 * @return $value
+	 */
 	/* I don't think we need this anymore. MC_options always have an ID now
 	public function get_value($key, $question_id, $mc_option_id) {
 		$value = '';
