@@ -22,6 +22,19 @@
  */
 // var_dump( $mc_option_image );
 ?>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+var quill = new Quill('#enp-question-explanation__<?php echo $question_id;?>', {
+modules: {
+	toolbar: [
+	['link', 'bold', 'italic', 'underline']
+	]
+},
+placeholder: "Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.",
+theme: 'snow'  // or 'bubble'
+});
+</script>
 <aside class="enp-dash__section-aside">
 	<?php echo $Quiz_create->dashboard_breadcrumb_link(); ?>
 </aside>
@@ -76,14 +89,15 @@
 			<section class="enp-quiz-create__questions">
 				<?php
 				$question_i = 0;
+
 				// count the number of questions
 				$question_ids = $quiz->get_questions();
 				if (!empty($question_ids)) {
 					foreach ($question_ids as $question_id) :
 						?>
 						<?php include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php'; ?>
-						<?php $question_i++; ?>
-					<?php
+						<?php 
+						$question_i++;
 					endforeach;
 				}
 				?>

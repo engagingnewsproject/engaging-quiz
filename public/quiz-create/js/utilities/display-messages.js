@@ -41,3 +41,14 @@ function removeErrorMessages() {
     }
 
 }
+
+
+var quill = new Quill('#editor', {
+modules: {
+	toolbar: [
+	['link', 'bold', 'italic', 'underline']
+	]
+},
+placeholder: "Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.",
+theme: 'snow'  // or 'bubble'
+});

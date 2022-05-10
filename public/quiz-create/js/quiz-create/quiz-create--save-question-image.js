@@ -18,24 +18,18 @@ function unset_tempAddQuestionImage(question_id) {
 
 function addQuestionImage(question) {
     questionID = question.question_id;
-    mcOptionID = question.mc_option_id;
 
     $('#enp-question--'+questionID+' .enp-question-image-upload').remove();
     $('#enp-question--'+questionID+' .enp-question-image-upload__input').remove();
-    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').remove();
-    $('#enp-question--'+questionID+' .enp-mc-option-image-upload__input').remove();
     $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
 
 
     // add the value for this question in the input field
     $('#enp-question--'+questionID+' .enp-question-image__input').val(question.question_image);
-    $('#enp-question--'+questionID+' .enp-mc-option-image__input').val(question.mc_option_image);
 
     // load the new image template
     templateParams ={question_id: questionID, question_position: getQuestionIndex(questionID)};
-    templateParamsMcOption ={mc_option_id: mc_optionID, mc_option_position: getQuestionIndex(mcOptionID)};
     $('#enp-question--'+questionID+' .enp-question-image__input').after(questionImageTemplate(templateParams));
-    $('#enp-question--'+questionID+' .enp-mc-option-image__input').after(mcOptionImageTemplate(templateParams));
 
     imageFile = question.question_image;
     // get the 580 wide one
@@ -46,13 +40,11 @@ function addQuestionImage(question) {
 
     // insert the image
     $('#enp-question--'+questionID+' .enp-question-image__container').prepend('<img class="enp-question-image enp-question-image" src="'+imageURL+'" alt="'+question.question_image_alt+'"/>');
-    $('#enp-question--'+questionID+' .enp-mc-option-image__container').prepend('<img class="enp-mc-option-image enp-mc-option-image" src="'+imageURL+'" alt="'+question.mc_option_image_alt+'"/>');
 
 }
 
 function temp_removeQuestionImage(questionID) {
     $('#enp-question--'+questionID+' .enp-question-image__container').addClass('enp-question__image--remove');
-    $('#enp-question--'+questionID+' .enp-mc_option-image__container').addClass('enp-question__image--remove');
     // set a temporary data attribute so we can get the value back if it doesn't save
     imageInput = $('#enp-question-image-'+questionID);
     imageFilename = imageInput.val();

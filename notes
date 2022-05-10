@@ -1,0 +1,46 @@
+Existing plugin. . .
+_____________________________________________________
+---- Question Image ------
+HTML INPUT ELEMENT'S "NAME" ATTR
+__________________________
+BEFORE UPLOAD: .enp-question-image-upload__input
+	enp_question[0][question_image]
+AFTER UPLOAD:
+	enp_question[0][question_image]
+AFTER REFRESH: .enp-question-image-upload__input
+	question_image_upload_3
+
+JS TEMPLATES
+_____________________
+id="question_template":
+	enp_question[{{question_position}}][question_order]
+id"question_image_upload_template":
+	question_image_upload_{{question_id}}
+
+
+
+_____________________________________________________
+------ MC Options ---
+HTML INPUT ELEMENT'S "NAME" ATTR
+____________________
+BEFORE & AFTER SAVE: .enp-mc-option__input
+	Question one:
+		enp_question[0][mc_option][0][mc_option_content]
+		enp_question[0][mc_option][1][mc_option_content]
+		enp_question[0][mc_option][2][mc_option_content]
+		enp_question[0][mc_option][3][mc_option_content]
+	Question two:
+		enp_question[1][mc_option][0][mc_option_content]
+		enp_question[1][mc_option][1][mc_option_content]
+		enp_question[1][mc_option][2][mc_option_content]
+		enp_question[1][mc_option][3][mc_option_content]
+		* if marked "correct", class added to <li> element: enp-mc-option--correct
+
+JS TEMPLATES id="mc_option_template"
+_____________________
+	<input> .enp-mc-option-id 		name:
+		enp_question[{{question_position}}][mc_option][{{mc_option_position}}][mc_option_id]
+	<input .enp-mc-option-order 	name:
+		enp_question[{{question_position}}][mc_option][{{mc_option_position}}][mc_option_order]
+	<input> .enp-mc-option__input	name:
+		enp_question[{{question_position}}][mc_option][{{mc_option_position}}][mc_option_content]

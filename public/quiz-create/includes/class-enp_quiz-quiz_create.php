@@ -218,8 +218,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
 	// Question image SCRIPT TEMPLATE
 	public function get_question_image_template($question, $question_id, $question_i, $question_image) {
-		// var_dump($mc_option);
-		// die();
 		ob_start();
 		if(!empty($question_image)) {
 			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-question-image.php');
@@ -485,7 +483,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 	}
 
 	// MC Option / Image / Template
-	public function mc_option_image_js_template($Quiz_create, $question, $question_id, $question_i) {
+	public function mc_option_image_js_template($Quiz_create, $mc_option, $mc_option_id, $mc_option_i) {
 		$js_template = '<script type="text/template" id="mc_option_image_template">';
 			ob_start();
 			include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc-option-image.php');
@@ -529,7 +527,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 		$js_template = '<script type="text/template" id="mc_option_template">';
 			ob_start();
 			include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option.php');
-			// echo $this->get_mc_option_image_template( $Quiz_create, $mc_option_id, $mc_option_i, $mc_option_image );
 			$js_template .= ob_get_contents();
 			if (ob_get_length()) ob_end_clean();
 		// end our template

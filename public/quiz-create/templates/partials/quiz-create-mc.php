@@ -20,3 +20,7 @@
 		<?php echo $Quiz_create->get_mc_option_add_button($question_id);?>
 	</ul>
 </fieldset>
+<?php 
+// var_dump( $mc_option_content);
+// die();
+?>
