@@ -76,6 +76,8 @@ class Enp_quiz_Admin {
 
 		wp_register_style( $this->plugin_name.'-admin', plugin_dir_url( __FILE__ ) . 'css/enp_quiz-admin.css', array(), ENP_QUIZ_VERSION);
 
+		wp_enqueue_style(  $this->plugin_name.'-admin' );
+
 	}
 
 	/**
@@ -92,4 +94,3 @@ class Enp_quiz_Admin {
 	}
 
 }
-?>
