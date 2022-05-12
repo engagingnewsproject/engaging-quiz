@@ -19,8 +19,10 @@
 	 ?>
 	<div class="enp-question__move">
 		<?php 
+		if(isset($question_ids)) :
 		echo $Quiz_create->get_question_move_button($question_id, $question_i, 'up', $question_ids);
 		echo $Quiz_create->get_question_move_button($question_id, $question_i, 'down', $question_ids);
+		endif;
 		?>
 	</div>
 

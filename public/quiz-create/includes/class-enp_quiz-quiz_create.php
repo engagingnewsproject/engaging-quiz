@@ -286,39 +286,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create
 	}
 
 	/**
-	 * MC Option image: GET js template
-	 */
-	public function get_mc_option_image_template($mc_option, $mc_option_id, $mc_option_i, $mc_option_image)
-	{
-		ob_start();
-		if (!empty($mc_option_image)) {
-			include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option-image.php');
-		} elseif ($mc_option_id !== '{{question_id}}') {
-			include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option-image-upload.php');
-		}
-		$mc_option_image_template = ob_get_contents();
-		// don't use ob_get_length first as this is a nested ob (output buffer)
-		// inside question template and messes up the JS template output
-		ob_end_clean();
-
-		return $mc_option_image_template;
-	}
-
-	public function get_quiz_create_mc_option_image($mc_option, $question_id)
-	{
-		$mc_option_image = '';
-		if ($question_id !== '{{question_id}}') {
-			$mc_option_image = '<img
-				class="enp-question-image"
-				src="' . $mc_option->get_mc_option_image_src() . '"
-				srcset="' . $mc_option->get_mc_option_image_srcset() . '"
-				alt="' . $mc_option->get_mc_option_image_alt() . '"
-			/>';
-		}
-		return $mc_option_image;
-	}
-
-	/**
 	 * Multiple choice: question type selector
 	 */
 	public function get_question_type_mc_input($question, $question_id, $question_i)
@@ -491,51 +458,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create
 	}
 
 	/**
-	 * MC option image: upload button js template
-	 */
-	public function mc_option_image_upload_button_js_template($Quiz_create, $question_id, $question_i)
-	{
-		$js_template = '<script type="text/template" id="question_image_upload_button_template">
-			<button type="button" class="JSTEMPLATE enp-btn--add enp-question-image-upload"><svg class="enp-icon enp-icon--photo enp-question-image-upload__icon--photo" role="presentation" aria-hidden="true">
-				<use xlink:href="#icon-photo" />
-			</svg>
-			<svg class="enp-icon enp-icon--add enp-question-image-upload__icon--add" role="presentation" aria-hidden="true">
-				<use xlink:href="#icon-add" />
-			</svg> Add Image</button>
-		</script>';
-
-		return $js_template;
-	}
-
-	/**
-	 * MC option image: (uploaded) js template
-	 */
-	public function mc_option_image_js_template($Quiz_create, $question, $question_id, $question_i)
-	{
-		$js_template = '<script type="text/template" id="mc_option_image_template">';
-		ob_start();
-		include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option-image.php');
-		$js_template .= ob_get_contents();
-		if (ob_get_length()) ob_end_clean();
-		$js_template .= '</script>';
-		return $js_template;
-	}
-
-	/**
-	 * MC option image: upload wrapper
-	 */
-	public function mc_option_image_upload_js_template($question_id)
-	{
-		$js_template = '<script type="text/template" id="mc_option_image_upload_template">';
-		ob_start();
-		include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option-image-upload.php');
-		$js_template .= ob_get_contents();
-		if (ob_get_length()) ob_end_clean();
-		$js_template .= '</script>';
-		return $js_template;
-	}
-
-	/**
 	 * Multiple choice: js template wrapper
 	 */
 	public function mc_option_js_template($Quiz_create, $question_id, $question_i)
@@ -546,7 +468,6 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create
 		$js_template = '<script type="text/template" id="mc_option_template">';
 		ob_start();
 		include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option.php');
-		include(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc-option-image.php');
 		$js_template .= ob_get_contents();
 		if (ob_get_length()) ob_end_clean();
 		// end our template

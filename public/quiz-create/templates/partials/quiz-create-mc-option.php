@@ -11,6 +11,5 @@ $mc_option = new Enp_quiz_MC_option($mc_option_id);
 	<?php
 	echo $Quiz_create->get_mc_option_correct_button($question_id, $mc_option_id);
 	echo $Quiz_create->get_mc_option_delete_button($mc_option_id);
-	echo $Quiz_create->get_mc_option_image_template($mc_option, $mc_option_id, $mc_option_i, $mc_option_image);
 	?>
 </li>

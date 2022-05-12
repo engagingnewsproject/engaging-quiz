@@ -9,11 +9,9 @@
  *
  **/
 
-class enp_quiz_Db extends PDO
-{
+class enp_quiz_Db extends PDO {
 
-	public function __construct()
-	{
+	public function __construct() {
 		// check if a connection already exists
 		try {
 			// config file for connection info and necessary variables
@@ -52,21 +50,18 @@ class enp_quiz_Db extends PDO
 		}
 	}
 
-	public function query($sql, $params = null)
-	{
+	public function query($sql, $params = null) {
 		$stmt = $this->prepare($sql);
 		$stmt->execute($params);
 		return $stmt;
 	}
 
-	public function fetchOne($sql, $params = [])
-	{
+	public function fetchOne($sql, $params = []) {
 		$stmt = $this->query($sql, $params);
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public function fetchAll($sql, $params = [])
-	{
+	public function fetchAll($sql, $params = []) {
 		$stmt = $this->query($sql, $params);
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
@@ -75,8 +70,7 @@ class enp_quiz_Db extends PDO
 	 * Get Quizzes
 	 *
 	 */
-	public function getQuizzes($where = [])
-	{
+	public function getQuizzes($where = []) {
 
 		$params = $this->buildParams($where);
 		$sql = "SELECT * from " . $this->quiz_table . " WHERE quiz_is_deleted = 0";
@@ -92,8 +86,7 @@ class enp_quiz_Db extends PDO
 	 * Get Domains
 	 *
 	 */
-	public function getDomains($where = [])
-	{
+	public function getDomains($where = []) {
 
 		$params = $this->buildParams($where);
 		$sql = "SELECT DISTINCT(SUBSTRING_INDEX((SUBSTRING_INDEX((SUBSTRING_INDEX(embed_site_url, '://', -1)), '/', 1)), '.', -2)) as domain from " . $this->embed_site_table;
@@ -109,8 +102,7 @@ class enp_quiz_Db extends PDO
 	 * Get Sites
 	 *
 	 */
-	public function getSites($where = [])
-	{
+	public function getSites($where = []) {
 
 		$params = $this->buildParams($where);
 		$sql = "SELECT * from " . $this->embed_site_table;
@@ -126,8 +118,7 @@ class enp_quiz_Db extends PDO
 	 * Get Embeds
 	 *
 	 */
-	public function getEmbeds($where = [])
-	{
+	public function getEmbeds($where = []) {
 
 		$params = $this->buildParams($where);
 		$sql = "SELECT * from " . $this->embed_quiz_table;
@@ -140,39 +131,33 @@ class enp_quiz_Db extends PDO
 	}
 
 	// TOTALS
-	public function getResponsesCorrectTotal()
-	{
+	public function getResponsesCorrectTotal() {
 		$sql = "SELECT COUNT(*) from " . $this->response_question_table . " WHERE response_correct = 1";
 		return (int) $this->fetchOne($sql)['COUNT(*)'];
 	}
 
-	public function getResponsesIncorrectTotal()
-	{
+	public function getResponsesIncorrectTotal() {
 		$sql = "SELECT COUNT(*) from " . $this->response_question_table . " WHERE response_correct = 0";
 		return (int) $this->fetchOne($sql)['COUNT(*)'];
 	}
 
-	public function getMCQuestionsTotal()
-	{
+	public function getMCQuestionsTotal() {
 		$sql = "SELECT COUNT(*) from " . $this->question_table . " WHERE question_type = 'mc'";
 		return (int) $this->fetchOne($sql)['COUNT(*)'];
 	}
 
-	public function getSliderQuestionsTotal()
-	{
+	public function getSliderQuestionsTotal() {
 		$sql = "SELECT COUNT(*) from " . $this->question_table . " WHERE question_type = 'slider'";
 		return (int) $this->fetchOne($sql)['COUNT(*)'];
 	}
 
-	public function getUniqueUsersTotal()
-	{
+	public function getUniqueUsersTotal() {
 		$sql = "SELECT COUNT(DISTINCT user_id) as users
 					FROM " . $this->response_quiz_table;
 
 		return (int) $this->fetchOne($sql)['users'];
 	}
-	public function buildWhere($params, $where = true)
-	{
+	public function buildWhere($params, $where = true) {
 		$sql = '';
 		if ($where === true) {
 			$sql = ' WHERE ';
@@ -202,8 +187,7 @@ class enp_quiz_Db extends PDO
 	 * @param $params ARRAY
 	 * @return ARRAY
 	 */
-	public function buildParams($params)
-	{
+	public function buildParams($params) {
 		$bound = [];
 
 		foreach ($params as $key => $val) {
