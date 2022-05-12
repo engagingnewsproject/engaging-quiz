@@ -45,22 +45,36 @@
         <?php echo $Quiz_create->get_question_type_input($question, $question_id, $question_i);
 
 
-        include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc.php');
+        include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-mc.php'); ?>
 
-        $slider_id = $question->get_slider();
-        $slider = new Enp_quiz_Slider($slider_id);
-        // don't add slider in for our js question_template
-        if($slider_id !== '') {
-            include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/quiz-create-slider.php');
-        }
+	<div class="enp-question-inner enp-answer-explanation">
+		<fieldset class="enp-fieldset enp-answer-explanation__fieldset">
+			<label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id; ?>">Answer Explanation</label>
+			<script>tinymce.init({ selector: '#' + editor_id});</script>
+			<?php
+			
+			// ? TODO: Need to fix: >1 question added the toolbar wont show, user has to save & refresh or preview
+			if ($question_i < 1) { // ? prevent json error for $question_id with {{}}'s
+				$question_id = 0;
+			}
+			$input       = $question->get_question_explanation();
+			$editor_id   = "enp-question-explanation__$question_id";
+			$editor_name = 'enp_question[' . $question_i . '][question_explanation]';
+			$settings    = array(
+				'textarea_name' => $editor_name,
+				'media_buttons' => false, // ? no media upload option
+				'quicktags'     => true,
+				'teeny'         => false,
+				'tinymce'       => array(
+					'toolbar1' => 'link,unlink', // ? limit what shows on the toolbar
+					'toolbar2' => '',
+					'toolbar3' => '',
+				),
+			);
+			wp_editor($input, $editor_id, $settings);
 
-        ?>
-    </div>
-
-    <div class="enp-question-inner enp-answer-explanation">
-        <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
-            <label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id;?>">Answer Explanation</label>
-            <textarea id="enp-question-explanation__<?php echo $question_id;?>" class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?php echo $question_i;?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><?php echo $question->get_question_explanation();?></textarea>
-        </fieldset>
-    </div>
+			
+			?>
+		</fieldset>
+	</div>
 </section>
