@@ -47,7 +47,7 @@ $(document).on('click', '.enp-view-toggle', function() {
 $('.enp-dash-item__nav').each(function() {
     $(this).addClass('enp-dash-item__nav--collapsible')
             .attr('aria-hidden', true)
-            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg></button>');
+            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--top"><use xlink:href="#icon-chevron-down" /></svg></button>');
 });
 
 /**
@@ -411,5 +411,4 @@ function removeErrorMessages() {
     }
 
 }
-
 });
