@@ -22,6 +22,14 @@
  */
 
 ?>
+<script src="https://cdn.tiny.cloud/1/tpynz31lszn8p1eu7c0q58q5ua138xorj80slits2knm9zao/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+			<script type="text/javascript">
+				tinymce.init({
+					selector: '.myeditablediv',
+					inline: true,
+					menubar: false
+				});
+			</script>
 <aside class="enp-dash__section-aside">
 	<?php echo $Quiz_create->dashboard_breadcrumb_link(); ?>
 </aside>
