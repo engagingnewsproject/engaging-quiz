@@ -51,7 +51,7 @@ class Enp_quiz_Slider {
         $sql = "SELECT * from ".$pdo->question_slider_table." WHERE
                 slider_id = :slider_id
                 AND slider_is_deleted = 0";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $slider_row = $stmt->fetch();
         // return the found slider row
         return $slider_row;

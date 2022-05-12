@@ -40,26 +40,26 @@ class Enp_quiz_MC_option {
 		return self::$mc_option;
 	}
 
-	/**
-	*   For using PDO to select one mc_option row
-	*
-	*   @param  $mc_option_id = mc_option_id that you want to select
-	*   @return row from database table if found, false if not found
-	**/
-	public function select_mc_option_by_id($mc_option_id) {
-		$pdo = new enp_quiz_Db();
-		// Do a select query to see if we get a returned row
-		$params = array(
-			":mc_option_id" => $mc_option_id
-		);
-		$sql = "SELECT * from ".$pdo->question_mc_option_table." WHERE
-				mc_option_id = :mc_option_id
-				AND mc_option_is_deleted = 0";
-		$stmt = $pdo->query($sql, $params);
-		$mc_option_row = $stmt->fetch();
-		// return the found mc_option row
-		return $mc_option_row;
-	}
+    /**
+    *   For using PDO to select one mc_option row
+    *
+    *   @param  $mc_option_id = mc_option_id that you want to select
+    *   @return row from database table if found, false if not found
+    **/
+    public function select_mc_option_by_id($mc_option_id) {
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":mc_option_id" => $mc_option_id
+        );
+        $sql = "SELECT * from ".$pdo->question_mc_option_table." WHERE
+                mc_option_id = :mc_option_id
+                AND mc_option_is_deleted = 0";
+        $stmt = $pdo->runQuery($sql, $params);
+        $mc_option_row = $stmt->fetch();
+        // return the found mc_option row
+        return $mc_option_row;
+    }
 
 	/**
 	* Hook up all the values for the object

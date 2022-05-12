@@ -58,26 +58,26 @@ class Enp_quiz_Question {
 		return self::$question;
 	}
 
-	/**
-	*   For using PDO to select one question row
-	*
-	*   @param  $question_id = question_id that you want to select
-	*   @return row from database table if found, false if not found
-	**/
-	public function select_question_by_id($question_id) {
-		$pdo = new enp_quiz_Db();
-		// Do a select query to see if we get a returned row
-		$params = array(
-			":question_id" => $question_id
-		);
-		$sql = "SELECT * from ".$pdo->question_table." WHERE
-				question_id = :question_id
-				AND question_is_deleted = 0";
-		$stmt = $pdo->query($sql, $params);
-		$question_row = $stmt->fetch();
-		// return the found question row
-		return $question_row;
-	}
+    /**
+    *   For using PDO to select one question row
+    *
+    *   @param  $question_id = question_id that you want to select
+    *   @return row from database table if found, false if not found
+    **/
+    public function select_question_by_id($question_id) {
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":question_id" => $question_id
+        );
+        $sql = "SELECT * from ".$pdo->question_table." WHERE
+                question_id = :question_id
+                AND question_is_deleted = 0";
+        $stmt = $pdo->runQuery($sql, $params);
+        $question_row = $stmt->fetch();
+        // return the found question row
+        return $question_row;
+    }
 
 	/**
 	* Hook up all the values for the object
@@ -252,17 +252,17 @@ class Enp_quiz_Question {
 	protected function set_mc_options() {
 		$question_id = self::$question['question_id'];
 
-		$pdo = new enp_quiz_Db();
-		// Do a select query to see if we get a returned row
-		$params = array(
-			":question_id" => $question_id
-		);
-		$sql = "SELECT mc_option_id from ".$pdo->question_mc_option_table." WHERE
-				question_id = :question_id
-				AND mc_option_is_deleted = 0
-				ORDER BY mc_option_order ASC";
-		$stmt = $pdo->query($sql, $params);
-		$mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":question_id" => $question_id
+        );
+        $sql = "SELECT mc_option_id from ".$pdo->question_mc_option_table." WHERE
+                question_id = :question_id
+                AND mc_option_is_deleted = 0
+                ORDER BY mc_option_order ASC";
+        $stmt = $pdo->runQuery($sql, $params);
+        $mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 		$mc_options = array();
 
@@ -288,18 +288,18 @@ class Enp_quiz_Question {
 	protected function set_slider() {
 		$question_id = self::$question['question_id'];
 
-		$pdo = new enp_quiz_Db();
-		// Do a select query to see if we get a returned row
-		$params = array(
-			":question_id" => $question_id
-		);
-		$sql = "SELECT slider_id from ".$pdo->question_slider_table." WHERE
-				question_id = :question_id
-				AND slider_is_deleted = 0";
-		$stmt = $pdo->query($sql, $params);
-		$slider_id = $stmt->fetch();
-		return $slider_id['slider_id'];
-	}
+        $pdo = new enp_quiz_Db();
+        // Do a select query to see if we get a returned row
+        $params = array(
+            ":question_id" => $question_id
+        );
+        $sql = "SELECT slider_id from ".$pdo->question_slider_table." WHERE
+                question_id = :question_id
+                AND slider_is_deleted = 0";
+        $stmt = $pdo->runQuery($sql, $params);
+        $slider_id = $stmt->fetch();
+        return $slider_id['slider_id'];
+    }
 
 	/**
 	* Set the question_views for our Quiz Object
