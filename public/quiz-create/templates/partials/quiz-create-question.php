@@ -1,12 +1,11 @@
 <?php
 // get our question object
-$question = new Enp_quiz_Question( $question_id );
-if ( $question_id === '{{question_id}}' ) {
+$question = new Enp_quiz_Question($question_id);
+if ($question_id === '{{question_id}}') {
     $question_i = '{{question_position}}';
 } else {
     $question_i = $question_i;
 }
-
 $question_image = $question->get_question_image();
 ?>
 
@@ -15,20 +14,17 @@ $question_image = $question->get_question_image();
     <input class="enp-question-order" type="hidden" name="enp_question[<?php echo $question_i; ?>][question_order]" value="<?php echo $question_i; ?>" />
 
     <?php
-    echo $Quiz_create->get_question_delete_button( $question_id );
+    echo $Quiz_create->get_question_delete_button($question_id);
 
-    if ( isset( $question_ids ) ) :
-        ?>
+    if (isset($question_ids)) :
+    ?>
         <div class="enp-question__move">
             <?php
-            echo $Quiz_create->get_question_move_button( $question_id, $question_i, 'up', $question_ids );
-            echo $Quiz_create->get_question_move_button( $question_id, $question_i, 'down', $question_ids );
+            echo $Quiz_create->get_question_move_button($question_id, $question_i, 'up', $question_ids);
+            echo $Quiz_create->get_question_move_button($question_id, $question_i, 'down', $question_ids);
             ?>
         </div>
     <?php endif; ?>
-
-
-
 
     <div class="enp-question-inner enp-question">
         <label class="enp-label enp-question-title__label" for="question-title-<?php echo $question_id; ?>">
@@ -39,62 +35,61 @@ $question_image = $question->get_question_image();
         <input type="hidden" id="enp-question-image-<? echo $question_id; ?>" class="enp-question-image__input" name="enp_question[<? echo $question_i; ?>][question_image]" value="<?php echo $question_image; ?>" />
 
         <?php
-        echo $Quiz_create->get_question_image_template( $question, $question_id, $question_i, $question_image );
+        echo $Quiz_create->get_question_image_template($question, $question_id, $question_i, $question_image);
         ?>
 
         <h4 class="enp-legend enp-question-type__legend">Question Type</h4>
 
         <?php
-        echo $Quiz_create->get_question_type_input( $question, $question_id, $question_i );
-
+        echo $Quiz_create->get_question_type_input($question, $question_id, $question_i);
 
         require ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-mc.php';
 
         $slider_id = $question->get_slider();
-        $slider    = new Enp_quiz_Slider( $slider_id );
+        $slider    = new Enp_quiz_Slider($slider_id);
         // don't add slider in for our js question_template
-        if ( $slider_id !== '' ) {
+        if ($slider_id !== '') {
             include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-slider.php';
         }
         ?>
     </div>
-
     <div class="enp-question-inner enp-answer-explanation">
-        <div class="enp-fieldset enp-answer-explanation__fieldset">
+        <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id; ?>">Answer Explanation</label>
-            <textarea class="enp-textarea enp-answer-explanation__textarea enp-answer-explanation__editor" id="enp-question-explanation__<?php echo $question_id; ?>" name="enp_question[<?php echo $question_i; ?>][question_explanation]"><?php echo $question->get_question_explanation(); ?></textarea>            
-        </div>
+            <textarea id="enp-question-explanation__<?php echo $question_id;?>" class="enp-textarea enp-answer-explanation__textarea">
+                <?php echo $question->get_question_explanation();?>
+            </textarea>
+            <?php 
+            /**
+             * Duplicate hidden textarea for tinymce.
+             * All attributes need to stay on the hidden textarea
+             * 
+             * 1) 
+             */
+            ?>
+            <textarea id="enp-question-explanation__<?php echo $question_id;?>" class="enp-textarea enp-answer-explanation__textarea" style="visibility: hidden; position: absolute; z-index-1;" name="enp_question[<?php echo $question_i;?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.">
+                <?php echo $question->get_question_explanation();?>
+            </textarea>
+            <?php
+                // ? TODO: Need to fix: >1 question added the toolbar wont show, user has to save & refresh or preview
+                // if ($question_i < 1) { // ? prevent json error for $question_id with {{}}'s
+                //     $question_id = 0;
+                // }
+                // $input       = $question->get_question_explanation();
+                // $editor_id   = "enp-question-explanation__$question_id";
+                // $editor_name = 'enp_question[' . $question_i . '][question_explanation]';
+                // $settings    = array(
+                //     'textarea_name' => $editor_name,
+                //     'media_buttons' => false, // ? no media upload option
+                //     'quicktags' => false,
+                //     'tinymce'       => array(
+                //         'toolbar1' => 'link,unlink', // ? limit what shows on the toolbar
+                //         'toolbar2' => '',
+                //         'toolbar3' => '',
+                //     ),
+                // );
+                // wp_editor($input, $editor_id, $settings);
+            ?>
+        </fieldset>
     </div>
 </section>
-<script>
-    // inline
-    // tinymce.init({
-    //     selector: '.enp-answer-explanation__editor',
-    //     inline: true,
-    //     menubar: false,
-    //     forced_root_block : 'p',
-    //     forced_root_block_attrs: {
-    //         'class': 'myclass',
-    //         'name': 'enp_question[<?php //echo $question_i; ?>][question_explanation]',
-    //         'id': 'enp-question-explanation__<?php //echo $question_id; ?>'
-    //     }
-    // });
-
-    // full editor
-    var question_answer_explanation = 'This content!';
-    tinymce.init({
-        selector: '.enp-answer-explanation__editor',
-        forced_root_block : 'p',
-        forced_root_block_attrs: {
-            'class': 'myclass',
-            'name': 'enp_question[<?php echo $question_i; ?>][question_explanation]',
-            'id': 'enp-question-explanation__<?php echo $question_id; ?>'
-        },
-        setup: function (editor) {
-        editor.on('init', function (e) {
-            editor.setContent(question_answer_explanation);
-        });
-        }
-    });
-    var myContent = tinymce.get(".enp-answer-explanation__editor").getContent();
-</script>

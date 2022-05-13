@@ -20,11 +20,9 @@
  * for reference,
  * $this = $Quiz_create = Enp_quiz_Quiz_create class
  */
-
 ?>
 <script src="https://cdn.tiny.cloud/1/tpynz31lszn8p1eu7c0q58q5ua138xorj80slits2knm9zao/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
-            <?php // echo $question->get_question_explanation(); ?>
 <aside class="enp-dash__section-aside">
     <?php echo $Quiz_create->dashboard_breadcrumb_link(); ?>
 </aside>
@@ -39,18 +37,15 @@
             <?php
             $enp_quiz_nonce->outputKey();
             echo $Quiz_create->hidden_fields(); 
-            // var_dump($quiz);
-            // $input       = $question->get_question_explanation();
-            // var_dump($input);
-            
+
             ?>
             <fieldset class="enp-fieldset enp-quiz-title">
                 <label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
                     Quiz Title
                 </label>
                 <textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title') ?></textarea>
-                <!-- Quiz title test: /quiz-create/ -->
                 <?php
+                // Sample title workflow
                 /**
                  * 
                  * // // // A DUPLICATE (commented out) INPUT ELEMENT TO SAVE US ALL! // // //
@@ -75,25 +70,20 @@
                  * 
                  *
                  * Not really in any particular order, it just looks nicer that way. 
-                 *
+                 * <textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php // echo $quiz->get_value('quiz_title_test') ?></textarea> 
                  */
                 ?>
-                <!-- <textarea id="quiz-title_test" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title_test]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php // echo $quiz->get_value('quiz_title_test') ?></textarea> -->
-
             </fieldset>
 
             <section class="enp-quiz-create__questions">
                 <?php
                 $question_i = 0;
-                // count the number of questions
+                // count the number of questions.
                 $question_ids = $quiz->get_questions();
-                if (!empty($question_ids)) : ?>
-                    <?php 
+                if (!empty($question_ids)) : 
                     foreach ($question_ids as $question_id) :
-                        ?>
-                        <?php include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php'; ?>
-                        <?php $question_i++; ?>
-                    <?php
+                        include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php';
+                        $question_i++;
                     endforeach;
                 endif;
                 ?>

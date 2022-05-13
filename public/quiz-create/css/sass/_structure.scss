@@ -7,9 +7,9 @@
 }
 
 @mixin container {
-    max-width: 840px;
+    max-width: 80vw;
     margin: 0 auto;
-    @include clearfix;
+    // @include clearfix;
 }
 
 @mixin well {

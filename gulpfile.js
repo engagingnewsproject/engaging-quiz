@@ -47,6 +47,7 @@ gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashb
 					"public/quiz-create/includes/*.php",
 					"public/quiz-create/js/dist/quiz-create.min.js",
 					"public/quiz-take/css/enp_quiz-take.min.css",
+                    "public/quiz-create/templates/partials/*.php",
 					"public/quiz-take/*.php",
 					"public/quiz-take/includes/*.php",
 					"public/quiz-take/js/dist/quiz-take.min.js"

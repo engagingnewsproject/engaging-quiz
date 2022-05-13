@@ -469,6 +469,7 @@
 }
 
 @mixin accordion__content--closed  {
+    // TEMP DEV comment out
     margin-top: 0;
     padding-top: 0rem;
     animation: slideOutTop .25s $fastInEaseOut forwards;
@@ -565,6 +566,7 @@
 
     .enp-accordion-content {
         @include accordion__content ;
+
     }
 
     .enp-accordion-content--closed {

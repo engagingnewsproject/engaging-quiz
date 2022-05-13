@@ -222,6 +222,42 @@ _.middleNumber = function(a, b) {
     return (a + b)/2;
 };
 
+// Tinymce init for "add question" button
+function addTinymce( $question_id ) {
+    // find the textareas you need to add the tinymce onto
+    $textareas = $('question').find('.enp-answer-explanation__textarea');
+    // add the tinymce to each
+    tinymce.init({
+        selector: '#enp-question-explanation__'+$question_id+'',
+        menubar: false,
+        statusbar: false,
+        plugins: 'quickbars link' ,
+        toolbar: 'bold italic link blockquote',
+        quickbars_selection_toolbar: 'bold italic link blockquote',
+        quickbars_insert_toolbar: false,
+        quickbars_image_toolbar: false,
+
+    });
+}
+
+// TODO: only load the tinymce if .enp-accordion-header or 
+// .enp-quiz-form__add-question elements/buttons are clicked
+function addAnswerExplanationEditor( response ) {
+    var $question,
+        $question_id,
+
+    // get the questions
+    $question = response.question;
+
+    // loop through all questions
+    $( $question ).each(function( $question_id ) {
+        // get the question_id of each
+        $question_id = this.question_id;
+        // click on any of the triggers go ahead and add the tinymce
+            addTinymce( $question_id );
+    });
+}
+
 /*
 * Set-up Underscore Templates
 */
@@ -1170,6 +1206,7 @@ function saveQuiz(userAction) {
     var quizForm = document.getElementById("enp-quiz-create-form");
     // create formData object
     var fd = new FormData(quizForm);
+
     // set our submit button value
     fd.append('enp-quiz-submit', userAction);
     // append our action for wordpress AJAX call
@@ -1234,6 +1271,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             new_mcOption = getNewMCOption(new_questionID, response.question);
             new_sliderID = newQuestionResponse.slider.slider_id;
             addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
+             addAnswerExplanationEditor( response );
         } else {
             unset_tempAddQuestion();
         }
@@ -1300,6 +1338,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             temp_unsetRemoveQuestionImage(questionID);
         }
     }
+
     // show ajax messages
     displayMessages(response.message);
     // remove error messages. Let the preview button handle that.
@@ -1317,6 +1356,7 @@ function setNewQuiz(response) {
     var pageTitle = $('.enp-quiz-title__textarea').val();
     pageTitle = 'Quiz: '+pageTitle;
     var urlPath = quizCreate.quiz_create_url + response.quiz_id;
+    addAnswerExplanationEditor( response );
     window.history.pushState({"html":html,"pageTitle":pageTitle},"", urlPath);
 }
 
@@ -1376,6 +1416,28 @@ function unsetWait() {
     $('.enp-quiz-message--saving').remove();
 }
 
+// Accordion toggle click listener for tinymce initialization.
+$(document).ready(function(){
+    $(".enp-accordion-container").click(function(){
+        $accordionClick = $(this).find(".enp-answer-explanation__textarea").attr("id");
+        console.dir($accordionClick);
+        tinymce.init({
+            selector: '#'+$accordionClick+'',
+            menubar: false,
+            statusbar: false,
+            plugins: 'quickbars link' ,
+            toolbar: 'bold italic link blockquote',
+            quickbars_selection_toolbar: 'bold italic link blockquote',
+            quickbars_insert_toolbar: false,
+            quickbars_image_toolbar: false
+        });
+    });
+});
+$textareas = $('question').find('.enp-answer-explanation__textarea');
+function getAnchorId() {
+    var anchorId = $(this).children('a').attr('id');
+    console.log(anchorId);
+}
 function bindSliderData(questionJSON) {
     // assigns data and creates the jQuery slider
     question = $('#question_'+questionJSON.question_id);

@@ -221,3 +221,39 @@ function replaceAttributes(el, pattern, replace) {
 _.middleNumber = function(a, b) {
     return (a + b)/2;
 };
+
+// Tinymce init for "add question" button
+function addTinymce( $question_id ) {
+    // find the textareas you need to add the tinymce onto
+    $textareas = $('question').find('.enp-answer-explanation__textarea');
+    // add the tinymce to each
+    tinymce.init({
+        selector: '#enp-question-explanation__'+$question_id+'',
+        menubar: false,
+        statusbar: false,
+        plugins: 'quickbars link' ,
+        toolbar: 'bold italic link blockquote',
+        quickbars_selection_toolbar: 'bold italic link blockquote',
+        quickbars_insert_toolbar: false,
+        quickbars_image_toolbar: false,
+
+    });
+}
+
+// TODO: only load the tinymce if .enp-accordion-header or 
+// .enp-quiz-form__add-question elements/buttons are clicked
+function addAnswerExplanationEditor( response ) {
+    var $question,
+        $question_id,
+
+    // get the questions
+    $question = response.question;
+
+    // loop through all questions
+    $( $question ).each(function( $question_id ) {
+        // get the question_id of each
+        $question_id = this.question_id;
+        // click on any of the triggers go ahead and add the tinymce
+            addTinymce( $question_id );
+    });
+}
