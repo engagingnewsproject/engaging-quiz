@@ -37,7 +37,7 @@
         display: grid;
         padding-left: 0;
         padding-right: 0;
-        @include breakpoint(medium) {
+        @include breakpoint(large) {
             width: 100%;
             max-width: 40rem;
         }

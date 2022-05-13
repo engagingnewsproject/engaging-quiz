@@ -1,0 +1,28 @@
+{
+    "folders": [
+        {
+            "path": ".."
+        }
+    ],
+    "settings": {
+		"phpcs.enable": true,
+		"phpcs.composerJsonPath": "wp-content/plugins/enp-quiz/composer.json",
+		"phpcs.standard": "WordPress",
+		"phpcs.executablePath": "/Users/lukey/.composer/vendor/bin/phpcs",
+		"phpcbf.enable": true,
+		"phpcbf.onsave": true,
+		"phpcbf.executablePath": "/Users/lukey/.composer/vendor/bin/phpcbf",
+		"phpcbf.standard": "WordPress",
+		"phpsab.standard": "WordPress",
+		"phpsab.fixerEnable": true,
+        "editor.renderWhitespace": "all",
+        "editor.hover.enabled": true,
+        "php.suggest.basic": false,
+        "phpcbf.documentFormattingProvider": true,
+		"html.format.templating": true,
+		"editor.defaultFormatter": "persoderlind.vscode-phpcbf",
+		"[php]": {
+			"editor.defaultFormatter": "persoderlind.vscode-phpcbf"
+		}
+	}
+}

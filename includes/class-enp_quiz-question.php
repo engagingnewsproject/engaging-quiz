@@ -220,7 +220,10 @@ class Enp_quiz_Question {
     * @return question_explanation field from the database
     */
     protected function set_question_explanation() {
-        $question_explanation = stripslashes(self::$question['question_explanation']);
+        // $question_explanation = stripslashes(self::$question['question_explanation']);
+        $question_explanation = self::$question['question_explanation'];
+        // var_dump($question_explanation);
+        // die();
         return $question_explanation;
     }
 
@@ -489,10 +492,12 @@ class Enp_quiz_Question {
     public function get_question_explanation() {
         $question_explanation = $this->question_explanation;
         // ? TODO: perfect the target attribute add. kindof buggy.
-
-        $question_explanation = html_entity_decode($question_explanation);
+    //   var_dump($question_explanation);
+    //     die();
+        // $question_explanation = html_entity_decode($question_explanation);
         // = preg_replace('/(<a\b[^><]*)>/i', '$1 target="_blank">', $question_explanation);
         return $question_explanation;
+  
     }
 
     /**

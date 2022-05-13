@@ -199,7 +199,7 @@ class Enp_quiz_Activator
 					question_image_alt VARCHAR(3060) NOT NULL,
 					question_order BIGINT(3) NOT NULL,
 					question_type VARCHAR(20) NOT NULL,
-					question_explanation VARCHAR(6120) NOT NULL,
+					question_explanation TEXT NOT NULL,
 					question_views BIGINT(20) NOT NULL DEFAULT '0',
 					question_responses BIGINT(20) NOT NULL DEFAULT '0',
 					question_responses_correct BIGINT(20) NOT NULL DEFAULT 0,
