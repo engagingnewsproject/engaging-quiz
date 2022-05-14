@@ -59,7 +59,7 @@ function saveQuiz(userAction) {
     setTemp(userAction);
     // desroy successs messages so they don't stack
     destroySuccessMessages();
-
+    tinyMCE.triggerSave();
     $.ajax( {
         type: 'POST',
          url  : quizCreate.ajax_url,
@@ -258,25 +258,8 @@ function unsetWait() {
     $('.enp-quiz-message--saving').remove();
 }
 
-// Accordion toggle click listener for tinymce initialization.
-$(document).ready(function(){
-    $(".enp-accordion-container").click(function(){
-        $accordionClick = $(this).find(".enp-answer-explanation__textarea").attr("id");
-        console.dir($accordionClick);
-        tinymce.init({
-            selector: '#'+$accordionClick+'',
-            menubar: false,
-            statusbar: false,
-            plugins: 'quickbars link' ,
-            toolbar: 'bold italic link blockquote',
-            quickbars_selection_toolbar: 'bold italic link blockquote',
-            quickbars_insert_toolbar: false,
-            quickbars_image_toolbar: false
-        });
-    });
-});
-$textareas = $('question').find('.enp-answer-explanation__textarea');
-function getAnchorId() {
-    var anchorId = $(this).children('a').attr('id');
-    console.log(anchorId);
-}
+
+
+
+
+

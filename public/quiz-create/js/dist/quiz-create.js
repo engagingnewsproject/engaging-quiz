@@ -222,10 +222,13 @@ _.middleNumber = function(a, b) {
     return (a + b)/2;
 };
 
+
+
+
+
+
 // Tinymce init for "add question" button
 function addTinymce( $question_id ) {
-    // find the textareas you need to add the tinymce onto
-    $textareas = $('question').find('.enp-answer-explanation__textarea');
     // add the tinymce to each
     tinymce.init({
         selector: '#enp-question-explanation__'+$question_id+'',
@@ -236,9 +239,23 @@ function addTinymce( $question_id ) {
         quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
-
+        setup: function (editor) {
+            editor.on('init', function (e) {
+                editor.setContent('<p>Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.</p>');
+            });
+        }
     });
 }
+
+// function tinymceToTextarea($question_id) {
+//     var textArea = document.getElementById('#enp-question-explanation__'+$question_id+'');
+//     // get save button
+//     var saveBtn = document.getElementsByClassName('enp-quiz-submit');
+//     // on save button click set tinycme html to textarea
+//     $(document).on('click', saveBtn, function(e) {
+//         // input tinymce content html into textarea
+//    });
+// }
 
 // TODO: only load the tinymce if .enp-accordion-header or 
 // .enp-quiz-form__add-question elements/buttons are clicked
@@ -258,6 +275,64 @@ function addAnswerExplanationEditor( response ) {
     });
 }
 
+
+// // // // // // // // // 
+// TINYMCE ALT
+// // // // // // // // // 
+
+function addTinymceAlt( $question_id ) {
+    console.log($question_id);
+
+    $(document).ready(function(){
+        $(".enp-accordion-container").click(function(){
+            $accordionClick = $(this).find(".enp-answer-explanation__textarea").attr("id");
+            tinymce.init({
+                selector: '#'+$accordionClick+'',
+                menubar: false,
+                statusbar: false,
+                plugins: 'quickbars link' ,
+                toolbar: 'bold italic link blockquote',
+                quickbars_selection_toolbar: 'bold italic link blockquote',
+                quickbars_insert_toolbar: false,
+                quickbars_image_toolbar: false,
+                setup: function (editor) {
+                    editor.on('init', function (e) {
+                        editor.setContent('<p>Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.</p>');
+                    });
+                },
+            });
+        });
+    });
+}
+
+
+// Accordion toggle click listener for tinymce initialization.
+
+// var myContent = tinymce.get('#enp-question-explanation__').getContent({ format: "text" });
+
+// $textareas = $('question').find('.enp-answer-explanation__textarea');
+// console.log($textareas);
+// function getAnchorId() {
+//     var anchorId = $(this).children('a').attr('id');
+//     console.log(anchorId);
+// }
+// $hiddenTextarea = $('.enp-answer-explanation__textarea-hidden');
+// $visibleTextarea = $('.enp-answer-explanation__textarea');
+// // console.log($ogTextarea)
+
+// $('.enp-btn--save').click(function() {
+//     // get the contents of the link that was clicked
+//     var answerText = $( visibleTextarea ).text();
+
+//     // replace the contents of the div with the link text
+//     $(hiddenTextarea).html(answerText);
+
+//     // cancel the default action of the link by returning false
+//     return false;
+// });
+
+// $myContent = $('#enp-question-explanation__'+$question_id+'').tinymce().getContent();
+// console.log(myContent);
 /*
 * Set-up Underscore Templates
 */
@@ -1217,7 +1292,7 @@ function saveQuiz(userAction) {
     setTemp(userAction);
     // desroy successs messages so they don't stack
     destroySuccessMessages();
-
+    tinyMCE.triggerSave();
     $.ajax( {
         type: 'POST',
          url  : quizCreate.ajax_url,
@@ -1416,28 +1491,12 @@ function unsetWait() {
     $('.enp-quiz-message--saving').remove();
 }
 
-// Accordion toggle click listener for tinymce initialization.
-$(document).ready(function(){
-    $(".enp-accordion-container").click(function(){
-        $accordionClick = $(this).find(".enp-answer-explanation__textarea").attr("id");
-        console.dir($accordionClick);
-        tinymce.init({
-            selector: '#'+$accordionClick+'',
-            menubar: false,
-            statusbar: false,
-            plugins: 'quickbars link' ,
-            toolbar: 'bold italic link blockquote',
-            quickbars_selection_toolbar: 'bold italic link blockquote',
-            quickbars_insert_toolbar: false,
-            quickbars_image_toolbar: false
-        });
-    });
-});
-$textareas = $('question').find('.enp-answer-explanation__textarea');
-function getAnchorId() {
-    var anchorId = $(this).children('a').attr('id');
-    console.log(anchorId);
-}
+
+
+
+
+
+
 function bindSliderData(questionJSON) {
     // assigns data and creates the jQuery slider
     question = $('#question_'+questionJSON.question_id);

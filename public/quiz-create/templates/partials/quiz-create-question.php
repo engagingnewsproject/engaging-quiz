@@ -56,18 +56,18 @@ $question_image = $question->get_question_image();
     <div class="enp-question-inner enp-answer-explanation">
         <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id; ?>">Answer Explanation</label>
-            <textarea id="enp-question-explanation__<?php echo $question_id;?>" class="enp-textarea enp-answer-explanation__textarea">
-                <?php echo $question->get_question_explanation();?>
-            </textarea>
             <?php 
             /**
              * Duplicate hidden textarea for tinymce.
              * All attributes need to stay on the hidden textarea
              * 
-             * 1) 
+             * 1) use tinymce api to push answer explanation to hidden textarea
+             * 2) ensure this push is save to the database
+             * 3) must save as html (links, bold, italic)
              */
             ?>
-            <textarea id="enp-question-explanation__<?php echo $question_id;?>" class="enp-textarea enp-answer-explanation__textarea" style="visibility: hidden; position: absolute; z-index-1;" name="enp_question[<?php echo $question_i;?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.">
+            <!-- For tinycme -->
+            <textarea id="enp-question-explanation__<?php echo $question_id;?>" class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?php echo $question_i;?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.">
                 <?php echo $question->get_question_explanation();?>
             </textarea>
             <?php
