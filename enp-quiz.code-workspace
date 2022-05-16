@@ -7,7 +7,6 @@
     "settings": {
 		"phpcs.enable": true,
 		"phpcs.composerJsonPath": "wp-content/plugins/enp-quiz/composer.json",
-		"phpcs.standard": "WordPress",
 		"phpcs.executablePath": "/Users/lukey/.composer/vendor/bin/phpcs",
 		"phpcbf.enable": true,
 		"phpcbf.onsave": true,
@@ -23,6 +22,13 @@
 		"editor.defaultFormatter": "persoderlind.vscode-phpcbf",
 		"[php]": {
 			"editor.defaultFormatter": "persoderlind.vscode-phpcbf"
-		}
+        },
+        "editor.autoIndent": "keep",
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "phpcs.standard": "enp-quiz/rulesetsPHPCS.xml",
+        "phpcs.showWarnings": false,
+        "editor.guides.highlightActiveIndentation": false
 	}
 }

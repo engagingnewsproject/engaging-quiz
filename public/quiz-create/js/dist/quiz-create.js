@@ -222,16 +222,14 @@ _.middleNumber = function(a, b) {
     return (a + b)/2;
 };
 
-
-
-
-
-
+// // // // // // // // // 
 // Tinymce init for "add question" button
-function addTinymce( $question_id ) {
+// // // // // // // // // 
+
+function addTinymce( obj ) {
     // add the tinymce to each
     tinymce.init({
-        selector: '#enp-question-explanation__'+$question_id+'',
+        selector: '#enp-question-explanation__'+obj+'',
         menubar: false,
         statusbar: false,
         plugins: 'quickbars link' ,
@@ -239,26 +237,9 @@ function addTinymce( $question_id ) {
         quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
-        setup: function (editor) {
-            editor.on('init', function (e) {
-                editor.setContent('<p>Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.</p>');
-            });
-        }
     });
 }
 
-// function tinymceToTextarea($question_id) {
-//     var textArea = document.getElementById('#enp-question-explanation__'+$question_id+'');
-//     // get save button
-//     var saveBtn = document.getElementsByClassName('enp-quiz-submit');
-//     // on save button click set tinycme html to textarea
-//     $(document).on('click', saveBtn, function(e) {
-//         // input tinymce content html into textarea
-//    });
-// }
-
-// TODO: only load the tinymce if .enp-accordion-header or 
-// .enp-quiz-form__add-question elements/buttons are clicked
 function addAnswerExplanationEditor( response ) {
     var $question,
         $question_id,
@@ -275,64 +256,6 @@ function addAnswerExplanationEditor( response ) {
     });
 }
 
-
-// // // // // // // // // 
-// TINYMCE ALT
-// // // // // // // // // 
-
-function addTinymceAlt( $question_id ) {
-    console.log($question_id);
-
-    $(document).ready(function(){
-        $(".enp-accordion-container").click(function(){
-            $accordionClick = $(this).find(".enp-answer-explanation__textarea").attr("id");
-            tinymce.init({
-                selector: '#'+$accordionClick+'',
-                menubar: false,
-                statusbar: false,
-                plugins: 'quickbars link' ,
-                toolbar: 'bold italic link blockquote',
-                quickbars_selection_toolbar: 'bold italic link blockquote',
-                quickbars_insert_toolbar: false,
-                quickbars_image_toolbar: false,
-                setup: function (editor) {
-                    editor.on('init', function (e) {
-                        editor.setContent('<p>Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.</p>');
-                    });
-                },
-            });
-        });
-    });
-}
-
-
-// Accordion toggle click listener for tinymce initialization.
-
-// var myContent = tinymce.get('#enp-question-explanation__').getContent({ format: "text" });
-
-// $textareas = $('question').find('.enp-answer-explanation__textarea');
-// console.log($textareas);
-// function getAnchorId() {
-//     var anchorId = $(this).children('a').attr('id');
-//     console.log(anchorId);
-// }
-// $hiddenTextarea = $('.enp-answer-explanation__textarea-hidden');
-// $visibleTextarea = $('.enp-answer-explanation__textarea');
-// // console.log($ogTextarea)
-
-// $('.enp-btn--save').click(function() {
-//     // get the contents of the link that was clicked
-//     var answerText = $( visibleTextarea ).text();
-
-//     // replace the contents of the div with the link text
-//     $(hiddenTextarea).html(answerText);
-
-//     // cancel the default action of the link by returning false
-//     return false;
-// });
-
-// $myContent = $('#enp-question-explanation__'+$question_id+'').tinymce().getContent();
-// console.log(myContent);
 /*
 * Set-up Underscore Templates
 */
@@ -404,6 +327,21 @@ if($('.enp-message__item--error').length !== 0) {
 
 }
 
+// tinymce
+// tinymce: Prevent jQuery UI dialog from blocking focusin
+$(document).on('focusin', function(e) {
+  if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+    e.stopImmediatePropagation();
+  }
+});
+
+// ready the tinymce's for each question
+$theQuestions = $('.enp-accordion-container');
+$.each($theQuestions, function(i) {
+    // initialize the tinymce editor
+    question = getQuestionID(this);
+    addTinymce( question );
+});
 /*
 * General UX interactions to make a better user experience
 */
@@ -1231,9 +1169,10 @@ function setUpSliderTemplate(sliderOptionsContainer) {
     enp_accordion__setup(accordion);
 }
 
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
-
+    tinyMCE.triggerSave();
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -1276,7 +1215,7 @@ function saveQuiz(userAction) {
     var response,
         userActionAction,
         userActionElement;
-
+    console.log(userAction);
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
     // create formData object
@@ -1290,9 +1229,9 @@ function saveQuiz(userAction) {
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
+    tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
-    tinyMCE.triggerSave();
     $.ajax( {
         type: 'POST',
          url  : quizCreate.ajax_url,
@@ -1315,7 +1254,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    //console.log(jqXHR.responseJSON);
+    // console.log(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();
@@ -1346,7 +1285,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             new_mcOption = getNewMCOption(new_questionID, response.question);
             new_sliderID = newQuestionResponse.slider.slider_id;
             addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
-             addAnswerExplanationEditor( response );
+            addAnswerExplanationEditor( response );
         } else {
             unset_tempAddQuestion();
         }
@@ -1356,6 +1295,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
         // check to see if the action was completed
         questionID = response.user_action.details.question_id;
         questionResponse = checkQuestionSaveStatus(questionID, response.question);
+        console.log(questionResponse);
         if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
             removeQuestion(questionID);
         } else {
@@ -1436,11 +1376,14 @@ function setNewQuiz(response) {
 }
 
 function setTemp(userAction) {
+        console.log(userAction);
     var pattern;
     // deleting a question
     if(userAction.indexOf('add-question') > -1) {
         // match the number for the ID
         temp_addQuestion();
+
+        // addAnswerExplanationEditor( response );
     }
     else if(userAction.indexOf('add-mc-option__question') > -1) {
         pattern = /add-mc-option__question-/g;
