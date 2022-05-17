@@ -155,11 +155,11 @@ class Enp_quiz_Create {
     * need to run on a quiz create page
     */
     public function load_quiz_create_resources() {
+        // TinyMCE
+        wp_enqueue_script( 'tinymce_cloud', 'https://cdn.tiny.cloud/1/tpynz31lszn8p1eu7c0q58q5ua138xorj80slits2knm9zao/tinymce/5/tinymce.min.js', false );
         // load take quiz styles
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-        // TinyMCE
-        wp_enqueue_script( 'tinymce_cloud', 'https://cdn.tiny.cloud/1/tpynz31lszn8p1eu7c0q58q5ua138xorj80slits2knm9zao/tinymce/6/tinymce.min.js', true );
-        wp_enqueue_script( 'tinymce_jquery', 'https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@1/dist/tinymce-jquery.min.js', true );
+
         // load take quiz scripts
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
         // custom action hook for displaying messages

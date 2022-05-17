@@ -228,17 +228,31 @@ _.middleNumber = function(a, b) {
 
 function addTinymce( obj ) {
     // add the tinymce to each
+
     tinymce.init({
         selector: '#enp-question-explanation__'+obj+'',
         menubar: false,
         statusbar: false,
-        plugins: 'quickbars link' ,
+        plugins: 'quickbars link autosave' ,
         toolbar: 'bold italic link blockquote',
         quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
+        placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
     });
 }
+/*
+function injectTinymce( obj ) {
+
+    tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
+
+    // tinymce.$('#enp-question-explanation__'+obj+'').setContent( obj );
+ console.log(obj);
+    // $($ansExpTxtArea).text( $tinyMCEcontent );
+        // console.log($ansExpTxtArea);
+}
+
+*/
 
 function addAnswerExplanationEditor( response ) {
     var $question,

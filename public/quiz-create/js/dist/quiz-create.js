@@ -228,17 +228,31 @@ _.middleNumber = function(a, b) {
 
 function addTinymce( obj ) {
     // add the tinymce to each
+
     tinymce.init({
         selector: '#enp-question-explanation__'+obj+'',
         menubar: false,
         statusbar: false,
-        plugins: 'quickbars link' ,
+        plugins: 'quickbars link autosave' ,
         toolbar: 'bold italic link blockquote',
         quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
+        placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
     });
 }
+/*
+function injectTinymce( obj ) {
+
+    tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
+
+    // tinymce.$('#enp-question-explanation__'+obj+'').setContent( obj );
+ console.log(obj);
+    // $($ansExpTxtArea).text( $tinyMCEcontent );
+        // console.log($ansExpTxtArea);
+}
+
+*/
 
 function addAnswerExplanationEditor( response ) {
     var $question,
@@ -335,13 +349,17 @@ $(document).on('focusin', function(e) {
   }
 });
 
-// ready the tinymce's for each question
+// get each question container
 $theQuestions = $('.enp-accordion-container');
+
+// for each question. . .
 $.each($theQuestions, function(i) {
-    // initialize the tinymce editor
-    question = getQuestionID(this);
-    addTinymce( question );
+    // get question id's
+    obj = getQuestionID(this);
+    // init tinymce for each question
+    addTinymce( obj );
 });
+
 /*
 * General UX interactions to make a better user experience
 */
@@ -1172,7 +1190,9 @@ function setUpSliderTemplate(sliderOptionsContainer) {
 
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
-    tinyMCE.triggerSave();
+    // obj = tinymce.activeEditor.getContent();
+    // injectTinymce( obj )
+        tinymce.triggerSave();
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -1215,7 +1235,6 @@ function saveQuiz(userAction) {
     var response,
         userActionAction,
         userActionElement;
-    console.log(userAction);
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
     // create formData object
@@ -1254,7 +1273,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    // console.log(jqXHR.responseJSON);
+    // console.dir(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();
@@ -1295,7 +1314,6 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
         // check to see if the action was completed
         questionID = response.user_action.details.question_id;
         questionResponse = checkQuestionSaveStatus(questionID, response.question);
-        console.log(questionResponse);
         if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
             removeQuestion(questionID);
         } else {
@@ -1376,7 +1394,7 @@ function setNewQuiz(response) {
 }
 
 function setTemp(userAction) {
-        console.log(userAction);
+
     var pattern;
     // deleting a question
     if(userAction.indexOf('add-question') > -1) {

@@ -59,10 +59,13 @@ $(document).on('focusin', function(e) {
   }
 });
 
-// ready the tinymce's for each question
+// get each question container
 $theQuestions = $('.enp-accordion-container');
+
+// for each question. . .
 $.each($theQuestions, function(i) {
-    // initialize the tinymce editor
-    question = getQuestionID(this);
-    addTinymce( question );
+    // get question id's
+    obj = getQuestionID(this);
+    // init tinymce for each question
+    addTinymce( obj );
 });

@@ -1,7 +1,9 @@
 
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
-    tinyMCE.triggerSave();
+    // obj = tinymce.activeEditor.getContent();
+    // injectTinymce( obj )
+        tinymce.triggerSave();
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -44,7 +46,6 @@ function saveQuiz(userAction) {
     var response,
         userActionAction,
         userActionElement;
-    console.log(userAction);
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
     // create formData object
@@ -83,7 +84,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    // console.log(jqXHR.responseJSON);
+    // console.dir(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();
@@ -124,7 +125,6 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
         // check to see if the action was completed
         questionID = response.user_action.details.question_id;
         questionResponse = checkQuestionSaveStatus(questionID, response.question);
-        console.log(questionResponse);
         if(questionResponse !== false && questionResponse.action === 'update' && questionResponse.status === 'success') {
             removeQuestion(questionID);
         } else {
@@ -205,7 +205,7 @@ function setNewQuiz(response) {
 }
 
 function setTemp(userAction) {
-        console.log(userAction);
+
     var pattern;
     // deleting a question
     if(userAction.indexOf('add-question') > -1) {
