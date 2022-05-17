@@ -44,9 +44,8 @@
                 </label>
                 <textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" maxlength="255" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value( 'quiz_title' ); ?></textarea>
                 <?php
-                // Sample title workflow
                 /**
-                 *
+                 * Sample title workflow
                  * // // // A DUPLICATE (commented out) INPUT ELEMENT TO SAVE US ALL! // // //
                  * All of these files are part of the "quiz_title_test" example of how to replicate
                  * an input element that will save to the database, and display across the quiz:

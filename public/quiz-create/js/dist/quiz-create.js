@@ -227,32 +227,54 @@ _.middleNumber = function(a, b) {
 // // // // // // // // // 
 
 function addTinymce( obj ) {
-    // add the tinymce to each
+    var currentSelector = $('#enp-question-explanation__'+obj+'');
 
     tinymce.init({
-        selector: '#enp-question-explanation__'+obj+'',
+        selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
         menubar: false,
         statusbar: false,
-        plugins: 'quickbars link autosave' ,
+        plugins: 'quickbars link autosave',
         toolbar: 'bold italic link blockquote',
         quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
+        setup: function (editor) {
+            editor.on('click', function () {
+                console.log('Editor was clicked');
+                tinymce.activeEditor.execCommand('mceFocus');
+            });
+            editor.on('blur', function () {
+                console.log('Editor was clicked');
+                tinymce.activeEditor.execCommand('mceFocus');
+                // console.log(tinymce.activeEditor.getContent({format: 'raw'}));
+                var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
+                currentSelector.innerHTML = tinyEditorContent;
+                console.log(currentSelector);
+            });
+        }
     });
+
 }
-/*
+
+
+
+
 function injectTinymce( obj ) {
+// tinymce.activeEditor.execCommand('mceInsertContent', false, 'your content');
+
+// tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
+    tinymce.activeEditor.getContent({ format: 'html' });
 
     tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
 
     // tinymce.$('#enp-question-explanation__'+obj+'').setContent( obj );
- console.log(obj);
+    console.log(obj);
     // $($ansExpTxtArea).text( $tinyMCEcontent );
         // console.log($ansExpTxtArea);
 }
 
-*/
+
 
 function addAnswerExplanationEditor( response ) {
     var $question,
@@ -1190,9 +1212,10 @@ function setUpSliderTemplate(sliderOptionsContainer) {
 
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
-    // obj = tinymce.activeEditor.getContent();
-    // injectTinymce( obj )
-        tinymce.triggerSave();
+
+    tinymce.triggerSave();
+
+
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -1244,7 +1267,7 @@ function saveQuiz(userAction) {
     fd.append('enp-quiz-submit', userAction);
     // append our action for wordpress AJAX call
     fd.append('action', 'save_quiz');
-
+    
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
@@ -1282,7 +1305,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
     }
 
     response = $.parseJSON(jqXHR.responseJSON);
-
+    // console.dir(response);
     userActionAction = response.user_action.action;
     userActionElement = response.user_action.element;
     // see if we've created a new quiz
@@ -1371,6 +1394,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             temp_unsetRemoveQuestionImage(questionID);
         }
     }
+
 
     // show ajax messages
     displayMessages(response.message);

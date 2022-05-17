@@ -1,9 +1,10 @@
 
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
-    // obj = tinymce.activeEditor.getContent();
-    // injectTinymce( obj )
-        tinymce.triggerSave();
+
+    tinymce.triggerSave();
+
+
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -55,7 +56,7 @@ function saveQuiz(userAction) {
     fd.append('enp-quiz-submit', userAction);
     // append our action for wordpress AJAX call
     fd.append('action', 'save_quiz');
-
+    
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
@@ -93,7 +94,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
     }
 
     response = $.parseJSON(jqXHR.responseJSON);
-
+    // console.dir(response);
     userActionAction = response.user_action.action;
     userActionElement = response.user_action.element;
     // see if we've created a new quiz
@@ -182,6 +183,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             temp_unsetRemoveQuestionImage(questionID);
         }
     }
+
 
     // show ajax messages
     displayMessages(response.message);

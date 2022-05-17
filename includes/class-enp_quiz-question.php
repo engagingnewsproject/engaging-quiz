@@ -233,7 +233,9 @@ class Enp_quiz_Question {
      */
     protected function set_question_explanation() {
         // $question_explanation = stripslashes(self::$question['question_explanation']);
+        // var_dump(self::$question['question_explanation']);
         $question_explanation = self::$question['question_explanation'];
+        
         return $question_explanation;
     }
 
@@ -522,10 +524,10 @@ class Enp_quiz_Question {
      * @return question_explanation from the object
      */
     public function get_question_explanation() {
+        // var_dump($this->question_explanation);
         $question_explanation = $this->question_explanation;
         // ? TODO: perfect the target attribute add. kindof buggy.
         return $question_explanation;
-
     }
 
     /**
@@ -682,6 +684,7 @@ class Enp_quiz_Question {
     public function get_take_question_array() {
         // cast object to array
         $question_array = (array) $this;
+        
         // remove what we don't need
         unset( $question_array['quiz_id'] );
         unset( $question_array['mc_options'] );

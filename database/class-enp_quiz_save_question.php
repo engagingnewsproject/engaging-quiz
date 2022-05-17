@@ -48,7 +48,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $question_title = $this->set_question_value('question_title', '');
         $question_image_alt = $this->set_question_value('question_image_alt', '');
         $question_type = $this->set_question_value('question_type', 'mc');
-        $question_explanation = $this->set_question_value('question_explanation', '');
+        $question_explanation = $this->set_question_value('question_explanation', '' );
         $question_order = $question['question_order'];
         $question_is_deleted = $question['question_is_deleted'];
         // build our new array
