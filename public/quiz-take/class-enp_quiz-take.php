@@ -203,6 +203,7 @@ class Enp_quiz_Take
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-nonce.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-cookies.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-current-url.php';
+        require_once ENP_QUIZ_PLUGIN_DIR . 'includes/kses.php';
 		require_once ENP_QUIZ_PLUGIN_DIR . 'public/quiz-take/includes/class-enp_quiz-cookies_quiz_take.php';
 
 		// Quiz Take Classes

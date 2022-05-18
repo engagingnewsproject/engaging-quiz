@@ -67,6 +67,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create
         if (ob_get_length()) ob_end_clean();
 
         return $content;
+
     }
 
     public function enqueue_styles()
@@ -115,8 +116,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create
         ));
     }
 
-    public function set_quiz_action_url($quiz_id)
-    {
+    public function set_quiz_action_url($quiz_id) {
         if (is_numeric($quiz_id) || is_int($quiz_id)) {
             $quiz_action_url = ENP_QUIZ_CREATE_URL . $quiz_id . '/';
         } else {

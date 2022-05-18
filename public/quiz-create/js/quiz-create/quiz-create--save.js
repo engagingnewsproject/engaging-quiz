@@ -4,7 +4,6 @@ $(document).on('click', '.enp-quiz-submit', function(e) {
 
     tinymce.triggerSave();
 
-
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue

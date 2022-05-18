@@ -246,11 +246,10 @@ function addTinymce( obj ) {
             });
             editor.on('blur', function () {
                 console.log('Editor was clicked');
-                tinymce.activeEditor.execCommand('mceFocus');
-                // console.log(tinymce.activeEditor.getContent({format: 'raw'}));
                 var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
+                var tinyEditorContent = new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse( tinyEditorContent ));
                 currentSelector.innerHTML = tinyEditorContent;
-                console.log(currentSelector);
+                // console.log(tinyEditorContent);
             });
         }
     });

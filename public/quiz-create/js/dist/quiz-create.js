@@ -246,11 +246,10 @@ function addTinymce( obj ) {
             });
             editor.on('blur', function () {
                 console.log('Editor was clicked');
-                tinymce.activeEditor.execCommand('mceFocus');
-                // console.log(tinymce.activeEditor.getContent({format: 'raw'}));
                 var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
+                var tinyEditorContent = new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse( tinyEditorContent ));
                 currentSelector.innerHTML = tinyEditorContent;
-                console.log(currentSelector);
+                // console.log(tinyEditorContent);
             });
         }
     });
@@ -1214,7 +1213,6 @@ function setUpSliderTemplate(sliderOptionsContainer) {
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
     tinymce.triggerSave();
-
 
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
