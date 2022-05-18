@@ -233,9 +233,11 @@ function addTinymce( obj ) {
         selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
         menubar: false,
         statusbar: false,
-        plugins: 'quickbars link autosave',
-        toolbar: 'bold italic link blockquote',
-        quickbars_selection_toolbar: 'bold italic link blockquote',
+        toolbar: false,
+        inliine: true,
+        // plugins: 'quickbars link autosave',
+        // toolbar: 'bold italic link blockquote',
+        // quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
@@ -260,17 +262,13 @@ function addTinymce( obj ) {
 
 
 function injectTinymce( obj ) {
-// tinymce.activeEditor.execCommand('mceInsertContent', false, 'your content');
 
-// tinymce.activeEditor.getOuterHTML(tinymce.activeEditor.getBody());
     tinymce.activeEditor.getContent({ format: 'html' });
 
     tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
 
-    // tinymce.$('#enp-question-explanation__'+obj+'').setContent( obj );
     console.log(obj);
-    // $($ansExpTxtArea).text( $tinyMCEcontent );
-        // console.log($ansExpTxtArea);
+
 }
 
 

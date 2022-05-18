@@ -448,8 +448,6 @@ class Enp_quiz_Create {
 
 		if ( isset( $posted_question ) && ! empty( $posted_question ) ) {
 			$quiz['question'] = $posted_question;
-			// var_dump($quiz['question']);
-			// die();
 		}
 
 		if ( isset( $posted_user_action ) && ! empty( $posted_user_action ) ) {
@@ -460,15 +458,13 @@ class Enp_quiz_Create {
 			self::$message['error'][] = 'The form was not submitted right. Please contact our support and let them know how you reached this error';
 			return false;
 		}
-			// var_dump($response);
-			// die();
+
 		// initiate the save_quiz object
 		// // // // // // // // // // // // //
 		// At this point, we need to exclude the question_exlanation from being stripped of its HTML content.
 		$save_quiz = new Enp_quiz_Save_quiz();
 		// save the quiz by passing our $quiz array to the save function
-			// var_dump($save_quiz);
-			// die();
+
 		$response = $save_quiz->save( $quiz );
 
 		// set it as our messages to return to the user
