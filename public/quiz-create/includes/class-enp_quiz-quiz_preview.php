@@ -20,12 +20,10 @@
  * @subpackage Enp_quiz/public/Quiz_preview
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Quiz_preview extends Enp_quiz_Create
-{
+class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
     public $quiz; // object
 
-    public function __construct()
-    {
+    public function __construct() {
         // set the quiz object
         $this->quiz = $this->load_quiz();
         // check if it's valid
@@ -73,7 +71,7 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create
     {
 
         /*wp_register_script( $this->plugin_name.'-sticky-header', plugin_dir_url( __FILE__ ) . '../js/utilities/sticky-header.js', array( 'jquery', 'underscore' ), ENP_QUIZ_VERSION, true );
-		wp_enqueue_script( $this->plugin_name.'-sticky-header' );*/
+        wp_enqueue_script( $this->plugin_name.'-sticky-header' );*/
 
         $this->enqueue_color_picker();
 
@@ -99,4 +97,6 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create
         wp_register_script($this->plugin_name . '-iris', plugin_dir_url(__FILE__) . '../js/dist/iris.min.js', array('jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch'), ENP_QUIZ_VERSION, true);
         wp_enqueue_script($this->plugin_name . '-iris');
     }
+
+    
 }

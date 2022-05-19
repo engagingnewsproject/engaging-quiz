@@ -232,10 +232,7 @@ class Enp_quiz_Question {
      * @return question_explanation field from the database
      */
     protected function set_question_explanation() {
-        // $question_explanation = stripslashes(self::$question['question_explanation']);
-        // var_dump(self::$question['question_explanation']);
-        $question_explanation = self::$question['question_explanation'];
-        
+        $question_explanation = stripslashes( self::$question['question_explanation'] );
         return $question_explanation;
     }
 
@@ -524,9 +521,7 @@ class Enp_quiz_Question {
      * @return question_explanation from the object
      */
     public function get_question_explanation() {
-        // var_dump($this->question_explanation);
         $question_explanation = $this->question_explanation;
-        // ? TODO: perfect the target attribute add. kindof buggy.
         return $question_explanation;
     }
 
@@ -684,7 +679,6 @@ class Enp_quiz_Question {
     public function get_take_question_array() {
         // cast object to array
         $question_array = (array) $this;
-        
         // remove what we don't need
         unset( $question_array['quiz_id'] );
         unset( $question_array['mc_options'] );
@@ -721,41 +715,42 @@ class Enp_quiz_Question {
     }
 
     /**
-     * Get the value we should be saving on a question
-     * get posted if present, if not, get object. This is so we give them their
-     * current entry if we didn't *actually* save yet
-     * (like if there was an error on save they won't lose all their work).
+    * Get the value we should be saving on a question
+    * get posted if present, if not, get object. This is so we give them their
+    * current entry if we didn't *actually* save yet
+    * (like if there was an error on save they won't lose all their work).
      *
-     * @param $string = what you want to get ('question_title', 'question_explanation', whatever)
-     * @param $quetion_id = which question you're trying to get a value from
-     * @return $value
-     */
-    /*
-     * I don't think we need this anymore. Questions always have an ID now
+    * @param $string = what you want to get ('question_title', 'question_explanation', whatever)
+    * @param $quetion_id = which question you're trying to get a value from
+    * @return $value
     */
-    public function get_value( $key, $question_id ) {
+    /*
+     I don't think we need this anymore. Questions always have an ID now
+    public function get_value($key, $question_id) {
         $value = '';
-        if ( isset( $_POST['enp_question'] ) ) {
+        if(isset($_POST['enp_question'])) {
             $posted_value = $_POST['enp_question'];
             // find our question_id
-            foreach ( $posted_value as $question ) {
+            foreach($posted_value as $question) {
                 // see if we matched our question_id
-                if ( $question['question_id'] === $question_id ) {
-                    $value = stripslashes( $question[ $key ] );
+                if($question['question_id'] === $question_id) {
+                    $value = stripslashes($question[$key]);
                 }
             }
+
+
         }
         // if the value didn't get set, try with our object
-        if ( $value === '' ) {
-            $get_obj_value = 'get_' . $key;
-            $obj_value     = $this->$get_obj_value();
-            if ( $obj_value !== null ) {
+        if($value === '') {
+            $get_obj_value = 'get_'.$key;
+            $obj_value = $this->$get_obj_value();
+            if($obj_value !== null) {
                 $value = $obj_value;
             }
         }
         // send them back whatever the value should be
         return $value;
     }
-
+    */
 }
 

@@ -225,7 +225,7 @@ _.middleNumber = function(a, b) {
 // // // // // // // // // 
 // Tinymce init for "add question" button
 // // // // // // // // // 
-
+/*
 function addTinymce( obj ) {
     var currentSelector = $('#enp-question-explanation__'+obj+'');
 
@@ -249,14 +249,13 @@ function addTinymce( obj ) {
             editor.on('blur', function () {
                 console.log('Editor was clicked');
                 var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
-                var tinyEditorContent = new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse( tinyEditorContent ));
                 currentSelector.innerHTML = tinyEditorContent;
                 // console.log(tinyEditorContent);
             });
         }
     });
-
 }
+// var tinyEditorContent = new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse( tinyEditorContent ));
 
 
 
@@ -288,3 +287,4 @@ function addAnswerExplanationEditor( response ) {
             addTinymce( $question_id );
     });
 }
+*/

@@ -1,9 +1,7 @@
-
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
-    tinymce.triggerSave();
-
+    // tinymce.triggerSave();
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -46,11 +44,11 @@ function saveQuiz(userAction) {
     var response,
         userActionAction,
         userActionElement;
+
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
     // create formData object
     var fd = new FormData(quizForm);
-
     // set our submit button value
     fd.append('enp-quiz-submit', userAction);
     // append our action for wordpress AJAX call
@@ -59,9 +57,10 @@ function saveQuiz(userAction) {
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
-    tinyMCE.triggerSave();
+    // tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
+
     $.ajax( {
         type: 'POST',
          url  : quizCreate.ajax_url,
@@ -84,7 +83,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    // console.dir(jqXHR.responseJSON);
+    //console.log(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();
@@ -93,15 +92,13 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
     }
 
     response = $.parseJSON(jqXHR.responseJSON);
-    // console.dir(response);
+
     userActionAction = response.user_action.action;
     userActionElement = response.user_action.element;
     // see if we've created a new quiz
     if(response.status === 'success' && response.action === 'insert') {
         // set-up quiz
         setNewQuiz(response);
-        var resP = response;
-
         // show the preview/save buttons
         showSaveButton();
     }
@@ -115,7 +112,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             new_mcOption = getNewMCOption(new_questionID, response.question);
             new_sliderID = newQuestionResponse.slider.slider_id;
             addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
-            addAnswerExplanationEditor( response );
+            // addAnswerExplanationEditor( response );
         } else {
             unset_tempAddQuestion();
         }
@@ -182,8 +179,6 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             temp_unsetRemoveQuestionImage(questionID);
         }
     }
-
-
     // show ajax messages
     displayMessages(response.message);
     // remove error messages. Let the preview button handle that.
@@ -201,18 +196,16 @@ function setNewQuiz(response) {
     var pageTitle = $('.enp-quiz-title__textarea').val();
     pageTitle = 'Quiz: '+pageTitle;
     var urlPath = quizCreate.quiz_create_url + response.quiz_id;
-    addAnswerExplanationEditor( response );
+    // addAnswerExplanationEditor( response );
     window.history.pushState({"html":html,"pageTitle":pageTitle},"", urlPath);
 }
 
 function setTemp(userAction) {
-
     var pattern;
     // deleting a question
     if(userAction.indexOf('add-question') > -1) {
         // match the number for the ID
         temp_addQuestion();
-
         // addAnswerExplanationEditor( response );
     }
     else if(userAction.indexOf('add-mc-option__question') > -1) {
@@ -263,9 +256,3 @@ function unsetWait() {
     $('.enp-quiz-submit').removeClass('enp-quiz-submit--wait');
     $('.enp-quiz-message--saving').remove();
 }
-
-
-
-
-
-
