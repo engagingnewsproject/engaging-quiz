@@ -139,9 +139,18 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // email
         $email_subject = $facebook_title;
         $email_body_start = $facebook_description;
-        $email_body_end = $facebook_quote_end.'
+        $email_body_end = $facebook_quote_end.' '.$facebook_description;
 
-'.$facebook_description;
+        // winners & losers
+        $quiz_end_fail_title = $this->set_quiz_value('quiz_end_fail_title', 'Oops!!');
+        $quiz_end_fail_description = $this->set_quiz_value('quiz_end_fail_description', 'We bet you could do better. Why don\'t you try taking the quiz again?');
+        $quiz_end_average_title = $this->set_quiz_value('quiz_end_average_title', 'Not Bad!');
+        $quiz_end_average_description = $this->set_quiz_value('quiz_end_average_description', 'We bet you could do better. Why don\'t you try taking the quiz again?.');
+        $quiz_end_good_title = $this->set_quiz_value('quiz_end_good_title', 'Nice Job!');
+        $quiz_end_good_description = $this->set_quiz_value('quiz_end_good_description', 'Nice work! You almost got a perfect score!');
+        $quiz_end_perfect_title = $this->set_quiz_value('quiz_end_perfect_title', 'Perfect!');
+        $quiz_end_perfect_description = $this->set_quiz_value('quiz_end_perfect_description', 'Can\'t do any better than that! Go ahead, share this quiz and brag about it.');
+
         // twitter
         $include_url = true;
         $replace_mustache = true;
@@ -183,6 +192,15 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             'email_body_end' => $email_body_end,
             // tweet share text
             'tweet_end'=> $tweet_end,
+            // winners and losers
+            'quiz_end_fail_title' => $quiz_end_fail_title,
+            'quiz_end_fail_description' => $quiz_end_fail_description,
+            'quiz_end_average_title' => $quiz_end_average_title,
+            'quiz_end_average_description' => $quiz_end_average_description,
+            'quiz_end_good_title' => $quiz_end_good_title,
+            'quiz_end_good_description' => $quiz_end_good_description,
+            'quiz_end_perfect_title' => $quiz_end_perfect_title,
+            'quiz_end_perfect_description' => $quiz_end_perfect_description,
         );
         // We don't want to lose anything that was in the sent quiz (like questions, etc)
         // so we'll merge them to make sure we don't lose anything
@@ -610,7 +628,15 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                               'email_subject',
                               'email_body_start',
                               'email_body_end',
-                              'tweet_end'
+                              'tweet_end',
+                            'quiz_end_fail_title',
+                            'quiz_end_fail_description',
+                            'quiz_end_average_title',
+                            'quiz_end_average_description',
+                            'quiz_end_good_title',
+                            'quiz_end_good_description',
+                            'quiz_end_perfect_title',
+                            'quiz_end_perfect_description',
                             );
         foreach($quiz_options as $quiz_option) {
             if(array_key_exists($quiz_option, self::$quiz)) {
