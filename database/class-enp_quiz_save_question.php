@@ -48,7 +48,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         $question_title       = $this->set_question_value( 'question_title', '' );
         $question_image_alt   = $this->set_question_value( 'question_image_alt', '' );
         $question_type        = $this->set_question_value( 'question_type', 'mc' );
-        $question_explanation = $this->set_question_value( 'question_explanation', '' );
+        // $question_explanation = $this->set_question_value( 'question_explanation', '' );
         $question_order       = $question['question_order'];
         $question_is_deleted  = $question['question_is_deleted'];
         // build our new array
@@ -57,7 +57,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
             'question_title'       => $question_title,
             'question_image_alt'   => $question_image_alt,
             'question_type'        => $question_type,
-            'question_explanation' => $question_explanation,
+            // 'question_explanation' => $question_explanation,
             'question_order'       => $question_order,
             'question_is_deleted'  => $question_is_deleted,
         );
@@ -65,6 +65,8 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         self::$question = array_merge( self::$question, $prepared_question );
         // set the image
         self::$question['question_image'] = $this->set_question_image();
+        // set the question explanation
+        self::$question['question_explanation'] = $this->set_question_explanation();
 
         // we need to preprocess_mc_options and preprocess_slider to make sure each question has at least a slider array and mc_option array
         $this->preprocess_mc_options();
@@ -87,6 +89,17 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
         }
 
         return self::$question;
+
+    }
+
+    /**
+     * Sets our question answer explanation
+     * TODO: if ajax push works undo below (add question_explanation to prepare_submitted_question array above)
+     */
+    protected function set_question_explanation() {
+        // set our default
+        $question_explanation = $this->set_question_value( 'question_explanation', '' );
+        return $question_explanation;
     }
 
     /**

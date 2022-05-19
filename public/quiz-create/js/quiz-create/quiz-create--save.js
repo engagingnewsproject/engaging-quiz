@@ -1,7 +1,9 @@
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
-    tinymce.triggerSave();
+    // tinymce.triggerSave();
+
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -47,6 +49,7 @@ function saveQuiz(userAction) {
 
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
+
     // create formData object
     var fd = new FormData(quizForm);
     // set our submit button value
@@ -70,6 +73,7 @@ function saveQuiz(userAction) {
     } )
     // success
     .done( quizSaveSuccess )
+
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -83,7 +87,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    //console.log(jqXHR.responseJSON);
+    // console.log(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();

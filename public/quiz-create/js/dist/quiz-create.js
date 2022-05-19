@@ -202,7 +202,6 @@ function replaceAttributes(el, pattern, replace) {
         att = atts[i];
         newAttrVal = att.nodeValue.replace(pattern, replace);
 
-
         // if the new val and the old val match, then nothing was replaced,
         // so we can skip it
         if(newAttrVal !== att.nodeValue) {
@@ -225,10 +224,10 @@ _.middleNumber = function(a, b) {
 // // // // // // // // // 
 // Tinymce init for "add question" button
 // // // // // // // // // 
-
+var currentSelector;
 function addTinymce( obj ) {
     var currentSelector = $('#enp-question-explanation__'+obj+'');
-
+// injectTinymce( obj )
     tinymce.init({
         selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
         menubar: false,
@@ -243,25 +242,46 @@ function addTinymce( obj ) {
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
         setup: function (editor) {
             editor.on('click', function () {
-                console.log('Editor was clicked');
+                // console.log('Editor was clicked');
                 tinymce.activeEditor.execCommand('mceFocus');
             });
             editor.on('blur', function () {
-                console.log('Editor was clicked');
+                // console.log('Editor was clicked');
                 var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
-                currentSelector.innerHTML = tinyEditorContent;
+                var tContent = currentSelector.innerHTML = tinyEditorContent;
             });
         }
     });
+    
 }
-// var tinyEditorContent = new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse( tinyEditorContent ));
 
+// TODO: attempt to inject tinymce html
+function setTinymceContent( element, editorContent ) {
+    var html = editorContent;
+    tinymce.activeEditor.setContent(html, {format: 'raw'});
+    var data = $('#enp-quiz-create-form').serializeArray();
+}
+
+$('.enp-quiz-submit').click(function(e){
+tinymce.triggerSave();
+    $theQuestions = $('.enp-accordion-container');
+    $.each($theQuestions, function(i) {
+        obj = getQuestionID(this);
+        $(this).find('#enp-question-explanation__'+obj+'');
+        var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
+        var element = $(this);
+        setTinymceContent( element, editorContent ) 
+    });
+});
 
 function injectTinymce( obj ) {
-
-    tinymce.activeEditor.getContent({ format: 'html' });
-    tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
+$('.enp-question-content').each(function() {
+    var accordion = $(this).find('.enp-answer-explanation__textarea').val();
+console.log(accordion);
+    // tinymce.get('#enp-question-explanation__'+obj+'').getContent();
+    // tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
     // console.log(obj);
+    });
 }
 
 function addAnswerExplanationEditor( response ) {
@@ -1196,10 +1216,12 @@ function setUpSliderTemplate(sliderOptionsContainer) {
     enp_accordion__setup(accordion);
 }
 
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
-    tinymce.triggerSave();
+    // tinymce.triggerSave();
+
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -1245,6 +1267,7 @@ function saveQuiz(userAction) {
 
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
+
     // create formData object
     var fd = new FormData(quizForm);
     // set our submit button value
@@ -1268,6 +1291,7 @@ function saveQuiz(userAction) {
     } )
     // success
     .done( quizSaveSuccess )
+
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -1281,7 +1305,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    //console.log(jqXHR.responseJSON);
+    // console.log(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();

@@ -90,7 +90,7 @@
             <?php echo $Quiz_create->get_add_question_button(); ?>
 
             <div class="enp-btn--save__btns">
-
+                <!-- TODO Remove onclick="content()" -->
                 <button type="submit" class="enp-btn--save enp-quiz-submit enp-quiz-form__save" name="enp-quiz-submit" value="save">Save</button>
 
                 <?php echo $Quiz_create->get_next_step_button(); ?>
