@@ -225,7 +225,7 @@ _.middleNumber = function(a, b) {
 // // // // // // // // // 
 // Tinymce init for "add question" button
 // // // // // // // // // 
-/*
+
 function addTinymce( obj ) {
     var currentSelector = $('#enp-question-explanation__'+obj+'');
 
@@ -235,9 +235,9 @@ function addTinymce( obj ) {
         statusbar: false,
         toolbar: false,
         inliine: true,
-        // plugins: 'quickbars link autosave',
-        // toolbar: 'bold italic link blockquote',
-        // quickbars_selection_toolbar: 'bold italic link blockquote',
+        plugins: 'quickbars link autosave',
+        toolbar: 'bold italic link blockquote',
+        quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
@@ -250,7 +250,6 @@ function addTinymce( obj ) {
                 console.log('Editor was clicked');
                 var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
                 currentSelector.innerHTML = tinyEditorContent;
-                // console.log(tinyEditorContent);
             });
         }
     });
@@ -258,19 +257,12 @@ function addTinymce( obj ) {
 // var tinyEditorContent = new tinymce.html.Serializer().serialize(new tinymce.html.DomParser().parse( tinyEditorContent ));
 
 
-
-
 function injectTinymce( obj ) {
 
     tinymce.activeEditor.getContent({ format: 'html' });
-
     tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
-
-    console.log(obj);
-
+    // console.log(obj);
 }
-
-
 
 function addAnswerExplanationEditor( response ) {
     var $question,
@@ -287,4 +279,3 @@ function addAnswerExplanationEditor( response ) {
             addTinymce( $question_id );
     });
 }
-*/

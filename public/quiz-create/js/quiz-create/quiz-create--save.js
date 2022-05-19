@@ -1,7 +1,7 @@
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
 
-    // tinymce.triggerSave();
+    tinymce.triggerSave();
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
         // if new quiz flag is 1, then check for a title before continue
@@ -57,7 +57,7 @@ function saveQuiz(userAction) {
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
-    // tinyMCE.triggerSave();
+    tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
 
@@ -112,7 +112,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             new_mcOption = getNewMCOption(new_questionID, response.question);
             new_sliderID = newQuestionResponse.slider.slider_id;
             addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
-            // addAnswerExplanationEditor( response );
+            addAnswerExplanationEditor( response );
         } else {
             unset_tempAddQuestion();
         }
@@ -196,7 +196,7 @@ function setNewQuiz(response) {
     var pageTitle = $('.enp-quiz-title__textarea').val();
     pageTitle = 'Quiz: '+pageTitle;
     var urlPath = quizCreate.quiz_create_url + response.quiz_id;
-    // addAnswerExplanationEditor( response );
+    addAnswerExplanationEditor( response );
     window.history.pushState({"html":html,"pageTitle":pageTitle},"", urlPath);
 }
 
