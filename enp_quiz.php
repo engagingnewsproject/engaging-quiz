@@ -27,24 +27,24 @@
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-	die;
+    die;
 }
 
 // Define a Plugin Root File constant
 if(!defined('ENP_QUIZ_ROOT')) {
-	define( 'ENP_QUIZ_ROOT', plugin_dir_path( __FILE__ ) );
+    define( 'ENP_QUIZ_ROOT', plugin_dir_path( __FILE__ ) );
 }
 if(!defined('ENP_QUIZ_ROOT_URL')) {
-	define( 'ENP_QUIZ_ROOT_URL', plugins_url('enp-quiz') );
+    define( 'ENP_QUIZ_ROOT_URL', plugins_url('enp-quiz') );
 }
 
 // Define Version
 if(!defined('ENP_QUIZ_VERSION')) {
-	// also defined in public/class-enp_quiz-take.php for the Quiz Take side of things
-	define('ENP_QUIZ_VERSION', '1.1.0');
-	// add_option to WP options table so we can track it
-	// don't update it, because that'll be handled by the upgrade code
-	add_option('enp_quiz_version', ENP_QUIZ_VERSION);
+    // also defined in public/class-enp_quiz-take.php for the Quiz Take side of things
+    define('ENP_QUIZ_VERSION', '1.1.1');
+    // add_option to WP options table so we can track it
+    // don't update it, because that'll be handled by the upgrade code
+    add_option('enp_quiz_version', ENP_QUIZ_VERSION);
 }
 
 /**
@@ -52,9 +52,9 @@ if(!defined('ENP_QUIZ_VERSION')) {
  * This action is documented in includes/class-enp_quiz-activator.php
  */
 function activate_enp_quiz() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-activator.php';
-	$activate = new Enp_quiz_Activator();
-	$activate->run_activation();
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-activator.php';
+    $activate = new Enp_quiz_Activator();
+    $activate->run_activation();
 }
 
 /**
@@ -62,17 +62,17 @@ function activate_enp_quiz() {
  * This action is documented in includes/class-enp_quiz-deactivator.php
  */
 function deactivate_enp_quiz() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-deactivator.php';
-	new Enp_quiz_Deactivator();
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-deactivator.php';
+    new Enp_quiz_Deactivator();
 }
 
 /**
  * The code that runs on init to add in any necessary rewrite rules
  */
 function add_enp_quiz_rewrite_rules($hard = false) {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-activator.php';
-	$activate = new Enp_quiz_Activator();
-	$activate->add_rewrite_rules($hard);
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-activator.php';
+    $activate = new Enp_quiz_Activator();
+    $activate->add_rewrite_rules($hard);
 }
 
 
@@ -80,13 +80,13 @@ function add_enp_quiz_rewrite_rules($hard = false) {
 * Check version numbers to see if we need to run an upgrade process
 */
 function check_for_enp_quiz_upgrade() {
-	// check for upgrades
-	$stored_version = get_option('enp_quiz_version');
-	if($stored_version !== ENP_QUIZ_VERSION) {
-		// run upgrade code
-		require_once('upgrade.php');
-		$upgrade = new Enp_quiz_Upgrade($stored_version);
-	}
+    // check for upgrades
+    $stored_version = get_option('enp_quiz_version');
+    if($stored_version !== ENP_QUIZ_VERSION) {
+        // run upgrade code
+        require_once('upgrade.php');
+        $upgrade = new Enp_quiz_Upgrade($stored_version);
+    }
 }
 
 /**
@@ -95,16 +95,16 @@ function check_for_enp_quiz_upgrade() {
 * to see if we need to add our rules back in.
 */
 function enp_quiz_check_for_wordpress_upgrade() {
-	global $wp_version;
-	// check for upgrades
-	$stored_version = get_option('enp_quiz_wordpress_core_version');
-	if($stored_version !== $wp_version) {
-		// run upgrade code
-		$hard = true;
-		add_enp_quiz_rewrite_rules($hard);
-		// set the new worpdress core version
+    global $wp_version;
+    // check for upgrades
+    $stored_version = get_option('enp_quiz_wordpress_core_version');
+    if($stored_version !== $wp_version) {
+        // run upgrade code
+        $hard = true;
+        add_enp_quiz_rewrite_rules($hard);
+        // set the new worpdress core version
         update_option('enp_quiz_wordpress_core_version', $wp_version);
-	}
+    }
 }
 
 register_activation_hook( __FILE__, 'activate_enp_quiz' );
@@ -169,7 +169,7 @@ require plugin_dir_path( __FILE__ ) . 'api/routes.php';
  */
 function run_enp_quiz() {
 
-	$plugin = new Enp_quiz();
+    $plugin = new Enp_quiz();
 }
 
 /* For DEBUGGING
@@ -178,7 +178,7 @@ function run_enp_quiz() {
 */
 add_action('activated_plugin','enp_log_error');
 function enp_log_error(){
-	file_put_contents(plugin_dir_path( __FILE__ ).'/error.txt', ob_get_contents());
+    file_put_contents(plugin_dir_path( __FILE__ ).'/error.txt', ob_get_contents());
 }
 
 run_enp_quiz();

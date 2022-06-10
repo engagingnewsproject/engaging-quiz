@@ -227,7 +227,7 @@ _.middleNumber = function(a, b) {
 var currentSelector;
 function addTinymce( obj ) {
     var currentSelector = $('#enp-question-explanation__'+obj+'');
-// injectTinymce( obj )
+
     tinymce.init({
         selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
         menubar: false,
@@ -239,20 +239,18 @@ function addTinymce( obj ) {
         quickbars_selection_toolbar: 'bold italic link blockquote',
         quickbars_insert_toolbar: false,
         quickbars_image_toolbar: false,
+        link_assume_external_targets: 'http',
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
         setup: function (editor) {
             editor.on('click', function () {
-                // console.log('Editor was clicked');
                 tinymce.activeEditor.execCommand('mceFocus');
             });
             editor.on('blur', function () {
-                // console.log('Editor was clicked');
                 var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
                 var tContent = currentSelector.innerHTML = tinyEditorContent;
             });
         }
     });
-    
 }
 
 // TODO: attempt to inject tinymce html
@@ -277,10 +275,6 @@ tinymce.triggerSave();
 function injectTinymce( obj ) {
 $('.enp-question-content').each(function() {
     var accordion = $(this).find('.enp-answer-explanation__textarea').val();
-console.log(accordion);
-    // tinymce.get('#enp-question-explanation__'+obj+'').getContent();
-    // tinymce.get($('#enp-question-explanation__'+obj+'')).setContent(obj);
-    // console.log(obj);
     });
 }
 

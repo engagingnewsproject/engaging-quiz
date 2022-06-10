@@ -381,17 +381,23 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // loop through each key/value
         foreach ($array as $key => $value) {
             // sanitize the key
-            $key = sanitize_key($key);
+            $key = sanitize_key( $key );
 
-            // if it's not an array, sanitize the value
+            // if it's not an array, sanitize the value.
             if (!is_array($value) && !is_object($value)) {
-                $sanitized_array[$key] = sanitize_text_field($value);
+                // except for question explanation, we want to keep the HTML
+                if( $key === 'question_explanation' ) {
+                    $sanitized_array[$key] = wp_kses($value, 'post');
+                } else {
+                    $sanitized_array[$key] = sanitize_text_field($value);
+                }
             }
 
             // if it is an array, loop through that array with the same function
             if (is_array($value)) {
                 $sanitized_array[$key] = $this->sanitize_array($value);
             }
+
         }
         // return our new, clean, sanitized array
         return $sanitized_array;

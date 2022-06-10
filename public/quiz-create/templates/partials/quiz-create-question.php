@@ -61,7 +61,5 @@ $question_image = $question->get_question_image();
                 <?php echo $question->get_question_explanation(); ?>
             </textarea>
         </fieldset>
-        <div class="data-container">
-        </div>
     </div>
 </section>
