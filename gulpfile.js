@@ -41,7 +41,6 @@ gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashb
     // compress on change Quiz Take utilities
     gulp.watch('public/quiz-take/js/utilities/*.js', ['quizTakeUtilityJS']);
 
-<<<<<<< HEAD
     // Watch for file changes
     onChangeReload = ["public/quiz-create/css/enp_quiz-create.min.css",
                     "public/quiz-create/templates/*.php",
@@ -54,19 +53,6 @@ gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashb
                     "public/quiz-take/js/dist/quiz-take.min.js"
                     ];
     gulp.watch(onChangeReload).on('change', reload);
-=======
-	// Watch for file changes
-	onChangeReload = ["public/quiz-create/css/enp_quiz-create.min.css",
-					"public/quiz-create/templates/*",
-					"public/quiz-create/includes/*.php",
-					"public/quiz-create/js/dist/quiz-create.min.js",
-					"public/quiz-take/css/enp_quiz-take.min.css",
-					"public/quiz-take/*.php",
-					"public/quiz-take/includes/*.php",
-					"public/quiz-take/js/dist/quiz-take.min.js"
-					];
-	gulp.watch(onChangeReload).on('change', reload);
->>>>>>> feature-mc-option-images
 });
 
 gulp.task('sassQuizCreate', function () {
