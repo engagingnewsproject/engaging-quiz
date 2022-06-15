@@ -1,10 +1,16 @@
 function temp_addQuestionImage(question_id) {
     $('#enp-question--'+questionID+' .enp-question-image-upload').hide();
     $('#enp-question--'+questionID+' .enp-question-image-upload').after(waitSpinner('enp-image-upload-wait'));
+
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').hide();
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').after(waitSpinner('enp-image-upload-wait'));
 }
 
 function unset_tempAddQuestionImage(question_id) {
     $('#enp-question--'+questionID+' .enp-question-image-upload').show();
+    $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
+
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').show();
     $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
 
     appendMessage('Image could not be uploaded. Please reload the page and try again.', 'error');
@@ -12,6 +18,7 @@ function unset_tempAddQuestionImage(question_id) {
 
 function addQuestionImage(question) {
     questionID = question.question_id;
+
     $('#enp-question--'+questionID+' .enp-question-image-upload').remove();
     $('#enp-question--'+questionID+' .enp-question-image-upload__input').remove();
     $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();

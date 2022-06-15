@@ -28,7 +28,7 @@
 				<h1 class="enp-quiz-settings__title">Quiz Settings</h1>
 				<form class="enp-form enp-quiz-settings__form" method="post" action="<?php echo htmlentities(ENP_QUIZ_PREVIEW_URL . $quiz->get_quiz_id() . '/'); ?>">
 					<?php $enp_quiz_nonce->outputKey(); ?>
-					<input type="hidden" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id(); ?>" />
+					<input class="hide" name="enp_quiz[quiz_id]" value="<?php echo $quiz->get_quiz_id(); ?>" />
 
 					<fieldset id="enp-quiz-styles" class="enp-fieldset enp-fieldset--section enp-quiz-styles">
 						<legend class="enp-legend enp-quiz-styles__legend">Quiz Styles</legend>

@@ -1,0 +1,8 @@
+
+(1) finish script templates for mc_option images
+(2) ensure mc_option images are stored in database
+(3) test
+(4) js entries for mc_option images
+(5) mc_option images preview pages
+(6) mc_option images take quiz pages
+(7) mc_option images results pages

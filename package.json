@@ -10,7 +10,8 @@
     "tinymce": "^6.0.2"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "debug": "node"
   },
   "author": "juryjowns",
   "license": "ISC",

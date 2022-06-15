@@ -189,3 +189,8 @@
 @mixin radio-inline__label--focus  {
     @include radio-block__label--focus ;
 }
+
+.hide {
+    opacity: 0;
+    position: absolute;
+}

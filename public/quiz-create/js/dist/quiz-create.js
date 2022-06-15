@@ -305,8 +305,11 @@ _.templateSettings = {
 var questionTemplate = _.template($('#question_template').html());
 var questionImageTemplate = _.template($('#question_image_template').html());
 var questionImageUploadButtonTemplate = _.template($('#question_image_upload_button_template').html());
-var questionImageUploadTemplate = _.template($('#question_image_upload_template').html());
+var questionImageUploadTemplate = _.template($('#question_image_upload_template, #mc_option_image_upload_template').html());
 var mcOptionTemplate = _.template($('#mc_option_template').html());
+var mcOptionImageTemplate = _.template($('#mc_option_image_template').html());
+var mcOptionImageUploadButtonTemplate = _.template($('#mc_option_image_upload_button_template').html());
+var mcOptionImageUploadTemplate = _.template($('#mc_option_image_upload_template').html());
 var sliderTemplate = _.template($('#slider_template').html());
 var sliderTakeTemplate = _.template($('#slider_take_template').html());
 var sliderRangeHelpersTemplate = _.template($('#slider_take_range_helpers_template').html());
@@ -457,6 +460,7 @@ function removeErrorMessages() {
 
 }
 
+
 // set-up sortable
 function setUpSortable() {
     // setup our move buttons
@@ -570,7 +574,7 @@ function moveQuestion(questionID, to) {
 
     // get the accordion button attached to the question
     var $questionButton = getQuestionAccordionButton(questionID)
-    
+
     $questions = getQuestions()
     // check if we're moving it to be the last question
     // move just the button for now. we'll insert the question after the button later on
@@ -714,10 +718,16 @@ function removeQuestion(questionID) {
 function temp_addQuestionImage(question_id) {
     $('#enp-question--'+questionID+' .enp-question-image-upload').hide();
     $('#enp-question--'+questionID+' .enp-question-image-upload').after(waitSpinner('enp-image-upload-wait'));
+
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').hide();
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').after(waitSpinner('enp-image-upload-wait'));
 }
 
 function unset_tempAddQuestionImage(question_id) {
     $('#enp-question--'+questionID+' .enp-question-image-upload').show();
+    $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
+
+    $('#enp-question--'+questionID+' .enp-mc-option-image-upload').show();
     $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();
 
     appendMessage('Image could not be uploaded. Please reload the page and try again.', 'error');
@@ -725,6 +735,7 @@ function unset_tempAddQuestionImage(question_id) {
 
 function addQuestionImage(question) {
     questionID = question.question_id;
+
     $('#enp-question--'+questionID+' .enp-question-image-upload').remove();
     $('#enp-question--'+questionID+' .enp-question-image-upload__input').remove();
     $('#enp-question--'+questionID+' .enp-image-upload-wait').remove();

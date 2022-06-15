@@ -30,12 +30,17 @@
     <section class="enp-container enp-quiz-form-container js-enp-quiz-create-form-container">
         <?php require_once ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-breadcrumbs.php'; ?>
 
+<<<<<<< HEAD
         <?php do_action( 'enp_quiz_display_messages' ); ?>
+=======
+        <?php do_action('enp_quiz_display_messages'); ?>
+>>>>>>> feature-mc-option-images
 
         <form id="enp-quiz-create-form" class="enp-form enp-quiz-form" enctype="multipart/form-data" method="post" action="<?php echo $Quiz_create->get_quiz_action_url(); ?>" novalidate>
             <?php
             $enp_quiz_nonce->outputKey();
             echo $Quiz_create->hidden_fields();
+<<<<<<< HEAD
 
             ?>
             <fieldset class="enp-fieldset enp-quiz-title">
@@ -84,12 +89,38 @@
                         $question_i++;
                     endforeach;
                 endif;
+=======
+            ?>
+            <fieldset class="enp-fieldset enp-quiz-title">
+                <label class="enp-label enp-quiz-title__label enp-slider-correct-high__input-container--hidden" for="quiz-title">
+                    Quiz Title
+                </label>
+                <textarea id="quiz-title" class="enp-textarea enp-quiz-title__textarea" type="text" name="enp_quiz[quiz_title]" placeholder="An engaging quiz title. . ." /><?php echo $quiz->get_value('quiz_title') ?></textarea>
+                
+            </fieldset>
+
+            <section class="enp-quiz-create__questions">
+                <?php
+                $question_i = 0;
+
+                // count the number of questions
+                $question_ids = $quiz->get_questions();
+                if (!empty($question_ids)) {
+                    foreach ($question_ids as $question_id) :
+                        ?>
+                        <?php include ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-question.php'; ?>
+                        <?php 
+                        $question_i++;
+                    endforeach;
+                }
+>>>>>>> feature-mc-option-images
                 ?>
             </section>
 
             <?php echo $Quiz_create->get_add_question_button(); ?>
 
             <div class="enp-btn--save__btns">
+<<<<<<< HEAD
                 <!-- TODO Remove onclick="content()" -->
                 <button type="submit" class="enp-btn--save enp-quiz-submit enp-quiz-form__save" name="enp-quiz-submit" value="save">Save</button>
 
@@ -101,3 +132,15 @@
     </section>
 </article>
 <?php
+=======
+
+                <button type="submit" class="enp-btn--save enp-quiz-submit enp-quiz-form__save" name="enp-quiz-submit" value="save">Save</button>
+
+                <?php echo $Quiz_create->get_next_step_button(); ?>
+
+            </div>
+
+        </form>
+    </section>
+</article>
+>>>>>>> feature-mc-option-images

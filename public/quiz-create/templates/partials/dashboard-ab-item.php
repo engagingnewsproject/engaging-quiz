@@ -27,9 +27,9 @@ $unique_ab_test_id = $ab_test->get_ab_test_id() . 'a' . $ab_test->get_quiz_id_a(
 			<li class="enp-dash-item__nav__item">
 				<form id="enp-delete-ab-test-<?php echo $unique_ab_test_id; ?>" method="post" action="<?php echo htmlentities(ENP_QUIZ_DASHBOARD_URL . 'user/'); ?>">
 					<?php echo $nonce_input; ?>
-					<input type="hidden" class="enp-dash-item__ab-test-id" name="ab_test_id" value="<?php echo $ab_test->get_ab_test_id() ?>" />
-					<input type="hidden" class="enp-dash-item__quiz-id-a" name="quiz_id_a" value="<?php echo $ab_test->get_quiz_id_a() ?>" />
-					<input type="hidden" class="enp-dash-item__quiz-id-b" name="quiz_id_b" value="<?php echo $ab_test->get_quiz_id_b() ?>" />
+					<input class="hide" class="enp-dash-item__ab-test-id" name="ab_test_id" value="<?php echo $ab_test->get_ab_test_id() ?>" />
+					<input class="hide" class="enp-dash-item__quiz-id-a" name="quiz_id_a" value="<?php echo $ab_test->get_quiz_id_a() ?>" />
+					<input class="hide" class="enp-dash-item__quiz-id-b" name="quiz_id_b" value="<?php echo $ab_test->get_quiz_id_b() ?>" />
 					<button name="enp-ab-test-submit" class="enp-ab-test-submit enp-dash-item__delete" value="delete-ab-test">
 						<svg class="enp-dash-item__icon enp-icon enp-icon--delete">
 							<use xlink:href="#icon-delete">

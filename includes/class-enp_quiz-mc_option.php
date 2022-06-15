@@ -5,8 +5,14 @@
 * @return mc_option object
 */
 class Enp_quiz_MC_option {
-    public  $mc_option_id,
+    public  $quiz_id,
+            $question_id,
+            $mc_option_id,
             $mc_option_content,
+            $mc_option_image,
+            $mc_option_image_src,
+            $mc_option_image_srcset,
+            $mc_option_image_alt,
             $mc_option_correct,
             $mc_option_order,
             $mc_option_responses,
@@ -62,6 +68,10 @@ class Enp_quiz_MC_option {
     protected function set_mc_option_object_values() {
         $this->mc_option_id = $this->set_mc_option_id();
         $this->mc_option_content = $this->set_mc_option_content();
+        $this->mc_option_image = $this->set_mc_option_image();
+        $this->mc_option_image_src = $this->set_mc_option_image_src();
+        $this->mc_option_image_srcset = $this->set_mc_option_image_srcset();
+        $this->mc_option_image_alt = $this->set_mc_option_image_alt();
         $this->mc_option_correct = $this->set_mc_option_correct();
         $this->mc_option_order = $this->set_mc_option_order();
         $this->mc_option_responses = $this->set_mc_option_responses();
@@ -86,6 +96,69 @@ class Enp_quiz_MC_option {
     protected function set_mc_option_content() {
         $mc_option_content = stripslashes(self::$mc_option['mc_option_content']);
         return $mc_option_content;
+    }
+
+
+    /**
+    * Set the question_image path for our Quiz Object
+    * @param $question = question row from question database table
+    * @return mc_option_image path from the database
+    */
+    protected function set_mc_option_image() {
+        $mc_option_image = self::$mc_option['mc_option_image'];
+
+        return $mc_option_image;
+    }
+
+    /**
+    * Set the question_image for our Quiz Object
+    * We want to set the url, but the question_image just sets the filename
+    * we need to build it based on our ENP_QUIZ_IMAGE_URL, quiz_id and question_id
+    * @param $question = question object
+    * @return mc_option_image from the object
+    *
+    */
+    public function set_mc_option_image_src() {
+        $mc_option_image_src = '';
+        $mc_option_image = $this->mc_option_image;
+        if(!empty($mc_option_image)) {
+            $mc_option_image_src = ENP_QUIZ_MC_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$mc_option_image;
+        }
+        return $mc_option_image_src;
+    }
+
+    /**
+    * Set the question_image for our Quiz Object
+    * @param $question = question object
+    * @return question_image from the object
+    */
+    public function set_mc_option_image_srcset() {
+        if(empty($this->mc_option_image)) {
+            return '';
+        }
+        // -original is our stored filename so we can explode by that
+        // and generate our new filenames
+        $filename = explode('-original', $this->mc_option_image);
+        $name = $filename[0];
+        $ext = $filename[1];
+        $sizes = array(1000,740,580,320,200);
+        $srcset = '';
+        foreach($sizes as $size) {
+            $srcset .= ENP_QUIZ_IMAGE_URL.$this->quiz_id.'/'.$this->question_id.'/'.$name.$size.'w'.$ext.' '.($size+10).'w,';
+        }
+        // remove the trailing comma
+        $srcset = rtrim($srcset, ",");
+        return $srcset;
+    }
+
+    /**
+    * Set the question_image_alt for our Quiz Object
+    * @param $question = question row from question database table
+    * @return mc_option_image_alt field from the database
+    */
+    protected function set_mc_option_image_alt() {
+        $mc_option_image_alt = stripslashes(self::$mc_option['mc_option_image_alt']);
+        return $mc_option_image_alt;
     }
 
     /**
@@ -149,6 +222,58 @@ class Enp_quiz_MC_option {
     }
 
     /**
+    * Get the mc_option_image for our Quiz Object
+    * @param $question = question object
+    * @return mc_option_image from the object
+    */
+    public function get_mc_option_image() {
+        $mc_option_image = $this->mc_option_image;
+        return $mc_option_image;
+    }
+
+    /**
+    * Get the mc_option_image_src for our Quiz Object
+    * @param $question = question object
+    * @return mc_option_image_src from the object
+    */
+    public function get_mc_option_image_src() {
+        $mc_option_image_src = $this->mc_option_image_src;
+        return $mc_option_image_src;
+    }
+
+    /**
+    * Get the mc_option_image_srcset for our Quiz Object
+    * @param $question = question object
+    * @return mc_option_image_srcset from the object
+    */
+    public function get_mc_option_image_srcset() {
+        $mc_option_image_srcset = $this->mc_option_image_srcset;
+        return $mc_option_image_srcset;
+    }
+
+    public function get_mc_option_image_thumbnail() {
+        if(empty($this->mc_option_image)) {
+            return '';
+        }
+        $filename = explode('-original', $this->mc_option_image);
+        $name = $filename[0];
+        $ext = $filename[1];
+        $thumbnail = $name.'-w200'.$ext;
+        return $thumbnail;
+    }
+    
+    /**
+    * Get the mc_option_image_alt for our Quiz Object
+    * @param $question = question object
+    * @return mc_option_image_alt from the object
+    */
+    public function get_mc_option_image_alt() {
+        $mc_option_image_alt = $this->mc_option_image_alt;
+        return $mc_option_image_alt;
+    }
+
+
+    /**
     * Get the mc_option_correct for our Quiz Object
     * @param $mc_option = mc_option object
     * @return mc_option_correct from the object
@@ -201,13 +326,13 @@ class Enp_quiz_MC_option {
     }
 
     /**
-    * Get the value we should be saving on a mc_option
-    * get posted if present, if not, get object. This is so we give them their
-    * current entry if we don't *actually* save yet.
-    * @param $string = what you want to get ('mc_option_content', 'mc_option_explanation', whatever)
-    * @param $i = which mc_option you're trying to get a value from
-    * @return $value
-    */
+     * Get the value we should be saving on a mc_option
+     * get posted if present, if not, get object. This is so we give them their
+     * current entry if we don't *actually* save yet.
+     * @param $i = which mc_option you're trying to get a value from
+     * @param $string = what you want to get ('mc_option_content', 'mc_option_explanation', whatever)
+     * @return $value
+     */
     /* I don't think we need this anymore. MC_options always have an ID now
     public function get_value($key, $question_id, $mc_option_id) {
         $value = '';

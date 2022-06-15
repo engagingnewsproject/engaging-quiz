@@ -8,6 +8,7 @@ if ( $question_id === '{{question_id}}' ) {
 }
 $question_image = $question->get_question_image();
 ?>
+<section id="enp-question--<?php echo $question_id; ?>" class="enp-question-content">
 
 <section id="enp-question--<?php echo $question_id; ?>" class="enp-question-content">
     <input class="enp-question-id" type="hidden" name="enp_question[<?php echo $question_i; ?>][question_id]" value="<?php echo $question_id; ?>" />

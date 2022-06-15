@@ -107,6 +107,8 @@ _.templateSettings = {
 if($('#question_template').length) {
     var questionTemplate = _.template($('#question_template').html());
     var mcOptionTemplate = _.template($('#mc_option_template').html());
+    var mcOptionImageTemplate = _.template($('#mc_option_image_template').html());
+    var mcOptionImageUploadTemplate = _.template($('#mc_option_image_upload_template').html());
     var sliderTemplate = _.template($('#slider_template').html());
     var sliderRangeHelpersTemplate = _.template($('#slider_range_helpers_template').html());
     var questionImageTemplate = _.template($('#question_image_template').html());
