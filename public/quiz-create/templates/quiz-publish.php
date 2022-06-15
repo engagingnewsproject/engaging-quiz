@@ -17,8 +17,6 @@
 
     <section class="enp-container enp-aside-container enp-publish-page__aside-container">
         <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-share.php'); ?>
-        <textarea id="enp-quiz-feedback" class="enp-textarea enp-quiz-feedback__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_feedback]" placeholder="We would love to hear from you!"></textarea>
-        <button type="submit" class="enp-btn--submit enp-preview-form__submit" name="enp-quiz-submit" value="quiz-save">Save</button>
     </section>
 </aside>
 
