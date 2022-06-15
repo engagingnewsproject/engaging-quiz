@@ -49,13 +49,14 @@
 
     .enp-quiz__progress__bar__question-count {
         position: absolute;
-        right: 4px;
-        bottom: -1.3rem;
+        right: 1rem;
+        bottom: 0.7rem;
         font-size: .8rem;
     }
 
     .enp-question__container {
         display: block;
+        min-height: 92vh;
     }
 
     .enp-question__form {
@@ -219,8 +220,7 @@
     // ----------------------//
 
     .enp-question__container--explanation {
-        background-color: #eee;
-        background-color: rgba(0, 0, 0, 0.15);
+        background-color: $background;
 
         .enp-question__submit {
             display: none;
@@ -386,7 +386,7 @@
         font-weight: 400;
         position: absolute;
         top: 50%;
-        left: 50%;
+        left: 47%;
         transform: translate(-50%, -50%);
         margin: 0;
     }
@@ -409,6 +409,7 @@
     .enp-results__description {
         max-width: 24rem;
         margin: 0 auto 1.6rem;
+        text-align: center;
     }
 
     .enp-results__score__circle {

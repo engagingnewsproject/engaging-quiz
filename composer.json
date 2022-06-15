@@ -1,0 +1,8 @@
+{
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*"
+    },
+    "require": {
+        "tinymce/tinymce": "^6.0"
+    }
+}

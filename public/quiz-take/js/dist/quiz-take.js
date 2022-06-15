@@ -93,7 +93,6 @@ _.rawurlencode = function(str) {
     .replace(/\*/g, '%2A');
 };
 
-
 _.replaceURLs = function(str, oldURL, newURL) {
     return str.replace(oldURL, newURL)
               .replace(encodeURIComponent(oldURL), encodeURIComponent(newURL))

@@ -74,8 +74,8 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                         $this->pdo_publish_quiz();
                         // now let's reset the data and responses on that quiz as well
                         // delete all the responses & reset the stats for the quiz and questions
-            			$quiz_data = new Enp_quiz_Save_quiz_take_Quiz_data(self::$quiz_obj);
-            			$quiz_data->delete_quiz_responses(self::$quiz_obj);
+                        $quiz_data = new Enp_quiz_Save_quiz_take_Quiz_data(self::$quiz_obj);
+                        $quiz_data->delete_quiz_responses(self::$quiz_obj);
                     } else {
                         // don't worry about it, probably just clicked on the "embed" on the quiz preview/settings page
                     }
@@ -108,6 +108,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         $quiz_id = $this->set_quiz_value('quiz_id', 0);
         $quiz_title = $this->set_quiz_value('quiz_title', '');
+        $quiz_feedback = $this->set_quiz_value( 'quiz_feedback', '' );
         $quiz_status = $this->set_quiz_value('quiz_status', 'draft');
         $quiz_finish_message = $this->set_quiz_value('quiz_finish_message', 'Thanks for taking our quiz!');
         $quiz_updated_by = $this->set_quiz_value('quiz_updated_by', 0);
@@ -138,9 +139,18 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // email
         $email_subject = $facebook_title;
         $email_body_start = $facebook_description;
-        $email_body_end = $facebook_quote_end.'
+        $email_body_end = $facebook_quote_end.' '.$facebook_description;
 
-'.$facebook_description;
+        // winners & losers
+        $quiz_end_fail_title = $this->set_quiz_value('quiz_end_fail_title', 'Oops!!');
+        $quiz_end_fail_description = $this->set_quiz_value('quiz_end_fail_description', 'We bet you could do better. Why don\'t you try taking the quiz again?');
+        $quiz_end_average_title = $this->set_quiz_value('quiz_end_average_title', 'Not Bad!');
+        $quiz_end_average_description = $this->set_quiz_value('quiz_end_average_description', 'We bet you could do better. Why don\'t you try taking the quiz again?.');
+        $quiz_end_good_title = $this->set_quiz_value('quiz_end_good_title', 'Nice Job!');
+        $quiz_end_good_description = $this->set_quiz_value('quiz_end_good_description', 'Nice work! You almost got a perfect score!');
+        $quiz_end_perfect_title = $this->set_quiz_value('quiz_end_perfect_title', 'Perfect!');
+        $quiz_end_perfect_description = $this->set_quiz_value('quiz_end_perfect_description', 'Can\'t do any better than that! Go ahead, share this quiz and brag about it.');
+
         // twitter
         $include_url = true;
         $replace_mustache = true;
@@ -149,6 +159,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $default_quiz = array(
             'quiz_id' => $quiz_id,
             'quiz_title' => $quiz_title,
+            'quiz_feedback' => $quiz_feedback,
             'quiz_status' => $quiz_status,
             'quiz_finish_message' => $quiz_finish_message,
             'quiz_owner'      => $quiz_owner,
@@ -181,6 +192,15 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             'email_body_end' => $email_body_end,
             // tweet share text
             'tweet_end'=> $tweet_end,
+            // winners and losers
+            'quiz_end_fail_title' => $quiz_end_fail_title,
+            'quiz_end_fail_description' => $quiz_end_fail_description,
+            'quiz_end_average_title' => $quiz_end_average_title,
+            'quiz_end_average_description' => $quiz_end_average_description,
+            'quiz_end_good_title' => $quiz_end_good_title,
+            'quiz_end_good_description' => $quiz_end_good_description,
+            'quiz_end_perfect_title' => $quiz_end_perfect_title,
+            'quiz_end_perfect_description' => $quiz_end_perfect_description,
         );
         // We don't want to lose anything that was in the sent quiz (like questions, etc)
         // so we'll merge them to make sure we don't lose anything
@@ -356,25 +376,31 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $sanitized_array = array();
         // check to make sure it's an array
         if (!is_array($array) || !count($array)) {
-    		return $sanitized_array;
-    	}
+            return $sanitized_array;
+        }
         // loop through each key/value
-    	foreach ($array as $key => $value) {
+        foreach ($array as $key => $value) {
             // sanitize the key
-            $key = sanitize_key($key);
+            $key = sanitize_key( $key );
 
-            // if it's not an array, sanitize the value
-    		if (!is_array($value) && !is_object($value)) {
-                $sanitized_array[$key] = sanitize_text_field($value);
-    		}
+            // if it's not an array, sanitize the value.
+            if (!is_array($value) && !is_object($value)) {
+                // except for question explanation, we want to keep the HTML
+                if( $key === 'question_explanation' ) {
+                    $sanitized_array[$key] = wp_kses($value, 'post');
+                } else {
+                    $sanitized_array[$key] = sanitize_text_field($value);
+                }
+            }
 
             // if it is an array, loop through that array with the same function
-    		if (is_array($value)) {
-    			$sanitized_array[$key] = $this->sanitize_array($value);
-    		}
-    	}
+            if (is_array($value)) {
+                $sanitized_array[$key] = $this->sanitize_array($value);
+            }
+
+        }
         // return our new, clean, sanitized array
-    	return $sanitized_array;
+        return $sanitized_array;
     }
 
     /**
@@ -487,6 +513,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
         $params = array(':quiz_title'       => self::$quiz['quiz_title'],
+                        ':quiz_feedback'    => self::$quiz['quiz_feedback'],
                         ':quiz_status'      => self::$quiz['quiz_status'],
                         ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
                         ':quiz_owner'       => self::$quiz['quiz_owner'],
@@ -499,6 +526,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->quiz_table." (
                                             quiz_title,
+                                            quiz_feedback,
                                             quiz_status,
                                             quiz_finish_message,
                                             quiz_owner,
@@ -510,6 +538,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                         )
                                         VALUES(
                                             :quiz_title,
+                                            :quiz_feedback,
                                             :quiz_status,
                                             :quiz_finish_message,
                                             :quiz_owner,
@@ -548,6 +577,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         $sql = "UPDATE ".$pdo->quiz_table."
                      SET quiz_title = :quiz_title,
+                         quiz_feedback = :quiz_feedback,
                          quiz_status = :quiz_status,
                          quiz_finish_message = :quiz_finish_message,
                          quiz_updated_by = :quiz_updated_by,
@@ -604,7 +634,15 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                               'email_subject',
                               'email_body_start',
                               'email_body_end',
-                              'tweet_end'
+                              'tweet_end',
+                            'quiz_end_fail_title',
+                            'quiz_end_fail_description',
+                            'quiz_end_average_title',
+                            'quiz_end_average_description',
+                            'quiz_end_good_title',
+                            'quiz_end_good_description',
+                            'quiz_end_perfect_title',
+                            'quiz_end_perfect_description',
                             );
         foreach($quiz_options as $quiz_option) {
             if(array_key_exists($quiz_option, self::$quiz)) {
@@ -677,6 +715,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected function set_update_quiz_params() {
         $params = array(':quiz_id'          => self::$quiz_obj->get_quiz_id(),
                         ':quiz_title'       => self::$quiz['quiz_title'],
+                        ':quiz_feedback'    => self::$quiz['quiz_feedback'],
                         ':quiz_status'      => self::$quiz['quiz_status'],
                         ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
                         ':quiz_owner'       => self::$quiz['quiz_owner'],

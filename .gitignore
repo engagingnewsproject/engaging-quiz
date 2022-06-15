@@ -6,4 +6,4 @@
 .sass-cache
 node_modules/*
 bower_components/*
-gulpfile.js
+.vscode/launch.json

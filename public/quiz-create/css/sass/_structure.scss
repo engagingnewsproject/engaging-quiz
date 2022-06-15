@@ -7,18 +7,16 @@
 }
 
 @mixin container {
-    max-width: 640px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
-    @include clearfix;
+    max-width: 80vw;
+    margin: 0 auto;
+    // @include clearfix;
 }
 
 @mixin well {
     padding: 1.6rem;
     margin-bottom: 1.6rem;
-    background: #fff;
+    background: $light_blue;
+    @include border-radius;
     border: 1px solid #eee;
     border-bottom-color: #ccc;
 
@@ -32,18 +30,18 @@
     @include container;
 
     @include breakpoint(medium) {
-      max-width: 840px;
+      max-width: 1000px;
     }
 
     @include breakpoint(large) {
-      max-width: 1000px;
+      max-width: 1440px;
     }
 }
 
 
 @mixin container--thin {
     @include container;
-    max-width: 512px;
+    // max-width: 512px;
 }
 
 @mixin container--really-thin {
@@ -147,7 +145,7 @@
 
 @mixin flex-grid {
     @include flex;
-    flex-flow: row wrap;
+    flex-flow: column wrap;
     align-items: stretch;
     @include ul-no-style;
 }
@@ -155,36 +153,36 @@
 @mixin flex-grid__item  {
     flex-basis: 100%;
     padding: 1rem 1.2rem;
-    background: #fff;
+    background-color: $gray;
     border: 1px solid #eee;
     border-bottom: 1px solid #ddd;
     list-style: none;
     transition: all .35s $fastInEaseOut;
     margin: 0 0 0.8rem;
 
-    @include breakpoint(medium) {
-        flex-basis: 49%;
-        max-width: 49%;
-        margin: 0 2% 0.8rem 0;
+    // @include breakpoint(medium) {
+        // flex-basis: 100%;
+        // max-width: 100%;
+        // margin: 0 2% 0.8rem 0;
 
-        &:nth-child(2n) {
-            margin-right: 0;
-        }
-    }
+        // &:nth-child(2n) {
+        //     margin-right: 0;
+        // }
+    // }
 
-    @include breakpoint(large) {
-        flex-basis: 32.5%;
-        max-width: 32.5%;
-        margin-right: 1.25%;
+    // @include breakpoint(large) {
+    //     flex-basis: 100%;
+    //     max-width: 100%;
+    //     margin-right: 1.25%;
 
-        &:nth-child(2n) {
-            margin-right: 1.25%;
-        }
+    //     &:nth-child(2n) {
+    //         margin-right: 1.25%;
+    //     }
 
-        &:nth-child(3n) {
-            margin-right: 0;
-        }
-    }
+    //     &:nth-child(3n) {
+    //         margin-right: 0;
+    //     }
+    // }
 }
 
 @mixin flex-grid__title  {

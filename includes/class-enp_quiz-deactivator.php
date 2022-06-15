@@ -12,13 +12,13 @@
  */
 class Enp_quiz_Deactivator {
 
-	/**
-	 * What to do when our plugin is deactivated
-	 * @since    0.0.1
-	 */
-	public function __construct() {
-		// Remove the rewrite rules we added with a hard flush on rewrite rules so it regenerates the htaccess file
-		flush_rewrite_rules();
-	}
+    /**
+     * What to do when our plugin is deactivated
+     * @since    0.0.1
+     */
+    public function __construct() {
+        // Remove the rewrite rules we added with a hard flush on rewrite rules so it regenerates the htaccess file
+        flush_rewrite_rules();
+    }
 
 }

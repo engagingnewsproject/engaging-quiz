@@ -1,24 +1,37 @@
 //fonts
-$fontBody : "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
-$fontTitle : "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
-//colors
-$font : #444;
+$fontBody : Arial, monospace, helvetica, arial, sans-serif;
+$fontTitle : Arial, monospace, helvetica, arial, sans-serif;
+
+// // // colors
+$font : #1d1c25;
+$background: #FAF9FB;
 $title : #5D5E5F;
-$blue: #5887C0;
-$dark_blue: #242f42;
-$light_blue: #EAF4FF;
-$light_gray: #F5F5F5;
-$gray: #bbb;
-$dark_gray: #666;
-$darker_gray: #444;
-$really_light_gray: #F8F8F8;
-$link : $blue;
+
+// Blues
+$blue: #00A9B7;
+$dark_blue: #333F48;
+$light_blue: lighten($dark_blue, 40);
+
+// Grays
+$light_gray: #FAF9FB;
+$really_light_gray: lighten($light_gray, 1);
+$gray: darken($light_gray, 2);
+$dark_gray: darken($gray, 5);
+$darker_gray: darken($dark_gray, 20);
+$darkest_gray: darken($dark_gray, 50);
+
+// Other colors
 $green: darken(#58C88F,10);
+$green: #60AAAD;
 $dark_green: darken($green, 8);
-$red: #f14021;
-$dark_red: darken(#f14021, 8);
-$fade_red: #E97763;
+$red: #bf5700;
+$dark_red: darken($red, 8);
+$fade_red: #C1893E;
+
+// Elements
+$link: $blue;
 $link_hover: darken($link, 10%);
+
 // animation
 $fastInEaseOut: cubic-bezier(0, 0, .3, 1);
 $easeInOut: cubic-bezier(0.15,0,.5,1);

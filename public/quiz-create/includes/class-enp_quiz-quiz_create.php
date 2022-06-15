@@ -40,9 +40,9 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
         // load take quiz styles
-		add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
-		// load take quiz scripts
-		add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
+        // load take quiz scripts
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         // load js templates
         add_action('wp_footer', array($this, 'quiz_create_js_templates'));
     }
@@ -67,22 +67,22 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
 
     public function enqueue_styles() {
 
-	}
+    }
 
-	/**
-	 * Register and enqueue the JavaScript for quiz create.
-	 *
-	 * @since    0.0.1
-	 */
-	public function enqueue_scripts() {
+    /**
+     * Register and enqueue the JavaScript for quiz create.
+     *
+     * @since    0.0.1
+     */
+    public function enqueue_scripts() {
         $plugin_name = $this->plugin_name;
 
         wp_register_script( $plugin_name.'-accordion', plugin_dir_url( __FILE__ ) . '../js/utilities/accordion.js', array( 'underscore' ), ENP_QUIZ_VERSION, true );
-		wp_enqueue_script( $plugin_name.'-accordion' );
+        wp_enqueue_script( $plugin_name.'-accordion' );
 
 
         /*wp_register_script( $plugin_name.'-sticky-header', plugin_dir_url( __FILE__ ) . '../js/utilities/sticky-header.js', array( 'jquery', 'underscore' ), ENP_QUIZ_VERSION, true );
-		wp_enqueue_script( $plugin_name.'-sticky-header' );*/
+        wp_enqueue_script( $plugin_name.'-sticky-header' );*/
 
 
         // quiz create script.
@@ -104,14 +104,14 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         wp_enqueue_script( $plugin_name.'-quiz-create' );
 
         wp_localize_script( $plugin_name.'-quiz-create','quizCreate', array(
-    		'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
             'quiz_create_url' => ENP_QUIZ_CREATE_URL,
             'quiz_image_url' => ENP_QUIZ_IMAGE_URL,
-    	));
+        ));
 
 
 
-	}
+    }
 
     public function set_quiz_action_url($quiz_id) {
         if(is_numeric($quiz_id) || is_int($quiz_id)) {

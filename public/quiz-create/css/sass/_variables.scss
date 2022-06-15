@@ -1,33 +1,43 @@
 //fonts
-$fontBody: "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
-$fontTitle: "tablet-gothic", "helvetica neue", helvetica, arial, sans-serif;
-//colors
-$font: #444;
-$title: #5d5e5f;
-$blue: #5887c0;
-$dark_blue: #242f42;
-$light_blue: #eaf4ff;
-$light_gray: #f5f5f5;
-$transparent_gray: rgba(0, 0, 0, 0.2);
-$gray: #bbb;
-$dark_gray: #666;
-$darker_gray: #444;
-$really_light_gray: #f8f8f8;
-$link: darken($blue, 6);
-$khaki: #cca562;
-$green: darken(#58c88f, 10);
+$fontBody : Arial,monospace, helvetica, arial, sans-serif;
+$fontTitle : Arial,monospace, helvetica, arial, sans-serif;
+
+// // // colors
+$font : #1d1c25;
+$background: #FAF9FB;
+$title : #5D5E5F;
+
+// Blues
+$blue: #00A9B7;
+$dark_blue: #333F48;
+$light_blue: lighten($dark_blue, 40);
+
+// Grays
+$light_gray: #FAF9FB;
+$really_light_gray: lighten($light_gray, 1);
+$gray: darken($light_gray, 2);
+$dark_gray: darken($gray, 5);
+$darker_gray: darken($dark_gray, 25);
+$darkest_gray: darken($dark_gray, 50);
+
+// Other colors
+$khaki: #CCA562;
+$green: #60AAAD;
 $dark_green: darken($green, 8);
-$red: #f14021;
-$dark_red: darken(#f14021, 8);
-$fade_red: #e97763;
+$red: #bf5700;
+$dark_red: darken($red, 8);
+$fade_red: #C1893E;
+
+// Elements
+$link: #bf5700;
 $link_hover: darken($link, 8);
 // animation
 $fastInEaseOut: cubic-bezier(0, 0, 0.3, 1);
 
 $breakpoints: (
-	"small": 400px,
-	"medium": 700px,
-	"large": 1000px,
+    "small": 400px,
+    "medium": 700px,
+    "large": 1000px,
 );
 
 // -----------------------------------------------------------------------------
@@ -48,39 +58,39 @@ $current-breakpoint: $default-breakpoint;
 // 5. Then reset $current-breakpoint
 // 6. If breakpoint name doesn't exist in map, warn the user
 @mixin breakpoint($breakpoint) {
-	$value: map-get($breakpoints, $breakpoint);
+    $value: map-get($breakpoints, $breakpoint);
 
-	@if $value != null {
-		// 1
-		$current-breakpoint: $breakpoint !global; // 2
-		@media (min-width: $value) {
-			@content;
-		} // 3
-		$current-breakpoint: $default-breakpoint !global; // 5
-	} @else {
-		@warn "Invalid breakpoint `#{$breakpoint}`."; // 6
-	}
+    @if $value != null {
+        // 1
+        $current-breakpoint: $breakpoint !global; // 2
+        @media (min-width: $value) {
+            @content;
+        } // 3
+        $current-breakpoint: $default-breakpoint !global; // 5
+    } @else {
+        @warn "Invalid breakpoint `#{$breakpoint}`."; // 6
+    }
 }
 
 // for only targeting a specific device
 // NOTE: DOESN'T SUPPORT THE @include placeholders!!!
 @mixin media($query) {
-	@if $query == max-small {
-		$media_query: "max-width: #{map-get($breakpoints, " small ")}";
-	} @else if $query == only-medium {
-		$media_query: "min-width: #{map-get($breakpoints, "medium")}) and (max-width: #{(map-get($breakpoints, "large") - 1px)}";
-	} @else if $query == max-medium {
-		$media_query: "max-width: #{(map-get($breakpoints, "medium") - 1px)}";
-	} @else if $query == max-large { 
-		$media_query: "max-width: #{(map-get($breakpoints, "large") - 1px)}";
-	} @else {
-		// just use the number provided as a max width
-		$media_query: "max-width: #{$query}";
-	}
+    @if $query == max-small {
+        $media_query: "max-width: #{map-get($breakpoints, " small ")}";
+    } @else if $query == only-medium {
+        $media_query: "min-width: #{map-get($breakpoints, "medium")}) and (max-width: #{(map-get($breakpoints, "large") - 1px)}";
+    } @else if $query == max-medium {
+        $media_query: "max-width: #{(map-get($breakpoints, "medium") - 1px)}";
+    } @else if $query == max-large { 
+        $media_query: "max-width: #{(map-get($breakpoints, "large") - 1px)}";
+    } @else {
+        // just use the number provided as a max width
+        $media_query: "max-width: #{$query}";
+    }
 
-	@if variable-exists(media_query) {
-		@media ($media_query) {
-			@content;
-		}
-	}
+    @if variable-exists(media_query) {
+        @media ($media_query) {
+            @content;
+        }
+    }
 }

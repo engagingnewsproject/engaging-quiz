@@ -4,17 +4,17 @@
     .enp-quiz-settings-container {
 
         @include breakpoint(large) {
-            margin: 0;
-            width: 40%;
-            float: left;
+            // margin: 0;
+            // width: 40%;
+            // float: left;
         }
     }
 
     .enp-quiz-preview-container {
 
         @include breakpoint(large) {
-            width: 60%;
-            float: left;
+            // width: 60%;
+            // float: left;
         }
 
     }
@@ -25,11 +25,15 @@
         @include small-uppercase;
         font-weight: 600;
         padding-top: 0;
+
+        @include breakpoint(medium) {
+            padding: 1em 0;
+        }
     }
 
     .enp-quiz-settings__form {
         margin-bottom: 3rem;
-
+        overflow: visible;
         @include breakpoint(large) {
             padding: 0;
             margin-bottom: 0;
@@ -66,6 +70,9 @@
 
     .enp-fieldset--section {
         padding: 1.6rem 1rem;
+        @include breakpoint(large) {
+            padding: 1rem;
+        }
 
         &.enp-accordion-content--open {
             margin-bottom: 0;
@@ -106,6 +113,9 @@
     .enp-quiz-preview__title {
         @include small-uppercase;
         font-weight: 600;
+        @include breakpoint(medium) {
+            padding: 1em 0;
+        }
     }
 
     .enp-preview-form__submit {
@@ -146,8 +156,8 @@
 
         @include breakpoint(large) {
             position: absolute;
-            top: -4px;
-            left: 36%;
+            top: 50px;
+            left: 0;
         }
 
         &:last-of-type {

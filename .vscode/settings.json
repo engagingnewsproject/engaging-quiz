@@ -1,0 +1,6 @@
+{
+	"phpsab.fixerEnable": false,
+	"intelephense.format.enable": false,
+	"phpcbf.enable": false,
+	"phpcs.standard": "./rulesetsPHPCS.xml"
+}

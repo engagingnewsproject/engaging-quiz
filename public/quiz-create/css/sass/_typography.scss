@@ -93,6 +93,9 @@ body #enp-quiz {
         padding: 1.6em;
         overflow: auto;
         max-width: 100%;
+        overflow: scroll;
+        max-width: 68vw;
+        overflow-wrap: break-word;
     }
     .code, code, kbd, tt, var {
         font: .7em Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
