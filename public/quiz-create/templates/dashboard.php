@@ -21,29 +21,32 @@
     <div class="enp-quiz-list__view">
         <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH.'/partials/dashboard-quiz-sort.php');?>
     </div>
-    <div class="user-emails">
-        <ol style="list-style:none;">
-        <?php 
-
-            if(!empty($quizzes)) {
+    <?php if(!empty($quizzes) && current_user_can('manage_options')) : ?>
+        <div class="user-emails">
+            <br>
+            <h2 class="enp-dash__section-title">Quiz Users<br>
+                <p style="font-size:0.7em;margin:0.5em 0 0 0;text-transform: none;">To view full list of users add below snippet to the end of the address bar URL:<br><code style="font-size:1em;margin-left:1em;font-weight:bold;">&limit=9999</code></p>
+            </h2>
+            <ol style="list-style:none;margin-left:0.5em;">
+            <?php
                 $emails = array();
-                    foreach( $quizzes as $quiz ) {
-                        $quiz = new Enp_quiz_Quiz($quiz);
-                        if ( current_user_can('manage_options') && isset($_GET['include']) && $_GET['include'] === 'all_users' ) {
-                            $created_by = $quiz->get_quiz_created_by();
-                            $user_info = get_userdata( $created_by );
-                            $user_email_address = $user_info->user_email;
-                            array_push( $emails, $user_email_address );
-                        }
-                    }
-                    $emails = array_unique( $emails );
-                    foreach( $emails as $email ) {
-                        echo '<li class="enp-dash-item__email" style="font-size:10px;">' . $email . '</li>';
+                foreach( $quizzes as $quiz ) {
+                    $quiz = new Enp_quiz_Quiz($quiz);
+                    if ( current_user_can('manage_options') && isset($_GET['include']) && $_GET['include'] === 'all_users' ) {
+                        $created_by = $quiz->get_quiz_created_by();
+                        $user_info = get_userdata( $created_by );
+                        $user_email_address = $user_info->user_email;
+                        array_push( $emails, $user_email_address );
                     }
                 }
-        ?>
-        </ol>
-    </div>
+                $emails = array_unique( $emails );
+                foreach( $emails as $email ) {
+                    echo '<li class="enp-dash-item__email" style="font-size:10px;">' . $email . '</li>';
+                }
+                ?>
+            </ol>
+        </div>
+    <?php endif; ?>
 </aside>
 <article class="enp-container enp-dash-container">
     <section class="enp-dash-wrap">
