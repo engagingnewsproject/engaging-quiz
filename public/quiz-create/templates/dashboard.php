@@ -25,7 +25,7 @@
         <div class="user-emails">
             <br>
             <h2 class="enp-dash__section-title">Quiz Users<br>
-                <p style="font-size:0.7em;margin:0.5em 0 0 0;text-transform: none;">To view full list of users add below snippet to the end of the address bar URL:<br><code style="font-size:1em;margin-left:1em;font-weight:bold;">&limit=9999</code></p>
+                <p style="font-size:0.7em;margin:0.5em 0 0 0;text-transform: none;">ADMIN ONLY<br>To view full list of user emails select "All User's Quizzes" from above dropdown and add below snippet to the end of the address bar URL:<br><code style="font-size:1em;margin-left:1em;font-weight:bold;">&limit=9999</code></p>
             </h2>
             <ol style="list-style:none;margin-left:0.5em;">
             <?php
