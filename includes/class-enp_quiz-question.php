@@ -275,15 +275,9 @@ class Enp_quiz_Question {
         $sql            = 'SELECT mc_option_id from ' . $pdo->question_mc_option_table . ' WHERE
                 question_id = :question_id
                 AND mc_option_is_deleted = 0
-<<<<<<< HEAD
-                ORDER BY mc_option_order ASC";
-        $stmt = $pdo->runQuery($sql, $params);
-        $mc_option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-=======
                 ORDER BY mc_option_order ASC';
         $stmt           = $pdo->query( $sql, $params );
         $mc_option_rows = $stmt->fetchAll( PDO::FETCH_ASSOC );
->>>>>>> feature-2022-update-finish-1.0-merge
 
         $mc_options = array();
 
@@ -317,13 +311,8 @@ class Enp_quiz_Question {
         );
         $sql       = 'SELECT slider_id from ' . $pdo->question_slider_table . ' WHERE
                 question_id = :question_id
-<<<<<<< HEAD
-                AND slider_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
-=======
                 AND slider_is_deleted = 0';
         $stmt      = $pdo->query( $sql, $params );
->>>>>>> feature-2022-update-finish-1.0-merge
         $slider_id = $stmt->fetch();
         return $slider_id['slider_id'];
     }

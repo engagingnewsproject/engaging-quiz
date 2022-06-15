@@ -1,16 +1,14 @@
 <?php
-
 /**
- * Extremely bare wrapper based on
- * http://codereview.stackexchange.com/questions/52414/my-simple-pdo-wrapper-class
- * & http://stackoverflow.com/questions/20664450/is-a-pdo-wrapper-really-overkill
- * to make opening PDO connections and preparing, binding, and executing connections
- * faster.
- *
- **/
+* Extremely bare wrapper based on
+* http://codereview.stackexchange.com/questions/52414/my-simple-pdo-wrapper-class
+* & http://stackoverflow.com/questions/20664450/is-a-pdo-wrapper-really-overkill
+* to make opening PDO connections and preparing, binding, and executing connections
+* faster.
+*
+**/
 
-class enp_quiz_Db extends PDO
-{
+class enp_quiz_Db extends PDO {
 
     public function __construct() {
         // check if a connection already exists
@@ -69,13 +67,8 @@ class enp_quiz_Db extends PDO
      * Get Quizzes
      *
      */
-    public function getQuizzes($where = [])
-    {
+    public function getQuizzes($where = []) {
 
-<<<<<<< HEAD
-        $params = $this->buildParams($where);
-        $sql = "SELECT * from " . $this->quiz_table . " WHERE quiz_is_deleted = 0";
-=======
         $params = $this->buildParams($where);
         $sql = "SELECT * from ".$this->quiz_table." WHERE quiz_is_deleted = 0";
         
@@ -85,57 +78,13 @@ class enp_quiz_Db extends PDO
         
         return $this->fetchAll($sql, $params);
     }
->>>>>>> feature-2022-update-finish-1.0-merge
-
-        if ($where) {
-            $sql .= $this->buildWhere($params, true);
-        }
-
-        return $this->fetchAll($sql, $params);
-    }
 
     /*
-     * Get Domains
-     *
-     */
-    public function getDomains($where = [])
-    {
-
-<<<<<<< HEAD
-        $params = $this->buildParams($where);
-        $sql = "SELECT DISTINCT(SUBSTRING_INDEX((SUBSTRING_INDEX((SUBSTRING_INDEX(embed_site_url, '://', -1)), '/', 1)), '.', -2)) as domain from " . $this->embed_site_table;
-
-        if ($where) {
-            $sql .= $this->buildWhere($params, true);
-        }
-
-        return $this->fetchAll($sql, $params);
-    }
-
-    /*
-=======
-        $params = $this->buildParams($where);
-        $sql = "SELECT DISTINCT(SUBSTRING_INDEX((SUBSTRING_INDEX((SUBSTRING_INDEX(embed_site_url, '://', -1)), '/', 1)), '.', -2)) as domain from ".$this->embed_site_table;
-        
-        if($where) {
-            $sql .= $this->buildWhere($params, true);
-        }
-        
-        return $this->fetchAll($sql, $params);
-    }
-    
-    /*
->>>>>>> feature-2022-update-finish-1.0-merge
      * Get Sites
      *
      */
-    public function getSites($where = [])
-    {
+    public function getSites($where = []) {
 
-<<<<<<< HEAD
-        $params = $this->buildParams($where);
-        $sql = "SELECT * from " . $this->embed_site_table;
-=======
         $params = $this->buildParams($where);
         $sql = "SELECT * from ".$this->embed_site_table;
         
@@ -145,26 +94,13 @@ class enp_quiz_Db extends PDO
         
         return $this->fetchAll($sql, $params);
     }
->>>>>>> feature-2022-update-finish-1.0-merge
-
-        if ($where) {
-            $sql .= $this->buildWhere($params, true);
-        }
-
-        return $this->fetchAll($sql, $params);
-    }
 
     /*
      * Get Embeds
      *
      */
-    public function getEmbeds($where = [])
-    {
+    public function getEmbeds($where = []) {
 
-<<<<<<< HEAD
-        $params = $this->buildParams($where);
-        $sql = "SELECT * from " . $this->embed_quiz_table;
-=======
         $params = $this->buildParams($where);
         $sql = "SELECT * from ".$this->embed_quiz_table;
         
@@ -174,46 +110,34 @@ class enp_quiz_Db extends PDO
         
         return $this->fetchAll($sql, $params);
     }
->>>>>>> feature-2022-update-finish-1.0-merge
-
-        if ($where) {
-            $sql .= $this->buildWhere($params, true);
-        }
-
-        return $this->fetchAll($sql, $params);
-    }
 
     // TOTALS
-    public function getResponsesCorrectTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->response_question_table . " WHERE response_correct = 1";
+    public function getResponsesCorrectTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->response_question_table." WHERE response_correct = 1";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getResponsesIncorrectTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->response_question_table . " WHERE response_correct = 0";
+    public function getResponsesIncorrectTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->response_question_table." WHERE response_correct = 0";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getMCQuestionsTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->question_table . " WHERE question_type = 'mc'";
+    public function getMCQuestionsTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->question_table." WHERE question_type = 'mc'";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getSliderQuestionsTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->question_table . " WHERE question_type = 'slider'";
+    public function getSliderQuestionsTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->question_table." WHERE question_type = 'slider'";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-<<<<<<< HEAD
-    public function getUniqueUsersTotal()
-    {
+    public function getUniqueUsersTotal() {
         $sql = "SELECT COUNT(DISTINCT user_id) as users
-                    FROM " . $this->response_quiz_table;
-=======
+                    FROM ".$this->response_quiz_table;
+
+        return (int) $this->fetchOne($sql)['users'];
+
     }
     public function buildWhere($params, $where = true) {
         $sql = '';
@@ -238,34 +162,6 @@ class enp_quiz_Db extends PDO
         }
         return $sql;
     }
->>>>>>> feature-2022-update-finish-1.0-merge
-
-        return (int) $this->fetchOne($sql)['users'];
-    }
-    public function buildWhere($params, $where = true)
-    {
-        $sql = '';
-        if ($where === true) {
-            $sql = ' WHERE ';
-        }
-        if (!empty($params)) {
-            $i = 1;
-            foreach ($params as $key => $val) {
-                if (is_array($val)) {
-                    // for things like 'date > :date'
-                    $sql .= $val['key'] . ' ' . $val['operator'] . ' ' . $val['val'];
-                } else {
-                    $sql .= $key . ' = ' . $val;
-                }
-                if ($i !== count($params)) {
-                    // not the last one, so add an AND statement
-                    $where .= " AND ";
-                    $i++;
-                }
-            }
-        }
-        return $sql;
-    }
 
     /**
      * Builds out bound parameters in the array by adding a : to the beginning of the array keys
@@ -273,11 +169,10 @@ class enp_quiz_Db extends PDO
      * @param $params ARRAY
      * @return ARRAY
      */
-    public function buildParams($params)
-    {
+    public function buildParams($params) {
         $bound = [];
 
-        foreach ($params as $key => $val) {
+        foreach($params as $key => $val) {
             $bound[$key] = $val;
         }
 
