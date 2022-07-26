@@ -83,13 +83,14 @@
 
     @include breakpoint(medium) {
         padding: 0.8rem;
+        width: 100%;
     }
 }
 
 @mixin input--large {
     @include input;
     padding: 1rem 1.2rem;
-    font-size: 1.3rem;
+    font-size: 1rem;
 }
 
 @mixin input--xl {
@@ -106,7 +107,6 @@
 @mixin textarea {
     @include input;
     line-height: 1.5;
-    width: 100%;
 
     &:focus {
         @include focus--glow;
@@ -159,7 +159,7 @@
 }
 
 @mixin radio-block__label--checked  {
-    background: $green;
+    background: $blue;
     color: #fff;
     text-shadow: 0 0 1px rgba(0,0,0,.7);
 }
@@ -219,15 +219,25 @@
 
     .enp-label {
         @include label;
+        &__sm {
+            font-size: 0.85rem;
+        }
+        &.enp-quiz-winlose__label {
+            padding: 1rem 0 0 0;
+        }
     }
 
     .enp-legend {
         @include legend;
+        padding-top: 0;
     }
 
     .enp-input {
         @include input;
-
+        &__sm {
+            padding: 5px;
+            margin-bottom: 5px;
+        }
         &.enp-input--has-description {
             margin-bottom: 0.2rem;
         }
@@ -264,9 +274,8 @@
 
     .enp-embed-code {
         @include textarea;
-        width: 100%;
         padding: 1.6rem;
-        font-size: 0.9rem;
+        font-size: 0.7rem;
         font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
 
         @include media(max-medium) {

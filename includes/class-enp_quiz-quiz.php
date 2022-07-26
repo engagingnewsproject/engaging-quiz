@@ -1,28 +1,30 @@
 <?php
 /**
-* Create a quiz object
-* @param $quiz_id = the id of the quiz you want to get
-* @return quiz object
-*/
+ * Create a quiz object
+ * @param $quiz_id = the id of the quiz you want to get
+ * @return quiz object
+ * $quiz_title_test,
+ */
 class Enp_quiz_Quiz {
     public  $quiz_id,
-            $quiz_title,
-            $quiz_status,
-            $quiz_finish_message,
-            $quiz_owner,
-            $quiz_created_by,
-            $quiz_created_at,
-            $quiz_updated_by,
-            $quiz_updated_at,
-            $questions,
-            $quiz_options,
-            $quiz_views,
-            $quiz_starts,
-            $quiz_finishes,
-            $quiz_score_average,
-            $quiz_time_spent,
-            $quiz_time_spent_average,
-            $quiz_is_deleted;
+        $quiz_title,
+        $quiz_feedback,
+        $quiz_status,
+        $quiz_finish_message,
+        $quiz_owner,
+        $quiz_created_by,
+        $quiz_created_at,
+        $quiz_updated_by,
+        $quiz_updated_at,
+        $questions,
+        $quiz_options,
+        $quiz_views,
+        $quiz_starts,
+        $quiz_finishes,
+        $quiz_score_average,
+        $quiz_time_spent,
+        $quiz_time_spent_average,
+        $quiz_is_deleted;
 
     protected static $quiz;
 
@@ -32,11 +34,11 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    *   Build quiz object by id
-    *
-    *   @param  $quiz_id = quiz_id that you want to select
-    *   @return quiz object, false if not found
-    **/
+     *   Build quiz object by id
+     *
+     *   @param  $quiz_id = quiz_id that you want to select
+     *   @return quiz object, false if not found
+     **/
     public function get_quiz_by_id($quiz_id) {
         self::$quiz = $this->select_quiz_by_id($quiz_id);
         if(self::$quiz !== false) {
@@ -46,11 +48,11 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    *   For using PDO to select one quiz row
-    *
-    *   @param  $quiz_id = quiz_id that you want to select
-    *   @return row from database table if found, false if not found
-    **/
+     *   For using PDO to select one quiz row
+     *
+     *   @param  $quiz_id = quiz_id that you want to select
+     *   @return row from database table if found, false if not found
+     **/
     public function select_quiz_by_id($quiz_id) {
         $pdo = new enp_quiz_Db();
         // Do a select query to see if we get a returned row
@@ -67,12 +69,14 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Hook up all the values for the object
-    * @param $quiz = row from the quiz_table
-    */
+     * Hook up all the values for the object
+     * @param $quiz = row from the quiz_table
+     * $this->quiz_title_test = $this->set_quiz_title_test();
+     */
     protected function set_quiz_object_values() {
         $this->quiz_id = $this->set_quiz_id();
         $this->quiz_title = $this->set_quiz_title();
+        $this->quiz_feedback = $this->set_quiz_feedback();
         $this->quiz_status = $this->set_quiz_status();
         $this->quiz_finish_message = $this->set_quiz_finish_message();
         $this->quiz_owner = $this->set_quiz_owner();
@@ -94,9 +98,9 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Queries the quiz options table and sets more quiz object values
-    * @param $quiz_id
-    */
+     * Queries the quiz options table and sets more quiz object values
+     * @param $quiz_id
+     */
     protected function set_quiz_options() {
         $option_rows = $this->select_quiz_options();
         foreach($option_rows as $row => $option) {
@@ -113,11 +117,11 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    *   For using PDO to select one quiz row
-    *
-    *   @param  $quiz_id = quiz_id that you want to select
-    *   @return row from database table if found, false if not found
-    **/
+     *   For using PDO to select one quiz row
+     *
+     *   @param  $quiz_id = quiz_id that you want to select
+     *   @return row from database table if found, false if not found
+     **/
     protected function select_quiz_options() {
         $quiz_id = $this->quiz_id;
 
@@ -134,113 +138,134 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Set the quiz_id for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_id field from the database
-    */
+     * Set the quiz_id for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return quiz_id field from the database
+     */
     protected function set_quiz_id() {
         $quiz_id = self::$quiz['quiz_id'];
         return $quiz_id;
     }
 
     /**
-    * Set the quiz_title for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_title field from the database
-    */
+     * Set the quiz_title for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return quiz_title field from the database
+     */
     protected function set_quiz_title() {
         $quiz_title = stripslashes(self::$quiz['quiz_title']);
         return $quiz_title;
     }
 
     /**
-    * Set the quiz_status for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return 'published' or 'draft'
-    */
+     * Set the quiz_title_test for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return quiz_title_test field from the database
+     */
+    // protected function set_quiz_title_test()
+    // {
+    //  $quiz_title_test = stripslashes(self::$quiz['quiz_title_test']);
+    //  return $quiz_title_test;
+    // }
+
+    /**
+     * Set the quiz_feedback for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return quiz_feedback field from the database
+     */
+    protected function set_quiz_feedback() {
+        $quiz_feedback = stripslashes(self::$quiz['quiz_feedback']);
+        return $quiz_feedback;
+    }
+
+    /**
+     * Set the quiz_status for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return 'published' or 'draft'
+     */
     protected function set_quiz_status() {
         $quiz_status = self::$quiz['quiz_status'];
-        if($quiz_status !== 'published') {
+        if ($quiz_status !== 'published') {
             $quiz_status = 'draft';
         }
         return $quiz_status;
     }
 
     /**
-    * Set the quiz_finish_message for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_finish_message field from the database
-    */
+     * Set the quiz_finish_message for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return quiz_finish_message field from the database
+     */
     protected function set_quiz_finish_message() {
         $quiz_finish_message = stripslashes(self::$quiz['quiz_finish_message']);
         return $quiz_finish_message;
     }
 
     /**
-    * Set the quiz_owner for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return quiz_owner field from the database
-    */
+     * Set the quiz_owner for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return quiz_owner field from the database
+     */
     protected function set_quiz_owner() {
         $quiz_owner = self::$quiz['quiz_owner'];
         return $quiz_owner;
     }
 
     /**
-    * Set the created_by for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return created_by field from the database
-    */
+     * Set the created_by for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return created_by field from the database
+     */
     protected function set_quiz_created_by() {
         $created_by = self::$quiz['quiz_created_by'];
         return $created_by;
     }
 
     /**
-    * Set the created_at for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return created_at field from the database
-    */
+     * Set the created_at for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return created_at field from the database
+     */
     protected function set_quiz_created_at() {
         $created_at = self::$quiz['quiz_created_at'];
         return $created_at;
     }
 
     /**
-    * Set the updated_by for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return updated_by field from the database
-    */
+     * Set the updated_by for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return updated_by field from the database
+     */
     protected function set_quiz_updated_by() {
         $updated_by = self::$quiz['quiz_updated_by'];
         return $updated_by;
     }
 
     /**
-    * Set the updated_at for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return updated_at field from the database
-    */
+     * Set the updated_at for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return updated_at field from the database
+     */
     protected function set_quiz_updated_at() {
         $updated_at = self::$quiz['quiz_updated_at'];
         return $updated_at;
     }
 
     /**
-    * Set the is_deleted for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return is_deleted field from the database
-    */
+     * Set the is_deleted for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return is_deleted field from the database
+     */
     protected function set_quiz_is_deleted() {
         $is_deleted = self::$quiz['quiz_is_deleted'];
         return $is_deleted;
     }
 
     /**
-    * Set the questions for our Quiz Object
-    * @param $quiz_id
-    * @return questions array of ids array(3,4,5) from the database
-    */
+     * Set the questions for our Quiz Object
+     * @param $quiz_id
+     * @return questions array of ids array(3,4,5) from the database
+     */
     protected function set_questions() {
         $quiz_id = self::$quiz['quiz_id'];
 
@@ -264,170 +289,191 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Set the views for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return views field from the database
-    */
+     * Set the views for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return views field from the database
+     */
     protected function set_quiz_views() {
         $views = self::$quiz['quiz_views'];
         return $views;
     }
 
     /**
-    * Set the starts for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return starts field from the database
-    */
+     * Set the starts for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return starts field from the database
+     */
     protected function set_quiz_starts() {
         $starts = self::$quiz['quiz_starts'];
         return $starts;
     }
 
     /**
-    * Set the finishes for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return finishes field from the database
-    */
+     * Set the finishes for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return finishes field from the database
+     */
     protected function set_quiz_finishes() {
         $finishes = self::$quiz['quiz_finishes'];
         return $finishes;
     }
 
     /**
-    * Set the score_average for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return score_average field from the database
-    */
+     * Set the score_average for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return score_average field from the database
+     */
     protected function set_quiz_score_average() {
         $score_average = self::$quiz['quiz_score_average'];
         return $score_average;
     }
 
     /**
-    * Set the time_spent for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return time_spent field from the database
-    */
+     * Set the time_spent for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return time_spent field from the database
+     */
     protected function set_quiz_time_spent() {
         $time_spent = self::$quiz['quiz_time_spent'];
         return $time_spent;
     }
 
     /**
-    * Set the time_spent_average for our Quiz Object
-    * @param $quiz = quiz row from quiz database table
-    * @return time_spent_average field from the database
-    */
+     * Set the time_spent_average for our Quiz Object
+     * @param $quiz = quiz row from quiz database table
+     * @return time_spent_average field from the database
+     */
     protected function set_quiz_time_spent_average() {
         $time_spent_average = self::$quiz['quiz_time_spent_average'];
         return $time_spent_average;
     }
 
     /**
-    * Get the quiz_id for our Quiz Object
-    * @param $quiz = quiz object
-    * @return quiz_id from the object
-    */
+     * Get the quiz_id for our Quiz Object
+     * @param $quiz = quiz object
+     * @return quiz_id from the object
+     */
     public function get_quiz_id() {
         $quiz_id = $this->quiz_id;
         return $quiz_id;
     }
 
     /**
-    * Get the quiz_title for our Quiz Object
-    * @param $quiz = quiz object
-    * @return quiz_title from the object
-    */
+     * Get the quiz_title for our Quiz Object
+     * @param $quiz = quiz object
+     * @return quiz_title from the object
+     */
     public function get_quiz_title() {
         $quiz_title = $this->quiz_title;
         return $quiz_title;
     }
 
     /**
-    * Get the quiz_status for our Quiz Object
-    * @param $quiz = quiz object
-    * @return 'published' or 'draft'
-    */
+     * Get the quiz_title_test for our Quiz Object
+     * @param $quiz = quiz object
+     * @return quiz_title_test from the object
+     */
+    // public function get_quiz_title_test()
+    // {
+    //  $quiz_title_test = $this->quiz_title_test;
+    //  return $quiz_title_test;
+    // }
+
+    /**
+     * Get the quiz_feedback for our Quiz Object
+     * @param $quiz = quiz object
+     * @return quiz_feedback from the object
+     */
+    public function get_quiz_feedback() {
+        $quiz_feedback = $this->quiz_feedback;
+        return $quiz_feedback;
+    }
+
+    /**
+     * Get the quiz_status for our Quiz Object
+     * @param $quiz = quiz object
+     * @return 'published' or 'draft'
+     */
     public function get_quiz_status() {
         $quiz_status = $this->quiz_status;
         return $quiz_status;
     }
 
     /**
-    * Get the quiz_finish_message for our Quiz Object
-    * @param $quiz = quiz object
-    * @return quiz_finish_message from the quiz object
-    */
+     * Get the quiz_finish_message for our Quiz Object
+     * @param $quiz = quiz object
+     * @return quiz_finish_message from the quiz object
+     */
     public function get_quiz_finish_message() {
         $quiz_finish_message = $this->quiz_finish_message;
         return $quiz_finish_message;
     }
 
     /**
-    * Get the quiz_owner for our Quiz Object
-    * @param $quiz = quiz object
-    * @return user_id
-    */
+     * Get the quiz_owner for our Quiz Object
+     * @param $quiz = quiz object
+     * @return user_id
+     */
     public function get_quiz_owner() {
         $quiz_owner = $this->quiz_owner;
         return $quiz_owner;
     }
 
     /**
-    * Get the quiz_created_by for our Quiz Object
-    * @param $quiz = quiz object
-    * @return user_id
-    */
+     * Get the quiz_created_by for our Quiz Object
+     * @param $quiz = quiz object
+     * @return user_id
+     */
     public function get_quiz_created_by() {
         $quiz_created_by = $this->quiz_created_by;
         return $quiz_created_by;
     }
 
     /**
-    * Get the quiz_created_at for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz_created_at for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_created_at() {
         $quiz_created_at = $this->quiz_created_at;
         return $quiz_created_at;
     }
 
     /**
-    * Get the quiz_updated_by for our Quiz Object
-    * @param $quiz = quiz object
-    * @return user_id
-    */
+     * Get the quiz_updated_by for our Quiz Object
+     * @param $quiz = quiz object
+     * @return user_id
+     */
     public function get_quiz_updated_by() {
         $quiz_updated_by = $this->quiz_updated_by;
         return $quiz_updated_by;
     }
 
     /**
-    * Get the quiz_updated_at for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz_updated_at for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_updated_at() {
         $quiz_updated_at = $this->quiz_updated_at;
         return $quiz_updated_at;
     }
 
     /**
-    * Get the quiz_is_deleted for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz_is_deleted for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_is_deleted() {
         $quiz_is_deleted = $this->quiz_is_deleted;
         return $quiz_is_deleted;
     }
 
     /**
-    * Get a quiz option from our Quiz Object
-    * @param $key (string) key from the $this->quiz_option array
-    * @return (Mixed) $value of the item in the array if found, null if not found
-    */
+     * Get a quiz option from our Quiz Object
+     * @param $key (string) key from the $this->quiz_option array
+     * @return (Mixed) $value of the item in the array if found, null if not found
+     */
     public function get_quiz_option($key) {
         $value = null;
         if(is_array($this->quiz_options) && array_key_exists($key, $this->quiz_options)) {
@@ -437,177 +483,266 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Get the quiz_title_display for our Quiz Object
-    * @param $quiz = quiz object
-    * @return (string) 'show' or 'hide'
-    */
+     * Get the quiz_title_display for our Quiz Object
+     * @param $quiz = quiz object
+     * @return (string) 'show' or 'hide'
+     */
     public function get_quiz_title_display() {
         return $this->get_quiz_option('quiz_title_display');
     }
 
+    /**
+     * Get the quiz_title_test_display for our Quiz Object
+     * @param $quiz = quiz object
+     * @return (string) 'show' or 'hide'
+     */
+    // public function get_quiz_title_test_display()
+    // {
+    //  return $this->get_quiz_option('quiz_title_test_display');
+    // }
+
 
     /**
-    * Get the quiz_width for our Quiz Object
-    * @param $quiz = quiz object
-    * @return (string) %, px, em, or rem value (100%, 800px, 20rem, etc)
-    */
+     * Get the quiz_width for our Quiz Object
+     * @param $quiz = quiz object
+     * @return (string) %, px, em, or rem value (100%, 800px, 20rem, etc)
+     */
     public function get_quiz_width() {
         return $this->get_quiz_option('quiz_width');
     }
 
     /**
-    * Get the quiz_bg_color for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
+     * Get the quiz_bg_color for our Quiz Object
+     * @param $quiz = quiz object
+     * @return #hex code
+     */
     public function get_quiz_bg_color() {
         return $this->get_quiz_option('quiz_bg_color');
     }
 
     /**
-    * Get the quiz_text_color for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
+     * Get the quiz_text_color for our Quiz Object
+     * @param $quiz = quiz object
+     * @return #hex code
+     */
     public function get_quiz_text_color() {
         return $this->get_quiz_option('quiz_text_color');
     }
 
     /**
-    * Get the quiz_border_color for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
+     * Get the quiz_border_color for our Quiz Object
+     * @param $quiz = quiz object
+     * @return #hex code
+     */
     public function get_quiz_border_color() {
         return $this->get_quiz_option('quiz_border_color');
     }
 
     /**
-    * Get the quiz_button_color for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
+     * Get the quiz_button_color for our Quiz Object
+     * @param $quiz = quiz object
+     * @return #hex code
+     */
     public function get_quiz_button_color() {
         return $this->get_quiz_option('quiz_button_color');
     }
 
     /**
-    * Get the quiz_correct_color for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
+     * Get the quiz_correct_color for our Quiz Object
+     * @param $quiz = quiz object
+     * @return #hex code
+     */
     public function get_quiz_correct_color() {
         return $this->get_quiz_option('quiz_correct_color');
     }
 
     /**
-    * Get the quiz_incorrect_color for our Quiz Object
-    * @param $quiz = quiz object
-    * @return #hex code
-    */
+     * Get the quiz_incorrect_color for our Quiz Object
+     * @param $quiz = quiz object
+     * @return #hex code
+     */
     public function get_quiz_incorrect_color() {
         return $this->get_quiz_option('quiz_incorrect_color');
     }
 
     /**
-    * Get the quiz_custom_css for our Quiz Object
-    * @param $quiz = quiz object
-    * @return saved css
-    */
+     * Get the quiz_custom_css for our Quiz Object
+     * @param $quiz = quiz object
+     * @return saved css
+     */
     public function get_quiz_custom_css() {
         return $this->get_quiz_option('quiz_custom_css');
     }
 
     /**
-    * Get the quiz_custom_css_minified for our Quiz Object
-    * @param $quiz = quiz object
-    * @return saved css
-    */
+     * Get the quiz_custom_css_minified for our Quiz Object
+     * @param $quiz = quiz object
+     * @return saved css
+     */
     public function get_quiz_custom_css_minified() {
         return $this->get_quiz_option('quiz_custom_css_minified');
     }
 
     /**
-    * Get the quiz_custom_css_minified for our Quiz Object
-    * @param $quiz = quiz object
-    * @return saved css
-    */
+     * Get the quiz_custom_css_minified for our Quiz Object
+     * @param $quiz = quiz object
+     * @return saved css
+     */
     public function get_quiz_mc_options_order() {
         return $this->get_quiz_option('quiz_mc_options_order');
     }
 
     /**
-    * Get the facebook_title_start for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the facebook_title_start for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_facebook_title() {
         return $this->get_quiz_option('facebook_title');
     }
 
     /**
-    * Get the facebook_description_start for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the facebook_description_start for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_facebook_description() {
         return $this->get_quiz_option('facebook_description');
     }
 
     /**
-    * Get the facebook_quote_end for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the quiz_end_fail_title for our Quiz Object
+     *
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_fail_title() {
+        return $this->get_quiz_option('quiz_end_fail_title');
+    }
+
+    /**
+     * Get the quiz_end_fail_description for our Quiz Object
+     * 
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_fail_description() {
+        return $this->get_quiz_option('quiz_end_fail_description');
+    }
+
+    /**
+     * Get the quiz_end_average_title for our Quiz Object
+     *
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_average_title() {
+        return $this->get_quiz_option('quiz_end_average_title');
+    }
+
+    /**
+     * Get the quiz_end_average_description for our Quiz Object
+     * 
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_average_description() {
+        return $this->get_quiz_option('quiz_end_average_description');
+    }
+
+    /**
+     * Get the quiz_end_good_title for our Quiz Object
+     *
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_good_title() {
+        return $this->get_quiz_option('quiz_end_good_title');
+    }
+
+    /**
+     * Get the quiz_end_good_description for our Quiz Object
+     * 
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_good_description() {
+        return $this->get_quiz_option('quiz_end_good_description');
+    }
+
+    /**
+     * Get the quiz_end_perfect_title for our Quiz Object
+     *
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_perfect_title() {
+        return $this->get_quiz_option('quiz_end_perfect_title');
+    }
+
+    /**
+     * Get the quiz_end_perfect_description for our Quiz Object
+     * 
+     * @param $quiz = quiz object
+     * @return string
+     */
+    public function get_quiz_end_perfect_description() {
+        return $this->get_quiz_option('quiz_end_perfect_description');
+    }
+    /**
+     * Get the facebook_quote_end for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_facebook_quote_end() {
         return $this->get_quiz_option('facebook_quote_end');
     }
 
 
     /**
-    * Get the email_subject_start for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the email_subject_start for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_email_subject() {
         return $this->get_quiz_option('email_subject');
     }
 
     /**
-    * Get the facebook_description_start for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the facebook_description_start for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_email_body_start() {
         return $this->get_quiz_option('email_body_start');
     }
 
     /**
-    * Get the email_body_end for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the email_body_end for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_email_body_end() {
         return $this->get_quiz_option('email_body_end');
     }
 
     /**
-    * Get the tweet_end for our Quiz Object
-    * @param $quiz = quiz object
-    * @return string
-    */
+     * Get the tweet_end for our Quiz Object
+     * @param $quiz = quiz object
+     * @return string
+     */
     public function get_tweet_end() {
         $tweet = $this->get_quiz_option('tweet_end');
         return $tweet;
     }
 
     /**
-    * Utility function for encoding content
-    * @param $key (string) of Object var ('tweet_end', 'email_body_start', etc)
-    * @param $encoding (string) 'rawurl','url','htmlspecialchars'
-    * @param $mustache BOOLEAN keep mustache variables decoded
-    * @return encoded string
-    */
+     * Utility function for encoding content
+     * @param $key (string) of Object var ('tweet_end', 'email_body_start', etc)
+     * @param $encoding (string) 'rawurl','url','htmlspecialchars'
+     * @param $mustache BOOLEAN keep mustache variables decoded
+     * @return encoded string
+     */
     public function get_encoded($key, $encoding = 'url', $mustache = false) {
         $getter = 'get_'.$key;
         $value = $this->$getter();
@@ -615,10 +750,10 @@ class Enp_quiz_Quiz {
         return $value;
     }
     /**
-    * Get the questions for our Quiz Object
-    * @param $quiz = quiz object
-    * @return array of question_id's as integers
-    */
+     * Get the questions for our Quiz Object
+     * @param $quiz = quiz object
+     * @return array of question_id's as integers
+     */
     public function get_questions() {
         $questions = $this->questions;
         return $questions;
@@ -626,49 +761,49 @@ class Enp_quiz_Quiz {
 
 
     /**
-    * Get the quiz views for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz views for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_views() {
         $quiz_views = $this->quiz_views;
         return $quiz_views;
     }
 
     /**
-    * Get the quiz starts for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz starts for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_starts() {
         $quiz_starts = $this->quiz_starts;
         return $quiz_starts;
     }
 
     /**
-    * Get the quiz finishes for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz finishes for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_finishes() {
         $quiz_finishes = $this->quiz_finishes;
         return $quiz_finishes;
     }
 
     /**
-    * Get the quiz score_average for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz score_average for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_score_average() {
         $quiz_score_average = $this->quiz_score_average;
         return $quiz_score_average;
     }
 
     /**
-    * Utility function to return count of all questions
-    * @return (int) number of questions in the quiz
-    */
+     * Utility function to return count of all questions
+     * @return (int) number of questions in the quiz
+     */
     public function get_total_question_count() {
         $questions = $this->get_questions();
         return count($questions);
@@ -676,30 +811,30 @@ class Enp_quiz_Quiz {
 
 
     /**
-    * Get the quiz time_spent for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz time_spent for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_time_spent() {
         $quiz_time_spent = $this->quiz_time_spent;
         return $quiz_time_spent;
     }
 
     /**
-    * Get the quiz time_spent_average for our Quiz Object
-    * @param $quiz = quiz object
-    * @return Date formatted Y-m-d H:i:s
-    */
+     * Get the quiz time_spent_average for our Quiz Object
+     * @param $quiz = quiz object
+     * @return Date formatted Y-m-d H:i:s
+     */
     public function get_quiz_time_spent_average() {
         $quiz_time_spent_average = $this->quiz_time_spent_average;
         return $quiz_time_spent_average;
     }
 
     /**
-    * Get the individual score data on each take of this quiz
-    * @param $quiz = quiz object
-    * @return array of all the scores
-    */
+     * Get the individual score data on each take of this quiz
+     * @param $quiz = quiz object
+     * @return array of all the scores
+     */
     public function get_quiz_scores() {
         $pdo = new enp_quiz_Db();
         // Do a select query to see if we get a returned row
@@ -715,7 +850,7 @@ class Enp_quiz_Quiz {
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $quiz_scores = array();
-        foreach($scores as $score) {
+        foreach ($scores as $score) {
             $quiz_scores[] = (int) round($score['quiz_score'] * 100);
         }
 
@@ -724,9 +859,9 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Outputs an array that returns the count of each possible score
-    * @return array($score => $how_many_people_got_this_score, 100'=>'12', '50'=>12, '0'=>4);
-    */
+     * Outputs an array that returns the count of each possible score
+     * @return array($score => $how_many_people_got_this_score, 100'=>'12', '50'=>12, '0'=>4);
+     */
     public function get_quiz_scores_group_count() {
         $all_quiz_scores = $this->get_quiz_scores();
         $all_quiz_scores = array_count_values($all_quiz_scores);
@@ -735,13 +870,13 @@ class Enp_quiz_Quiz {
         $default_scores = array();
         $total_questions = $this->get_total_question_count();
         // return 0 if there are no questions
-        if($total_questions === 0) {
+        if ($total_questions === 0) {
             return $all_quiz_scores;
         }
 
         $i = 0;
-        while($i <= $total_questions) {
-            $key = (int) round($i/$total_questions * 100);
+        while ($i <= $total_questions) {
+            $key = (int) round($i / $total_questions * 100);
             $default_scores[$key] = 0;
             $i++;
         }
@@ -756,15 +891,15 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Useful for line charts and tables of quiz score data
-    * @return array('quiz_scores'=>array(scores grouped by integer), 'quiz_scores_labels'=>array(score labels))
-    */
+     * Useful for line charts and tables of quiz score data
+     * @return array('quiz_scores'=>array(scores grouped by integer), 'quiz_scores_labels'=>array(score labels))
+     */
     public function get_quiz_score_chart_data() {
         $all_quiz_scores = $this->get_quiz_scores_group_count();
         $quiz_scores_labels = array();
         $quiz_scores = array();
-        foreach($all_quiz_scores as $key => $val) {
-            $quiz_scores_labels[] = $key.'%';
+        foreach ($all_quiz_scores as $key => $val) {
+            $quiz_scores_labels[] = $key . '%';
             $quiz_scores[] = $val;
         }
 
@@ -777,15 +912,15 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Get the Quiz Take URL
-    */
+     * Get the Quiz Take URL
+     */
     public function get_quiz_url() {
         return ENP_QUIZ_URL.$this->get_quiz_id();
     }
 
     /**
-    * Create an entire quiz json object with all question and mc option data
-    */
+     * Create an entire quiz json object with all question and mc option data
+     */
     public function get_quiz_json() {
         $quiz = $this->get_take_quiz_array();
         return json_encode($quiz);
@@ -801,10 +936,10 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * If you ever need the entirely built quiz at once with all questions
-    * and all MC Option/Slider data
-    * @return array of quiz and questions
-    */
+     * If you ever need the entirely built quiz at once with all questions
+     * and all MC Option/Slider data
+     * @return array of quiz and questions
+     */
     public function get_quiz_with_full_questions_array() {
         $quiz = $this->get_take_quiz_array();
         $question_ids = $this->get_questions();
@@ -827,12 +962,12 @@ class Enp_quiz_Quiz {
 
 
     /**
-    * Get the value we should be saving on a quiz
-    * get posted if present, if not, get object. This is so we give them their
-    * current entry if we don't *actually* save yet.
-    * @param $string = what you want to get ('quiz_title', 'quiz_status', whatever)
-    * @return $value
-    */
+     * Get the value we should be saving on a quiz
+     * get posted if present, if not, get object. This is so we give them their
+     * current entry if we don't *actually* save yet.
+     * @param $string = what you want to get ('quiz_title', 'quiz_status', whatever)
+     * @return $value
+     */
     public function get_value($string) {
         $value = '';
         if(isset($_POST['enp_quiz'])) {
@@ -855,14 +990,14 @@ class Enp_quiz_Quiz {
     }
 
     /**
-    * Encode and replace {{mustache}} template vars for share text
-    *
-    * @param $content (string) the content you want encoded
-    * @param $encoding (mixed - string or boolean).
-    *		 false = no encoding. rawurl = rawurlencode(). url = urlencode(). htmlspecialchars = htmlspecialchars();
-    * @param $mustache (BOOLEAN) Should we search the string to replace {{mustache}} strings?
-    * @return STRING encoded and {{mustache}} replaced $content
-    */
+     * Encode and replace {{mustache}} template vars for share text
+     *
+     * @param $content (string) the content you want encoded
+     * @param $encoding (mixed - string or boolean).
+    *        false = no encoding. rawurl = rawurlencode(). url = urlencode(). htmlspecialchars = htmlspecialchars();
+     * @param $mustache (BOOLEAN) Should we search the string to replace {{mustache}} strings?
+     * @return STRING encoded and {{mustache}} replaced $content
+     */
     public function encode_content($content = '', $encoding = 'url', $mustache = false) {
         if($encoding === 'url') {
             $content = urlencode($content);
@@ -882,12 +1017,12 @@ class Enp_quiz_Quiz {
 
 
     /**
-    * If a string is URL encoded and you need to make it turn back into
-    * {{var}}. Right now it only replaces score_percentage, but we could upgrade * it to use regex or an array later (or the Mustache PHP implementation)
-    *
-    * @param $str (urlcoded string)
-    * @return $str with %7B%7Bscore_percentage%7D%7D turned into {{score_percentage}}
-    */
+     * If a string is URL encoded and you need to make it turn back into
+     * {{var}}. Right now it only replaces score_percentage, but we could upgrade * it to use regex or an array later (or the Mustache PHP implementation)
+     *
+     * @param $str (urlcoded string)
+     * @return $str with %7B%7Bscore_percentage%7D%7D turned into {{score_percentage}}
+     */
     public function prepare_encoded_mustache_string($str) {
         $str = str_replace('%7B%7Bscore_percentage%7D%7D', '{{score_percentage}}', $str);
         return $str;
@@ -895,11 +1030,11 @@ class Enp_quiz_Quiz {
 
 
     /**
-    *   For using PDO to select all a site's rows
-    *
-    *   @param  $site_id = embed_quiz_site that you want to get quizzes on that site
-    *   @return rows from database table if found, false if not found
-    **/
+     *   For using PDO to select all a site's rows
+     *
+     *   @param  $site_id = embed_quiz_site that you want to get quizzes on that site
+     *   @return rows from database table if found, false if not found
+     **/
     protected function select_embed_quizzes() {
         $pdo = new enp_quiz_Db();
         // Do a select query to see if we get a returned row

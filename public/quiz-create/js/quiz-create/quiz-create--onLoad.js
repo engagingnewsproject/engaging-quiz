@@ -50,3 +50,21 @@ if($('.enp-message__item--error').length !== 0) {
     });
 
 }
+
+// tinymce: Prevent jQuery UI dialog from blocking focusin
+$(document).on('focusin', function(e) {
+  if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+    e.stopImmediatePropagation();
+  }
+});
+
+// get each question container
+$theQuestions = $('.enp-accordion-container');
+
+// for each question. . .
+$.each($theQuestions, function(i) {
+    // get question id's
+    obj = getQuestionID(this);
+    // init tinymce for each question
+    addTinymce( obj );
+});

@@ -5,10 +5,17 @@
         background: $really_light_gray;
         padding-top: 3rem;
         padding-bottom: 3rem;
+        @include breakpoint(large) {
+            padding-top: 0;
+        }
     }
 
     .enp-ab-create__form {
         @include container--thin;
+        @include breakpoint(large) {
+            @include container;
+            margin: unset;
+        }
     }
 
     .enp-ab-create__label {

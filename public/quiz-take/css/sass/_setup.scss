@@ -54,6 +54,9 @@ content: "";
 }
 blockquote, q {
 quotes: "" "";
+    border-left: 2px solid #ccc;
+    margin-left: 1.5rem;
+    padding-left: 1rem;
 }
 a:focus {
 outline: thin dotted;
@@ -81,6 +84,7 @@ html {
 
 html #enp-quiz {
     box-sizing: border-box;
+    border-radius: 3px;
 }
 
 body #enp-quiz {

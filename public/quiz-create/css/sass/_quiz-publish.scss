@@ -1,5 +1,11 @@
 #enp-quiz {
-	/* Removing flexbox layout temporarily
+    .enp-share-quiz__container {
+        @include breakpoint(medium) {
+            padding: 0;
+            border: none;
+        }
+    }
+    /* Removing flexbox layout temporarily
     * because it wasn't laying out correctly before content loading
     * It would snap into the correct layout after a resize or textarea highlight
     .enp-publish-page-container {
@@ -64,56 +70,48 @@
     }
     */
 
-	.enp-share-quiz__url {
-		display: block;
-		font-size: 1rem;
-		line-height: 1.4;
-		word-wrap: break-word;
-	}
-	#enp-open__btn {
-		cursor: pointer;
-	}
-	#enp-modal__background {
-		display: none;
-		background-color: $transparent_gray;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
-	}
+    .enp-share-quiz__url {
+        display: block;
+        font-size: 1rem;
+        line-height: 1.4;
+        word-wrap: break-word;
+    }
+    #enp-open__btn {
+        cursor: pointer;
+    }
+    #enp-modal__background {
+        display: none;
+        background-color: $transparent_gray;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
 
-	#enp-modal {
-		background-color: #fff;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		padding: 10px 20px;
-		border-radius: 5px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-			0 10px 10px rgba(0, 0, 0, 0.22);
-		animation-name: fadeIn;
-		animation-duration: 0.4s;
-	}
+    #enp-modal {
+        background-color: #fff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+            0 10px 10px rgba(0, 0, 0, 0.22);
+        animation-name: fadeIn;
+        animation-duration: 0.4s;
+    }
 
-	#enp-close__btn {
-		align-self: flex-end;
-	}
-
-	#enp-close__btn:hover {
-		cursor: pointer;
-		color: $darker_gray;
-	}
-
-	@include share_icons(enp-share-quiz);
-
-	.enp-share-quiz {
-		justify-content: space-around;
-		margin-bottom: 0;
-	}
+    .enp-share-quiz {
+        justify-content: space-around;
+        margin-bottom: 0;
+        .enp-icon--mail {
+            background: $blue;
+        }
+    }
 }

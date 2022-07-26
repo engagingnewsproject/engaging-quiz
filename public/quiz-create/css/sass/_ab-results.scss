@@ -109,6 +109,7 @@
 
     .enp-question-results__container {
         @include container--wide;
+        padding-top: 3rem;
     }
 
     .enp-question-results--ab {

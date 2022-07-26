@@ -201,11 +201,14 @@
     }
 
     .enp-results-questions__section {
-        @include section--alt;
+        // @include section--alt;
         padding-top: 5rem;
         padding-bottom: 3rem;
         margin-top: 5rem;
         margin-bottom: 3rem;
+        @include breakpoint(medium) {
+            @include xmargin-horizontal;
+        }
     }
 
     .enp-results-questions__container {
@@ -283,6 +286,7 @@
 
     .enp-results-question__content {
         padding: 2rem 1.2rem 1.2rem;
+        @include border-radius;
     }
 
     .enp-results-question__deep-stats {

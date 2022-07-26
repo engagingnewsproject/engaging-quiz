@@ -82,7 +82,7 @@
 
 @mixin btn--ghost {
     @include btn;
-    border: 2px solid $link;
+    border: 2px solid $blue;
     background: transparent;
     color: $link;
     box-shadow: none;

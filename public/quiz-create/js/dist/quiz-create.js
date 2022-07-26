@@ -202,7 +202,6 @@ function replaceAttributes(el, pattern, replace) {
         att = atts[i];
         newAttrVal = att.nodeValue.replace(pattern, replace);
 
-
         // if the new val and the old val match, then nothing was replaced,
         // so we can skip it
         if(newAttrVal !== att.nodeValue) {
@@ -221,6 +220,79 @@ function replaceAttributes(el, pattern, replace) {
 _.middleNumber = function(a, b) {
     return (a + b)/2;
 };
+
+// // // // // // // // // 
+// Tinymce init for "add question" button
+// // // // // // // // // 
+var currentSelector;
+function addTinymce( obj ) {
+    var currentSelector = $('#enp-question-explanation__'+obj+'');
+
+    tinymce.init({
+        selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
+        menubar: false,
+        statusbar: false,
+        toolbar: false,
+        inliine: true,
+        plugins: 'quickbars link autosave',
+        toolbar: 'bold italic link blockquote',
+        quickbars_selection_toolbar: 'bold italic link blockquote',
+        quickbars_insert_toolbar: false,
+        quickbars_image_toolbar: false,
+        link_assume_external_targets: 'http',
+        placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
+        setup: function (editor) {
+            editor.on('click', function () {
+                tinymce.activeEditor.execCommand('mceFocus');
+            });
+            editor.on('blur', function () {
+                var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
+                var tContent = currentSelector.innerHTML = tinyEditorContent;
+            });
+        }
+    });
+}
+
+// TODO: attempt to inject tinymce html
+function setTinymceContent( element, editorContent ) {
+    var html = editorContent;
+    tinymce.activeEditor.setContent(html, {format: 'raw'});
+    var data = $('#enp-quiz-create-form').serializeArray();
+}
+
+$('.enp-quiz-submit').click(function(e){
+tinymce.triggerSave();
+    $theQuestions = $('.enp-accordion-container');
+    $.each($theQuestions, function(i) {
+        obj = getQuestionID(this);
+        $(this).find('#enp-question-explanation__'+obj+'');
+        var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
+        var element = $(this);
+        setTinymceContent( element, editorContent ) 
+    });
+});
+
+function injectTinymce( obj ) {
+$('.enp-question-content').each(function() {
+    var accordion = $(this).find('.enp-answer-explanation__textarea').val();
+    });
+}
+
+function addAnswerExplanationEditor( response ) {
+    var $question,
+        $question_id,
+
+    // get the questions
+    $question = response.question;
+
+    // loop through all questions
+    $( $question ).each(function( $question_id ) {
+        // get the question_id of each
+        $question_id = this.question_id;
+        // click on any of the triggers go ahead and add the tinymce
+            addTinymce( $question_id );
+    });
+}
 
 /*
 * Set-up Underscore Templates
@@ -292,6 +364,24 @@ if($('.enp-message__item--error').length !== 0) {
     });
 
 }
+
+// tinymce: Prevent jQuery UI dialog from blocking focusin
+$(document).on('focusin', function(e) {
+  if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+    e.stopImmediatePropagation();
+  }
+});
+
+// get each question container
+$theQuestions = $('.enp-accordion-container');
+
+// for each question. . .
+$.each($theQuestions, function(i) {
+    // get question id's
+    obj = getQuestionID(this);
+    // init tinymce for each question
+    addTinymce( obj );
+});
 
 /*
 * General UX interactions to make a better user experience
@@ -1120,8 +1210,11 @@ function setUpSliderTemplate(sliderOptionsContainer) {
     enp_accordion__setup(accordion);
 }
 
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
+
+    // tinymce.triggerSave();
 
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
@@ -1168,16 +1261,18 @@ function saveQuiz(userAction) {
 
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
+
     // create formData object
     var fd = new FormData(quizForm);
     // set our submit button value
     fd.append('enp-quiz-submit', userAction);
     // append our action for wordpress AJAX call
     fd.append('action', 'save_quiz');
-
+    
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
+    tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
 
@@ -1190,6 +1285,7 @@ function saveQuiz(userAction) {
     } )
     // success
     .done( quizSaveSuccess )
+
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -1203,7 +1299,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    //console.log(jqXHR.responseJSON);
+    // console.log(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();
@@ -1232,6 +1328,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             new_mcOption = getNewMCOption(new_questionID, response.question);
             new_sliderID = newQuestionResponse.slider.slider_id;
             addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
+            addAnswerExplanationEditor( response );
         } else {
             unset_tempAddQuestion();
         }
@@ -1315,6 +1412,7 @@ function setNewQuiz(response) {
     var pageTitle = $('.enp-quiz-title__textarea').val();
     pageTitle = 'Quiz: '+pageTitle;
     var urlPath = quizCreate.quiz_create_url + response.quiz_id;
+    addAnswerExplanationEditor( response );
     window.history.pushState({"html":html,"pageTitle":pageTitle},"", urlPath);
 }
 
@@ -1324,6 +1422,7 @@ function setTemp(userAction) {
     if(userAction.indexOf('add-question') > -1) {
         // match the number for the ID
         temp_addQuestion();
+        // addAnswerExplanationEditor( response );
     }
     else if(userAction.indexOf('add-mc-option__question') > -1) {
         pattern = /add-mc-option__question-/g;

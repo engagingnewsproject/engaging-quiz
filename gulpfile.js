@@ -2,8 +2,9 @@ var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
-var crass = require('gulp-crass');
+var cssnano = require('gulp-cssnano');
 var uglify = require('gulp-uglify');
 var rename = require("gulp-rename");
 var concat = require("gulp-concat");
@@ -16,7 +17,7 @@ var reload  = browserSync.reload;
 gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashboardJS', 'quizResultsJS', 'quizTakeJS', 'quizTakeIframeParentJS', 'quizTakeUtilityJS'], function() {
 
     browserSync({
-        proxy: "localhost:10044"
+        proxy: "localhost:10044",
     });
 
     // quiz create
@@ -42,10 +43,11 @@ gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashb
 
     // Watch for file changes
     onChangeReload = ["public/quiz-create/css/enp_quiz-create.min.css",
-                    "public/quiz-create/*.php",
+                    "public/quiz-create/templates/*.php",
                     "public/quiz-create/includes/*.php",
                     "public/quiz-create/js/dist/quiz-create.min.js",
                     "public/quiz-take/css/enp_quiz-take.min.css",
+                    "public/quiz-create/templates/partials/*.php",
                     "public/quiz-take/*.php",
                     "public/quiz-take/includes/*.php",
                     "public/quiz-take/js/dist/quiz-take.min.js"
@@ -239,24 +241,27 @@ function compressJS(path) {
 
 function processSASS(path) {
     return gulp.src(path+'sass/*.{scss,sass}')
-      .pipe(plumber())
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    // Converts Sass into CSS with Gulp Sass
+    .pipe(sass({
+    errLogToConsole: true
+    }))
+    
+    // adds prefixes to whatever needs to get done
+    .pipe(autoprefixer())
+    
+    // minify the CSS
+    .pipe(cssnano())
+    
+    // rename to add .min
+    .pipe(rename({
+    suffix: '.min'
+    }))
+    .pipe(sourcemaps.write('.'))
 
-      // Converts Sass into CSS with Gulp Sass
-      .pipe(sass({
-        errLogToConsole: true
-      }))
-      // adds prefixes to whatever needs to get done
-      .pipe(autoprefixer())
-
-      // minify the CSS
-      .pipe(crass({pretty:false}))
-
-      // rename to add .min
-      .pipe(rename({
-        suffix: '.min'
-      }))
-      // Outputs CSS files in the css folder
-      .pipe(gulp.dest(path));
+    // Outputs CSS files in the css folder
+    .pipe(gulp.dest(path));
 }
 
 // Creating a default task

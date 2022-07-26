@@ -202,7 +202,6 @@ function replaceAttributes(el, pattern, replace) {
         att = atts[i];
         newAttrVal = att.nodeValue.replace(pattern, replace);
 
-
         // if the new val and the old val match, then nothing was replaced,
         // so we can skip it
         if(newAttrVal !== att.nodeValue) {
@@ -221,3 +220,76 @@ function replaceAttributes(el, pattern, replace) {
 _.middleNumber = function(a, b) {
     return (a + b)/2;
 };
+
+// // // // // // // // // 
+// Tinymce init for "add question" button
+// // // // // // // // // 
+var currentSelector;
+function addTinymce( obj ) {
+    var currentSelector = $('#enp-question-explanation__'+obj+'');
+
+    tinymce.init({
+        selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
+        menubar: false,
+        statusbar: false,
+        toolbar: false,
+        inliine: true,
+        plugins: 'quickbars link autosave',
+        toolbar: 'bold italic link blockquote',
+        quickbars_selection_toolbar: 'bold italic link blockquote',
+        quickbars_insert_toolbar: false,
+        quickbars_image_toolbar: false,
+        link_assume_external_targets: 'http',
+        placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
+        setup: function (editor) {
+            editor.on('click', function () {
+                tinymce.activeEditor.execCommand('mceFocus');
+            });
+            editor.on('blur', function () {
+                var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
+                var tContent = currentSelector.innerHTML = tinyEditorContent;
+            });
+        }
+    });
+}
+
+// TODO: attempt to inject tinymce html
+function setTinymceContent( element, editorContent ) {
+    var html = editorContent;
+    tinymce.activeEditor.setContent(html, {format: 'raw'});
+    var data = $('#enp-quiz-create-form').serializeArray();
+}
+
+$('.enp-quiz-submit').click(function(e){
+tinymce.triggerSave();
+    $theQuestions = $('.enp-accordion-container');
+    $.each($theQuestions, function(i) {
+        obj = getQuestionID(this);
+        $(this).find('#enp-question-explanation__'+obj+'');
+        var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
+        var element = $(this);
+        setTinymceContent( element, editorContent ) 
+    });
+});
+
+function injectTinymce( obj ) {
+$('.enp-question-content').each(function() {
+    var accordion = $(this).find('.enp-answer-explanation__textarea').val();
+    });
+}
+
+function addAnswerExplanationEditor( response ) {
+    var $question,
+        $question_id,
+
+    // get the questions
+    $question = response.question;
+
+    // loop through all questions
+    $( $question ).each(function( $question_id ) {
+        // get the question_id of each
+        $question_id = this.question_id;
+        // click on any of the triggers go ahead and add the tinymce
+            addTinymce( $question_id );
+    });
+}

@@ -1,5 +1,8 @@
+
 // ajax submission
 $(document).on('click', '.enp-quiz-submit', function(e) {
+
+    // tinymce.triggerSave();
 
     if(!$(this).hasClass('enp-btn--next-step')) {
         e.preventDefault();
@@ -46,16 +49,18 @@ function saveQuiz(userAction) {
 
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
+
     // create formData object
     var fd = new FormData(quizForm);
     // set our submit button value
     fd.append('enp-quiz-submit', userAction);
     // append our action for wordpress AJAX call
     fd.append('action', 'save_quiz');
-
+    
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
+    tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
 
@@ -68,6 +73,7 @@ function saveQuiz(userAction) {
     } )
     // success
     .done( quizSaveSuccess )
+
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
@@ -81,7 +87,7 @@ function saveQuiz(userAction) {
 }
 
 function quizSaveSuccess( response, textStatus, jqXHR ) {
-    //console.log(jqXHR.responseJSON);
+    // console.log(jqXHR.responseJSON);
     if(jqXHR.responseJSON === undefined) {
         // error :(
         unsetWait();
@@ -110,6 +116,7 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
             new_mcOption = getNewMCOption(new_questionID, response.question);
             new_sliderID = newQuestionResponse.slider.slider_id;
             addQuestion(new_questionID, new_mcOption.mc_option_id, new_sliderID);
+            addAnswerExplanationEditor( response );
         } else {
             unset_tempAddQuestion();
         }
@@ -193,6 +200,7 @@ function setNewQuiz(response) {
     var pageTitle = $('.enp-quiz-title__textarea').val();
     pageTitle = 'Quiz: '+pageTitle;
     var urlPath = quizCreate.quiz_create_url + response.quiz_id;
+    addAnswerExplanationEditor( response );
     window.history.pushState({"html":html,"pageTitle":pageTitle},"", urlPath);
 }
 
@@ -202,6 +210,7 @@ function setTemp(userAction) {
     if(userAction.indexOf('add-question') > -1) {
         // match the number for the ID
         temp_addQuestion();
+        // addAnswerExplanationEditor( response );
     }
     else if(userAction.indexOf('add-mc-option__question') > -1) {
         pattern = /add-mc-option__question-/g;
