@@ -64,7 +64,7 @@ class Enp_quiz_Embed_site_type {
         // there *should* only be one since embed_syte_type is a unique column
         $sql = "SELECT * from ".$pdo->embed_site_type_table." WHERE
                 embed_site_type_slug = :embed_site_type_slug";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $embed_site_row = $stmt->fetch();
         // return the found row
         return $embed_site_row;
@@ -88,7 +88,7 @@ class Enp_quiz_Embed_site_type {
         $sql = "SELECT * from ".$pdo->embed_site_type_table." WHERE
                 embed_site_type_id = :embed_site_type_id
                 LIMIT 1";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $embed_site_row = $stmt->fetch();
         // return the found quiz row
         return $embed_site_row;

@@ -75,7 +75,7 @@ class Enp_quiz_Question {
         $sql          = 'SELECT * from ' . $pdo->question_table . ' WHERE
                 question_id = :question_id
                 AND question_is_deleted = 0';
-        $stmt         = $pdo->query( $sql, $params );
+        $stmt         = $pdo->runQuery( $sql, $params );
         $question_row = $stmt->fetch();
         // return the found question row
         return $question_row;
@@ -276,7 +276,7 @@ class Enp_quiz_Question {
                 question_id = :question_id
                 AND mc_option_is_deleted = 0
                 ORDER BY mc_option_order ASC';
-        $stmt           = $pdo->query( $sql, $params );
+        $stmt           = $pdo->runQuery( $sql, $params );
         $mc_option_rows = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
         $mc_options = array();
@@ -312,7 +312,7 @@ class Enp_quiz_Question {
         $sql       = 'SELECT slider_id from ' . $pdo->question_slider_table . ' WHERE
                 question_id = :question_id
                 AND slider_is_deleted = 0';
-        $stmt      = $pdo->query( $sql, $params );
+        $stmt      = $pdo->runQuery( $sql, $params );
         $slider_id = $stmt->fetch();
         return $slider_id['slider_id'];
     }

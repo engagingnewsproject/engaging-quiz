@@ -54,7 +54,7 @@ class Enp_quiz_Save_quiz_option extends Enp_quiz_Save_quiz {
         $sql = "SELECT quiz_option_id from ".$pdo->quiz_option_table."
                  WHERE quiz_id = :quiz_id
                    AND quiz_option_name = :quiz_option_name" ;
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $option_row = $stmt->fetch();
         return $option_row;
     }
@@ -80,7 +80,7 @@ class Enp_quiz_Save_quiz_option extends Enp_quiz_Save_quiz {
                                             :quiz_option_value
                                         )";
         // insert the quiz into the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -116,7 +116,7 @@ class Enp_quiz_Save_quiz_option extends Enp_quiz_Save_quiz {
                      AND quiz_option_name = :quiz_option_name
                 ";
 
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {

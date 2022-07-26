@@ -71,7 +71,7 @@ class Enp_quiz_Embed_quiz {
 
         $sql = "SELECT * from ".$pdo->embed_quiz_table." WHERE
                 embed_quiz_id = :embed_quiz_id";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $embed_quiz_row = $stmt->fetch();
         // return the found site row
         return $embed_quiz_row;
@@ -94,7 +94,7 @@ class Enp_quiz_Embed_quiz {
         $sql = "SELECT * from ".$pdo->embed_quiz_table." WHERE
                     embed_quiz_url = :embed_quiz_url
                 AND quiz_id = :quiz_id";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $embed_quiz_row = $stmt->fetch();
         // return the found site row
         return $embed_quiz_row;

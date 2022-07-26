@@ -39,7 +39,7 @@ class Enp_quiz_Question_AB_test_result extends Enp_quiz_Question {
                  WHERE ab_response.ab_test_id = :ab_test_id
                    AND question_response.question_id = :question_id
                    AND question_response.response_question_is_deleted = 0";
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // return the found results

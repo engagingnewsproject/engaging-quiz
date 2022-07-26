@@ -195,7 +195,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                                             :embed_quiz_updated_at
                                         )";
         // insert the mc_option into the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -245,7 +245,7 @@ class Enp_quiz_Save_embed_quiz extends Enp_quiz_Save {
                         embed_quiz_updated_at = :embed_quiz_updated_at
                  WHERE  embed_quiz_id = :embed_quiz_id";
         // insert the mc_option into the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {

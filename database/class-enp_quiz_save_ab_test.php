@@ -232,7 +232,7 @@ class Enp_quiz_Save_ab_test extends Enp_quiz_Save {
                                             :ab_test_updated_at
                                         )";
         // insert the quiz into the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         $this->response['action'] = 'insert';
         // success!
@@ -277,7 +277,7 @@ class Enp_quiz_Save_ab_test extends Enp_quiz_Save {
                    AND quiz_id_a = :quiz_id_a
                    AND quiz_id_b = :quiz_id_b";
         // insert the quiz into the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // start the response
         $this->response['action'] = 'update';
