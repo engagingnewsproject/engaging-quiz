@@ -15,7 +15,7 @@
   "author": "juryjowns",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.4.0",
+    "browser-sync": "^2.27.11",
     "chai": "^4.0.2",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^5.0.0",
