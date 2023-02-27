@@ -29,7 +29,7 @@
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.0",
-    "mocha": "^5.1.1",
+    "mocha": "^10.2.0",
     "run-sequence": "^2.2.1",
     "sinon": "^5.0.7",
     "sinon-chai": "^3.0.0"
