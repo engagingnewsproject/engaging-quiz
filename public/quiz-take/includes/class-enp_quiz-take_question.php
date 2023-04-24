@@ -139,7 +139,9 @@ class Enp_quiz_Take_Question {
 		unset($question->qt);
 		echo '<script type="text/javascript">';
 		// print this whole object as js global vars in json
-			echo 'var take_question_json = '.json_encode($question).';';
+			// Print converted json:
+			echo 'var take_question_json = '.json_encode($question, JSON_HEX_QUOT | JSON_HEX_TAG).';';
+			// echo 'var take_question_json = '.json_encode($question).';'; // BEFORE - print converted json
 			echo 'var init_question_json = '.$question->question->get_take_question_json().';';
 		echo '</script>';
 		// unset the cloned object
