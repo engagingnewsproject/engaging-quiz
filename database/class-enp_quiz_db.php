@@ -1,23 +1,20 @@
 <?php
-
 /**
- * Extremely bare wrapper based on
- * http://codereview.stackexchange.com/questions/52414/my-simple-pdo-wrapper-class
- * & http://stackoverflow.com/questions/20664450/is-a-pdo-wrapper-really-overkill
- * to make opening PDO connections and preparing, binding, and executing connections
- * faster.
- *
- **/
+* Extremely bare wrapper based on
+* http://codereview.stackexchange.com/questions/52414/my-simple-pdo-wrapper-class
+* & http://stackoverflow.com/questions/20664450/is-a-pdo-wrapper-really-overkill
+* to make opening PDO connections and preparing, binding, and executing connections
+* faster.
+*
+**/
 
-class enp_quiz_Db extends PDO
-{
+class enp_quiz_Db extends PDO {
 
-    public function __construct()
-    {
+    public function __construct() {
         // check if a connection already exists
         try {
             // config file for connection info and necessary variables
-            include($_SERVER["DOCUMENT_ROOT"] . '/enp-quiz-database-config.php');
+            include($_SERVER["DOCUMENT_ROOT"].'/enp-quiz-database-config.php');
             // Table names for dynamic reference
             $this->quiz_table = $enp_quiz_table_quiz;
             $this->quiz_option_table = $enp_quiz_table_quiz_option;
@@ -41,35 +38,28 @@ class enp_quiz_Db extends PDO
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             );
             // create the new connection
-            parent::__construct(
-                'mysql:host=' . $enp_db_host . ';dbname=' . $enp_db_name,
-                // for windows users possible fix for PDO error, change 'mysql:host=' line above to:
-                // 'sqlsrv:Server=' . $enp_db_host . ';Database=' . $enp_db_name,
-                $enp_db_user,
-                $enp_db_password,
-                $options
-            );
+            parent::__construct('mysql:host='.$enp_db_host.';dbname='.$enp_db_name,
+                                $enp_db_user,
+                                $enp_db_password,
+                                $options);
         } catch (Exception $e) {
             $this->errors = $e->getMessage();
         }
     }
 
-    public function runQuery($sql, $params = null)
-    {
+    public function runQuery($sql, $params = null, ...$fetchModeArgs) {
         $stmt = $this->prepare($sql);
         $stmt->execute($params);
         return $stmt;
     }
 
-    public function fetchOne($sql, $params = [])
-    {
-        $stmt = $this->runQuery($sql, $params);
+    public function fetchOne($sql, $params = []) {
+        $stmt = $this->query($sql, $params);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function fetchAll($sql, $params = [])
-    {
-        $stmt = $this->runQuery($sql, $params);
+    public function fetchAll($sql, $params = []) {
+        $stmt = $this->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -77,16 +67,15 @@ class enp_quiz_Db extends PDO
      * Get Quizzes
      *
      */
-    public function getQuizzes($where = [])
-    {
+    public function getQuizzes($where = []) {
 
         $params = $this->buildParams($where);
-        $sql = "SELECT * from " . $this->quiz_table . " WHERE quiz_is_deleted = 0";
-
-        if ($where) {
+        $sql = "SELECT * from ".$this->quiz_table." WHERE quiz_is_deleted = 0";
+        
+        if($where) {
             $sql .= $this->buildWhere($params, true);
         }
-
+        
         return $this->fetchAll($sql, $params);
     }
 
@@ -94,33 +83,31 @@ class enp_quiz_Db extends PDO
      * Get Domains
      *
      */
-    public function getDomains($where = [])
-    {
+    public function getDomains($where = []) {
 
         $params = $this->buildParams($where);
-        $sql = "SELECT DISTINCT(SUBSTRING_INDEX((SUBSTRING_INDEX((SUBSTRING_INDEX(embed_site_url, '://', -1)), '/', 1)), '.', -2)) as domain from " . $this->embed_site_table;
-
-        if ($where) {
+        $sql = "SELECT DISTINCT(SUBSTRING_INDEX((SUBSTRING_INDEX((SUBSTRING_INDEX(embed_site_url, '://', -1)), '/', 1)), '.', -2)) as domain from ".$this->embed_site_table;
+        
+        if($where) {
             $sql .= $this->buildWhere($params, true);
         }
-
+        
         return $this->fetchAll($sql, $params);
     }
-
+    
     /*
      * Get Sites
      *
      */
-    public function getSites($where = [])
-    {
+    public function getSites($where = []) {
 
         $params = $this->buildParams($where);
-        $sql = "SELECT * from " . $this->embed_site_table;
-
-        if ($where) {
+        $sql = "SELECT * from ".$this->embed_site_table;
+        
+        if($where) {
             $sql .= $this->buildWhere($params, true);
         }
-
+        
         return $this->fetchAll($sql, $params);
     }
 
@@ -128,67 +115,61 @@ class enp_quiz_Db extends PDO
      * Get Embeds
      *
      */
-    public function getEmbeds($where = [])
-    {
+    public function getEmbeds($where = []) {
 
         $params = $this->buildParams($where);
-        $sql = "SELECT * from " . $this->embed_quiz_table;
-
-        if ($where) {
+        $sql = "SELECT * from ".$this->embed_quiz_table;
+        
+        if($where) {
             $sql .= $this->buildWhere($params, true);
         }
-
+        
         return $this->fetchAll($sql, $params);
     }
 
     // TOTALS
-    public function getResponsesCorrectTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->response_question_table . " WHERE response_correct = 1";
+    public function getResponsesCorrectTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->response_question_table." WHERE response_correct = 1";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getResponsesIncorrectTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->response_question_table . " WHERE response_correct = 0";
+    public function getResponsesIncorrectTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->response_question_table." WHERE response_correct = 0";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getMCQuestionsTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->question_table . " WHERE question_type = 'mc'";
+    public function getMCQuestionsTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->question_table." WHERE question_type = 'mc'";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getSliderQuestionsTotal()
-    {
-        $sql = "SELECT COUNT(*) from " . $this->question_table . " WHERE question_type = 'slider'";
+    public function getSliderQuestionsTotal() {
+        $sql = "SELECT COUNT(*) from ".$this->question_table." WHERE question_type = 'slider'";
         return (int) $this->fetchOne($sql)['COUNT(*)'];
     }
 
-    public function getUniqueUsersTotal()
-    {
+    public function getUniqueUsersTotal() {
         $sql = "SELECT COUNT(DISTINCT user_id) as users
-                    FROM " . $this->response_quiz_table;
+                    FROM ".$this->response_quiz_table;
 
         return (int) $this->fetchOne($sql)['users'];
+
     }
-    public function buildWhere($params, $where = true)
-    {
+    public function buildWhere($params, $where = true) {
         $sql = '';
-        if ($where === true) {
+        if($where === true) {
             $sql = ' WHERE ';
         }
-        if (!empty($params)) {
+        if(!empty($params)) {
             $i = 1;
-            foreach ($params as $key => $val) {
-                if (is_array($val)) {
+            foreach($params as $key => $val) {
+                if(is_array($val)) {
                     // for things like 'date > :date'
-                    $sql .= $val['key'] . ' ' . $val['operator'] . ' ' . $val['val'];
+                    $sql .= $val['key'].' '.$val['operator'].' '.$val['val'];
                 } else {
-                    $sql .= $key . ' = ' . $val;
+                    $sql .= $key.' = '.$val;
                 }
-                if ($i !== count($params)) {
+                if($i !== count($params)) {
                     // not the last one, so add an AND statement
                     $where .= " AND ";
                     $i++;
@@ -204,11 +185,10 @@ class enp_quiz_Db extends PDO
      * @param $params ARRAY
      * @return ARRAY
      */
-    public function buildParams($params)
-    {
+    public function buildParams($params) {
         $bound = [];
 
-        foreach ($params as $key => $val) {
+        foreach($params as $key => $val) {
             $bound[$key] = $val;
         }
 

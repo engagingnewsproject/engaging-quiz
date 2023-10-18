@@ -223,13 +223,14 @@ _.middleNumber = function(a, b) {
 
 // // // // // // // // // 
 // Tinymce init for "add question" button
+// CodePen of editor: https://codepen.io/luukee/pen/VwEmdBB
 // // // // // // // // // 
 var currentSelector;
 function addTinymce( obj ) {
     var currentSelector = $('#enp-question-explanation__'+obj+'');
 
     tinymce.init({
-        selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
+        selector: '#enp-question-explanation__'+obj+'',
         menubar: false,
         statusbar: false,
         plugins: 'quickbars link autoresize',
@@ -1293,6 +1294,9 @@ function saveQuiz(userAction) {
 
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+        // Access the raw JSON data
+        var rawJSONData = jqXHR.responseText;
+        console.log('Raw JSON Data:', rawJSONData);
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 

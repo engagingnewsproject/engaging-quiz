@@ -387,7 +387,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
             if (!is_array($value) && !is_object($value)) {
                 // except for question explanation, we want to keep the HTML
                 if( $key === 'question_explanation' ) {
-                    $sanitized_array[$key] = wp_kses($value, 'post');
+                // var_dump($sanitized_array[$value]);
+                    // $sanitized_array[$key] = wp_kses($value, 'post'); // older
+                    $sanitized_array[$key] = wp_kses_post($value); // new
                 } else {
                     $sanitized_array[$key] = sanitize_text_field($value);
                 }

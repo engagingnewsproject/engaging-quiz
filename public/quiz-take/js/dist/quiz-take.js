@@ -192,6 +192,7 @@ function sendScrollToMessage() {
 * @return (int)
 */
 function calculateBodyHeight() {
+
     var height = document.getElementById('enp-quiz-container').offsetHeight + document.getElementById('enp-quiz-footer').offsetHeight;
 
     // calculate the height of the slide-hide mc elements, if there
@@ -221,6 +222,7 @@ function requestParentURL() {
 * Send a request to the parent frame to save the embed site
 */
 function sendSaveSite() {
+
     // send the message to the parent of the iframe
     sendPostMessageAction("saveSite");
 }
@@ -281,6 +283,7 @@ $(document).on('click', '.enp-option__label', function(e){
     }
     // get the input related to the label
     var thisMCInput = $(this).prev('.enp-option__input');
+
     // See if the DOM has updated to select the corresponding input yet or not.
     // if it hasn't select it, then submit the form
     if ( !thisMCInput.prop( "checked" ) ) {
@@ -327,6 +330,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     $('.enp-next-step').focus();
     // submit the question
     data = prepareQuestionFormData($(this));
+    console.log(data);
     url = $('.enp-question__form').attr('action');
 
     // AJAX Submit form
@@ -340,6 +344,9 @@ $(document).on('click', '.enp-question__submit', function(e){
     .done( questionSaveSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+        // Access the raw JSON data
+        var rawJSONData = jqXHR.responseText;
+        console.log('Raw JSON Data:', rawJSONData);
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 
@@ -349,11 +356,14 @@ $(document).on('click', '.enp-question__submit', function(e){
     });
 });
 
+// runs on option click
 function questionSaveSuccess( response, textStatus, jqXHR ) {
+
     // real quick, hide the submit button so it can't get submitted again
     $('.enp-question__submit').remove();
     // get the response
     var responseJSON = $.parseJSON(jqXHR.responseText);
+    console.log('questionSaveSuccess/responseJSON: ', responseJSON);
     // see if there are any errors
     if(responseJSON.error.length) {
         _.handle_error_message(responseJSON.error[0]);
@@ -464,6 +474,7 @@ function increaseQuestionProgress(questionOrder) {
 
 /**
 * Add/Remove classes to bring in the next question
+* Get question JSON
 */
 function showNextQuestion(obj) {
     obj.addClass('enp-question--show')
@@ -471,6 +482,7 @@ function showNextQuestion(obj) {
        .attr('aria-hidden', false);
     // get the data from it
     questionShowJSON = obj.data('questionJSON');
+    console.log('show next question:', questionShowJSON);
     questionOrder = questionShowJSON.question_order;
     // increase the number and the width of the progress bar
     increaseQuestionProgress(questionOrder);
@@ -536,6 +548,7 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
     }
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
+
     explanationTemplate = questionExplanationTemplate({
                             question_id: questionJSON.question_id,
                             question_explanation: questionJSON.question_explanation,
@@ -543,6 +556,7 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
                             question_explanation_percentage: question_response_percentage,
                             question_next_step_text: question_next_step_text
                         });
+
     if(typeof(callback) == "function") {
         callback(explanationTemplate);
     }
@@ -581,8 +595,11 @@ $(document).on('click', '.enp-next-step', function(e){
     } )
     // success
     .done( questionExplanationSubmitSuccess )
-    .fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+    .fail( function( jqXHR, textStatus, errorThrown, data ) {
+        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown, data );
+        // Access the raw JSON data
+        var rawJSONData = jqXHR.responseText;
+        console.log('Raw JSON Data:', rawJSONData);
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 

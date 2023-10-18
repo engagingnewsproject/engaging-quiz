@@ -173,7 +173,7 @@ class Enp_quiz_Take
         }
 
         // output the quiz level json and ab test id
-        echo '<script type="text/javascript">';
+        echo '<script type="text/javascript" class="TEST-LUKE">';
         echo 'var ab_test_id_json = {"ab_test_id":"' . $json->ab_test_id . '"};';
         // print this whole object as js global vars in json
         echo 'var quiz_json = ' . json_encode($json->quiz) . ';';
@@ -242,7 +242,6 @@ class Enp_quiz_Take
         ini_set('session.use_cookies', 1);
         ini_set('session.use_only_cookies', 0);
         ini_set('session.use_trans_sid', 1);
-        // Set cookie params
         session_set_cookie_params([
             'samesite' => 'None',
             'secure' => true
