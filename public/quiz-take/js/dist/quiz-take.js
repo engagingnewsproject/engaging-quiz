@@ -301,7 +301,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     e.preventDefault();
     // get the JSON data for this question
     var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
-
+    console.log(questionJSON);
     // if mc option
     if(questionJSON.question_type === 'mc') {
         correct_string = processMCSubmit();
@@ -334,6 +334,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     url = $('.enp-question__form').attr('action');
 
     // AJAX Submit form
+    console.log('Check status before ajax call');
     $.ajax( {
         type: 'POST',
         url  : url,
@@ -358,7 +359,25 @@ $(document).on('click', '.enp-question__submit', function(e){
 
 // runs on option click
 function questionSaveSuccess( response, textStatus, jqXHR ) {
+    console.log('TEST Response from server:');
+    // Error logging START
+    // Access specific properties
+    var mcOptionId = response.mc_option_id;
+    var status = response.status;
+    // ... access other properties ...
 
+    // Nested structure
+    var nextQuestionId = response.next_question.question_id;
+    var nextQuestionTitle = response.next_question.question_title;
+    // ... access other properties in the next_question object ...
+
+    // Handle errors
+    var errors = response.error;
+    if (errors.length > 0) {
+        console.error('Errors:', errors);
+        // Handle errors appropriately
+    }
+    // Error logging END
     // real quick, hide the submit button so it can't get submitted again
     $('.enp-question__submit').remove();
     // get the response

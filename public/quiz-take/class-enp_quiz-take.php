@@ -606,6 +606,7 @@ class Enp_quiz_Take
                 // Form key is invalid,
                 // return them to the page (they're probably refreshing the page)
                 //first, check if it's null or not
+                error_log('Validation failed. Error messages: ' . json_encode($this->error));
                 if ($validate_nonce === null) {
                     // cookies are likely disabled
                     $this->error[] = 'It looks like Cookies are disabled. Please enable Cookies in order to take the quiz. If you only have third-party Cookies disabled, <a href="' . $this->quiz_url . '" target="_blank">go here to take the quiz.</a>';
