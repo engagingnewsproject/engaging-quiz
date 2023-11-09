@@ -86,7 +86,7 @@ This odd set-up will allow you to move your quiz database to an entirely differe
 
 ### Local Dev
 
-#### `Fatal error: Uncaught Error: PDO object is not initialized, constructor was not called in .../database/class-enp_quiz_db.php`
+1. `Fatal error: Uncaught Error: PDO object is not initialized, constructor was not called in .../database/class-enp_quiz_db.php`
 
 The local app will add a `../../mysqld.sock` to the end of your `$enp_db_host` variable in your `enp-quiz-database-config.php` file on the quiz plugin installation. You just need to remove it so it's only `localhost`.
 
@@ -100,4 +100,23 @@ to:
 
 ```
 $enp_db_host = "localhost";
+```
+
+2. `Fatal error: Uncaught Error: count()`
+
+Issue lies in the `public/quiz-create/templates/enp-quiz-page.php` file. You need to ensure that the global `$post` variable is properly set before calling `the_content()`.
+
+If you only have:
+
+```
+the_content();
+```
+
+you will need to wrap it with an if statement so that the `$post` variable is properly set:
+
+```
+if (have_posts()) :
+	the_post();
+	the_content();
+endif;
 ```
