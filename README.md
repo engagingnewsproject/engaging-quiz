@@ -90,7 +90,7 @@ This odd set-up will allow you to move your quiz database to an entirely differe
 
 The local app will add a `../../mysqld.sock` to the end of your `$enp_db_host` variable in your `enp-quiz-database-config.php` file on the quiz plugin installation. You just need to remove it so it's only `localhost`.
 
-Update this line:
+Update the `/app/public/enp-quiz-database-config.php` file at this line:
 
 ```
 $enp_db_host = "localhost:/Users/username/Library/Application Support/Local/run/Yl7or9nT_/mysql/mysqld.sock";
