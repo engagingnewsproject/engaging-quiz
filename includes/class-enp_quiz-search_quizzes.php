@@ -241,13 +241,13 @@ class Enp_quiz_Search_quizzes {
                 ORDER BY $this->order_by $this->order
                 LIMIT $this->limit
                 OFFSET $this->offset";
-        $stmt = $pdo->query($sql);
+        $stmt = $pdo->runQuery($sql);
         $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         $total_sql = "SELECT COUNT(*) from $pdo->quiz_table
                 WHERE quiz_is_deleted = $this->deleted
                 $AND_sql";
-        $total_stmt = $pdo->query($total_sql);
+        $total_stmt = $pdo->runQuery($total_sql);
         $this->total = $total_stmt->fetchColumn();
 
         return $quiz_ids;
@@ -296,7 +296,7 @@ class Enp_quiz_Search_quizzes {
                     ORDER BY quiz.$this->order_by $this->order
                     LIMIT $this->limit
                     OFFSET $this->offset";
-            $stmt = $pdo->query($sql);
+            $stmt = $pdo->runQuery($sql);
             $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
             // get the total found
@@ -305,7 +305,7 @@ class Enp_quiz_Search_quizzes {
                     ON quiz.quiz_created_by = user.ID
                     WHERE quiz.quiz_is_deleted = $this->deleted
                     $user_sql";
-            $total_stmt = $pdo->query($total_sql);
+            $total_stmt = $pdo->runQuery($total_sql);
             $this->total = $total_stmt->fetchColumn();
 
             return $quiz_ids;
@@ -342,7 +342,7 @@ class Enp_quiz_Search_quizzes {
                 WHERE quiz_is_deleted = $this->deleted
                 $initial_AND_sql
                 ORDER BY $this->order_by $this->order";
-        $stmt = $pdo->query($sql);
+        $stmt = $pdo->runQuery($sql);
 
         $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -386,12 +386,12 @@ class Enp_quiz_Search_quizzes {
                 ORDER BY $this->order_by $this->order
                 LIMIT $this->limit
                 OFFSET $this->offset";
-        $stmt = $pdo->query($sql);
+        $stmt = $pdo->runQuery($sql);
         $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
         $total_sql = "SELECT COUNT(*) from $pdo->quiz_table
                 WHERE quiz_is_deleted = $this->deleted
                 $user_sql";
-        $total_stmt = $pdo->query($total_sql);
+        $total_stmt = $pdo->runQuery($total_sql);
         $this->total = $total_stmt->fetchColumn();
 
         return $quiz_ids;

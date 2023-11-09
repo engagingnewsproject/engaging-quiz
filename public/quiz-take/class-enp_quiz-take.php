@@ -242,6 +242,11 @@ class Enp_quiz_Take
         ini_set('session.use_cookies', 1);
         ini_set('session.use_only_cookies', 0);
         ini_set('session.use_trans_sid', 1);
+        // Set cookie params
+        session_set_cookie_params([
+            'samesite' => 'None',
+            'secure' => true
+        ]);
         //Start the session
         session_start();
         if ($this->ab_test_id !== false) {

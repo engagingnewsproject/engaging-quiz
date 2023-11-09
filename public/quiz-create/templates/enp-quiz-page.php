@@ -18,8 +18,13 @@ get_header();
 include( ENP_QUIZ_ROOT.'/public/quiz-create/svg/symbol-defs.svg');?>
 
 <main id="enp-quiz" class="enp-quiz__main" role="main">
-<?// this will include our template files
-the_content();?>
+<?php
+// this will include our template files
+if (have_posts()) :
+	the_post();
+	the_content();
+endif;
+?>
 </main>
 
 <?php // This is usually better without the sidebar

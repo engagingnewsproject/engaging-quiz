@@ -215,7 +215,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 											:mc_option_responses
                                         )";
         // insert the mc_option into the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -263,7 +263,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
 
                  WHERE  mc_option_id = :mc_option_id";
         // update the mc_option in the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {

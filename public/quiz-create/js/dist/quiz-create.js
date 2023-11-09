@@ -232,14 +232,19 @@ function addTinymce( obj ) {
         selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
         menubar: false,
         statusbar: false,
+        plugins: 'quickbars link autoresize',
         toolbar: false,
-        inliine: true,
-        plugins: 'quickbars link autosave',
-        toolbar: 'bold italic link blockquote',
-        quickbars_selection_toolbar: 'bold italic link blockquote',
+        quickbars_selection_toolbar: 'bold italic blockquote quicklink removeformat',
+        link_default_target: "_blank",
+        link_context_toolbar: true,
+        link_title: false,
+        link_assume_external_targets: "http",
+        link_quicklink: true,
         quickbars_insert_toolbar: false,
-        quickbars_image_toolbar: false,
-        link_assume_external_targets: 'http',
+        link_target_list: [
+            { title: "New page", value: "_blank" },
+        ],
+        link_target_list: false,
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
         setup: function (editor) {
             editor.on('click', function () {
