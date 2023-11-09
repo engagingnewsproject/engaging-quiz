@@ -61,7 +61,7 @@ class Enp_quiz_Save_quiz_take_Question_view extends Enp_quiz_Save_quiz_take {
                    SET  question_views = question_views + 1
                  WHERE  question_id = :question_id";
         // update the question view the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {

@@ -59,7 +59,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  quiz_views = quiz_views + 1
                  WHERE  quiz_id = :quiz_id";
         // update the question view the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -98,7 +98,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  quiz_starts = quiz_starts + 1
                  WHERE  quiz_id = :quiz_id";
         // update the question start the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -141,7 +141,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                         quiz_finishes = quiz_finishes + 1
                  WHERE  quiz_id = :quiz_id";
         // update the question finishes the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -183,7 +183,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  response_quiz_is_deleted = 1
                  WHERE  quiz_id = :quiz_id";
         // update the quiz responses the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // reset the compiled stats on the quiz table too
@@ -223,7 +223,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                         quiz_time_spent_average = 0
                  WHERE  quiz_id = :quiz_id";
         // update the quiz data in the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // success! If this rowCount doesn't === 1 then we have a problem...
@@ -290,7 +290,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  response_question_is_deleted = 1
                  WHERE  question_id = :question_id";
         // update the quiz responses the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // success!
@@ -327,7 +327,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                         question_time_spent_average = 0
                  WHERE  question_id = :question_id";
         // update the quiz data in the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // success! If this rowCount doesn't === 1 then we have a problem...
@@ -356,7 +356,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  response_mc_is_deleted = 1
                  WHERE  mc_option_id = :mc_option_id";
         // update the quiz responses the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // success!
@@ -385,7 +385,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  mc_option_responses = 0
                  WHERE  mc_option_id = :mc_option_id";
         // update the quiz data in the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // success! If this rowCount doesn't === 1 then we have a problem...
@@ -414,7 +414,7 @@ class Enp_quiz_Save_quiz_take_Quiz_data extends Enp_quiz_Save_quiz_take {
                    SET  response_slider_is_deleted = 1
                  WHERE  slider_id = :slider_id";
         // update the quiz responses the database
-        $stmt = $pdo->query($sql, $params);
+        $stmt = $pdo->runQuery($sql, $params);
 
         if($stmt !== false) {
             // success!

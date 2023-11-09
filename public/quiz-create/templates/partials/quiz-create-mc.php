@@ -3,7 +3,7 @@
     $mc_option_i = 0;
     // count the number of mc_options
     $mc_option_ids = $question->get_mc_options();
-    $mc_option_image = $mc_option_ids->get_mc_option_image();
+    // $mc_option_image = $mc_option_ids->get_mc_option_image();
 ?>
 <fieldset class="enp-mc-options">
     <legend class="enp-legend enp-mc-options__legend">Multiple Choice Options</legend>
