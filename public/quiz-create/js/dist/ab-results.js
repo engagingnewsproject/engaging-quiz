@@ -1,4 +1,4 @@
-jQuery( document ).ready( function( $ ) {
+jQuery( function( $ ) {
 
 var yScaleMaxA = _.max(ab_results_json.quiz_a_scores);
 var yScaleMaxB = _.max(ab_results_json.quiz_b_scores);
