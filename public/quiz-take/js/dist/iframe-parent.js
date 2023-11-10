@@ -252,7 +252,9 @@ EnpIframeQuiz.prototype.saveEmbedSite = function(origin, data, callback, boundTh
 		// log the HTTP status code received in the response
 		if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 			boundThis.setSaveEmbedSiteComplete(true);
+			
 			response = JSON.parse(xhr.responseText);
+			
 			console.log('Response--> ', response);
 			if(response.status === 'success') {
 				response.origin = origin;

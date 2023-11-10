@@ -10,5 +10,6 @@ gulpfile.js
 enp-quiz.code-workspace
 .vscode/launch.json
 package-lock.json
+composer.lock
 vendor/autoload.php
 vendor/

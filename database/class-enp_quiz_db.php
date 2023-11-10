@@ -25,6 +25,7 @@ class enp_quiz_Db extends PDO {
     public $embed_site_type_table;
     public $embed_site_br_site_type_table;
     public $embed_quiz_table;
+    public $errors;
     
     public function __construct()
     {
@@ -64,6 +65,7 @@ class enp_quiz_Db extends PDO {
                 $options
             );
         } catch (Exception $e) {
+            error_log('PDO Connection Error: ' . $e->getMessage());
             $this->errors = $e->getMessage();
         }
     }
