@@ -1,4 +1,4 @@
-jQuery( document ).ready( function( $ ) {
+jQuery( function( $ ) {
 
     // set-up accordions
     $('.enp-fieldset--section').each( function(i) {

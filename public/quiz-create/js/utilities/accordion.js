@@ -1,4 +1,4 @@
-jQuery( document ).ready( function( $ ) {
+jQuery(function( $ ) {
     /*
     *   Progressive Enhancement Accordion Set-up
     *   @usage Create a JS object with what the header and content is for each accordion
