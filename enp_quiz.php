@@ -25,6 +25,14 @@
  * Domain Path:       /languages
  */
 
+ function enp_quiz_csp_header() {
+    // Cross-Origin Resource Sharing (CORS) header allow your domain to be embedded in iframes. 
+    header('Content-Security-Policy: frame-ancestors "self" mediaengagement.org');
+    // Allow Embedding in iframes
+    header('X-Frame-Options: ALLOW-FROM https://mediaengagement.org/');
+}
+add_action('init', 'enp_quiz_csp_header');
+
  // Include the custom rewrite rules
 include_once(plugin_dir_path(__FILE__) . 'rewrite-rules.php');
  
