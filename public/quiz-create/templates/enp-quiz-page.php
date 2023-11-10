@@ -22,7 +22,7 @@ include( ENP_QUIZ_ROOT.'/public/quiz-create/svg/symbol-defs.svg');?>
 // this will include our template files
 if (have_posts()) :
 	the_post();
-	the_content();
+the_content();
 endif;
 ?>
 </main>

@@ -110,10 +110,10 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 			<form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action(); ?>">
 				<?php echo $qt->get_session_id_input(); ?>
 				<?php $qt->nonce->outputKey(); ?>
-				<input class="hide" name="enp-quiz-id" value="<?php echo $qt->quiz->get_quiz_id(); ?>" />
-				<input class="hide" name="enp-user-id" value="<?php echo $qt->get_user_id(); ?>" />
-				<input class="hide" name="enp-response-quiz-id" value="<?php echo $qt->get_response_quiz_id(); ?>" />
-				<input id="correctly-answered" class="hide" name="enp-quiz-correctly-answered" value="<?php echo $qt->get_correctly_answered(); ?>" />
+				<input class="hidden" name="enp-quiz-id" value="<?php echo $qt->quiz->get_quiz_id(); ?>" />
+				<input class="hidden" name="enp-user-id" value="<?php echo $qt->get_user_id(); ?>" />
+				<input class="hidden" name="enp-response-quiz-id" value="<?php echo $qt->get_response_quiz_id(); ?>" />
+				<input id="correctly-answered" class="hidden" name="enp-quiz-correctly-answered" value="<?php echo $qt->get_correctly_answered(); ?>" />
 				<?php
 				if ($state === 'question' || $state === 'question_explanation') {
 					include(ENP_QUIZ_TAKE_TEMPLATES_PATH . '/partials/question.php');

@@ -22,8 +22,6 @@ $invalid_quiz = array (
                                     array(
                                          "mc_option_id"=> "26",
                                          "mc_option_content"=> "MC option 1",
-                                         "mc_option_image"=> "Screen-Shot-2016-03-29-at-3.13.42-PM--original.png",
-                                         "mc_option_image_alt"=> "",
                                          "mc_option_order"=> 0,
                                          "mc_option_correct"=> "0",
                                          "mc_option_is_deleted"=> "0"
@@ -31,8 +29,6 @@ $invalid_quiz = array (
                                      array(
                                           "mc_option_id"=> "28",
                                           "mc_option_content"=> "MC option 2",
-                                          "mc_option_image"=> "Screen-Shot-2016-03-29-at-3.13.42-PM--original.png",
-                                         "mc_option_image_alt"=> "",
                                           "mc_option_order"=> 1,
                                           "mc_option_correct"=> "0",
                                           "mc_option_is_deleted"=> "0"

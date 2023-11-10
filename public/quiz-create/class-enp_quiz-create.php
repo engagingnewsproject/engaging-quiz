@@ -130,8 +130,7 @@ class Enp_quiz_Create {
         if ( array_key_exists( 'enp_quiz_template', $wp_query->query_vars ) ) {
             // if it's there, then see what the value is
             $this->template      = $wp_query->get( 'enp_quiz_template' );
-
-            $this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH . $this->template . '.php';
+            $this->template_file = ENP_QUIZ_CREATE_TEMPLATES_PATH . '/' . $this->template . '.php';
 
             // make sure we have a user
             // and if they're accessing a quiz, that they own it

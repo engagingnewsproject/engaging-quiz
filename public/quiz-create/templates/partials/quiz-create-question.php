@@ -8,7 +8,6 @@ if ( $question_id === '{{question_id}}' ) {
 }
 $question_image = $question->get_question_image();
 ?>
-<section id="enp-question--<?php echo $question_id; ?>" class="enp-question-content">
 
 <section id="enp-question--<?php echo $question_id; ?>" class="enp-question-content">
     <input class="enp-question-id" type="hidden" name="enp_question[<?php echo $question_i; ?>][question_id]" value="<?php echo $question_id; ?>" />
@@ -57,6 +56,7 @@ $question_image = $question->get_question_image();
     <div class="enp-question-inner enp-answer-explanation">
         <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id; ?>">Answer Explanation</label>
+            <p style="font-size: 0.85rem;">** Double click any text you input to add formatting.</p>
             <!-- For tinycme -->
             <textarea id="enp-question-explanation__<?php echo $question_id; ?>" class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?php echo $question_i; ?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.">
                 <?php echo $question->get_question_explanation(); ?>

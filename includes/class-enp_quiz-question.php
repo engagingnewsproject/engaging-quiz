@@ -233,6 +233,7 @@ class Enp_quiz_Question {
      */
     protected function set_question_explanation() {
         $question_explanation = stripslashes( self::$question['question_explanation'] );
+        // var_dump('<pre>'.$question_explanation.'</pre>');
         return $question_explanation;
     }
 
@@ -711,9 +712,8 @@ class Enp_quiz_Question {
 
     public function get_take_question_json() {
         $question = $this->get_take_question_array();
-        // Return converted json: for possible achor links in question explanation  
+        // return json_encode( $question );
         return json_encode( $question, JSON_HEX_QUOT | JSON_HEX_TAG );
-        // return json_encode( $question ); // BEFORE - Return converted json
     }
 
     /**

@@ -137,11 +137,10 @@ class Enp_quiz_Take_Question {
 	public function get_init_json() {
 		$question = clone $this;
 		unset($question->qt);
-		echo '<script type="text/javascript">';
+		echo '<script type="text/javascript" class="take_question_json">';
 		// print this whole object as js global vars in json
-			// Print converted json:
-			echo 'var take_question_json = '.json_encode($question, JSON_HEX_QUOT | JSON_HEX_TAG).';';
-			// echo 'var take_question_json = '.json_encode($question).';'; // BEFORE - print converted json
+			// echo 'var take_question_json = '.json_encode($question).';';
+            echo 'var take_question_json = '.json_encode($question, JSON_HEX_QUOT | JSON_HEX_TAG).';';
 			echo 'var init_question_json = '.$question->question->get_take_question_json().';';
 		echo '</script>';
 		// unset the cloned object
@@ -174,8 +173,6 @@ class Enp_quiz_Take_Question {
 		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question.php');
 		$template .= ob_get_clean();
 		$template .= '</script>';
-
-
 
 		return $template;
 	}

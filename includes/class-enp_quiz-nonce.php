@@ -52,7 +52,7 @@ class Enp_quiz_Nonce {
         $this->nonce = $this->generateKey();
         //Store the form key in the session
         $_SESSION[$this->session_name] = $this->nonce;
-        $outputKey = "<input class='hide' name='".$this->session_name."' id='".$this->session_name."' value='".$this->nonce."' />";
+        $outputKey = "<input type='hidden' name='".$this->session_name."' id='".$this->session_name."' value='".$this->nonce."' />";
         //Output the form key
         if($return === false) {
             echo $outputKey;
