@@ -8,6 +8,28 @@
  *
  * @package    Enp_quiz
  * @subpackage Enp_quiz/public/Quiz_preview
+ * 
+ * Constructor: 
+ * The constructor sets up the class by loading the quiz object using the load_quiz method and validating it. 
+ * It includes a content filter and enqueues styles and scripts for quiz preview.
+ * 
+ * load_content: 
+ * This method includes the template file quiz-preview.php and captures its output. 
+ * It sets up various variables like $enp_quiz_nonce and $enp_next_button_name based on the quiz status. 
+ * The template likely contains HTML for displaying the quiz preview.
+ * 
+ * enqueue_styles: 
+ * This method is currently empty, indicating that no additional styles are enqueued specifically for the quiz preview.
+ * 
+ * enqueue_scripts: 
+ * This method enqueues several JavaScript files related to quiz preview. 
+ * Notably, it includes scripts for color picker, accordion functionality, limited characters, and the main quiz-preview.js. 
+ * These scripts likely contribute to the interactive features and behavior of the quiz preview.
+ * 
+ * enqueue_color_picker: 
+ * This method enqueues the Iris color picker script. The comment in the code refers to the complexity of 
+ * getting it to work on the front end.
+ * 
  */
 
 /**

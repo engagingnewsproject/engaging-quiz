@@ -535,6 +535,7 @@ class Enp_quiz_Create {
                 'enp_user_action' => self::$user_action,
             )
         );
+        do_action( 'qm/debug', $url_query );
         // they just created a new page (quiz) so we need to redirect them to it and post our messages
         wp_redirect( ENP_QUIZ_CREATE_URL . $quiz_id . '/?' . $url_query );
         exit;

@@ -17,6 +17,88 @@
  * @subpackage Enp_quiz/database
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
+/**
+ * This PHP code defines a class Enp_quiz_Save_quiz that handles the saving and processing of quizzes. The class extends another class Enp_quiz_Save. Here's a breakdown of the code:
+ * 
+ * Class Overview:
+ * 
+ * The class is part of a larger project related to quizzes, presumably for a website or application.
+ * It handles the saving process for quizzes and is meant to be called by other classes (Enp_quiz_Quiz_create and Enp_quiz_Quiz_preview).
+ * Properties:
+ * 
+ * Several protected properties are declared, including $quiz, $quiz_obj, $response_obj, and others. These properties store various data related to the quiz being processed.
+ * Constructor:
+ * 
+ * The class has an empty constructor.
+ * Save Method:
+ * 
+ * The save method is the main entry point for saving a quiz.
+ * It first sanitizes the submitted quiz data.
+ * It then creates objects for handling responses (Enp_quiz_Save_quiz_Response) and the quiz itself (Enp_quiz_Quiz).
+ * The method goes through a series of steps, including preparing the submitted quiz, processing questions, checking for errors, and saving the quiz.
+ * There are conditional checks for actions like moving to the next step or publishing the quiz.
+ * Prepare Submitted Quiz Method:
+ * 
+ * The prepare_submitted_quiz method processes and validates various quiz-related data. It sets default values for missing data and merges them with the submitted quiz data.
+ * Prepare Submitted Questions Method:
+ * 
+ * The prepare_submitted_questions method processes and validates submitted questions. It uses another class (Enp_quiz_Save_question) to handle individual questions.
+ * Preprocess Questions Method:
+ * 
+ * The preprocess_questions method handles actions related to questions, such as adding a new question or moving a question within the quiz.
+ * Preprocess Deleted Question Method:
+ * 
+ * The preprocess_deleted_question method checks if a question is marked for deletion and adjusts the order counter accordingly.
+ * Flatten Quiz Array Method:
+ * 
+ * The flatten_quiz_array method reorganizes the structure of the submitted quiz array for easier handling.
+ * Sanitize Array Method:
+ * 
+ * The sanitize_array method recursively sanitizes keys and values of an array.
+ * Save Quiz Method:
+ * 
+ * The private save_quiz method is a core function that inserts or updates the quiz in the database. It also handles saving quiz options and questions.
+ * 
+ * quiz_owned_by_current_user(): Checks if the owner of the submitted quiz matches the user trying to update the quiz.
+ * 
+ * allow_user_to_update_quiz(): Determines whether the current user is allowed to update the quiz based on their role (admin or quiz owner).
+ * 
+ * insert_quiz(): Connects to the database and inserts a new quiz.
+ * 
+ * update_quiz(): Connects to the database and updates an existing quiz.
+ * 
+ * save_quiz_options(): Saves various quiz options.
+ * 
+ * pdo_publish_quiz(): Publishes a quiz by updating its status in the database.
+ * 
+ * publish_quiz($quiz): Public method to trigger quiz publishing.
+ * 
+ * set_update_quiz_params(): Populates the parameters array for updating a quiz.
+ * 
+ * save_questions(): Saves questions associated with the quiz.
+ * 
+ * set_quiz_value(), set_quiz_value__allow_empty(), set_quiz_value__object_first(): Methods to set quiz values, with different behaviors for handling empty values and prioritizing object values.
+ * 
+ * get_quiz_object_value($key): Dynamically gets a value from the quiz object.
+ * 
+ * validate_quiz_value_from_object($key, $default, $validation): Validates a quiz value retrieved from the object.
+ * 
+ * Methods like set_quiz_hex_value(), set_quiz_css_measurement_value(), set_quiz_css_value(), set_tweet_value(): Specialized methods to handle specific types of values (e.g., hex colors, CSS measurements, tweets).
+ * 
+ * optimize_css($css, $minify): Runs CSS through CSS Tidy for optimization.
+ * 
+ * facebook_api_rescrape(): Triggers Facebook to rescrape the URL for updated content.
+ * 
+ * facebook_curl_post($quiz_url): Sends a cURL post request to Facebook for rescraping.
+ * 
+ * set_quiz_is_deleted(): Determines if a quiz should be marked as deleted.
+ * 
+ * delete_quiz_ab_tests($quiz_id, $quiz_owner): Deletes all AB Tests associated with a quiz.
+ * 
+ * get_all_quiz_ab_tests($quiz_id): Retrieves all AB Test IDs associated with a quiz.
+ * 
+ * These methods collectively provide a comprehensive set of functionalities for managing quizzes, their options, and related tasks.
+ **/
 class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected static $quiz,
                      $quiz_obj,

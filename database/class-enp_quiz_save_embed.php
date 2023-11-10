@@ -12,6 +12,25 @@ header('Access-Control-Allow-Origin: *');
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 
+ /**
+  * Constructor: The constructor receives the POST data and decodes it. It then determines whether to save an embedded site or an embedded quiz based on the value of $save.
+  * 
+  * save_embed_site: If the value of $save is 'embed_site', it checks the validity of the URL and proceeds to save the embedded site using the Enp_quiz_Save_embed_site class.
+  * 
+  * save_embed_quiz: 
+  * If the value of $save is 'embed_quiz', it checks the validity of the quiz URL. 
+  * If the quiz already exists, it updates the existing quiz; otherwise, 
+  * it inserts a new one. It uses the Enp_quiz_Save_embed_quiz class for this.
+  * 
+  * decode: This method is used to URL decode each value in the POST data.
+  * 
+  * get_response: This method returns the response generated during the save process.
+  * 
+  * Main Code Block: The last part of the file checks if the 'save' parameter is set in the POST data. If set, it creates an instance of Enp_quiz_Save_embed and returns the response. If the request is done via AJAX, it returns the response as JSON.
+  * 
+  * 
+  */
+
 // set enp-quiz-config file path (eehhhh... could be better to not use relative path stuff)
 require_once '../../../enp-quiz-config.php';
 // which files are required for this to run?
@@ -38,9 +57,10 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
         $this->date = date("Y-m-d H:i:s");
         $embed_data = $this->decode($embed_data);
 
-
+        do_action( 'qm/debug', $embed_data );
         $save = $embed_data['save'];
 
+        do_action( 'qm/debug', $save );
         if($save === 'embed_site') {
 
             // check the URL. If it doesn't start with http we don't want it
@@ -63,7 +83,7 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
     protected function save_embed_site($embed_data) {
         // load required files
         $embed_data['embed_site_updated_at'] = $this->date;
-
+        do_action( 'qm/debug', $embed_data['embed_site_updated_at'] );
         // start our embed save
         $save_site = new Enp_quiz_Save_embed_site();
         $this->response = $save_site->save_embed_site($embed_data);
@@ -104,6 +124,7 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
     }
 
     public function get_response() {
+        do_action( 'qm/debug', $this->response );
         return $this->response;
     }
 }

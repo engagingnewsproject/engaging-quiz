@@ -37,6 +37,7 @@ class Enp_quiz_Save {
                 $string = $posted_string;
             }
         }
+        do_action( 'qm/debug', $string );
         return $string;
     }
 

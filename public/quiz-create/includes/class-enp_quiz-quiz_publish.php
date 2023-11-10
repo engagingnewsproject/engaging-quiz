@@ -19,6 +19,34 @@
  * @package    Enp_quiz
  * @subpackage Enp_quiz/public/Quiz_publish
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
+ * 
+ * Constructor: 
+ * The constructor sets up the class. It loads the quiz object using the load_quiz method, 
+ * checks if the quiz is valid, and redirects the user to the quiz create page if it's not. 
+ * It then includes a content filter and enqueues styles and scripts.
+ * 
+ * load_quiz: 
+ * This method is called in the constructor to load the quiz object. 
+ * The var_dump($this->quiz->quiz_status) statement indicates that the class is checking and displaying the quiz status.
+ * 
+ * validate_quiz_redirect: 
+ * This method is used to validate the quiz and redirect the user to the quiz create page if it's not valid. 
+ * The specific validation logic is not shown in this code snippet.
+ * 
+ * load_content: 
+ * This method includes the template file quiz-publish.php and captures its output. 
+ * The template likely contains the HTML structure for displaying the published quiz.
+ * 
+ * enqueue_styles: 
+ * This method is intended for enqueuing styles but is currently empty. 
+ * Styles related to quiz publishing could be added here in the future.
+ * 
+ * enqueue_scripts: 
+ * This method registers and enqueues the JavaScript file quiz-publish.js. 
+ * This script is enqueued with a dependency on jQuery and is meant for handling 
+ * JavaScript functionality related to quiz publishing.
+ * 
+ * 
  */
 class Enp_quiz_Quiz_publish extends Enp_quiz_Create {
     public $quiz; // object
@@ -26,6 +54,7 @@ class Enp_quiz_Quiz_publish extends Enp_quiz_Create {
     public function __construct() {
         // set the quiz object
         $this->quiz = $this->load_quiz();
+        do_action( 'qm/debug', $this->quiz->quiz_status );
         // check if it's valid
         // if it's not, they'll get redirected to the quiz create page
         $this->validate_quiz_redirect($this->quiz, 'publish');
