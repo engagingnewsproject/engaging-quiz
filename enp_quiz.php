@@ -25,6 +25,9 @@
  * Domain Path:       /languages
  */
 
+ // Include the custom rewrite rules
+include_once(plugin_dir_path(__FILE__) . 'rewrite-rules.php');
+ 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
     die;

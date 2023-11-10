@@ -531,7 +531,7 @@ $enp_quiz_table_embed_quiz = "' . $this->embed_quiz_table_name . '";';
         $enp_create_url = site_url( 'enp-quiz' );
         // default image directory for question image uploads
         $image_dir = wp_upload_dir();
-
+        do_action( 'qm/debug', $enp_take_url );
         $config_contents =
         '<?php
 include("' . $this->enp_database_config_path . '");

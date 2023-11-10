@@ -24,6 +24,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
     public $quiz,
            $quiz_action_url,
            $new_quiz_flag;
+           
     public function __construct() {
         // load the quiz
         $this->quiz = $this->load_quiz();
