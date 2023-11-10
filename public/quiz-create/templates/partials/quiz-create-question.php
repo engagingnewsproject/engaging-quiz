@@ -32,7 +32,7 @@ $question_image = $question->get_question_image();
         </label>
         <textarea id="question-title-<?php echo $question_id; ?>" class="enp-textarea enp-question-title__textarea" name="enp_question[<?php echo $question_i; ?>][question_title]" maxlength="6120" placeholder="Why can't we tickle ourselves?" /><?php echo $question->get_question_title(); ?></textarea>
 
-        <input type="hidden" id="enp-question-image-<? echo $question_id; ?>" class="enp-question-image__input" name="enp_question[<? echo $question_i; ?>][question_image]" value="<?php echo $question_image; ?>" />
+        <input type="hidden" id="enp-question-image-<?php echo $question_id; ?>" class="enp-question-image__input" name="enp_question[<?php echo $question_i; ?>][question_image]" value="<?php echo $question_image; ?>" />
 
         <?php
         echo $Quiz_create->get_question_image_template( $question, $question_id, $question_i, $question_image );
