@@ -77,8 +77,8 @@
     background: #fff;
     border: 1px solid #aaa;
     border-radius: 3px;
-    width: 35rem;
-    max-width: 40rem;
+    width: 20rem;
+    max-width: 100%;
     margin-bottom: 1.2rem;
 
     @include breakpoint(medium) {
@@ -282,9 +282,4 @@
             padding: .8rem;
         }
      }
-}
-
-.hide {
-    opacity: 0;
-    position: absolute;
 }

@@ -94,8 +94,7 @@
         @include input--large;
     }
 
-    .enp-question-image-upload,
-    .enp-mc-option-image-upload {
+    .enp-question-image-upload {
         @include btn--dashed--light--alt-bg;
         @include small-uppercase;
         position: relative;
@@ -141,38 +140,7 @@
             }
         }
     }
-    // hide mc image upload button
-    // button.enp-button.enp-quiz-submit.enp-button__mc-option-image-upload {
-    //    opacity: 0;
-    //    position: absolute;
-    //    right: 900vw;
-    // }
-    .enp-mc-option-image-upload__input {
-        background: #fff;
-        width: 50px;
-        height: 50px;
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 2;
-        opacity: 0;
-    }
-    // mc option image upload
-    .enp-mc-option-image-upload__input {
-        cursor: pointer;
-    }
-    .enp-mc-option--inputs .enp-mc-option-image-upload__icon {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: #fff;
-        width: 40px;
-        height: 40px;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+
     .enp-question-image__container {
         position: relative;
         margin-bottom: 1rem;
@@ -570,9 +538,6 @@
             @include icon--gray-bg;
             position: relative;
             top: 0.2rem;
-            &:hover {
-                background-color: $darker_gray;
-            }
         }
 
         &:hover .enp-add-question__icon {
