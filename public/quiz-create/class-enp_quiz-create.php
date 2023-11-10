@@ -30,6 +30,9 @@ class Enp_quiz_Create {
      * @var      string    $plugin_name    The ID of this plugin.
      */
     protected $plugin_name;
+    protected $template; // Declare the property
+    protected $template_file; // Declare the property
+    protected $template_underscored; // Declare the property
 
 
     public static $message,

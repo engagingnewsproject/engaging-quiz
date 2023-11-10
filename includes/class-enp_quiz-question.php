@@ -25,6 +25,7 @@ class Enp_quiz_Question {
             $question_score_average,
             $question_time_spent,
             $question_time_spent_average,
+            $question_is_deleted,
             $mc_options = array(),
             $slider     = '';
 

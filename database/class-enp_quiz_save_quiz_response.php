@@ -26,6 +26,8 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save
         $quiz_title,
         $quiz_feedback,
         $quiz_status,
+        $quiz_finish_message,
+        $quiz_updated_at,
         $status,
         $action,
         $message = array('error' => array(), 'success' => array()),

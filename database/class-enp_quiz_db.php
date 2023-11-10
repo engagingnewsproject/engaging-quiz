@@ -10,6 +10,22 @@
 
 class enp_quiz_Db extends PDO {
 
+    public $quiz_table;
+    public $quiz_option_table;
+    public $question_table;
+    public $question_mc_option_table;
+    public $question_slider_table;
+    public $ab_test_table;
+    public $response_quiz_table;
+    public $response_question_table;
+    public $response_mc_table;
+    public $response_slider_table;
+    public $response_ab_test_table;
+    public $embed_site_table;
+    public $embed_site_type_table;
+    public $embed_site_br_site_type_table;
+    public $embed_quiz_table;
+    
     public function __construct()
     {
         // check if a connection already exists

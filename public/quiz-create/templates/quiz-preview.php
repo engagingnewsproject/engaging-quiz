@@ -161,9 +161,9 @@
 						<fieldset class="enp-fieldset enp-quiz-winlose enp-quiz-winlose--win">
 							<p class="enp-input-description">Text to display on quiz completion.</p>
 
-							<label class="enp-label enp-quiz-winlose__label" for="enp-win-title">
+							<p class="enp-label enp-quiz-winlose__label" for="enp-win-title">
 								Perfect Score &#129321;
-							</label>
+							</p>
 							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-perfect-description">Title</label>
 							<input id="enp-perfect-title" class="enp-input enp-input__sm enp-quiz-winlose-perfect__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_perfect_title]" type="text" value="<?php echo $quiz->get_quiz_end_perfect_title(); ?>">
 							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-good-description">Description</label>
