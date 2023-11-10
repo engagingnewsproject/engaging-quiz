@@ -16,10 +16,6 @@
 </aside>
 
 <article class="enp-container enp-dash-container">
-<?php 
-// $quiz_thing = new Enp_quiz_Quiz($dbQuiz['quiz_id']);
-// var_dump($quiz_thing);
-?>
 	<div class="enp-container enp-preview-page-container js-enp-quiz-create-form-container">
 		<?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-breadcrumbs.php'); ?>
 		<?php do_action('enp_quiz_display_messages'); ?>
@@ -116,7 +112,6 @@
 
 					</fieldset>
 
-					<!-- SHARE TEXT dropdown -->
 					<fieldset id="enp-quiz-share-text" class="enp-fieldset enp-fieldset--section">
 						<legend class="enp-legend enp-fieldset--section__title enp-quiz-share__legend">Quiz Share Text</legend>
 
@@ -216,8 +211,7 @@
 			<section class="enp-container enp-quiz-preview-container">
 				<h2 class="enp-quiz-preview__title">Quiz Preview</h2>
 
-				<script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL; ?>public/quiz-take/js/dist/iframe-parent.min.js"></script>
-
+				<script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL; ?>public/quiz-take/js/dist/iframe-parent.js"></script>
 				<iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id(); ?>" class="enp-quiz-iframe" src="<?php echo ENP_QUIZ_URL . $quiz->get_quiz_id(); ?>" style="width: <?php echo $quiz->get_quiz_width(); ?>; height: 500px;"></iframe>
 
 			</section>

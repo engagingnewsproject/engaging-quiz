@@ -369,17 +369,6 @@ class Enp_quiz_Quiz {
     }
 
     /**
-     * Get the quiz_title_test for our Quiz Object
-     * @param $quiz = quiz object
-     * @return quiz_title_test from the object
-     */
-    // public function get_quiz_title_test()
-    // {
-    //  $quiz_title_test = $this->quiz_title_test;
-    //  return $quiz_title_test;
-    // }
-
-    /**
      * Get the quiz_feedback for our Quiz Object
      * @param $quiz = quiz object
      * @return quiz_feedback from the object
