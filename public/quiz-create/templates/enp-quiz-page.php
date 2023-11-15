@@ -18,22 +18,11 @@ get_header();
 include( ENP_QUIZ_ROOT.'/public/quiz-create/svg/symbol-defs.svg');?>
 
 <main id="enp-quiz" class="enp-quiz__main" role="main">
-<?php
-// this will include our template files
-    // Get the current post
-    $current_post = get_post();
-    
-    // Check if we have a post
-    if ($current_post) {
-        // Set up post data for template tags
-        setup_postdata($current_post);
-
-        // Output the content
-        the_content();
-
-        // Reset post data
-        wp_reset_postdata();
-    }
+<?php // this will include our template files
+if (have_posts()) :
+			the_post();
+			the_content();
+endif;
 ?>
 </main>
 

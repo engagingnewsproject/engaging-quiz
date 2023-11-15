@@ -26,7 +26,7 @@ class Enp_quiz_Take_Question {
 		// set random vars if necessary
 		if($this->qt->state === 'question_explanation') {
 			// set if they got the question right or not
-			$this->set_question_response_correct();
+						$this->set_question_response_correct();
 			$this->set_question_explanation_vars();
 		}
 	}
@@ -136,12 +136,11 @@ class Enp_quiz_Take_Question {
 
 	public function get_init_json() {
 		$question = clone $this;
-		unset($question->qt);
-		echo '<script type="text/javascript" class="take_question_json">';
+				unset($question->qt);
+		echo '<script type="text/javascript" id="quiz_take_question_json">';
 		// print this whole object as js global vars in json
-			// echo 'var take_question_json = '.json_encode($question).';';
-            echo 'var take_question_json = '.json_encode($question, JSON_HEX_QUOT | JSON_HEX_TAG).';';
-			echo 'var init_question_json = '.$question->question->get_take_question_json().';';
+			echo 'var take_question_json = '.json_encode($question).';';
+            			echo 'var init_question_json = '.$question->question->get_take_question_json().';';
 		echo '</script>';
 		// unset the cloned object
 		unset($question);
@@ -173,6 +172,8 @@ class Enp_quiz_Take_Question {
 		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/question.php');
 		$template .= ob_get_clean();
 		$template .= '</script>';
+
+
 
 		return $template;
 	}

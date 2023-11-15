@@ -88,7 +88,7 @@ This odd set-up will allow you to move your quiz database to an entirely differe
 
 1. IMPORTANT - the plugin root folder needs to be named `enp-quiz` or you'll run into a heap of troubles. So change it for your own good :)
 
-2. `Fatal error: Uncaught Error: PDO object is not initialized, constructor was not called in .../database/class-enp_quiz_db.php`
+2. **MIGHT NOT BE A FIX** `Fatal error: Uncaught Error: PDO object is not initialized, constructor was not called in .../database/class-enp_quiz_db.php`
 
 The local app will add a `../../mysqld.sock` to the end of your `$enp_db_host` variable in your `enp-quiz-database-config.php` file on the quiz plugin installation. You just need to remove it so it's only `localhost`.
 

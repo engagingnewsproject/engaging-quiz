@@ -139,7 +139,7 @@ class Enp_quiz_Take {
 	public function scripts() {
 		// use minified version on engagingnewsproject.org
 		if($_SERVER['HTTP_HOST'] === 'engagingnewsproject.org' || $_SERVER['HTTP_HOST'] === 'mediaengagement.org') {
-			$ext = '';
+			$ext = '.min';
 		} else {
 			$ext = '';
 		}

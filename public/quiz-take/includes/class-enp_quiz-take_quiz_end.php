@@ -9,8 +9,7 @@
  * @subpackage Enp_quiz/public
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
-class Enp_quiz_Take_Quiz_end
-{
+class Enp_quiz_Take_Quiz_end {
 	public $quiz, // Enp_quiz_Quiz Object
 		$correctly_answered,
 		$score,
@@ -25,8 +24,7 @@ class Enp_quiz_Take_Quiz_end
 	 * set states, and all other details we're sure to need for our templating
 	 *
 	 */
-	public function __construct($quiz, $correctly_answered = 0)
-	{
+	public function __construct($quiz, $correctly_answered = 0) {
 		$this->quiz = $quiz;
 		$this->correctly_answered = $correctly_answered;
 		// set the score
@@ -41,15 +39,14 @@ class Enp_quiz_Take_Quiz_end
 		$this->set_score_circle_dashoffset();
 	}
 
-	public function set_score()
-	{
+	
+	public function set_score() {
 		$total_questions = $this->quiz->get_total_question_count();
 		// calculate the score
 		$this->score = $this->correctly_answered / $total_questions;
 	}
 
-	public function set_score_percentage()
-	{
+	public function set_score_percentage() {
 		$this->score_percentage = round($this->score * 100);
 	}
 
@@ -57,8 +54,7 @@ class Enp_quiz_Take_Quiz_end
 	 * Give them a title based on how well they did
 	 * @param score
 	 */
-	public function set_quiz_end_title()
-	{
+	public function set_quiz_end_title() {
 		$score = (int) $this->score_percentage;
 		if ($score < 50) {
 			$title = $this->quiz->get_quiz_end_fail_title();
@@ -74,8 +70,7 @@ class Enp_quiz_Take_Quiz_end
 		$this->quiz_end_title = $title;
 	}
 
-	public function get_quiz_end_title()
-	{
+	public function get_quiz_end_title() {
 		return $this->quiz_end_title;
 	}
 
@@ -83,8 +78,7 @@ class Enp_quiz_Take_Quiz_end
 	 * Give them a title based on how well they did
 	 * @param score
 	 */
-	public function set_quiz_end_content()
-	{
+	public function set_quiz_end_content() {
 		// Not so good. Default.
 		$score = (int) $this->score_percentage;
 		$content = "We bet you could do better. Why don't you try taking the quiz again?";
@@ -100,46 +94,40 @@ class Enp_quiz_Take_Quiz_end
 		$this->quiz_end_content = $content;
 	}
 
-	public function get_quiz_end_content()
-	{
+	public function get_quiz_end_content() {
 		return $this->quiz_end_content;
 	}
 
-	public function get_score()
-	{
+	public function get_score() {
 		return $this->score;
 	}
 
-	public function get_score_percentage()
-	{
+	public function get_score_percentage() {
 		return $this->score_percentage;
 	}
 
-	public function set_score_circle_dashoffset()
-	{
+	public function set_score_circle_dashoffset() {
 		$dashoffset = 0;
-		if (!empty($this->score)) {
+		if(!empty($this->score)) {
 			// calculate the score dashoffset
 			$r = 90;
-			$c = M_PI * ($r * 2);
-			$dashoffset = ((100 - $this->get_score() * 100) / 100) * $c;
+			$c = M_PI*($r*2);
+			$dashoffset = ((100-$this->get_score()*100)/100)*$c;
 		}
 		$this->score_circle_dashoffset = $dashoffset;
 	}
 
-	public function get_score_circle_dashoffset()
-	{
+	public function get_score_circle_dashoffset() {
 		return $this->score_circle_dashoffset;
 	}
 
-	public function get_init_json()
-	{
+	public function get_init_json() {
 		$quiz_end = clone $this;
 		// we already have the quiz
 		unset($quiz_end->quiz);
 		echo '<script type="text/javascript">';
 		// print this whole object as js global vars in json
-		echo 'var quiz_end_json = ' . json_encode($quiz_end) . ';';
+		echo 'var quiz_end_json = '.json_encode($quiz_end).';';
 		echo '</script>';
 		// remove the cloned object
 		unset($quiz_end);
@@ -150,22 +138,21 @@ class Enp_quiz_Take_Quiz_end
 	 * It loops all keys in the object and sets the values as handlebar style strings
 	 * and injects it into the template
 	 */
-	public function quiz_end_template()
-	{
+	public function quiz_end_template() {
 		// clone the object so we don't reset its own values
 		$qt_end = clone $this;
 
 		// quiz end object variables
-		foreach ($qt_end as $key => $value) {
+		foreach($qt_end as $key => $value) {
 			// we don't want to unset our quiz object or twitter_share_text
-			if ('quiz' !== $key && 'twitter_share_text' !== $key) {
-				$qt_end->$key = '{{' . $key . '}}';
+			if($key !== 'quiz' && $key !== 'twitter_share_text') {
+				$qt_end->$key = '{{'.$key.'}}';
 			}
 		}
 
 		$template = '<script type="text/template" id="quiz_end_template">';
 		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH . 'partials/quiz-end.php');
+		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'partials/quiz-end.php');
 		$template .= ob_get_clean();
 		$template .= '</script>';
 
@@ -179,8 +166,7 @@ class Enp_quiz_Take_Quiz_end
 	 * @param $str (string) with {{mustache}} variable in it
 	 * @return $str (string) with {{score_percentage}} replaced by the actual get_score_percentage()
 	 */
-	public function replace_mustache_variable($str)
-	{
+	public function replace_mustache_variable($str) {
 		// regex to match {{string}} and extract string
 		// /\{\{([^}]+)\}\}/g
 		$str = str_replace('{{score_percentage}}', $this->get_score_percentage(), $str);
@@ -196,10 +182,9 @@ class Enp_quiz_Take_Quiz_end
 	 * @param $replace_mustache (boolean) true = search_repace {{vars}}, false = nope
 	 * @return (string) $this->share_content($key), if found.
 	 */
-	public function get_share_content($key = false, $encoding = 'url', $replace_mustache = true)
-	{
+	public function get_share_content($key = false, $encoding = 'url', $replace_mustache = true) {
 		// check if it's there
-		if ($key === false) {
+		if($key === false ) {
 			// we're gonna need some more from you here...
 			return false;
 		}
@@ -207,10 +192,13 @@ class Enp_quiz_Take_Quiz_end
 		$content = $this->quiz->get_encoded($key, $encoding, $replace_mustache);
 
 		// replace mustache var if necessary
-		if ($replace_mustache === true) {
+		if($replace_mustache === true) {
 			$content = $this->replace_mustache_variable($content);
 		}
 
 		return $content;
 	}
+
+
+
 }

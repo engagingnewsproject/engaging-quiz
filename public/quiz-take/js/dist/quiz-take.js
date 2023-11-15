@@ -1,4 +1,4 @@
-jQuery( document ).ready( function( $ ) {// UTILITY
+jQuery( function( $ ) {// UTILITY
     /**
     * get a string or decimal integer and return a formatted decimal number
     * @param places (int) how many decimal places you want to leave in Defaults to 0.
@@ -92,6 +92,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         .replace(/\)/g, '%29')
         .replace(/\*/g, '%2A');
     };
+
     
     _.replaceURLs = function(str, oldURL, newURL) {
         return str.replace(oldURL, newURL)
@@ -103,7 +104,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
     _.templateSettings = {
       interpolate: /\{\{(.+?)\}\}/g
     };
-    // Templates
+        // Templates
     if($('#question_template').length) {
         var questionTemplate = _.template($('#question_template').html());
         var mcOptionTemplate = _.template($('#mc_option_template').html());
@@ -112,20 +113,20 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         var questionImageTemplate = _.template($('#question_image_template').html());
         var errorMessageTemplate = _.template($('#error_message_template').html());
     }
-    if($('#question_explanation_template').length) {
+        if($('#question_explanation_template').length) {
         var questionExplanationTemplate = _.template($('#question_explanation_template').html());
     }
-    if($('#quiz_end_template').length) {
+        if($('#quiz_end_template').length) {
         var quizEndTemplate = _.template($('#quiz_end_template').html());
     }
-    // facebook share templates
+        // facebook share templates
     if(quiz_json.quiz_options.facebook_title_end) {
         var facebookTitleEndTemplate = _.template(quiz_json.quiz_options.facebook_title_end);
     } 
-    if(quiz_json.quiz_options.facebook_description_end) {
+        if(quiz_json.quiz_options.facebook_description_end) {
         var facebookDescriptionEndTemplate = _.template(quiz_json.quiz_options.facebook_description_end);
     }
-    
+
     
     /**
     * postMessage communication with parent of the iframe
@@ -185,15 +186,14 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // send the message to the parent of the iframe
         sendPostMessageAction('scrollToQuiz');
     }
-    
+
     
     /**
     * Function for caluting the container height of the iframe
     * @return (int)
     */
     function calculateBodyHeight() {
-    
-        var height = document.getElementById('enp-quiz-container').offsetHeight + document.getElementById('enp-quiz-footer').offsetHeight;
+            var height = document.getElementById('enp-quiz-container').offsetHeight + document.getElementById('enp-quiz-footer').offsetHeight;
     
         // calculate the height of the slide-hide mc elements, if there
         if($('.enp-option__input--slide-hide').length) {
@@ -222,8 +222,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
     * Send a request to the parent frame to save the embed site
     */
     function sendSaveSite() {
-    
-        // send the message to the parent of the iframe
+            // send the message to the parent of the iframe
         sendPostMessageAction("saveSite");
     }
     
@@ -250,7 +249,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
             }
         }
     }
-    
+
     
     function setCalloutURL(parentURL) {
         var href,
@@ -287,7 +286,6 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // selects the input element related to the clicked label with the class '.enp-option__input' 
         // and stores it in the variable thisMCInput.
         var thisMCInput = $(this).prev('.enp-option__input');
-    
         // See if the DOM has updated to select the corresponding input yet or not.
         // if it hasn't select it, then submit the form
         // checks if the input element is not already checked. If it's not checked, set the 'checked' property of the input to true.
@@ -298,69 +296,20 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // just trigger a click on the submit button
         $('.enp-question__submit').trigger('click');
     });
-    // runs on option click
-    function questionSaveSuccess( response, textStatus, jqXHR ) {
-        console.log('parsed json: ', $.parseJSON(jqXHR.responseText));
-        // Error logging START
-        // Access specific properties
-        var mcOptionId = response.mc_option_id;
-        console.log(mcOptionId);
-        // var status = response.status;
-        // ... access other properties ...
-    
-        // Nested structure
-        // var nextQuestionId = response.next_question.question_id;
-        // var nextQuestionTitle = response.next_question.question_title;
-        // ... access other properties in the next_question object ...
-    
-        // Handle errors
-        var errors = response.error;
-        if (errors.length > 0) {
-            console.error('Errors:', errors);
-            // Handle errors appropriately
-        }
-        // Error logging END
-        // real quick, hide the submit button so it can't get submitted again
-        $('.enp-question__submit').remove();
-        // get the response
-        var responseJSON = $.parseJSON(jqXHR.responseText);
-        console.log('questionSaveSuccess/responseJSON: ', responseJSON);
-        // see if there are any errors
-        if(responseJSON.error.length) {
-            _.handle_error_message(responseJSON.error[0]);
-        }
-    
-        // see if there's a next question
-        else if(responseJSON.next_state === 'question') {
-            // we have a next question, so generate it
-            generateQuestion(responseJSON.next_question);
-        } else {
-            // we're at the quiz end, in the future, we might get some data
-            // ready so we can populate quiz end instantly. Let's just do it based on a response from the server instead for now so we don't have to set localStorage and have duplicate copy for all the quiz end states
-    
-        }
-        // update correctly answered input with the response
-        $('#correctly-answered').val(responseJSON.correctly_answered);
-        // send the height of the new view
-        sendBodyHeight();
-    
-    }
-    
+
     
     // 5. save the quiz on click
     // AJAX save
     // ** when not on the last question .enp-question__submit button is hidden
     // but still a click is triggered by the .enp-option__label click, see function call above.
     $(document).on('click', '.enp-question__submit', function(e){
-        console.log('enp-question__submit onclick START');
         e.preventDefault();
         // get the JSON data for this question
         // retrieves JSON data associated with the closest ancestor element with the class '.enp-question__fieldset' 
         // and stores it in the variable questionJSON.
         var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
+        
         // if mc option
-        var closestFieldset = $(this).closest('.enp-question__fieldset')
-        var questionJSON = closestFieldset.data('questionJSON');
         // Depending on the value of questionJSON.question_type, either call the processMCSubmit() function 
         // or the processSliderSubmit() function and store the result in the variable correct_string.
         if(questionJSON.question_type === 'mc') {
@@ -382,8 +331,8 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // add answered class
         $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
         // show the explanation by generating the question explanation template
-        var questionExplanation = questionJSON;
         var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
+
         // add the Question Explanation Template into the DOM
         $('.enp-question__submit').before(qExplanationTemplate);
         // focus it
@@ -398,26 +347,45 @@ jQuery( document ).ready( function( $ ) {// UTILITY
             url  : url,
             data : data,
             dataType : 'json',
-        })
-        .done(function(data, textStatus, jqXHR) {
-            var rawJSONData = $.parseJSON(jqXHR.responseText);
-            // console.log('explanation-->', rawJSONData.question_explanation);
-            data = sanitizeQuestionExplanation(data);
-            questionExplanationSubmitSuccess(data);
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            // Handle AJAX failure
-            // console.log('AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown);
-            var rawJSONData = jqXHR.responseText;
-            // console.log('Raw JSON Data:', rawJSONData);
-        })
-        .always(function () {
-            // Always execute this code
-        })        
-        .then( function( errorThrown, textStatus, jqXHR ) {
-    
+            } )
+                // success
+        .done( questionSaveSuccess )
+        .fail( function( jqXHR, textStatus, errorThrown ) {
+            console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
         } )
+        .then( function( errorThrown, textStatus, jqXHR ) {
+
+        } )
+        .always(function() {
+
     });
+});
+
+function questionSaveSuccess( response, textStatus, jqXHR ) {
+            // real quick, hide the submit button so it can't get submitted again
+    $('.enp-question__submit').remove();
+    // get the response
+    var responseJSON = JSON.parse(jqXHR.responseText);
+    // see if there are any errors
+    if(responseJSON.error.length) {
+        _.handle_error_message(responseJSON.error[0]);
+    }
+
+    // see if there's a next question
+    else if(responseJSON.next_state === 'question') {
+        // we have a next question, so generate it
+        generateQuestion(responseJSON.next_question);
+    } else {
+        // we're at the quiz end, in the future, we might get some data
+        // ready so we can populate quiz end instantly. Let's just do it based on a response from the server instead for now so we don't have to set localStorage and have duplicate copy for all the quiz end states
+
+    }
+    // update correctly answered input with the response
+    $('#correctly-answered').val(responseJSON.correctly_answered);
+    // send the height of the new view
+    sendBodyHeight();
+
+}
     
     /**
     * Binds JSON data to the main question element in the DOM so we always have
@@ -456,7 +424,6 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         };
     
         new_questionTemplate = questionTemplate(questionData);
-        console.log(new_questionTemplate);
         $('.enp-question__fieldset').before(new_questionTemplate);
         // find it and add the classes we need
         $('#question_'+questionJSON.question_id)
@@ -509,8 +476,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
     
     /**
     * Add/Remove classes to bring in the next question
-    * Get question JSON
-    */
+        */
     function showNextQuestion(obj) {
         obj.addClass('enp-question--show')
            .removeClass('enp-question--on-deck')
@@ -535,6 +501,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // add in a little data to let the server know the data is coming from an ajax call
         doing_ajax = 'doing_ajax=doing_ajax';
         data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+
         // see if our question response is in there.
         // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
         // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
@@ -586,135 +553,61 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // Formats this percentage using the _.reformat_number function, presumably to ensure it's displayed as a percentage out of 100.
         var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
         question_response_percentage = _.reformat_number(question_response_percentage, 100);
-    
-        explanationTemplate = questionExplanationTemplate({
+            explanationTemplate = questionExplanationTemplate({
                                 question_id: questionJSON.question_id,
                                 question_explanation: questionJSON.question_explanation,
                                 question_explanation_title: correct,
                                 question_explanation_percentage: question_response_percentage,
                                 question_next_step_text: question_next_step_text
                             });
-    
-        if(typeof(callback) == "function") {
+            if(typeof(callback) == "function") {
             callback(explanationTemplate);
         }
         return explanationTemplate;
     }
-    
- // Modify the AJAX response using the $.ajaxPrefilter()
-$.ajaxPrefilter(function (options) {
-    if (options.dataType && options.dataType.toLowerCase() === 'json') {
-        var originalSuccess = options.success;
-        options.success = function (data) {
-            // Check if the data is a string
-            if (typeof data === 'string') {
-                try {
-                    // Attempt to parse the JSON
-                    data = JSON.parse(data);
-                } catch (e) {
-                    // Handle the error, escape bad characters here
-                    data = escapeBadCharacters(data);
-                }
-            }
 
-            // Call the original success callback with the modified data
-            if (originalSuccess) {
-                originalSuccess(data);
-            }
-        };
-    }
-});
+        /**
+     * Click on Next Question / Quiz End button
+     * 1. Prep the form values
+     * 2. Show the next question or quiz end template
+     * 3. Submit the form (so we can register a new page view/change the state of the quiz, etc)
+     */
+    $(document).on('click', '.enp-next-step', function(e){
+        e.preventDefault();
+        url = $('.enp-question__form').attr('action');
+        // prepare the data to submit
+        data = prepareQuestionFormData($(this));
 
-// Define a function to escape bad characters in the JSON string
-function escapeBadCharacters(jsonString) {
-    // You can implement custom logic here to fix bad characters in the JSON string
-    // For example, replace invalid characters
-    jsonString = jsonString.replace(/\?PHPSESSID=/g, '');
-    return jsonString;
-}
-/**
- * Click on Next Question / Quiz End button
- * 1. Prep the form values
- * 2. Show the next question or quiz end template
- * 3. Submit the form (so we can register a new page view/change the state of the quiz, etc)
- */
-$(document).on('click', '.enp-next-step', function (e) {
-    e.preventDefault();
-    url = $('.enp-question__form').attr('action');
-    // prepare the data to submit
-    data = prepareQuestionFormData($(this));
+        $('.enp-question__answered').addClass('enp-question--remove');
+        $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
 
-    $('.enp-question__answered').addClass('enp-question--remove');
-    $('.enp-question__container').removeClass('enp-question__container--explanation').addClass('enp-question__container--unanswered');
-
-    // bring in the next question/quiz end, it it's there
-    if ($('.enp-question--on-deck').length) {
-        nextQuestion = $('.enp-question--on-deck');
-        // add the classes for the next question
-        showNextQuestion(nextQuestion);
-    }
-
-    // submit the form
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: data,
-        dataType: 'json',
-    })
-    // success
-    .done(function (data, textStatus, jqXHR) {
-        console.log('START--> .done');
-        // Check the Content-Type header in the response
-        var contentType = jqXHR.getResponseHeader('Content-Type');
-        if (contentType && contentType.indexOf('application/json') !== -1) {
-            // Handle the parsed data
-            data = sanitizeQuestionExplanation(data);
-            questionExplanationSubmitSuccess(data);
-        } else {
-            // Handle the case where the response is not JSON
-            console.error('Response is not JSON');
+        // bring in the next question/quiz end, it it's there
+        if($('.enp-question--on-deck').length) {
+            nextQuestion = $('.enp-question--on-deck');
+            // add the classes for the next question
+            showNextQuestion(nextQuestion);
         }
-    })
-    
-    .fail(function (jqXHR, textStatus, errorThrown) {
-        // Handle AJAX failure
-        console.log('AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown);
-        try {
-            console.log('START--> .fail->try');
-            var responseJSON = $.parseJSON(jqXHR.responseText);
-            console.log('Parsed JSON Data:', responseJSON);
 
-            // If you need to sanitize the JSON further, you can do it here
-            responseJSON = sanitizeJSON(responseJSON);
 
-            // Now, you can use the sanitized response as needed
-            console.log('Sanitized JSON Data:', responseJSON);
-        } catch (error) {
-            console.log('Failed to parse JSON:', error);
+        // submit the form
+        $.ajax( {
+            type: 'POST',
+            url  : url,
+            data : data,
+            dataType : 'json',
+    } )
+        // success
+        .done( questionExplanationSubmitSuccess )
+        .fail( function( jqXHR, textStatus, errorThrown ) {
+        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+        } )
+        .then( function( errorThrown, textStatus, jqXHR ) {
 
-            // Handle the JSON parsing error here
-        }
-    })
-    .then(function (errorThrown, textStatus, jqXHR) {
-        // Handle any additional actions after success/failure
-    })
-    .always(function () {
-        // Perform actions that should always run
+    } )
+        .always(function() {
+
+        });
     });
-});
-
-function sanitizeQuestionExplanation(data) {
-    if (data && data.next_question && data.next_question.question_explanation) {
-        // Remove PHPSESSID from the question_explanation
-        var questionExplanation = data.next_question.question_explanation;
-        console.log(questionExplanation);
-        questionExplanation = questionExplanation.replace(/\?PHPSESSID=[^"]+"/g, '"');
-        data.next_question.question_explanation = questionExplanation;
-    }
-    return data;
-}
-
-
 
     /**
     * On successful AJAX submit, either set-up the Next, Next question,
@@ -722,9 +615,8 @@ function sanitizeQuestionExplanation(data) {
     *
     */
     function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
-        var responseJSON = $.parseJSON(jqXHR.responseText);
-        console.log(responseJSON);
-        // console.log(responseJSON.next_question.question_explanation);
+        var responseJSON = JSON.parse(jqXHR.responseText);
+
         // see if there are any errors
         if(responseJSON.error.length) {
             _.handle_error_message(responseJSON.error[0]);
@@ -796,7 +688,7 @@ function sanitizeQuestionExplanation(data) {
         });
         return correct;
     }
-    
+
     
     /**
     * Find all the mc options in a container and tell us which are incorrect
@@ -1219,6 +1111,7 @@ function sanitizeQuestionExplanation(data) {
     
     // on load, bind the quiz data to the quiz DOM
     bindQuizData(quiz_json);
+
     /**
     * Binds JSON data to the quiz form element in the DOM so we always have
     * access to it. Accessible via
@@ -1242,4 +1135,4 @@ function sanitizeQuestionExplanation(data) {
         // console.log('image loaded');
         sendBodyHeight();
     });
-    });
+});
