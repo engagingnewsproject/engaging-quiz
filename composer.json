@@ -1,0 +1,29 @@
+{
+    "name": "cme/enp-quiz",
+    "description": "Create quizzes for embedding on websites",
+    "type": "project",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Engaging News Project"
+        }
+    ],
+    "require-dev": {
+        "phpcompatibility/php-compatibility": "*",
+        "wp-coding-standards/wpcs": "^3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "squizlabs/php_codesniffer": "*"
+    },
+    "prefer-stable" : true,
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "install-codestandards": [
+            "PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
+        ]
+    }
+}
