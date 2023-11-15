@@ -21,6 +21,7 @@
 class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
     public $quiz_id,
            $quiz_title,
+           $quiz_feedback,
            $quiz_status,
            $status,
            $action,
@@ -66,6 +67,7 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save {
     public function set_quiz_response($quiz) {
         $this->set_quiz_id($quiz['quiz_id']);
         $this->quiz_title = $quiz['quiz_title'];
+        $this->quiz_feedback = $quiz['quiz_feedback'];
         $this->quiz_status = $quiz['quiz_status'];
         $this->quiz_finish_message = $quiz['quiz_finish_message'];
         $this->quiz_updated_at = $quiz['quiz_updated_at'];
