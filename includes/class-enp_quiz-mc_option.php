@@ -134,7 +134,7 @@ class Enp_quiz_MC_option {
     * @return mc_option_id from the object
     */
     public function get_mc_option_id() {
-        $mc_option_id = $this->mc_option_id;
+                $mc_option_id = $this->mc_option_id;
         return $mc_option_id;
     }
 
@@ -144,7 +144,7 @@ class Enp_quiz_MC_option {
     * @return mc_option_content from the object
     */
     public function get_mc_option_content() {
-        $mc_option_content = $this->mc_option_content;
+                $mc_option_content = $this->mc_option_content;
         return $mc_option_content;
     }
 
@@ -155,7 +155,7 @@ class Enp_quiz_MC_option {
     */
     public function get_mc_option_correct() {
         $mc_option_correct = $this->mc_option_correct;
-        return $mc_option_correct;
+                return $mc_option_correct;
     }
 
     /**

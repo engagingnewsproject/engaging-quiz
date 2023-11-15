@@ -83,10 +83,11 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         // will return 0 if wrong, 1 if right. We don't care if
         // it's right or not, just that we KNOW if it's right or not
         $response_correct = $mc->get_mc_option_correct();
+        // var_dump( $response_correct );
         // if somehow this has been called on an invalid item
         if($response_correct !== '0' &&  $response_correct !== '1') {
-            var_dump('invalid response');
-        }
+            var_dump('INCORRECT I GUESS--> ', $response_correct);
+                    }
 
         return $response_correct;
     }
@@ -285,9 +286,12 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
     protected function update_question_response_data($response) {
         // connect to PDO
         $pdo = new enp_quiz_Db();
+        // var_dump( $pdo );
         // setup our SQL statement variables so we don't need to have a correct query, incorrect query, and a rebuild % query. A little convoluted, but fast.
         $question_responses = 'question_responses';
+        // var_dump( $response['response_correct'] );
         if($response['response_correct'] === '1') {
+            // var_dump( 'correct-->1' );
             $question_response_state = 'question_responses_correct';
 
         } else {

@@ -10,6 +10,7 @@
 
 class enp_quiz_Db extends PDO {
 
+    // Properties to store table names and errors
     public $quiz_table;
     public $quiz_option_table;
     public $question_table;
@@ -31,9 +32,9 @@ class enp_quiz_Db extends PDO {
     {
         // check if a connection already exists
         try {
-            // config file for connection info and necessary variables
+            // Include the configuration file with connection info and variables
             include($_SERVER["DOCUMENT_ROOT"] . '/enp-quiz-database-config.php');
-            // Table names for dynamic reference
+            // Set table names for dynamic reference
             $this->quiz_table = $enp_quiz_table_quiz;
             $this->quiz_option_table = $enp_quiz_table_quiz_option;
             $this->question_table = $enp_quiz_table_question;
@@ -50,12 +51,13 @@ class enp_quiz_Db extends PDO {
             $this->embed_site_br_site_type_table = $enp_quiz_table_embed_site_br_site_type;
             $this->embed_quiz_table = $enp_quiz_table_embed_quiz;
 
-            // set options for PDO connection
+            // Set options for PDO connection
             $options = array(
                 PDO::ATTR_PERSISTENT => true,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             );
-            // create the new connection
+
+            // Create a new PDO connection
             parent::__construct(
                 'mysql:host=' . $enp_db_host . ';dbname=' . $enp_db_name,
                 // for windows users possible fix for PDO error, change 'mysql:host=' line above to:
@@ -65,26 +67,33 @@ class enp_quiz_Db extends PDO {
                 $options
             );
         } catch (Exception $e) {
+            // Handle PDO connection error
             error_log('PDO Connection Error: ' . $e->getMessage());
             $this->errors = $e->getMessage();
         }
     }
 
+     // Method to run a query
     public function runQuery($sql, $params = null)
     {
+        // Prepare and execute the query
         $stmt = $this->prepare($sql);
         $stmt->execute($params);
         return $stmt;
     }
 
+    // Method to fetch a single row
     public function fetchOne($sql, $params = [])
     {
+        // Run the query and fetch a single row
         $stmt = $this->runQuery($sql, $params);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Method to fetch all rows
     public function fetchAll($sql, $params = [])
     {
+        // Run the query and fetch all rows
         $stmt = $this->runQuery($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -189,21 +198,27 @@ class enp_quiz_Db extends PDO {
 
         return (int) $this->fetchOne($sql)['users'];
     }
+    
+    // Method to build the WHERE clause of a query
     public function buildWhere($params, $where = true)
     {
+        // Initialize the WHERE clause
         $sql = '';
         if ($where === true) {
             $sql = ' WHERE ';
         }
+        // Build the WHERE clause based on parameters
         if (!empty($params)) {
             $i = 1;
             foreach ($params as $key => $val) {
                 if (is_array($val)) {
-                    // for things like 'date > :date'
+                    // For conditions like 'date > :date'
                     $sql .= $val['key'] . ' ' . $val['operator'] . ' ' . $val['val'];
                 } else {
+                    // For simple key-value conditions
                     $sql .= $key . ' = ' . $val;
                 }
+                // Add an AND statement if not the last condition
                 if ($i !== count($params)) {
                     // not the last one, so add an AND statement
                     $where .= " AND ";
@@ -216,14 +231,16 @@ class enp_quiz_Db extends PDO {
 
     /**
      * Builds out bound parameters in the array by adding a : to the beginning of the array keys
-     *
+     * Method to prepare parameters for binding
      * @param $params ARRAY
      * @return ARRAY
      */
     public function buildParams($params)
     {
+        // Initialize an array to store bound parameters
         $bound = [];
-
+        
+        // Copy parameters to the bound array
         foreach ($params as $key => $val) {
             $bound[$key] = $val;
         }

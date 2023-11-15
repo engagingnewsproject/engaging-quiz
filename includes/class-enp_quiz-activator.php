@@ -11,7 +11,7 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Activator {
-    public $enp_database_config_path,
+	public 	  $enp_database_config_path,
               $enp_config_path,
               $quiz_table_name,
               $quiz_option_table_name,
@@ -39,9 +39,9 @@ class Enp_quiz_Activator {
 
         // set some stuff
         // set enp-database-quiz-config file path
-        $this->enp_database_config_path = $_SERVER['DOCUMENT_ROOT'] . '/enp-quiz-database-config.php';
+        $this->enp_database_config_path = $_SERVER["DOCUMENT_ROOT"].'/enp-quiz-database-config.php';
         // set enp-quiz-config file path
-        $this->enp_config_path = WP_CONTENT_DIR . '/enp-quiz-config.php';
+        $this->enp_config_path = WP_CONTENT_DIR.'/enp-quiz-config.php';
 
         // set table names
         $this->set_table_names();
@@ -54,8 +54,8 @@ class Enp_quiz_Activator {
 
         $database_config_file_exists = $this->check_database_config_file();
         // if doesn't exist, create it
-        if ( $database_config_file_exists === false ) {
-            // create the config file
+        if($database_config_file_exists === false) {
+            //create the config file
             $this->create_database_config_file();
         }
 
@@ -63,8 +63,8 @@ class Enp_quiz_Activator {
 
         $config_file_exists = $this->check_config_file();
         // if doesn't exist, create it
-        if ( $config_file_exists === false ) {
-            // create the config file
+        if($config_file_exists === false) {
+            //create the config file
             $this->create_config_file();
         }
 
@@ -72,9 +72,9 @@ class Enp_quiz_Activator {
         $this->include_config_file();
 
         // check to see if our image upload directory exists
-        if ( ! file_exists( ENP_QUIZ_IMAGE_DIR ) ) {
+        if (!file_exists(ENP_QUIZ_IMAGE_DIR)) {
             // if it doesn't exist, create it
-            mkdir( ENP_QUIZ_IMAGE_DIR, 0777, true );
+            mkdir(ENP_QUIZ_IMAGE_DIR, 0777, true);
         }
 
         // Set-up rewrite rules based on our config files
@@ -480,42 +480,42 @@ class Enp_quiz_Activator {
 
     protected function create_database_config_file() {
         // creates and opens the file for writing
-        $database_config_file = fopen( $this->enp_database_config_path, 'w' );
+        $database_config_file = fopen($this->enp_database_config_path, "w");
 
         // use single quotes around the DB_PASSWORD in case they have
         // a $ in their password
         $database_connection = '<?php
 // Modify these to match your Quiz Database credentials
-$enp_db_name = "' . DB_NAME . '";
-$enp_db_user = "' . DB_USER . '";
-$enp_db_password = \'' . DB_PASSWORD . '\';
-$enp_db_host = "' . DB_HOST . '";
-$enp_quiz_table_quiz = "' . $this->quiz_table_name . '";
-$enp_quiz_table_quiz_option = "' . $this->quiz_option_table_name . '";
-$enp_quiz_table_question = "' . $this->question_table_name . '";
-$enp_quiz_table_question_mc_option = "' . $this->mc_option_table_name . '";
-$enp_quiz_table_question_slider = "' . $this->slider_table_name . '";
-$enp_quiz_table_ab_test = "' . $this->ab_test_table_name . '";
-$enp_quiz_table_response_quiz = "' . $this->response_quiz_table_name . '";
-$enp_quiz_table_response_question = "' . $this->response_question_table_name . '";
-$enp_quiz_table_response_mc = "' . $this->response_mc_table_name . '";
-$enp_quiz_table_response_slider = "' . $this->response_slider_table_name . '";
-$enp_quiz_table_ab_test_response = "' . $this->ab_test_response_table_name . '";
-$enp_quiz_table_embed_site = "' . $this->embed_site_table_name . '";
-$enp_quiz_table_embed_site_type = "' . $this->embed_site_type_table_name . '";
-$enp_quiz_table_embed_site_br_site_type = "' . $this->embed_site_br_site_type_table_name . '";
-$enp_quiz_table_embed_quiz = "' . $this->embed_quiz_table_name . '";';
+$enp_db_name = "'.DB_NAME.'";
+$enp_db_user = "'.DB_USER.'";
+$enp_db_password = \''.DB_PASSWORD.'\';
+$enp_db_host = "'.DB_HOST.'";
+$enp_quiz_table_quiz = "'.$this->quiz_table_name.'";
+$enp_quiz_table_quiz_option = "'.$this->quiz_option_table_name.'";
+$enp_quiz_table_question = "'.$this->question_table_name.'";
+$enp_quiz_table_question_mc_option = "'.$this->mc_option_table_name.'";
+$enp_quiz_table_question_slider = "'.$this->slider_table_name.'";
+$enp_quiz_table_ab_test = "'.$this->ab_test_table_name.'";
+$enp_quiz_table_response_quiz = "'.$this->response_quiz_table_name.'";
+$enp_quiz_table_response_question = "'.$this->response_question_table_name.'";
+$enp_quiz_table_response_mc = "'.$this->response_mc_table_name.'";
+$enp_quiz_table_response_slider = "'.$this->response_slider_table_name.'";
+$enp_quiz_table_ab_test_response = "'.$this->ab_test_response_table_name.'";
+$enp_quiz_table_embed_site = "'.$this->embed_site_table_name.'";
+$enp_quiz_table_embed_site_type = "'.$this->embed_site_type_table_name.'";
+$enp_quiz_table_embed_site_br_site_type = "'.$this->embed_site_br_site_type_table_name.'";
+$enp_quiz_table_embed_quiz = "'.$this->embed_quiz_table_name.'";';
 
         // write to the file
-        fwrite( $database_config_file, $database_connection );
+        fwrite($database_config_file, $database_connection);
         // close the file
-        fclose( $database_config_file );
+        fclose($database_config_file);
         return true;
     }
 
     protected function check_config_file() {
         // see if the file exists
-        if ( file_exists( $this->enp_config_path ) ) {
+        if(file_exists($this->enp_config_path)) {
             // if the file exists, return true
             return true;
         }
@@ -525,39 +525,39 @@ $enp_quiz_table_embed_quiz = "' . $this->embed_quiz_table_name . '";';
 
     protected function create_config_file() {
         // creates and opens the file for writing
-        $config_file = fopen( $this->enp_config_path, 'w' );
+        $config_file = fopen($this->enp_config_path, "w");
         // get site url and append our string
-        $enp_take_url   = site_url();
-        $enp_create_url = site_url( 'enp-quiz' );
+        $enp_take_url = site_url();
+        $enp_create_url = site_url('enp-quiz');
         // default image directory for question image uploads
         $image_dir = wp_upload_dir();
-        do_action( 'qm/debug', $enp_take_url );
+        
         $config_contents =
         '<?php
-include("' . $this->enp_database_config_path . '");
-define("ENP_QUIZ_CREATE_TEMPLATES_PATH", "' . ENP_QUIZ_ROOT . 'public/quiz-create/templates/");
-define("ENP_QUIZ_CREATE_MAIN_TEMPLATE_PATH", "' . ENP_QUIZ_ROOT . 'public/quiz-create/templates/enp-quiz-page.php");
-define("ENP_QUIZ_TAKE_TEMPLATES_PATH", "' . ENP_QUIZ_ROOT . 'public/quiz-take/templates/");
-define("ENP_QUIZ_TAKE_RESOURCES_PATH", "' . ENP_QUIZ_ROOT . 'public/quiz-take/");
-define("ENP_QUIZ_DASHBOARD_URL", "' . $enp_create_url . '/dashboard/");
-define("ENP_QUIZ_CREATE_URL", "' . $enp_create_url . '/quiz-create/");
-define("ENP_QUIZ_PREVIEW_URL", "' . $enp_create_url . '/quiz-preview/");
-define("ENP_QUIZ_PUBLISH_URL", "' . $enp_create_url . '/quiz-publish/");
-define("ENP_QUIZ_RESULTS_URL", "' . $enp_create_url . '/quiz-results/");
-define("ENP_AB_TEST_URL", "' . $enp_create_url . '/ab-test/");
-define("ENP_AB_RESULTS_URL", "' . $enp_create_url . '/ab-results/");
-define("ENP_QUIZ_URL", "' . $enp_take_url . '/quiz-embed/");
-define("ENP_TAKE_AB_TEST_URL", "' . $enp_take_url . '/ab-embed/");
-define("ENP_QUIZ_IMAGE_DIR", "' . $image_dir['basedir'] . '/enp-quiz/");
-define("ENP_QUIZ_IMAGE_URL", "' . $image_dir['baseurl'] . '/enp-quiz/");
-define("ENP_QUIZ_PLUGIN_DIR", "' . ENP_QUIZ_ROOT . '");
-define("ENP_QUIZ_PLUGIN_URL", "' . ENP_QUIZ_ROOT_URL . '/");
+include("'.$this->enp_database_config_path.'");
+define("ENP_QUIZ_CREATE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-create/templates/");
+define("ENP_QUIZ_CREATE_MAIN_TEMPLATE_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-create/templates/enp-quiz-page.php");
+define("ENP_QUIZ_TAKE_TEMPLATES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/templates/");
+define("ENP_QUIZ_TAKE_RESOURCES_PATH", "'.ENP_QUIZ_ROOT.'public/quiz-take/");
+define("ENP_QUIZ_DASHBOARD_URL", "'.$enp_create_url.'/dashboard/");
+define("ENP_QUIZ_CREATE_URL", "'.$enp_create_url.'/quiz-create/");
+define("ENP_QUIZ_PREVIEW_URL", "'.$enp_create_url.'/quiz-preview/");
+define("ENP_QUIZ_PUBLISH_URL", "'.$enp_create_url.'/quiz-publish/");
+define("ENP_QUIZ_RESULTS_URL", "'.$enp_create_url.'/quiz-results/");
+define("ENP_AB_TEST_URL", "'.$enp_create_url.'/ab-test/");
+define("ENP_AB_RESULTS_URL", "'.$enp_create_url.'/ab-results/");
+define("ENP_QUIZ_URL", "'.$enp_take_url.'/quiz-embed/");
+define("ENP_TAKE_AB_TEST_URL", "'.$enp_take_url.'/ab-embed/");
+define("ENP_QUIZ_IMAGE_DIR", "'.$image_dir["basedir"].'/enp-quiz/");
+define("ENP_QUIZ_IMAGE_URL", "'.$image_dir["baseurl"].'/enp-quiz/");
+define("ENP_QUIZ_PLUGIN_DIR", "'.ENP_QUIZ_ROOT.'");
+define("ENP_QUIZ_PLUGIN_URL", "'.ENP_QUIZ_ROOT_URL.'/");
 ?>';
 
         // write to the file
-        fwrite( $config_file, $config_contents );
+        fwrite($config_file, $config_contents);
         // close the file
-        fclose( $config_file );
+        fclose($config_file);
         return true;
     }
 

@@ -3,8 +3,7 @@
  * Create a quiz object
  * @param $quiz_id = the id of the quiz you want to get
  * @return quiz object
- * $quiz_title_test,
- */
+  */
 class Enp_quiz_Quiz {
     public  $quiz_id,
         $quiz_title,
@@ -71,8 +70,7 @@ class Enp_quiz_Quiz {
     /**
      * Hook up all the values for the object
      * @param $quiz = row from the quiz_table
-     * $this->quiz_title_test = $this->set_quiz_title_test();
-     */
+          */
     protected function set_quiz_object_values() {
         $this->quiz_id = $this->set_quiz_id();
         $this->quiz_title = $this->set_quiz_title();
@@ -156,18 +154,6 @@ class Enp_quiz_Quiz {
         $quiz_title = stripslashes(self::$quiz['quiz_title']);
         return $quiz_title;
     }
-
-    /**
-     * Set the quiz_title_test for our Quiz Object
-     * @param $quiz = quiz row from quiz database table
-     * @return quiz_title_test field from the database
-     */
-    // protected function set_quiz_title_test()
-    // {
-    //  $quiz_title_test = stripslashes(self::$quiz['quiz_title_test']);
-    //  return $quiz_title_test;
-    // }
-
     /**
      * Set the quiz_feedback for our Quiz Object
      * @param $quiz = quiz row from quiz database table
@@ -185,7 +171,7 @@ class Enp_quiz_Quiz {
      */
     protected function set_quiz_status() {
         $quiz_status = self::$quiz['quiz_status'];
-        if ($quiz_status !== 'published') {
+        if($quiz_status !== 'published') {
             $quiz_status = 'draft';
         }
         return $quiz_status;
@@ -479,16 +465,6 @@ class Enp_quiz_Quiz {
     public function get_quiz_title_display() {
         return $this->get_quiz_option('quiz_title_display');
     }
-
-    /**
-     * Get the quiz_title_test_display for our Quiz Object
-     * @param $quiz = quiz object
-     * @return (string) 'show' or 'hide'
-     */
-    // public function get_quiz_title_test_display()
-    // {
-    //  return $this->get_quiz_option('quiz_title_test_display');
-    // }
 
 
     /**
@@ -839,7 +815,7 @@ class Enp_quiz_Quiz {
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $quiz_scores = array();
-        foreach ($scores as $score) {
+        foreach($scores as $score) {
             $quiz_scores[] = (int) round($score['quiz_score'] * 100);
         }
 
@@ -859,13 +835,13 @@ class Enp_quiz_Quiz {
         $default_scores = array();
         $total_questions = $this->get_total_question_count();
         // return 0 if there are no questions
-        if ($total_questions === 0) {
+        if($total_questions === 0) {
             return $all_quiz_scores;
         }
 
         $i = 0;
-        while ($i <= $total_questions) {
-            $key = (int) round($i / $total_questions * 100);
+        while($i <= $total_questions) {
+            $key = (int) round($i/$total_questions * 100);
             $default_scores[$key] = 0;
             $i++;
         }
@@ -887,8 +863,8 @@ class Enp_quiz_Quiz {
         $all_quiz_scores = $this->get_quiz_scores_group_count();
         $quiz_scores_labels = array();
         $quiz_scores = array();
-        foreach ($all_quiz_scores as $key => $val) {
-            $quiz_scores_labels[] = $key . '%';
+        foreach($all_quiz_scores as $key => $val) {
+            $quiz_scores_labels[] = $key.'%';
             $quiz_scores[] = $val;
         }
 
@@ -983,7 +959,7 @@ class Enp_quiz_Quiz {
      *
      * @param $content (string) the content you want encoded
      * @param $encoding (mixed - string or boolean).
-    *        false = no encoding. rawurl = rawurlencode(). url = urlencode(). htmlspecialchars = htmlspecialchars();
+    *		 false = no encoding. rawurl = rawurlencode(). url = urlencode(). htmlspecialchars = htmlspecialchars();
      * @param $mustache (BOOLEAN) Should we search the string to replace {{mustache}} strings?
      * @return STRING encoded and {{mustache}} replaced $content
      */
