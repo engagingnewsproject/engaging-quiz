@@ -24,15 +24,6 @@
  * Text Domain:       enp_quiz
  * Domain Path:       /languages
  */
-
- function enp_quiz_csp_header() {
-    // Cross-Origin Resource Sharing (CORS) header allow your domain to be embedded in iframes. 
-    header('Content-Security-Policy: frame-ancestors "self" mediaengagement.org');
-    // Allow Embedding in iframes
-    header('X-Frame-Options: ALLOW-FROM https://mediaengagement.org/');
-}
-add_action('init', 'enp_quiz_csp_header');
-
  // Include the custom rewrite rules
 include_once(plugin_dir_path(__FILE__) . 'rewrite-rules.php');
  
@@ -186,10 +177,13 @@ function run_enp_quiz() {
 /* For DEBUGGING
 *  creates log file with error output. Good for using on
 * The plugin generated xxxx characters of unexpected output messages
-*/
+
 add_action('activated_plugin','enp_log_error');
 function enp_log_error(){
     file_put_contents(plugin_dir_path( __FILE__ ).'/error.txt', ob_get_contents());
 }
-
+*/
 run_enp_quiz();
+
+
+		
