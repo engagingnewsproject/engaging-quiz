@@ -24,6 +24,10 @@
  * Text Domain:       enp_quiz
  * Domain Path:       /languages
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> 13af8e28ec9d17cc0c2b6f548a7051a6a1c83be0
  // Include the custom rewrite rules
 include_once(plugin_dir_path(__FILE__) . 'rewrite-rules.php');
  

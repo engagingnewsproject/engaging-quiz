@@ -8,6 +8,34 @@
  *
  * Data available to this view:
  * $quiz = quiz object (if exits), error page if it doesn't (TODO)
+* 
+ * Breadcrumb Link:
+ * An aside element containing a breadcrumb link is included, likely for navigation 
+ * within the quiz preview page.
+ * 
+ * Quiz Preview Form:
+ * A form with various fieldsets for configuring quiz settings is present.
+ * Fields include options for quiz styles (title display, options order, colors, width), 
+ * share text for Facebook and Twitter, result screen text for different score ranges, and a feedback textarea.
+ * 
+ * Submit Buttons:
+ * Two submit buttons are provided - one for saving changes (Save) and another for 
+ * proceeding to the next step, possibly publishing the quiz (Publish or Embed). The specific 
+ * label is determined by the $enp_next_button_name variable.
+ * 
+ * Quiz Preview Container:
+ * An iframe is embedded in the page to display the quiz preview. The iframe source is 
+ * dynamically set based on the quiz ID, and its width is determined by the quiz settings.
+ * 
+ * Scripts:
+ * The file includes a JavaScript file (iframe-parent.js) for handling interactions with the 
+ * iframe. This script is located at public/quiz-take/js/dist/iframe-parent.js.
+ * Dynamic Values:
+ * 
+ * Throughout the template, PHP code is used to retrieve and display dynamic values from the 
+ * quiz object, such as colors, titles, and descriptions.
+ * 
+ * 
  * 
  * Breadcrumb Link:
  * An aside element containing a breadcrumb link is included, likely for navigation 

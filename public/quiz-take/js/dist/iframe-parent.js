@@ -1,4 +1,5 @@
 /**
+<<<<<<< HEAD
 * 
 * EnpIframeQuiz Constructor:
 * 
@@ -46,6 +47,57 @@
 * 
 * 
 */
+=======
+ * 
+ * @param {*} data 
+ * 
+ * EnpIframeQuiz Constructor:
+ * 
+ * Initializes properties based on the provided data object.
+ * Sets up some flags and IDs.
+ * Calls onLoadIframe method.
+ * Getter and Setter Methods:
+ * 
+ * getSaveEmbedSiteComplete and setSaveEmbedSiteComplete: Get and set the completion status for saving the embedded site.
+ * getSaveEmbedQuizComplete and setSaveEmbedQuizComplete: Get and set the completion status for saving the embedded quiz.
+ * setSiteName: Sets the site name based on the provided parameter.
+ * getSiteName: Gets the site name.
+ * Message Handling:
+ * 
+ * receiveIframeMessage: Handles postMessage events received by the iframe, performs actions based on the message action.
+ * Initialization on Iframe Load:
+ * 
+ * onLoadIframe: Called when the iframe loads. It adds styles, gets the quiz height, and sends the parent URL.
+ * Height and URL Management:
+ * 
+ * getQuizHeight: Sends a postMessage to get the correct height of the iframe.
+ * sendSaveSite: Sends a postMessage to save the site.
+ * sendParentURL: Sends the full URL and path of the current page to be used in share URLs.
+ * setQuizHeight: Sets the height of the iframe.
+ * scrollToQuiz: Scrolls to the top of the next quiz question.
+ * Styling:
+ * 
+ * addIframeStyles: Adds styles for transitions.
+ * Utility Methods:
+ * 
+ * serialize: Serializes an object into a URL-encoded string.
+ * Server Communication:
+ * 
+ * saveEmbedSite: Sends a request to save the embedded site using XMLHttpRequest.
+ * handleEmbedSiteResponse: Handles the response after saving the embedded site.
+ * saveEmbedQuiz: Sends a request to save/update the embedded quiz.
+ * handleEmbedQuizResponse: Handles the response after saving the embedded quiz.
+ * Initialization of Iframes:
+ * 
+ * Creates instances of EnpIframeQuiz for each iframe and handles postMessage events.
+ * Event Listeners:
+ * 
+ * Adds an event listener for postMessage events.
+ * Listens for the document's ready state and triggers actions when it's complete.
+ * 
+ * 
+ */
+>>>>>>> 13af8e28ec9d17cc0c2b6f548a7051a6a1c83be0
 
 function EnpIframeQuiz(data) {
 	"use strict";
@@ -67,8 +119,13 @@ function EnpIframeQuiz(data) {
 
 // getters and setters
 EnpIframeQuiz.prototype.getSaveEmbedSiteComplete = function(){
+<<<<<<< HEAD
 	console.log('saved done');
 	return this.saveEmbedSiteComplete;
+=======
+    console.log('saved done');
+    return this.saveEmbedSiteComplete;
+>>>>>>> 13af8e28ec9d17cc0c2b6f548a7051a6a1c83be0
 };
 
 EnpIframeQuiz.prototype.setSaveEmbedSiteComplete = function(val){
