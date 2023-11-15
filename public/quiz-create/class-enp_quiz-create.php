@@ -530,17 +530,7 @@ $response = $save_quiz->save($quiz);
 
     protected function redirect_to_quiz_create($quiz_id) {
         // set a messages array to pass to url on redirect
-<<<<<<< HEAD
         $url_query = http_build_query(array('enp_messages' => self::$message, 'enp_user_action'=> self::$user_action));
-=======
-        $url_query = http_build_query(
-            array(
-                'enp_messages'    => self::$message,
-                'enp_user_action' => self::$user_action,
-            )
-        );
-        do_action( 'qm/debug', $url_query );
->>>>>>> 13af8e28ec9d17cc0c2b6f548a7051a6a1c83be0
         // they just created a new page (quiz) so we need to redirect them to it and post our messages
         wp_redirect( ENP_QUIZ_CREATE_URL.$quiz_id.'/?'.$url_query );
         exit;
