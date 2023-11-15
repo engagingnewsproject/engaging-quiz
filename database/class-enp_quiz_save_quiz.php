@@ -108,6 +108,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         $quiz_id = $this->set_quiz_value('quiz_id', 0);
         $quiz_title = $this->set_quiz_value('quiz_title', '');
+        $quiz_feedback = $this->set_quiz_value( 'quiz_feedback', '' );
         $quiz_status = $this->set_quiz_value('quiz_status', 'draft');
         $quiz_finish_message = $this->set_quiz_value('quiz_finish_message', 'Thanks for taking our quiz!');
         $quiz_updated_by = $this->set_quiz_value('quiz_updated_by', 0);
@@ -149,6 +150,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $default_quiz = array(
             'quiz_id' => $quiz_id,
             'quiz_title' => $quiz_title,
+            'quiz_feedback' => $quiz_feedback,
             'quiz_status' => $quiz_status,
             'quiz_finish_message' => $quiz_finish_message,
             'quiz_owner'      => $quiz_owner,
@@ -487,6 +489,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $pdo = new enp_quiz_Db();
         // Get our Parameters ready
         $params = array(':quiz_title'       => self::$quiz['quiz_title'],
+                        ':quiz_feedback'    => self::$quiz['quiz_feedback'],
                         ':quiz_status'      => self::$quiz['quiz_status'],
                         ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
                         ':quiz_owner'       => self::$quiz['quiz_owner'],
@@ -499,6 +502,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         // write our SQL statement
         $sql = "INSERT INTO ".$pdo->quiz_table." (
                                             quiz_title,
+                                            quiz_feedback,
                                             quiz_status,
                                             quiz_finish_message,
                                             quiz_owner,
@@ -510,6 +514,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                         )
                                         VALUES(
                                             :quiz_title,
+                                            :quiz_feedback,
                                             :quiz_status,
                                             :quiz_finish_message,
                                             :quiz_owner,
@@ -548,6 +553,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
         $sql = "UPDATE ".$pdo->quiz_table."
                      SET quiz_title = :quiz_title,
+                         quiz_feedback = :quiz_feedback,
                          quiz_status = :quiz_status,
                          quiz_finish_message = :quiz_finish_message,
                          quiz_updated_by = :quiz_updated_by,
@@ -677,6 +683,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     protected function set_update_quiz_params() {
         $params = array(':quiz_id'          => self::$quiz_obj->get_quiz_id(),
                         ':quiz_title'       => self::$quiz['quiz_title'],
+                        ':quiz_feedback'    => self::$quiz['quiz_feedback'],
                         ':quiz_status'      => self::$quiz['quiz_status'],
                         ':quiz_finish_message' => self::$quiz['quiz_finish_message'],
                         ':quiz_owner'       => self::$quiz['quiz_owner'],

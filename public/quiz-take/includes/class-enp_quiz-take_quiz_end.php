@@ -56,18 +56,16 @@ class Enp_quiz_Take_Quiz_end {
 	*/
 	public function set_quiz_end_title() {
 		$score = (int) $this->score_percentage;
-		if($score < 50) {
-			$title = "Ouch!";
-		} elseif($score < 70) {
-			$title = "Not Bad!";
+		if ($score < 50) {
+			$title = $this->quiz->get_quiz_end_fail_title();
+		} elseif ($score < 70) {
+			$title = $this->quiz->get_quiz_end_average_title();
 		} elseif ($score < 85) {
-			$title = "Nice Job!";
-		}
-		elseif ($score < 100) {
-			$title = "Fantastic!";
-		}
-		elseif ($score === 100) {
-			$title = "Perfect!";
+			$title = $this->quiz->get_quiz_end_good_title();
+		} elseif ($score < 100) {
+			$title = $this->quiz->get_quiz_end_good_title();
+		} elseif ($score === 100) {
+			$title = $this->quiz->get_quiz_end_perfect_title();
 		}
 		$this->quiz_end_title = $title;
 	}

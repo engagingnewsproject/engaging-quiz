@@ -154,6 +154,7 @@ class Enp_quiz_Activator {
 		$quiz_sql = "CREATE TABLE $quiz_table_name (
 					quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
 					quiz_title VARCHAR(255) NOT NULL,
+					quiz_feedback VARCHAR(255) NOT NULL,
 					quiz_status VARCHAR(11) NOT NULL,
 					quiz_finish_message VARCHAR(510) NOT NULL,
 					quiz_owner BIGINT(20) NOT NULL,

@@ -121,16 +121,57 @@
 
                     </fieldset>
 
-                    <fieldset class="enp-fieldset enp-quiz-share enp-quiz-share--twitter">
-                        <legend class="enp-legend enp-quiz-share__legend">Twitter Share</legend>
-                        <p  class="enp-input-description">After taking the quiz, what should someone's default tweet be?</p>
+					<!-- win/lose RESULTS dropdown -->
+					<fieldset id="enp-quiz-winlose-text" class="enp-fieldset enp-fieldset--section">
+						<legend class="enp-legend enp-fieldset--section__title enp-quiz-winlose__legend">Results Screen</legend>
+						<fieldset class="enp-fieldset enp-quiz-winlose enp-quiz-winlose--win">
+							<p class="enp-input-description">Text to display on quiz completion.</p>
 
-                        <label class="enp-label enp-quiz-share__label" for="enp-tweet-end">
-                            Tweet
-                        </label>
-                        <p id="enp-share-twitter__description" class="enp-textarea-description enp-textarea-description--before">Use {{score_percentage}} to show someone's score.</p>
-                        <textarea id="enp-tweet-end" class="enp-textarea enp-quiz-share__textarea enp-quiz-share__textarea--tweet enp-quiz-share__textarea--after" maxlength="117" name="enp_quiz[tweet_end]" aria-describedby="enp-share-twitter__description"><?php echo $quiz->get_tweet_end();?></textarea>
-                    </fieldset>
+							<label class="enp-label enp-quiz-winlose__label" for="enp-win-title">
+								Perfect Score &#129321;
+							</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-perfect-description">Title</label>
+							<input id="enp-perfect-title" class="enp-input enp-input__sm enp-quiz-winlose-perfect__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_perfect_title]" type="text" value="<?php echo $quiz->get_quiz_end_perfect_title(); ?>">
+							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-good-description">Description</label>
+							<textarea id="enp-perfect-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_perfect_description]"><?php echo $quiz->get_quiz_end_perfect_description(); ?></textarea>
+							<hr>
+							
+							<label class="enp-label enp-quiz-winlose__label" for="enp-good-title">
+								Good Score :)
+							</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-good-description">Title</label>
+							<input id="enp-good-title" class="enp-input enp-input__sm enp-quiz-winlose-fail__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_good_title]" type="text" value="<?php echo $quiz->get_quiz_end_good_title(); ?>">
+							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-good-description">Description</label>
+							<textarea id="enp-good-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_good_description]"><?php echo $quiz->get_quiz_end_good_description(); ?></textarea>
+							<hr>
+
+							<label class="enp-label enp-quiz-winlose__label" for="enp-average-title">
+								Average Score :|
+							</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-average-description">Title</label>
+							<input id="enp-average-title" class="enp-input enp-input__sm enp-quiz-winlose-fail__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_average_title]" type="text" value="<?php echo $quiz->get_quiz_end_average_title(); ?>">
+							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-average-description">Description</label>
+							<textarea id="enp-average-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_average_description]"><?php echo $quiz->get_quiz_end_average_description(); ?></textarea>
+							<hr>
+
+							<label class="enp-label enp-quiz-winlose__label" for="enp-fail-title">
+								Failing Score :(
+							</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-fail-description">Title</label>
+							<input id="enp-fail-title" class="enp-input enp-input__sm enp-quiz-winlose-fail__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_fail_title]" type="text" value="<?php echo $quiz->get_quiz_end_fail_title(); ?>">
+							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-fail-description">Description</label>
+							<textarea id="enp-fail-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_fail_description]"><?php echo $quiz->get_quiz_end_fail_description(); ?></textarea>
+
+						</fieldset>
+					</fieldset>
+					<!-- feedback submission -->
+					<fieldset id="enp-quiz-feedback-text" class="enp-fieldset enp-fieldset--section">
+						<legend class="enp-legend enp-fieldset--section__title enp-quiz-feedback__legend">Feedback?</legend>
+						<fieldset class="enp-fieldset enp-quiz-feedback enp-quiz-feedback">
+							<p class="enp-input-description">What did you think of our quiz tool?</p>
+							<textarea id="enp-quiz-feedback" class="enp-textarea enp-quiz-feedback__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_feedback]" placeholder="We would love to hear from you!"></textarea>
+						</fieldset>
+					</fieldset>
                 </fieldset>
 
                 <button type="submit" class="enp-btn--submit enp-preview-form__submit" name="enp-quiz-submit" value="quiz-save">Save</button>

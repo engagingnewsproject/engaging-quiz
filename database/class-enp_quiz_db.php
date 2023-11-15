@@ -47,7 +47,7 @@ class enp_quiz_Db extends PDO {
         }
 	}
 
-	public function query($sql, $params = null) {
+	public function query($sql, $params = null,  ...$fetchModeArgs) {
 		$stmt = $this->prepare($sql);
         $stmt->execute($params);
         return $stmt;
