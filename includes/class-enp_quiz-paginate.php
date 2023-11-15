@@ -2,6 +2,7 @@
 /**
 * A little utility class for paginating
 */
+#[AllowDynamicProperties]
 class Enp_quiz_Paginate {
     public $page = '1',
            $offset = '0',

@@ -4,6 +4,7 @@
 * @param $question_id = the id of the question you want to get
 * @return question object
 */
+#[AllowDynamicProperties]
 class Enp_quiz_Question {
     public  $quiz_id,
             $question_id,
