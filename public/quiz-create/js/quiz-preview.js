@@ -10,6 +10,7 @@ jQuery( function( $ ) {
         accordion = {title: accordionTitle, content: $(this), baseID: i};
         //returns an accordion object with the header object and content object
         accordion = enp_accordion__create_headers(accordion);
+        // console.log(accordion);
         // set-up all the accordion classes and start classes (so they're closed by default)
         enp_accordion__setup(accordion);
     });
@@ -65,7 +66,11 @@ jQuery( function( $ ) {
 
     // prevent click on circle from adding # to url and causing
     // page to jump to top
-    $('.iris-square-value').click(function(e) {
+    // $('.iris-square-value').click(function(e) {
+    //     e.preventDefault();
+    // });
+    
+    $('.iris-square-value').on( 'click', function(e) {
         e.preventDefault();
     });
 

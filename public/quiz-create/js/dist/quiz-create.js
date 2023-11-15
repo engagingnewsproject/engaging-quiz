@@ -1,7 +1,4 @@
-jQuery( function( $ ) {
-        
-    function getQuestions() {
-        console.log('quiz-create.js / get questions');
+jQuery( function( $ ) {function getQuestions() {
         return $('.enp-question-content')
     }
 
@@ -205,6 +202,7 @@ jQuery( function( $ ) {
             att = atts[i];
             newAttrVal = att.nodeValue.replace(pattern, replace);
 
+            
             // if the new val and the old val match, then nothing was replaced,
             // so we can skip it
             if(newAttrVal !== att.nodeValue) {
@@ -1059,7 +1057,7 @@ jQuery( function( $ ) {
         sliderInput.val(sliderValue);
     }
 
-    /* calculate where the slider should start */
+    // calculate where the slider should start
     function getSliderStart(low, high, interval) {
         low = parseFloat(low);
         high = parseFloat(high);
@@ -1219,10 +1217,8 @@ jQuery( function( $ ) {
         enp_accordion__setup(accordion);
     }
 
-
     // ajax submission
     $(document).on('click', '.enp-quiz-submit', function(e) {
-
         // tinymce.triggerSave();
 
         if(!$(this).hasClass('enp-btn--next-step')) {
@@ -1270,7 +1266,6 @@ jQuery( function( $ ) {
 
         // get form
         var quizForm = document.getElementById("enp-quiz-create-form");
-
         // create formData object
         var fd = new FormData(quizForm);
         // set our submit button value
@@ -1294,7 +1289,6 @@ jQuery( function( $ ) {
         } )
         // success
         .done( quizSaveSuccess )
-
         .fail( function( jqXHR, textStatus, errorThrown ) {
             console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
         } )
@@ -1307,21 +1301,18 @@ jQuery( function( $ ) {
         });
     }
 
+    // Runs while creating questions on quiz save
     function quizSaveSuccess( response, textStatus, jqXHR ) {
-        console.log('quiz-create.js / quizSaveSuccess');
-        // console.log(jqXHR.responseJSON);
+        // console.log('quiz-create.js / quizSaveSuccess', jqXHR.responseJSON);
         if(jqXHR.responseJSON === undefined) {
             // error :(
             unsetWait();
             appendMessage('Something went wrong. Please reload the page and try again.', 'error');
             return false;
         }
-        console.log(jqXHR.responseJSON);
+        
         // response = $.parseJSON(jqXHR.responseJSON); // depreciated
-        // console.log(response);
         response = JSON.parse(jqXHR.responseJSON);
-        console.log(response);
-        // response = 
 
         userActionAction = response.user_action.action;
         userActionElement = response.user_action.element;
