@@ -757,7 +757,7 @@ function processMCSubmit() {
     var correct = selectedMCInput.data('correct');
 
     // check if it's correct or not
-    if(correct === '1') {
+    if(correct === 1) { // "1" is not a string but a number so no quotes
         correct_string = 'correct';
         // it's right! add the correct class to the input
         selectedMCInput.addClass('enp-option__input--correct-clicked');
