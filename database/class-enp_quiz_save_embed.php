@@ -30,7 +30,7 @@ require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_embed_site.php';
 
 class Enp_quiz_Save_embed extends Enp_quiz_Save {
     public $date,
-           $response = array(
+           $response = array( // public was added before $response, which caused a big error. 
                               'error'=>array()
                              );
 
