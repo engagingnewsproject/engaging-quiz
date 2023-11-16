@@ -340,7 +340,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     // success
     .done( questionSaveSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+        console.error( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 
@@ -583,7 +583,7 @@ $(document).on('click', '.enp-next-step', function(e){
     // success
     .done( questionExplanationSubmitSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+        console.error( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 
@@ -750,7 +750,7 @@ function processMCSubmit() {
 
     // if there's nothing selected, return an error message
     if(selectedMCInput.length === 0) {
-        console.log('no selected options');
+        console.error('no selected options');
         return false;
     }
     // see if the input is correct or incorrect
