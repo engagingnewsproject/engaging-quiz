@@ -46,7 +46,7 @@ class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Respon
                                             :mc_option_id
                                         )";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -87,7 +87,7 @@ class Enp_quiz_Save_quiz_take_Response_MC extends Enp_quiz_Save_quiz_take_Respon
                    SET  mc_option_responses = mc_option_responses + 1
                  WHERE  mc_option_id = :mc_option_id";
         // update the question view the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {

@@ -55,6 +55,20 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 <html lang="en-US">
 
 <head>
+	<!-- Sentry -->
+	<!-- <script
+	src="https://js.sentry-cdn.com/9e18cfe96456d768f05663d51ae48577.min.js"
+	crossorigin="anonymous"
+	></script>
+	<script src="https://cdn.lr-intake.com/LogRocket.min.js" crossorigin="anonymous"></script>
+<script>window.LogRocket && window.LogRocket.init('kjijq4/cme-quiz');</script>
+<script>
+	LogRocket.getSessionURL(sessionURL => {
+  Sentry.configureScope(scope => {
+    scope.setExtra("sessionURL", sessionURL);
+  });
+});
+	</script> -->
 	<?php
 	// forces IE to load in Standards mode instead of Quirks mode (which messes things up) 
 	?>
@@ -108,7 +122,7 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 
 		<main class="enp-question__container <?php echo $qt->get_question_container_class(); ?>" role="main" aria-live="polite" aria-relevant="additions text">
 			<form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action(); ?>">
-				<?php echo $qt->get_session_id_input(); ?>
+				<?php // echo $qt->get_session_id_input(); ?>
 				<?php $qt->nonce->outputKey(); ?>
 				<input type="hidden" name="enp-quiz-id" value="<?php echo $qt->quiz->get_quiz_id(); ?>" />
 				<input type="hidden" name="enp-user-id" value="<?php echo $qt->get_user_id(); ?>" />

@@ -52,7 +52,7 @@ class Enp_quiz_AB_test {
         $sql = "SELECT * from ".$pdo->ab_test_table." WHERE
                 ab_test_id = :ab_test_id
                 AND ab_test_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $ab_test_row = $stmt->fetch();
         // return the found quiz row
         return $ab_test_row;

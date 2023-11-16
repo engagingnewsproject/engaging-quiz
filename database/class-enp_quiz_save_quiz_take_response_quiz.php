@@ -59,7 +59,7 @@ class Enp_quiz_Save_quiz_take_Response_quiz extends Enp_quiz_Save_quiz_take {
 											:response_quiz_viewed_at
                                         )";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -105,7 +105,7 @@ class Enp_quiz_Save_quiz_take_Response_quiz extends Enp_quiz_Save_quiz_take {
                  WHERE  response_quiz_id = :response_quiz_id
                    AND  quiz_id = :quiz_id";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -151,7 +151,7 @@ class Enp_quiz_Save_quiz_take_Response_quiz extends Enp_quiz_Save_quiz_take {
                  WHERE  response_quiz_id = :response_quiz_id
                    AND  quiz_id = :quiz_id";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -196,7 +196,7 @@ class Enp_quiz_Save_quiz_take_Response_quiz extends Enp_quiz_Save_quiz_take {
                  WHERE  response_quiz_id = :response_quiz_id
                    AND  quiz_id = :quiz_id";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {

@@ -223,13 +223,14 @@ _.middleNumber = function(a, b) {
 
 // // // // // // // // // 
 // Tinymce init for "add question" button
+// CodePen of editor: https://codepen.io/luukee/pen/VwEmdBB
 // // // // // // // // // 
 var currentSelector;
 function addTinymce( obj ) {
     var currentSelector = $('#enp-question-explanation__'+obj+'');
 
     tinymce.init({
-        selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
+        selector: '#enp-question-explanation__'+obj+'',
         menubar: false,
         statusbar: false,
         plugins: 'quickbars link autoresize',

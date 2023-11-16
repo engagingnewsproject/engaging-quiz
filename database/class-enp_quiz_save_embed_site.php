@@ -150,7 +150,7 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
                                             :embed_site_updated_at
                                         )";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {

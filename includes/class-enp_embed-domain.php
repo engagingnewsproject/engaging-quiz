@@ -58,7 +58,7 @@ class Enp_quiz_Embed_domain {
 
         $sql = "SELECT embed_site_id, SUBSTRING_INDEX((SUBSTRING_INDEX((SUBSTRING_INDEX(embed_site_url, '://', -1)), '/', 1)), '.', -2) as domain from ".$pdo->embed_site_table." WHERE embed_site_is_dev=0 HAVING
                 domain = :domain";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $embed_domain_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // return the found domain row ids
@@ -92,11 +92,7 @@ class Enp_quiz_Embed_domain {
 
         foreach($sites as $site) {
             $site_ids[] = $site->get_embed_site_id();
-            $site_quiz_ids = $site->get_embed_site_quiz_ids();
-           
-            foreach($site_quiz_ids as $quiz_id) {
-                $quiz_ids[] = $quiz_id;
-            }
+            $quiz_ids[] = $site->get_embed_site_quiz_ids();
         }
 
 

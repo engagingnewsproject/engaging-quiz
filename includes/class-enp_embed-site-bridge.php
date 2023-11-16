@@ -75,7 +75,7 @@ class Enp_quiz_Embed_site_bridge {
         // there *should* only be one since embed_syte_type is a unique column
         $sql = "SELECT * from ".$pdo->embed_site_br_site_type_table." WHERE
                 embed_site_id = :site_id";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $embed_bridge_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // return the found rows
         return $embed_bridge_rows;
@@ -97,7 +97,7 @@ class Enp_quiz_Embed_site_bridge {
         // there *should* only be one since embed_syte_type is a unique column
         $sql = "SELECT * from ".$pdo->embed_site_br_site_type_table." WHERE
                 embed_site_type_id = :type_id";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $embed_bridge_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // return the found rows
         return $embed_bridge_rows;

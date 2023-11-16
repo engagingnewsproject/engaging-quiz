@@ -412,7 +412,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
                                             :question_time_spent_average
                                         )';
         // insert the question into the database
-        $stmt = $pdo->runQuery( $sql, $params );
+        $stmt = $pdo->query( $sql, $params );
 
         // success!
         if($stmt !== false ) {
@@ -475,7 +475,7 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
 
                  WHERE  question_id = :question_id';
         // update the question in the database
-        $stmt = $pdo->runQuery( $sql, $params );
+        $stmt = $pdo->query( $sql, $params );
 
         // success!
         if($stmt !== false ) {

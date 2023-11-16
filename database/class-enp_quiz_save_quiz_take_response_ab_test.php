@@ -59,7 +59,7 @@ class Enp_quiz_Save_quiz_take_Response_ab_test extends Enp_quiz_Save_quiz_take {
                     :ab_test_id
                 )";
         // update the question view the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {

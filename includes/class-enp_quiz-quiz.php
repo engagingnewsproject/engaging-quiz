@@ -62,7 +62,7 @@ class Enp_quiz_Quiz {
         $sql = "SELECT * from ".$pdo->quiz_table." WHERE
                 quiz_id = :quiz_id
                 AND quiz_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $quiz_row = $stmt->fetch();
         // return the found quiz row
         return $quiz_row;
@@ -132,7 +132,7 @@ class Enp_quiz_Quiz {
         );
         $sql = "SELECT * from ".$pdo->quiz_option_table." WHERE
                 quiz_id = :quiz_id";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $option_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $option_rows;
     }
@@ -278,7 +278,7 @@ class Enp_quiz_Quiz {
                 quiz_id = :quiz_id
                 AND question_is_deleted = 0
                 ORDER BY question_order ASC";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $question_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $questions = array();
@@ -846,7 +846,7 @@ class Enp_quiz_Quiz {
                    AND quiz_id = :quiz_id
                    AND response_quiz_is_deleted = 0
               ORDER BY quiz_score ASC";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $scores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $quiz_scores = array();
@@ -1044,7 +1044,7 @@ class Enp_quiz_Quiz {
 
         $sql = "SELECT * from ".$pdo->embed_quiz_table." WHERE
                 quiz_id = :quiz_id";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $embed_quiz_row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // return the found site row
         return $embed_quiz_row;

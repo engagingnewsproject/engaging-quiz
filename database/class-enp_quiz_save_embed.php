@@ -40,7 +40,6 @@ class Enp_quiz_Save_embed extends Enp_quiz_Save {
 
 
         $save = $embed_data['save'];
-
         if($save === 'embed_site') {
 
             // check the URL. If it doesn't start with http we don't want it

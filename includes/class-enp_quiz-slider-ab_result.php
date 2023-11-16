@@ -37,7 +37,7 @@ class Enp_quiz_Slider_AB_test_result extends Enp_quiz_Slider_Result {
                  WHERE ab_response.ab_test_id = :ab_test_id
                    AND slider_response.slider_id = :slider_id
                    AND slider_response.response_slider_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $results = $stmt->fetchAll(PDO::FETCH_COLUMN);
         // return the found results
         return $results;

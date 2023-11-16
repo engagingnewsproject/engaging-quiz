@@ -388,6 +388,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                 // except for question explanation, we want to keep the HTML
                 if( $key === 'question_explanation' ) {
                     $sanitized_array[$key] = wp_kses($value, 'post');
+                    // $sanitized_array[$key] = wp_kses_post($value); // new
                 } else {
                     $sanitized_array[$key] = sanitize_text_field($value);
                 }
@@ -549,7 +550,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                                             :quiz_is_deleted
                                         )";
         // insert the quiz into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -588,7 +589,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                      AND quiz_owner = :quiz_owner
                 ";
 
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -675,7 +676,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
                    WHERE quiz_id = :quiz_id
                      AND quiz_owner = :quiz_owner";
 
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -1101,7 +1102,7 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
         $sql = "SELECT ab_test_id from ".$pdo->ab_test_table."
                   WHERE (quiz_id_a = :quiz_id OR quiz_id_b = :quiz_id)
                 AND ab_test_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $ab_test_row = $stmt->fetchAll(PDO::FETCH_COLUMN);
         // return the found quiz row
         return $ab_test_row;

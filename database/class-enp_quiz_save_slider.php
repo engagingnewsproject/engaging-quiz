@@ -212,7 +212,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
                                             :slider_suffix
                                         )";
         // insert the slider into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -267,7 +267,7 @@ class Enp_quiz_Save_slider extends Enp_quiz_Save_question {
 
                  WHERE  slider_id = :slider_id";
         // update the slider in the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {

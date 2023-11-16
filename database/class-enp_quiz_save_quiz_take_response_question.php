@@ -176,7 +176,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
                                             :response_question_updated_at
                                         )";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -235,7 +235,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
                         response_question_updated_at = :response_question_updated_at
                  WHERE  response_question_id = :response_question_id";
         // insert the mc_option into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -310,7 +310,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
                         question_responses_incorrect_percentage = question_responses_incorrect/question_responses
                  WHERE  question_id = :question_id";
         // update the question view the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {
@@ -340,7 +340,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         $sql = "SELECT response_question_id from ".$pdo->response_question_table." WHERE
                 response_quiz_id = :response_quiz_id
                 AND question_id = :question_id";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $result = $stmt->fetch();
         return $result['response_question_id'];
     }

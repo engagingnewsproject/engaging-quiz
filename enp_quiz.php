@@ -25,6 +25,13 @@
  * Domain Path:       /languages
  */
 
+// Cross-Origin Resource Sharing (CORS) headers to 
+// explicitly allow your domain to be embedded in iframes. 
+// function enp_quiz_csp_header() {
+//     header('Content-Security-Policy: frame-ancestors "self" mediaengagement.org');
+// }
+// add_action('init', 'enp_quiz_csp_header');
+
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
     die;

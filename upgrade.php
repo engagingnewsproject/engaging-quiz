@@ -64,7 +64,7 @@ class Enp_quiz_Upgrade {
     public function get_all_quiz_ids() {
         $pdo = new enp_quiz_Db();
         $sql = "SELECT quiz_id from ".$pdo->quiz_table;
-        $stmt = $pdo->runQuery($sql);
+        $stmt = $pdo->query($sql);
         $quiz_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
         return $quiz_ids;
     }

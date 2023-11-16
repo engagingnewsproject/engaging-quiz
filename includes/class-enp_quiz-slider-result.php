@@ -42,7 +42,7 @@ class Enp_quiz_Slider_Result extends Enp_quiz_Slider {
                  WHERE slider_id = :slider_id
                    AND response_slider_is_deleted = 0
               ORDER BY response_slider";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $results = $stmt->fetchAll(PDO::FETCH_COLUMN);
         // return the found results
         return $results;

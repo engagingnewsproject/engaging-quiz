@@ -49,7 +49,7 @@ class Enp_quiz_Save_quiz_take_Response_Slider extends Enp_quiz_Save_quiz_take_Re
                                             :response_slider
                                         )";
         // insert the slider into the database
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
 
         // success!
         if($stmt !== false) {

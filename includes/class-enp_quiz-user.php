@@ -45,7 +45,7 @@ class Enp_quiz_User {
         $sql = "SELECT quiz_id from ".$pdo->quiz_table." WHERE
                 quiz_owner = :user_id
                 AND quiz_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $quiz_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $quizzes = array();
@@ -70,7 +70,7 @@ class Enp_quiz_User {
                 quiz_owner = :user_id
                 AND quiz_status = 'published'
                 AND quiz_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $quiz_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $quizzes = array();
@@ -95,7 +95,7 @@ class Enp_quiz_User {
         $sql = "SELECT ab_test_id from ".$pdo->ab_test_table." WHERE
                 ab_test_owner = :user_id
                 AND ab_test_is_deleted = 0";
-        $stmt = $pdo->runQuery($sql, $params);
+        $stmt = $pdo->query($sql, $params);
         $ab_test_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $ab_tests = array();
