@@ -78,14 +78,14 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
     }
 
     protected function is_mc_option_response_correct($response) {
-        // see if it's right...
+                // see if it's right...
         $mc = new Enp_quiz_MC_option($response['question_response']);
         // will return 0 if wrong, 1 if right. We don't care if
         // it's right or not, just that we KNOW if it's right or not
         $response_correct = $mc->get_mc_option_correct();
         // if somehow this has been called on an invalid item
-        if($response_correct !== '0' &&  $response_correct !== '1') {
-            var_dump('invalid response');
+        if($response_correct !== 0 &&  $response_correct !== 1) {
+            var_export('response_correct not valid');
         }
 
         return $response_correct;
