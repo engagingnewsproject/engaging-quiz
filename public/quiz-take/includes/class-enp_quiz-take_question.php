@@ -8,6 +8,7 @@
  * @subpackage Enp_quiz/public
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
+#[AllowDynamicProperties]
 class Enp_quiz_Take_Question {
 	public 	$qt, // Enp_quiz_Take Object
 			$question,

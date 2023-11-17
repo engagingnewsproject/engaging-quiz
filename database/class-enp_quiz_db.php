@@ -7,7 +7,7 @@
 * faster.
 *
 **/
-
+#[AllowDynamicProperties]
 class enp_quiz_Db extends PDO {
 
     public function __construct() {

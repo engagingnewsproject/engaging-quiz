@@ -1,15 +1,4 @@
 <?php
-
-/**
- * The public-facing functionality of the plugin.
- *
- * @link       http://engagingnewsproject.org
- * @since      0.0.1
- *
- * @package    Enp_quiz
- * @subpackage Enp_quiz/public/quiz-take
- */
-
 /**
  * The public-facing functionality of the plugin.
  *
