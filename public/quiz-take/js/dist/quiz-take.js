@@ -1,4 +1,4 @@
-jQuery( document ).ready( function( $ ) {// UTILITY
+jQuery( function( $ ) {// UTILITY
     /**
     * get a string or decimal integer and return a formatted decimal number
     * @param places (int) how many decimal places you want to leave in Defaults to 0.
@@ -319,13 +319,13 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         $(this).closest('.enp-question__fieldset').addClass('enp-question__answered');
         // show the explanation by generating the question explanation template
         var qExplanationTemplate = generateQuestionExplanation(questionJSON, correct_string);
-        
+
         // add the Question Explanation Template into the DOM
         $('.enp-question__submit').before(qExplanationTemplate);
         // focus it
         $('.enp-next-step').trigger('focus');
         // submit the question
-        data = prepareQuestionFormData($(this));
+                data = prepareQuestionFormData($(this));
         url = $('.enp-question__form').attr('action');
     
         // AJAX Submit form
@@ -483,7 +483,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
     *
     */
     function prepareQuestionFormData(clickedButton) {
-        // add button value and name to the data since jQuery doesn't submit button value
+                // add button value and name to the data since jQuery doesn't submit button value
         userAction = clickedButton.attr("name") + "=" + clickedButton.val();
         // add in a little data to let the server know the data is coming from an ajax call
         doing_ajax = 'doing_ajax=doing_ajax';
@@ -493,7 +493,7 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
         // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
         questionPattern = new RegExp("&enp-question-response=");
-        if(questionPattern.test(data) !== true) {
+                if(questionPattern.test(data) !== true) {
             // the question response field isn't in there, so let's add it
             data += '&enp-question-response='+$('.enp-question__form input[name="enp-question-response"]').val();
         }
@@ -660,7 +660,8 @@ jQuery( document ).ready( function( $ ) {// UTILITY
     function locateCorrectMCOption(container, callback) {
         var correct;
         $('.enp-option__input', container).each(function(e, obj) {
-            if($(this).data('correct') === '1') {
+
+            if($(this).data('correct') === 1) {
                 correct =  $(this);
                 if(typeof(callback) == "function") {
                     callback($(this));
@@ -1117,4 +1118,4 @@ jQuery( document ).ready( function( $ ) {// UTILITY
         // console.log('image loaded');
         sendBodyHeight();
     });
-    });
+});

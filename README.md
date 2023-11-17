@@ -120,3 +120,13 @@ if (have_posts()) :
 	the_content();
 endif;
 ```
+
+# PHP Sessions & Hosting
+
+Exclusions should be added for these files in order for the quiz embeds to work. Otherwise a PHPSESSID hidden input element is appended to the quiz form DOM & malforms the ajax JSON responses.
+
+```
+^/wp-content/plugins/enp-quiz/?
+^/wp-content/plugins/enp-quiz/
+^/wp-content/plugins/enp-quiz 
+```
