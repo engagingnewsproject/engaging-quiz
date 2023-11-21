@@ -8,24 +8,28 @@ add_action( 'rest_api_init', function () {
   register_rest_route( $namespace, '/domains', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizDomainsAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizDomainsAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/domains/(?P<domainID>[\d|\w|\.|_|-]+)', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizDomainAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizDomainAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/sites', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizSitesAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizDomainsAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/sites/(?P<siteID>\d+)', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizSiteAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizSiteAPIArgs()
   ) );
 
@@ -33,18 +37,21 @@ add_action( 'rest_api_init', function () {
   register_rest_route( $namespace, '/sites/(?P<siteID>\d+)/embeds', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizEmbedsAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizEmbedsAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/embeds/', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizEmbedsAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizEmbedsAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/embeds/(?P<embedID>\d+)', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizEmbedAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizEmbedAPIArgs()
   ) );
 
@@ -52,24 +59,28 @@ add_action( 'rest_api_init', function () {
   register_rest_route( $namespace, '/sites/(?P<siteID>\d+)/embeds/(?P<embedID>\d+)', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizEmbedAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizEmbedAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/quizzes/', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizzesAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizzesAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/quizzes/(?P<quizID>\d+)', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizAPIArgs()
   ) );
 
   register_rest_route( $namespace, '/totals/', array(
     'methods'   => 'GET',
     'callback'  => 'getQuizTotalsAPI',
+    'permission_callback' => '__return_true',
     'args'      => getQuizTotalsAPIArgs()
   ) );
 } );
