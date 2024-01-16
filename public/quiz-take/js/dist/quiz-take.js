@@ -330,17 +330,15 @@ $(document).on('click', '.enp-question__submit', function(e){
     $('.enp-next-step').focus();
     // submit the question
     data = prepareQuestionFormData($(this));
-    console.log(data);
     url = $('.enp-question__form').attr('action');
 
     // AJAX Submit form
-    console.log('Check status before ajax call');
     $.ajax( {
         type: 'POST',
         url  : url,
         data : data,
         dataType : 'json',
-    } )
+    })
     // success
     .done( questionSaveSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
@@ -359,7 +357,6 @@ $(document).on('click', '.enp-question__submit', function(e){
 
 // runs on option click
 function questionSaveSuccess( response, textStatus, jqXHR ) {
-    console.log('TEST Response from server:');
     // Error logging START
     // Access specific properties
     var mcOptionId = response.mc_option_id;
@@ -382,7 +379,6 @@ function questionSaveSuccess( response, textStatus, jqXHR ) {
     $('.enp-question__submit').remove();
     // get the response
     var responseJSON = $.parseJSON(jqXHR.responseText);
-    console.log('questionSaveSuccess/responseJSON: ', responseJSON);
     // see if there are any errors
     if(responseJSON.error.length) {
         _.handle_error_message(responseJSON.error[0]);
@@ -501,7 +497,6 @@ function showNextQuestion(obj) {
        .attr('aria-hidden', false);
     // get the data from it
     questionShowJSON = obj.data('questionJSON');
-    console.log('show next question:', questionShowJSON);
     questionOrder = questionShowJSON.question_order;
     // increase the number and the width of the progress bar
     increaseQuestionProgress(questionOrder);
@@ -520,7 +515,6 @@ function prepareQuestionFormData(clickedButton) {
     // add in a little data to let the server know the data is coming from an ajax call
     doing_ajax = 'doing_ajax=doing_ajax';
     data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
-
     // see if our question response is in there.
     // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
     // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
@@ -555,7 +549,9 @@ function buildImageTemplate(questionJSON) {
 */
 function generateQuestionExplanation(questionJSON, correct, callback) {
     // check to make sure the Question Explanation hasn't already been generated
+    // looking for an element with the ID 'enp-explanation_'followed by the question's ID
     if(0 < $('#enp-explanation_'+questionJSON.question_id).length) {
+        // If such an element exists, return false, indicating that there's no need to generate the explanation again.
         return false;
     }
 
@@ -792,7 +788,7 @@ function processMCSubmit() {
     var correct = selectedMCInput.data('correct');
 
     // check if it's correct or not
-    if(correct === '1') {
+    if(correct === 1) {
         correct_string = 'correct';
         // it's right! add the correct class to the input
         selectedMCInput.addClass('enp-option__input--correct-clicked');

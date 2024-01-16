@@ -287,7 +287,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         $pdo = new enp_quiz_Db();
         // setup our SQL statement variables so we don't need to have a correct query, incorrect query, and a rebuild % query. A little convoluted, but fast.
         $question_responses = 'question_responses';
-        if($response['response_correct'] === '1') {
+        if($response['response_correct'] === 1) {
             $question_response_state = 'question_responses_correct';
 
         } else {
