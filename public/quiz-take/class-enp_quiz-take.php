@@ -173,7 +173,7 @@ class Enp_quiz_Take
         }
 
         // output the quiz level json and ab test id
-        echo '<script type="text/javascript" class="TEST-LUKE">';
+        echo '<script type="text/javascript">';
         echo 'var ab_test_id_json = {"ab_test_id":"' . $json->ab_test_id . '"};';
         // print this whole object as js global vars in json
         echo 'var quiz_json = ' . json_encode($json->quiz) . ';';
@@ -242,6 +242,7 @@ class Enp_quiz_Take
         ini_set('session.use_cookies', 1);
         ini_set('session.use_only_cookies', 0);
         ini_set('session.use_trans_sid', 1);
+        // Set cookie params
         session_set_cookie_params([
             'samesite' => 'None',
             'secure' => true
@@ -606,7 +607,6 @@ class Enp_quiz_Take
                 // Form key is invalid,
                 // return them to the page (they're probably refreshing the page)
                 //first, check if it's null or not
-                error_log('Validation failed. Error messages: ' . json_encode($this->error));
                 if ($validate_nonce === null) {
                     // cookies are likely disabled
                     $this->error[] = 'It looks like Cookies are disabled. Please enable Cookies in order to take the quiz. If you only have third-party Cookies disabled, <a href="' . $this->quiz_url . '" target="_blank">go here to take the quiz.</a>';
