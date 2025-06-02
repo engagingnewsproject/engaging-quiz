@@ -84,7 +84,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         // it's right or not, just that we KNOW if it's right or not
         $response_correct = $mc->get_mc_option_correct();
         // if somehow this has been called on an invalid item
-        if($response_correct !== '0' &&  $response_correct !== '1') {
+        if($response_correct !== 0 &&  $response_correct !== 1) {
             var_dump('invalid response');
         }
 
@@ -131,9 +131,9 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
 
         if($slider_correct_low <= $question_response && $question_response <= $slider_correct_high) {
             // it's correct!
-            $response_correct = '1';
+            $response_correct = 1;
         } else {
-            $response_correct = '0';
+            $response_correct = 0;
         }
 
         return $response_correct;
