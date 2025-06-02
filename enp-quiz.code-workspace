@@ -29,6 +29,9 @@
         "editor.detectIndentation": false,
         "phpcs.standard": "enp-quiz/rulesetsPHPCS.xml",
         "phpcs.showWarnings": false,
-        "editor.guides.highlightActiveIndentation": false
+        "editor.guides.highlightActiveIndentation": false,
+        "[javascriptreact]": {
+            "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
 	}
 }
