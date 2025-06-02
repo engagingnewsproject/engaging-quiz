@@ -79,10 +79,10 @@ function getQuizDomainsAPI($request) {
   $where = [];
 
   // exclude dev sites by default
-  $where['embed_site_is_dev'] = '0';
+  /*$where['embed_site_is_dev'] = '0';
   if(isset($request['include_dev']) && $request['include_dev']) {
     unset($where['embed_site_is_dev']);
-  }
+  }*/
 
   $dbDomains = $db->getDomains($where); 
 
