@@ -1,4 +1,4 @@
-jQuery( document ).ready( function( $ ) {// UTILITY
+jQuery( function( $ ) {// UTILITY
 /**
 * get a string or decimal integer and return a formatted decimal number
 * @param places (int) how many decimal places you want to leave in Defaults to 0.
@@ -192,7 +192,6 @@ function sendScrollToMessage() {
 * @return (int)
 */
 function calculateBodyHeight() {
-
     var height = document.getElementById('enp-quiz-container').offsetHeight + document.getElementById('enp-quiz-footer').offsetHeight;
 
     // calculate the height of the slide-hide mc elements, if there
@@ -222,7 +221,6 @@ function requestParentURL() {
 * Send a request to the parent frame to save the embed site
 */
 function sendSaveSite() {
-
     // send the message to the parent of the iframe
     sendPostMessageAction("saveSite");
 }
@@ -283,7 +281,6 @@ $(document).on('click', '.enp-option__label', function(e){
     }
     // get the input related to the label
     var thisMCInput = $(this).prev('.enp-option__input');
-
     // See if the DOM has updated to select the corresponding input yet or not.
     // if it hasn't select it, then submit the form
     if ( !thisMCInput.prop( "checked" ) ) {
@@ -301,7 +298,6 @@ $(document).on('click', '.enp-question__submit', function(e){
     e.preventDefault();
     // get the JSON data for this question
     var questionJSON = $(this).closest('.enp-question__fieldset').data('questionJSON');
-    console.log(questionJSON);
     // if mc option
     if(questionJSON.question_type === 'mc') {
         correct_string = processMCSubmit();
@@ -338,14 +334,11 @@ $(document).on('click', '.enp-question__submit', function(e){
         url  : url,
         data : data,
         dataType : 'json',
-    })
+    } )
     // success
     .done( questionSaveSuccess )
     .fail( function( jqXHR, textStatus, errorThrown ) {
-        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
-        // Access the raw JSON data
-        var rawJSONData = jqXHR.responseText;
-        console.log('Raw JSON Data:', rawJSONData);
+        console.error( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 
@@ -355,26 +348,7 @@ $(document).on('click', '.enp-question__submit', function(e){
     });
 });
 
-// runs on option click
 function questionSaveSuccess( response, textStatus, jqXHR ) {
-    // Error logging START
-    // Access specific properties
-    var mcOptionId = response.mc_option_id;
-    var status = response.status;
-    // ... access other properties ...
-
-    // Nested structure
-    var nextQuestionId = response.next_question.question_id;
-    var nextQuestionTitle = response.next_question.question_title;
-    // ... access other properties in the next_question object ...
-
-    // Handle errors
-    var errors = response.error;
-    if (errors.length > 0) {
-        console.error('Errors:', errors);
-        // Handle errors appropriately
-    }
-    // Error logging END
     // real quick, hide the submit button so it can't get submitted again
     $('.enp-question__submit').remove();
     // get the response
@@ -489,7 +463,6 @@ function increaseQuestionProgress(questionOrder) {
 
 /**
 * Add/Remove classes to bring in the next question
-* Get question JSON
 */
 function showNextQuestion(obj) {
     obj.addClass('enp-question--show')
@@ -515,6 +488,7 @@ function prepareQuestionFormData(clickedButton) {
     // add in a little data to let the server know the data is coming from an ajax call
     doing_ajax = 'doing_ajax=doing_ajax';
     data = $('.enp-question__form').serialize() + "&" + userAction + "&" + doing_ajax;
+
     // see if our question response is in there.
     // if it's the slider, we have to add in the value of the response for some reason, so we'll just add it in here for all question types.
     // Basically, if there's a jQuery slider attached to the input, the input doesn't get added when serializing the form for some reason.
@@ -549,10 +523,8 @@ function buildImageTemplate(questionJSON) {
 */
 function generateQuestionExplanation(questionJSON, correct, callback) {
     // check to make sure the Question Explanation hasn't already been generated
-    // looking for an element with the ID 'enp-explanation_'followed by the question's ID
-    if(0 < $('#enp-explanation_'+questionJSON.question_id).length) {
-        // If such an element exists, return false, indicating that there's no need to generate the explanation again.
-        return false;
+        if(0 < $('#enp-explanation_'+questionJSON.question_id).length) {
+                return false;
     }
 
 
@@ -563,7 +535,6 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
     }
     var question_response_percentage = questionJSON['question_responses_'+correct+'_percentage'];
     question_response_percentage = _.reformat_number(question_response_percentage, 100);
-
     explanationTemplate = questionExplanationTemplate({
                             question_id: questionJSON.question_id,
                             question_explanation: questionJSON.question_explanation,
@@ -571,7 +542,6 @@ function generateQuestionExplanation(questionJSON, correct, callback) {
                             question_explanation_percentage: question_response_percentage,
                             question_next_step_text: question_next_step_text
                         });
-
     if(typeof(callback) == "function") {
         callback(explanationTemplate);
     }
@@ -610,12 +580,9 @@ $(document).on('click', '.enp-next-step', function(e){
     } )
     // success
     .done( questionExplanationSubmitSuccess )
-    .fail( function( jqXHR, textStatus, errorThrown, data ) {
-        console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown, data );
-        // Access the raw JSON data
-        var rawJSONData = jqXHR.responseText;
-        console.log('Raw JSON Data:', rawJSONData);
-    } )
+    .fail( function( jqXHR, textStatus, errorThrown ) {
+        console.error( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
+            } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 
     } )
@@ -693,7 +660,7 @@ function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
 function locateCorrectMCOption(container, callback) {
     var correct;
     $('.enp-option__input', container).each(function(e, obj) {
-        if($(this).data('correct') === '1') {
+        if($(this).data('correct') === 1) {
             correct =  $(this);
             if(typeof(callback) == "function") {
                 callback($(this));
@@ -714,7 +681,7 @@ function locateCorrectMCOption(container, callback) {
 function locateIncorrectMCOptions(container, callback) {
     var incorrect;
     $('.enp-option__input', container).each(function(e, obj) {
-        if($(this).data('correct') === '0') {
+        if($(this).data('correct') === 0) {
             incorrect =  $(this);
             if(typeof(callback) == "function") {
                 callback($(this));
@@ -781,7 +748,7 @@ function processMCSubmit() {
 
     // if there's nothing selected, return an error message
     if(selectedMCInput.length === 0) {
-        console.log('no selected options');
+        console.error('no selected options');
         return false;
     }
     // see if the input is correct or incorrect
