@@ -9,3 +9,4 @@ bower_components/*
 gulpfile.js
 enp-quiz.code-workspace
 .vscode/launch.json
+public/quiz-take/js/dist/quiz-take-NO-COMMENTS.js

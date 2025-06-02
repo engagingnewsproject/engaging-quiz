@@ -85,7 +85,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         $response_correct = $mc->get_mc_option_correct();
         // if somehow this has been called on an invalid item
         if($response_correct !== 0 &&  $response_correct !== 1) {
-            var_export('response_correct not valid');
+            var_dump('invalid response');
         }
 
         return $response_correct;
@@ -131,9 +131,9 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
 
         if($slider_correct_low <= $question_response && $question_response <= $slider_correct_high) {
             // it's correct!
-            $response_correct = '1';
+            $response_correct = 1;
         } else {
-            $response_correct = '0';
+            $response_correct = 0;
         }
 
         return $response_correct;
@@ -287,7 +287,7 @@ class Enp_quiz_Save_quiz_take_Response_question extends Enp_quiz_Save_quiz_take 
         $pdo = new enp_quiz_Db();
         // setup our SQL statement variables so we don't need to have a correct query, incorrect query, and a rebuild % query. A little convoluted, but fast.
         $question_responses = 'question_responses';
-        if($response['response_correct'] === '1') {
+        if($response['response_correct'] === 1) {
             $question_response_state = 'question_responses_correct';
 
         } else {
