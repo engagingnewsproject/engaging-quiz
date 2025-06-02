@@ -420,6 +420,7 @@ class Enp_quiz_Search_quizzes {
 
         $status_sql = '';
         if($this->status !=='') {
+            // $status_sql =  "${join_string}quiz_status = '$this->status'";
             $status_sql =  "{$join_string}quiz_status = '$this->status'";
         }
         return $status_sql;
@@ -447,7 +448,8 @@ class Enp_quiz_Search_quizzes {
             // wildcard and quote it
             $quoted_str = $this->process_search_string($pdo);
             // build the sql
-            $search_sql = "{$join_string}quiz_title LIKE $quoted_str";
+            // $search_sql = "${join_string}quiz_title LIKE $quoted_str";
+            $search_sql = "{$join_string}quiz_title LIKE {$quoted_str}";
         }
 
         return $search_sql;

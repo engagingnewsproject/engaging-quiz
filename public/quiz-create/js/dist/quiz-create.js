@@ -1294,9 +1294,6 @@ function saveQuiz(userAction) {
 
     .fail( function( jqXHR, textStatus, errorThrown ) {
         console.log( 'AJAX failed', jqXHR.getAllResponseHeaders(), textStatus, errorThrown );
-        // Access the raw JSON data
-        var rawJSONData = jqXHR.responseText;
-        console.log('Raw JSON Data:', rawJSONData);
     } )
     .then( function( errorThrown, textStatus, jqXHR ) {
 

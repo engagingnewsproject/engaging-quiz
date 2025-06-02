@@ -31,6 +31,12 @@ class Enp_quiz_Create {
      */
     protected $plugin_name;
 
+    /**
+     * Properties used in the class.
+     */
+    protected $template;
+    protected $template_file;
+    protected $template_underscored;
 
     public static $message,
                   $nonce,

@@ -48,19 +48,33 @@ if ($state !== 'quiz_end') {
 }
 // create the quiz end object (so we have a template for it for the JS)
 $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
+// var_dump($qt->quiz);
 
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
 
 <head>
+	<!-- Sentry -->
+	<!-- <script
+	src="https://js.sentry-cdn.com/9e18cfe96456d768f05663d51ae48577.min.js"
+	crossorigin="anonymous"
+	></script>
+	<script src="https://cdn.lr-intake.com/LogRocket.min.js" crossorigin="anonymous"></script>
+<script>window.LogRocket && window.LogRocket.init('kjijq4/cme-quiz');</script>
+<script>
+	LogRocket.getSessionURL(sessionURL => {
+  Sentry.configureScope(scope => {
+    scope.setExtra("sessionURL", sessionURL);
+  });
+});
+	</script> -->
 	<?php
 	// forces IE to load in Standards mode instead of Quirks mode (which messes things up) 
 	?>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
 	<title><?php echo $qt->quiz->get_quiz_title(); ?></title>
-<!-- <title><?php // echo $qt->quiz->get_quiz_title_test(); ?></title> -->
 	<?php
 	// load meta
 	$qt->meta_tags();
@@ -94,20 +108,12 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 			</div>
 		</header>
 
-		<!-- <header class="enp-quiz__header" role="banner">
-			<h3 class="enp-quiz__title <?php // echo 'enp-quiz__title--' . $qt->quiz->get_quiz_title_test_display(); ?>"><?php // echo $qt->quiz->get_quiz_title_test(); ?></h3>
-			<div class="enp-quiz__progress">
-				<?php // echo $qt->get_progress_bar(); ?>
-			</div>
-		</header> -->
-
 		<?php
 		// check for errors
 		echo $qt->get_error_messages(); ?>
 
 		<main class="enp-question__container <?php echo $qt->get_question_container_class(); ?>" role="main" aria-live="polite" aria-relevant="additions text">
 			<form id="quiz" class="enp-question__form" method="post" action="<?php echo $qt->get_quiz_form_action(); ?>">
-				<?php // echo $qt->get_session_id_input(); ?>
 				<?php $qt->nonce->outputKey(); ?>
 				<input type="hidden" name="enp-quiz-id" value="<?php echo $qt->quiz->get_quiz_id(); ?>" />
 				<input type="hidden" name="enp-user-id" value="<?php echo $qt->get_user_id(); ?>" />
@@ -127,7 +133,10 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 		</main>
 	</div>
 	<?php $current_url = new Enp_quiz_Current_URL(); ?>
-	<footer id="enp-quiz-footer" class="enp-callout"><a class="enp-callout__link" href="<?php echo $current_url->get_root(); ?>/quiz-creator/?iframe_referral=true&amp;quiz_id=<?php echo $qt_end->quiz->get_quiz_id(); ?>" target="_blank">Powered by the Center for Media Engagement<span class="enp-screen-reader-text"> Link opens in a new window</span></a></footer>
+	<footer id="enp-quiz-footer" class="enp-callout">
+		<a class="enp-callout__link" href="<?php echo $current_url->get_root(); ?>/quiz-creator/?iframe_referral=true&amp;quiz_id=<?php echo $qt_end->quiz->get_quiz_id(); ?>" target="_blank">Powered by the Center for Media Engagement<span class="enp-screen-reader-text"> Link opens in a new window</span></a>
+		<p>Quizzes and users are not monitored or endorsed by the Center for Media Engagement.</p>
+	</footer>
 
 
 
@@ -147,8 +156,11 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 	// load scripts
 	$qt->scripts();
 	// if we're on prod, include GA Tracking code
-	if ($_SERVER['HTTP_HOST'] === 'engagingnewsproject.org' || $_SERVER['HTTP_HOST'] === 'mediaengagement.org') {
-		$ga_id = ($_SERVER['HTTP_HOST'] === 'mediaengagement.org' ? 'UA-52471115-4' : 'UA-52471115-1');
+	if (
+		(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'engagingnewsproject.org') ||
+		(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'mediaengagement.org')
+	) {
+		$ga_id = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'mediaengagement.org' ? 'UA-52471115-4' : 'UA-52471115-1');
 	?>
 		<script>
 			(function(i, s, o, g, r, a, m) {

@@ -3,13 +3,14 @@
 * A little utility class for paginating
 */
 class Enp_quiz_Paginate {
-    public $page = '1',
-           $offset = '0',
-           $limit = '10',
-           $total = '0',
-           $total_page,
-           $total_page_display,
-           $url;
+    public $page = '1';
+    public $offset = '0';
+    public $limit = '10';
+    public $total = '0';
+    public $total_pages;
+    public $total_page_display;
+    public $url;
+    protected $current_page;
 
     public function __construct($total, $page, $limit, $url) {
         $this->current_page = (isset($_GET['page']) ? (int) $_GET['page'] : 1);

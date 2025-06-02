@@ -16,6 +16,10 @@
 </aside>
 
 <article class="enp-container enp-dash-container">
+<?php 
+// $quiz_thing = new Enp_quiz_Quiz($dbQuiz['quiz_id']);
+// var_dump($quiz_thing);
+?>
 	<div class="enp-container enp-preview-page-container js-enp-quiz-create-form-container">
 		<?php include_once(ENP_QUIZ_CREATE_TEMPLATES_PATH . '/partials/quiz-create-breadcrumbs.php'); ?>
 		<?php do_action('enp_quiz_display_messages'); ?>

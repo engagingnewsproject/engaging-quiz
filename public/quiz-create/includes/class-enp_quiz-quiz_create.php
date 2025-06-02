@@ -36,7 +36,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
         // TODO: Offer to duplicate the quiz in error message?
         $this->quiz_published_redirect($this->quiz);
 
-        add_action('init', array($this, 'register_my_session', 1));
+        //add_action('init', array($this, 'register_my_session', 1));
         // Other page classes will not need to do this
         add_filter( 'the_content', array($this, 'load_content' ));
         // load take quiz styles

@@ -412,7 +412,6 @@ class Enp_quiz_Save {
     */
     public function does_embed_quiz_exist($embed_quiz_query) {
         $embed_quiz = new Enp_quiz_Embed_quiz($embed_quiz_query);
-        do_action( 'qm/debug', $embed_quiz );
         $id = $embed_quiz->get_embed_quiz_id();
 
         return $this->is_id($id);

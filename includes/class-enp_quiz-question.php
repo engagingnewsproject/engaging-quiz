@@ -5,7 +5,6 @@
  * @param $question_id = the id of the question you want to get
  * @return question object
  */
-#[AllowDynamicProperties]
 class Enp_quiz_Question {
     public $quiz_id,
             $question_id,
@@ -715,6 +714,7 @@ class Enp_quiz_Question {
         $question = $this->get_take_question_array();
         // return json_encode( $question );
         return json_encode( $question, JSON_HEX_QUOT | JSON_HEX_TAG );
+        var_dump( $this->get_take_question_array() );
     }
 
     /**

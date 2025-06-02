@@ -460,5 +460,8 @@
         font-size: 0.8rem;
         text-align: right;
         padding: 0.4rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
     }
 }

@@ -7,7 +7,7 @@
 * faster.
 *
 **/
-
+#[AllowDynamicProperties]
 class enp_quiz_Db extends PDO {
 
     public function __construct() {
@@ -47,7 +47,7 @@ class enp_quiz_Db extends PDO {
         }
     }
 
-    public function runQuery($sql, $params = null, ...$fetchModeArgs) {
+    public function query($sql, $params = null, ...$fetchModeArgs): PDOStatement|false {
         $stmt = $this->prepare($sql);
         $stmt->execute($params);
         return $stmt;
