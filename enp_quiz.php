@@ -27,10 +27,74 @@
 
 // Cross-Origin Resource Sharing (CORS) headers to 
 // explicitly allow your domain to be embedded in iframes. 
-// function enp_quiz_csp_header() {
-//     header('Content-Security-Policy: frame-ancestors "self" mediaengagement.org');
-// }
-// add_action('init', 'enp_quiz_csp_header');
+function enp_quiz_csp_header() {
+    // Get the referer domain
+    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+    $referer_domain = parse_url($referer, PHP_URL_HOST);
+    
+    // Get whitelisted domains from options
+    $whitelisted_domains = get_option('enp_quiz_whitelisted_domains', array());
+    
+    // Always allow your own domain
+    $whitelisted_domains[] = parse_url(get_site_url(), PHP_URL_HOST);
+    
+    // Check if the referer domain is whitelisted
+    $is_allowed = false;
+    foreach ($whitelisted_domains as $domain) {
+        if ($referer_domain !== null && strpos($referer_domain, $domain) !== false) {
+            $is_allowed = true;
+            break;
+        }
+    }
+    
+    if ($is_allowed) {
+        // Allow embedding from whitelisted domains
+        header('Content-Security-Policy: frame-ancestors ' . implode(' ', array_map(function($domain) {
+            return "'self' *." . $domain;
+        }, $whitelisted_domains)));
+    } else {
+        // Block embedding from unauthorized domains
+        header('Content-Security-Policy: frame-ancestors \'none\'');
+    }
+}
+add_action('init', 'enp_quiz_csp_header');
+
+// Add admin menu for managing whitelisted domains
+function enp_quiz_add_whitelist_menu() {
+    add_submenu_page(
+        'edit.php?post_type=enp_quiz',
+        'Embed Domain Whitelist',
+        'Embed Whitelist',
+        'manage_options',
+        'enp-quiz-whitelist',
+        'enp_quiz_whitelist_page'
+    );
+}
+add_action('admin_menu', 'enp_quiz_add_whitelist_menu');
+
+// Whitelist management page
+function enp_quiz_whitelist_page() {
+    if (isset($_POST['enp_quiz_whitelist_domains'])) {
+        $domains = array_map('trim', explode("\n", $_POST['enp_quiz_whitelist_domains']));
+        $domains = array_filter($domains); // Remove empty lines
+        update_option('enp_quiz_whitelisted_domains', $domains);
+        echo '<div class="notice notice-success"><p>Whitelist updated successfully.</p></div>';
+    }
+    
+    $whitelisted_domains = get_option('enp_quiz_whitelisted_domains', array());
+    ?>
+    <div class="wrap">
+        <h1>Quiz Embed Domain Whitelist</h1>
+        <form method="post">
+            <p>Enter one domain per line. These domains will be allowed to embed your quizzes.</p>
+            <textarea name="enp_quiz_whitelist_domains" rows="10" cols="50"><?php echo esc_textarea(implode("\n", $whitelisted_domains)); ?></textarea>
+            <p class="submit">
+                <input type="submit" class="button-primary" value="Save Changes">
+            </p>
+        </form>
+    </div>
+    <?php
+}
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -168,6 +232,178 @@ require_once plugin_dir_path( __FILE__ ) . 'database/class-enp_quiz_save_quiz_ta
 
 // API
 require plugin_dir_path( __FILE__ ) . 'api/routes.php';
+
+// Track and validate embedding domains
+function enp_quiz_track_embed_domain() {
+    // Only track on quiz embed pages
+    // if (!is_singular('enp_quiz')) {
+    //     return;
+    // }
+
+    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+    if (empty($referer)) {
+        return;
+    }
+
+    $referer_domain = parse_url($referer, PHP_URL_HOST);
+    
+    // Skip if it's our own domain
+    if ($referer_domain === parse_url(get_site_url(), PHP_URL_HOST)) {
+        return;
+    }
+
+    // Get or initialize the domains tracking option
+    $tracked_domains = get_option('enp_quiz_tracked_domains', array());
+    
+    // Initialize domain tracking if it doesn't exist
+    if (!isset($tracked_domains[$referer_domain])) {
+        $tracked_domains[$referer_domain] = array(
+            'embed_count' => 0,
+            'first_seen' => current_time('mysql'),
+            'last_seen' => current_time('mysql'),
+            'is_blocked' => false,
+            'reports' => 0
+        );
+    }
+
+    // Update tracking data
+    $tracked_domains[$referer_domain]['embed_count']++;
+    $tracked_domains[$referer_domain]['last_seen'] = current_time('mysql');
+
+    // Check for suspicious patterns
+    $is_suspicious = false;
+    
+    // Check for high embed count in short time
+    if ($tracked_domains[$referer_domain]['embed_count'] > 100) {
+        $is_suspicious = true;
+    }
+    
+    // Check for known spam patterns in domain
+    $spam_patterns = array(
+        '/^[a-z0-9]{8,}\./', // Random-looking subdomains
+        '/\.(xyz|top|loan|click|work)$/i', // Known spam TLDs
+        '/[0-9]{4,}/', // Lots of numbers
+        '/[a-z]{1,2}[0-9]{1,2}[a-z]{1,2}/i' // Alternating letters and numbers
+    );
+    
+    foreach ($spam_patterns as $pattern) {
+        if (preg_match($pattern, $referer_domain)) {
+            $is_suspicious = true;
+            break;
+        }
+    }
+
+    // If suspicious, increment reports
+    if ($is_suspicious) {
+        $tracked_domains[$referer_domain]['reports']++;
+        
+        // Block if too many reports
+        if ($tracked_domains[$referer_domain]['reports'] >= 3) {
+            $tracked_domains[$referer_domain]['is_blocked'] = true;
+        }
+    }
+
+    update_option('enp_quiz_tracked_domains', $tracked_domains);
+
+    // Block if domain is marked as blocked
+    if ($tracked_domains[$referer_domain]['is_blocked']) {
+        header('Content-Security-Policy: frame-ancestors \'none\'');
+        die('This domain has been blocked due to suspicious activity.');
+    }
+}
+add_action('wp', 'enp_quiz_track_embed_domain');
+
+// Add admin menu for managing tracked domains
+function enp_quiz_add_domain_tracking_menu() {
+    add_menu_page(
+        'Embed Domain Tracking',
+        'Quiz Tracking',
+        'manage_options',
+        'enp-quiz-tracking',
+        'enp_quiz_tracking_page',
+        'dashicons-visibility',
+        101
+    );
+}
+add_action('admin_menu', 'enp_quiz_add_domain_tracking_menu');
+
+// Domain tracking management page
+function enp_quiz_tracking_page() {
+    if (isset($_POST['action']) && isset($_POST['domain'])) {
+        $tracked_domains = get_option('enp_quiz_tracked_domains', array());
+        $domain = sanitize_text_field($_POST['domain']);
+        
+        if ($_POST['action'] === 'block' && isset($tracked_domains[$domain])) {
+            $tracked_domains[$domain]['is_blocked'] = true;
+            update_option('enp_quiz_tracked_domains', $tracked_domains);
+            echo '<div class="notice notice-success"><p>Domain blocked successfully.</p></div>';
+        } elseif ($_POST['action'] === 'unblock' && isset($tracked_domains[$domain])) {
+            $tracked_domains[$domain]['is_blocked'] = false;
+            $tracked_domains[$domain]['reports'] = 0;
+            update_option('enp_quiz_tracked_domains', $tracked_domains);
+            echo '<div class="notice notice-success"><p>Domain unblocked successfully.</p></div>';
+        }
+    }
+    
+    $tracked_domains = get_option('enp_quiz_tracked_domains', array());
+    ?>
+    <div class="wrap">
+        <h1>Quiz Embed Domain Tracking</h1>
+        <table class="wp-list-table widefat fixed striped">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Embed Count</th>
+                    <th>First Seen</th>
+                    <th>Last Seen</th>
+                    <th>Reports</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($tracked_domains as $domain => $data): ?>
+                <tr>
+                    <td><?php echo esc_html($domain); ?></td>
+                    <td><?php echo esc_html($data['embed_count']); ?></td>
+                    <td><?php echo esc_html($data['first_seen']); ?></td>
+                    <td><?php echo esc_html($data['last_seen']); ?></td>
+                    <td><?php echo esc_html($data['reports']); ?></td>
+                    <td><?php echo $data['is_blocked'] ? 'Blocked' : 'Active'; ?></td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            <input type="hidden" name="domain" value="<?php echo esc_attr($domain); ?>">
+                            <?php if ($data['is_blocked']): ?>
+                                <input type="hidden" name="action" value="unblock">
+                                <button type="submit" class="button">Unblock</button>
+                            <?php else: ?>
+                                <input type="hidden" name="action" value="block">
+                                <button type="submit" class="button">Block</button>
+                            <?php endif; ?>
+                        </form>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+
+function enp_quiz_add_test_menu() {
+    add_menu_page(
+        'Test Page',
+        'Test Menu',
+        'manage_options',
+        'enp-quiz-test',
+        'enp_quiz_test_page'
+    );
+}
+add_action('admin_menu', 'enp_quiz_add_test_menu');
+
+function enp_quiz_test_page() {
+    echo '<div class="wrap"><h1>Test Page</h1></div>';
+}
 
 /**
  * Begins execution of the plugin.
