@@ -82,9 +82,16 @@ This odd set-up will allow you to move your quiz database to an entirely differe
 ## Upgrade Notice
 
 
-## Issues
+# Local Dev
 
-### Local Dev
+If on a nginx server add below to the bottom of your site.conf.hbs file inside the `server{}` block:
+
+```
+# START Custom Quiz Embed Rewrites
+rewrite ^/quiz-embed/([0-9]+)$ /wp-content/plugins/enp-quiz/public/quiz-take/templates/quiz.php?quiz_id=$1 last;
+rewrite ^/ab-embed/([0-9]+)$ /wp-content/plugins/enp-quiz/public/quiz-take/templates/ab-test.php?ab_test_id=$1 last;
+# END Custom Quiz Embed Rewrites
+```
 
 1. `Fatal error: Uncaught Error: PDO object is not initialized, constructor was not called in .../database/class-enp_quiz_db.php`
 
