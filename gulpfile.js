@@ -1,7 +1,9 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
+// Use Dart Sass (no native build / Python) instead of deprecated node-sass
 var sass = require('gulp-sass');
+sass.compiler = require('sass');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var cssnano = require('gulp-cssnano');
@@ -17,7 +19,7 @@ var reload  = browserSync.reload;
 gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashboardJS', 'quizResultsJS', 'quizTakeJS', 'quizTakeIframeParentJS', 'quizTakeUtilityJS'], function() {
 
     browserSync({
-        proxy: "localhost:10044",
+        proxy: "localhost:10121",
     });
 
     // quiz create
