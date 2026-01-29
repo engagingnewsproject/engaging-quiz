@@ -126,8 +126,11 @@ class Enp_quiz_Take {
 	 * @since    0.0.1
 	 */
 	public function scripts() {
-		// use minified version on engagingnewsproject.org
-		if($_SERVER['HTTP_HOST'] === 'engagingnewsproject.org' || $_SERVER['HTTP_HOST'] === 'mediaengagement.org') {
+		// Fallback host if running in CLI
+		$host = php_sapi_name() === 'cli' ? 'localhost' : ($_SERVER['HTTP_HOST'] ?? 'localhost');
+
+		// Use minified version on production domains
+		if ($host === 'engagingnewsproject.org' || $host === 'mediaengagement.org') {
 			$ext = '';
 		} else {
 			$ext = '';

@@ -156,11 +156,11 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 	// load scripts
 	$qt->scripts();
 	// if we're on prod, include GA Tracking code
-	if (
-		(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'engagingnewsproject.org') ||
-		(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'mediaengagement.org')
-	) {
-		$ga_id = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'mediaengagement.org' ? 'UA-52471115-4' : 'UA-52471115-1');
+	$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+
+	if ($host === 'engagingnewsproject.org' || $host === 'mediaengagement.org') {
+		$ga_id = ($host === 'mediaengagement.org') ? 'UA-52471115-4' : 'UA-52471115-1';
+	}
 	?>
 		<script>
 			(function(i, s, o, g, r, a, m) {
@@ -179,7 +179,6 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 			ga('create', '<?php echo $ga_id; ?>', 'auto');
 			ga('send', 'pageview');
 		</script>
-	<?php } ?>
 
 </body>
 
