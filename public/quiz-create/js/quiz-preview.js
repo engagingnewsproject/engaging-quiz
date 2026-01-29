@@ -107,5 +107,27 @@ jQuery( document ).ready( function( $ ) {
         limitedChars(tweetField[i]);
     }
 
+    /**
+     * Results Screen description textareas: TinyMCE in classic (iframe) mode for links/formatting.
+     * Inline mode is not used because it only supports block elements, not textareas.
+     */
+    if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+            selector: '#enp-perfect-description,#enp-good-description,#enp-average-description,#enp-fail-description',
+            menubar: false,
+            statusbar: false,
+            toolbar: 'bold italic link blockquote',
+            plugins: 'link autosave',
+            link_assume_external_targets: 'http',
+            height: 120
+        });
+    }
+
+    /** Sync all TinyMCE editors (Results Screen descriptions) to their textareas before form submit. */
+    $('.enp-quiz-settings__form').on('submit', function() {
+        if (typeof tinymce !== 'undefined') {
+            tinymce.triggerSave();
+        }
+    });
 
 });

@@ -10,7 +10,12 @@ $current_url = new Enp_quiz_Current_URL(); ?>
 	</div>
 	<p class="enp-results__encouragement"><?php echo $qt_end->get_quiz_end_title(); ?></p>
 	<p class="enp-results__description">
-		<?php echo $qt_end->get_quiz_end_content(); ?>
+		<?php
+		// Results descriptions may contain links/formatting (saved with wp_kses_post on Quiz Create).
+		// Use wp_kses_post when available; fallback to raw output when quiz runs without full WP (e.g. embed).
+		$description = $qt_end->get_quiz_end_content();
+		echo function_exists( 'wp_kses_post' ) ? wp_kses_post( $description ) : $description;
+		?>
 	</p>
 	<div class="enp-quiz-restart__container">
 		<button type="submit" class="enp-btn enp-quiz-restart" name="enp-quiz-restart" value="enp-quiz-restart">Restart Quiz</button>

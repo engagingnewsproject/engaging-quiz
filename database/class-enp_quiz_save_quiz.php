@@ -370,7 +370,9 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
     }
 
     /*
-    * Sanitize all keys and values of an array. Loops through ALL arrays (even nested)
+    * Sanitize all keys and values of an array. Loops through ALL arrays (even nested).
+    * Rich-text fields (question_explanation, quiz_end_*_description) are sanitized with wp_kses_post
+    * so links and formatting are stored safely; all other string values use sanitize_text_field.
     */
     protected function sanitize_array($array) {
         $sanitized_array = array();
@@ -385,10 +387,16 @@ class Enp_quiz_Save_quiz extends Enp_quiz_Save {
 
             // if it's not an array, sanitize the value.
             if (!is_array($value) && !is_object($value)) {
-                // except for question explanation, we want to keep the HTML
-                if( $key === 'question_explanation' ) {
-                    $sanitized_array[$key] = wp_kses($value, 'post');
-                    // $sanitized_array[$key] = wp_kses_post($value); // new
+                // Allow HTML for question explanation and Results Screen descriptions (links/formatting)
+                $html_allowed_keys = array(
+                    'question_explanation',
+                    'quiz_end_perfect_description',
+                    'quiz_end_good_description',
+                    'quiz_end_average_description',
+                    'quiz_end_fail_description',
+                );
+                if ( in_array( $key, $html_allowed_keys, true ) ) {
+                    $sanitized_array[$key] = wp_kses_post( $value );
                 } else {
                     $sanitized_array[$key] = sanitize_text_field($value);
                 }
