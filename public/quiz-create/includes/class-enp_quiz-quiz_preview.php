@@ -78,7 +78,8 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
         wp_register_script($this->plugin_name . '-accordion', plugin_dir_url(__FILE__) . '../js/utilities/accordion.js', array('underscore'), ENP_QUIZ_VERSION, true);
         wp_enqueue_script($this->plugin_name . '-accordion');
 
-        wp_register_script($this->plugin_name . '-quiz-preview', plugin_dir_url(__FILE__) . '../js/quiz-preview.js', array('jquery', $this->plugin_name . '-iris', $this->plugin_name . '-accordion', $this->plugin_name . '-limited-chars'), ENP_QUIZ_VERSION, true);
+        // tinymce_cloud required for Results Screen description editors (links/formatting) in quiz-preview.js
+        wp_register_script($this->plugin_name . '-quiz-preview', plugin_dir_url(__FILE__) . '../js/quiz-preview.js', array('jquery', 'tinymce_cloud', $this->plugin_name . '-iris', $this->plugin_name . '-accordion', $this->plugin_name . '-limited-chars'), ENP_QUIZ_VERSION, true);
         wp_enqueue_script($this->plugin_name . '-quiz-preview');
 
         wp_register_script($this->plugin_name . '-limited-chars', plugin_dir_url(__FILE__) . '../js/utilities/limited-chars.js', ENP_QUIZ_VERSION, true);

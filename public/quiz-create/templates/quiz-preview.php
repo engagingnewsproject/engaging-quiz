@@ -160,6 +160,8 @@
 						<legend class="enp-legend enp-fieldset--section__title enp-quiz-winlose__legend">Results Screen</legend>
 						<fieldset class="enp-fieldset enp-quiz-winlose enp-quiz-winlose--win">
 							<p class="enp-input-description">Text to display on quiz completion.</p>
+							<?php // TinyMCE toolbar on description fields below allows links/formatting (see quiz-preview.js). ?>
+							<p class="enp-input-description" style="font-size: 0.85rem;">** Double click any text you input to add formatting or links.</p>
 
 							<label class="enp-label enp-quiz-winlose__label" for="enp-win-title">
 								Perfect Score &#129321;
