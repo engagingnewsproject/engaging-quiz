@@ -223,39 +223,32 @@ _.middleNumber = function(a, b) {
 
 // // // // // // // // // 
 // Tinymce init for "add question" button
-// CodePen of editor: https://codepen.io/luukee/pen/VwEmdBB
 // // // // // // // // // 
 var currentSelector;
+/**
+ * Inits TinyMCE on the Answer Explanation textarea for a question.
+ * Uses classic (iframe) mode because TinyMCE 6 inline mode does not support textarea.
+ * If TinyMCE script is not loaded yet (e.g. CDN delay), retries once after a short delay.
+ * @param {number|string} obj - Question ID used in selector #enp-question-explanation__{id}
+ */
 function addTinymce( obj ) {
-    var currentSelector = $('#enp-question-explanation__'+obj+'');
+    if (typeof tinymce === 'undefined') {
+        // CDN may load after our script; retry so editor still inits
+        setTimeout(function() { addTinymce(obj); }, 200);
+        return;
+    }
 
+    var selector = '#enp-question-explanation__'+obj+'';
     tinymce.init({
-        selector: '#enp-question-explanation__'+obj+'',
+        selector: selector,
         menubar: false,
         statusbar: false,
-        plugins: 'quickbars link autoresize',
-        toolbar: false,
-        quickbars_selection_toolbar: 'bold italic blockquote quicklink removeformat',
-        link_default_target: "_blank",
-        link_context_toolbar: true,
-        link_title: false,
-        link_assume_external_targets: "http",
-        link_quicklink: true,
-        quickbars_insert_toolbar: false,
-        link_target_list: [
-            { title: "New page", value: "_blank" },
-        ],
-        link_target_list: false,
+        toolbar: 'bold italic link blockquote',
+        plugins: 'link',
+        link_assume_external_targets: 'http',
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
-        setup: function (editor) {
-            editor.on('click', function () {
-                tinymce.activeEditor.execCommand('mceFocus');
-            });
-            editor.on('blur', function () {
-                var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
-                var tContent = currentSelector.innerHTML = tinyEditorContent;
-            });
-        }
+        // Classic (iframe) mode: required for textarea; inline mode only supports block elements (div, etc.)
+        inline: false
     });
 }
 
@@ -267,15 +260,17 @@ function setTinymceContent( element, editorContent ) {
 }
 
 $('.enp-quiz-submit').click(function(e){
-tinymce.triggerSave();
-    $theQuestions = $('.enp-accordion-container');
-    $.each($theQuestions, function(i) {
-        obj = getQuestionID(this);
-        $(this).find('#enp-question-explanation__'+obj+'');
-        var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
-        var element = $(this);
-        setTinymceContent( element, editorContent ) 
-    });
+    if (typeof tinymce !== 'undefined') {
+        tinymce.triggerSave();
+        $theQuestions = $('.enp-accordion-container');
+        $.each($theQuestions, function(i) {
+            obj = getQuestionID(this);
+            $(this).find('#enp-question-explanation__'+obj+'');
+            var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
+            var element = $(this);
+            setTinymceContent( element, editorContent );
+        });
+    }
 });
 
 function injectTinymce( obj ) {
@@ -381,17 +376,65 @@ $(document).on('focusin', function(e) {
 // get each question container
 $theQuestions = $('.enp-accordion-container');
 
-// for each question. . .
+// init TinyMCE for each question's Answer Explanation (addTinymce retries if tinymce not loaded yet)
 $.each($theQuestions, function(i) {
-    // get question id's
     obj = getQuestionID(this);
-    // init tinymce for each question
-    addTinymce( obj );
+    addTinymce(obj);
 });
 
 /*
 * General UX interactions to make a better user experience
 */
+
+// MC option image: clicking the Add Image icon triggers the hidden file input (trigger is in right-actions, file input in same option)
+$(document).on('click', '.enp-mc-option-image-upload__trigger', function(e) {
+	e.preventDefault();
+	$(this).closest('.enp-mc-option').find('.enp-mc-option-image-upload__input').trigger('click');
+});
+
+// MC option image: show preview when a file is selected (before submit); hide "Add Image" link, show clear button
+$(document).on('change', '.enp-mc-option-image-upload__input', function() {
+	var $input = $(this);
+	var $upload = $input.closest('.enp-mc-option-image-upload');
+	var $preview = $upload.find('.enp-mc-option-image-preview');
+	var file = this.files && this.files[0];
+
+	if (!$preview.length) {
+		return;
+	}
+
+	// Revoke previous object URL to avoid memory leaks
+	var oldUrl = $preview.data('object-url');
+	if (oldUrl) {
+		URL.revokeObjectURL(oldUrl);
+		$preview.removeData('object-url');
+	}
+
+	$preview.empty().addClass('enp-mc-option-image-preview--hidden');
+
+	if (file && file.type.indexOf('image/') === 0) {
+		var url = URL.createObjectURL(file);
+		var $img = $('<img class="enp-mc-option-image enp-mc-option-image--preview" alt="">').attr('src', url);
+		var $clearBtn = $('<button type="button" class="enp-mc-option-image-preview__clear" aria-label="Remove image"><svg class="enp-icon enp-icon--delete"><use xlink:href="#icon-delete"></use></svg></button>');
+		$preview.data('object-url', url).append($img).append($clearBtn).removeClass('enp-mc-option-image-preview--hidden');
+	}
+});
+
+// MC option image: clear preview (remove file, hide preview, show "Add Image" link again)
+$(document).on('click', '.enp-mc-option-image-preview__clear', function(e) {
+	e.preventDefault();
+	var $preview = $(this).closest('.enp-mc-option-image-preview');
+	var $upload = $preview.closest('.enp-mc-option-image-upload');
+	var $input = $upload.find('.enp-mc-option-image-upload__input');
+
+	var oldUrl = $preview.data('object-url');
+	if (oldUrl) {
+		URL.revokeObjectURL(oldUrl);
+		$preview.removeData('object-url');
+	}
+	$input.val('');
+	$preview.empty().addClass('enp-mc-option-image-preview--hidden');
+});
 
 // set titles as the values are being typed
 $(document).on('keyup', '.enp-question-title__textarea', function() {
@@ -435,6 +478,9 @@ function appendMessage(message, status) {
 // Loop through messages and display them
 // Show success messages
 function displayMessages(message) {
+    if (!message || typeof message !== 'object') {
+        return;
+    }
     // loop through success messages
     //for(var success_i = 0; success_i < message.success.length; success_i++) {
         if(typeof message.success !== 'undefined' && message.success.length > 0) {
@@ -445,8 +491,10 @@ function displayMessages(message) {
     //}
 
     // Show error messages
-    for(var error_i = 0; error_i < message.error.length; error_i++) {
-        appendMessage(message.error[error_i], 'error');
+    if (message.error && message.error.length > 0) {
+        for(var error_i = 0; error_i < message.error.length; error_i++) {
+            appendMessage(message.error[error_i], 'error');
+        }
     }
 }
 
@@ -1265,10 +1313,15 @@ function saveQuiz(userAction) {
         userActionAction,
         userActionElement;
 
+    // Sync TinyMCE content to textareas before capturing form data (required for AJAX submit).
+    if (typeof tinymce !== 'undefined') {
+        tinymce.triggerSave();
+    }
+
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
 
-    // create formData object
+    // create formData object (after triggerSave so Answer Explanation HTML is included)
     var fd = new FormData(quizForm);
     // set our submit button value
     fd.append('enp-quiz-submit', userAction);
@@ -1278,7 +1331,6 @@ function saveQuiz(userAction) {
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
-    tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
 
@@ -1313,10 +1365,13 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
         return false;
     }
 
-    response = $.parseJSON(jqXHR.responseJSON);
+    // responseJSON is already parsed by jQuery when server sends application/json
+    response = jqXHR.responseJSON;
 
-    userActionAction = response.user_action.action;
-    userActionElement = response.user_action.element;
+    // Guard: server may return without user_action (e.g. validation error)
+    var userAction = response && response.user_action;
+    userActionAction = userAction ? userAction.action : undefined;
+    userActionElement = userAction ? userAction.element : undefined;
     // see if we've created a new quiz
     if(response.status === 'success' && response.action === 'insert') {
         // set-up quiz
