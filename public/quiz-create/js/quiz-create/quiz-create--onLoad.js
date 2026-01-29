@@ -61,10 +61,8 @@ $(document).on('focusin', function(e) {
 // get each question container
 $theQuestions = $('.enp-accordion-container');
 
-// for each question. . .
+// init TinyMCE for each question's Answer Explanation (addTinymce retries if tinymce not loaded yet)
 $.each($theQuestions, function(i) {
-    // get question id's
     obj = getQuestionID(this);
-    // init tinymce for each question
-    addTinymce( obj );
+    addTinymce(obj);
 });

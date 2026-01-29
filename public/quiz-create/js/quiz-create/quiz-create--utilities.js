@@ -225,31 +225,30 @@ _.middleNumber = function(a, b) {
 // Tinymce init for "add question" button
 // // // // // // // // // 
 var currentSelector;
+/**
+ * Inits TinyMCE on the Answer Explanation textarea for a question.
+ * Uses classic (iframe) mode because TinyMCE 6 inline mode does not support textarea.
+ * If TinyMCE script is not loaded yet (e.g. CDN delay), retries once after a short delay.
+ * @param {number|string} obj - Question ID used in selector #enp-question-explanation__{id}
+ */
 function addTinymce( obj ) {
-    var currentSelector = $('#enp-question-explanation__'+obj+'');
+    if (typeof tinymce === 'undefined') {
+        // CDN may load after our script; retry so editor still inits
+        setTimeout(function() { addTinymce(obj); }, 200);
+        return;
+    }
 
+    var selector = '#enp-question-explanation__'+obj+'';
     tinymce.init({
-        selector: '#enp-question-explanation__'+obj+'',  // change this value according to your HTML
+        selector: selector,
         menubar: false,
         statusbar: false,
-        toolbar: false,
-        inline: true,
-        plugins: 'quickbars link autosave',
         toolbar: 'bold italic link blockquote',
-        quickbars_selection_toolbar: 'bold italic link blockquote',
-        quickbars_insert_toolbar: false,
-        quickbars_image_toolbar: false,
+        plugins: 'link',
         link_assume_external_targets: 'http',
         placeholder: 'Your cerebellum can predict your own actions, so you\'re unable to \'surprise\' yourself with a tickle.',
-        setup: function (editor) {
-            editor.on('click', function () {
-                tinymce.activeEditor.execCommand('mceFocus');
-            });
-            editor.on('blur', function () {
-                var tinyEditorContent = tinymce.activeEditor.getContent({format: 'raw'});
-                var tContent = currentSelector.innerHTML = tinyEditorContent;
-            });
-        }
+        // Classic (iframe) mode: required for textarea; inline mode only supports block elements (div, etc.)
+        inline: false
     });
 }
 
@@ -261,15 +260,17 @@ function setTinymceContent( element, editorContent ) {
 }
 
 $('.enp-quiz-submit').click(function(e){
-tinymce.triggerSave();
-    $theQuestions = $('.enp-accordion-container');
-    $.each($theQuestions, function(i) {
-        obj = getQuestionID(this);
-        $(this).find('#enp-question-explanation__'+obj+'');
-        var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
-        var element = $(this);
-        setTinymceContent( element, editorContent ) 
-    });
+    if (typeof tinymce !== 'undefined') {
+        tinymce.triggerSave();
+        $theQuestions = $('.enp-accordion-container');
+        $.each($theQuestions, function(i) {
+            obj = getQuestionID(this);
+            $(this).find('#enp-question-explanation__'+obj+'');
+            var editorContent = tinymce.activeEditor.getContent({format: 'raw'});
+            var element = $(this);
+            setTinymceContent( element, editorContent );
+        });
+    }
 });
 
 function injectTinymce( obj ) {

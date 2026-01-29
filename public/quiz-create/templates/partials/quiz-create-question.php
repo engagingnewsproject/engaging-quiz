@@ -57,10 +57,8 @@ $question_image = $question->get_question_image();
         <fieldset class="enp-fieldset enp-answer-explanation__fieldset">
             <label class="enp-label enp-answer-explanation__label" for="enp-question-explanation__<?php echo $question_id; ?>">Answer Explanation</label>
             <p style="font-size: 0.85rem;">** Double click any text you input to add formatting.</p>
-            <!-- For tinycme -->
-            <textarea id="enp-question-explanation__<?php echo $question_id; ?>" class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?php echo $question_i; ?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle.">
-                <?php echo $question->get_question_explanation(); ?>
-            </textarea>
+            <!-- For TinyMCE -->
+            <textarea id="enp-question-explanation__<?php echo $question_id; ?>" class="enp-textarea enp-answer-explanation__textarea" name="enp_question[<?php echo $question_i; ?>][question_explanation]" maxlength="6120" rows="5" placeholder="Your cerebellum can predict your own actions, so you're unable to 'surprise' yourself with a tickle."><?php echo $question->get_question_explanation(); ?></textarea>
         </fieldset>
     </div>
 </section>

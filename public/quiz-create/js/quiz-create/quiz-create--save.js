@@ -47,10 +47,15 @@ function saveQuiz(userAction) {
         userActionAction,
         userActionElement;
 
+    // Sync TinyMCE content to textareas before capturing form data (required for AJAX submit).
+    if (typeof tinymce !== 'undefined') {
+        tinymce.triggerSave();
+    }
+
     // get form
     var quizForm = document.getElementById("enp-quiz-create-form");
 
-    // create formData object
+    // create formData object (after triggerSave so Answer Explanation HTML is included)
     var fd = new FormData(quizForm);
     // set our submit button value
     fd.append('enp-quiz-submit', userAction);
@@ -60,7 +65,6 @@ function saveQuiz(userAction) {
     // this sets up the immediate actions so it feels faster to the user
     // Optimistic Ajax
     setTemp(userAction);
-    tinyMCE.triggerSave();
     // desroy successs messages so they don't stack
     destroySuccessMessages();
 
@@ -95,10 +99,13 @@ function quizSaveSuccess( response, textStatus, jqXHR ) {
         return false;
     }
 
-    response = $.parseJSON(jqXHR.responseJSON);
+    // responseJSON is already parsed by jQuery when server sends application/json
+    response = jqXHR.responseJSON;
 
-    userActionAction = response.user_action.action;
-    userActionElement = response.user_action.element;
+    // Guard: server may return without user_action (e.g. validation error)
+    var userAction = response && response.user_action;
+    userActionAction = userAction ? userAction.action : undefined;
+    userActionElement = userAction ? userAction.element : undefined;
     // see if we've created a new quiz
     if(response.status === 'success' && response.action === 'insert') {
         // set-up quiz
