@@ -77,8 +77,13 @@ class Enp_quiz_Create {
     }
 
     public function set_enp_quiz_nonce() {
-        // Start the session
-        session_start();
+        // Check if session is already started
+        if (session_status() === PHP_SESSION_NONE) {
+            // Only start session if headers haven't been sent
+            if (!headers_sent()) {
+                session_start();
+            }
+        }
         // Start the class
         self::$nonce = new Enp_quiz_Nonce();
     }
