@@ -233,7 +233,7 @@ function addTinymce( obj ) {
         menubar: false,
         statusbar: false,
         toolbar: false,
-        inliine: true,
+        inline: true,
         plugins: 'quickbars link autosave',
         toolbar: 'bold italic link blockquote',
         quickbars_selection_toolbar: 'bold italic link blockquote',
