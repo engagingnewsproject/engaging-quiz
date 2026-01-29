@@ -61,6 +61,8 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         // we need this after setting the mc_option because set_mc_option_correct needs
         // the mc_option_id
         self::$mc_option['mc_option_is_deleted'] = $this->set_mc_option_is_deleted();
+        // set image (upload/delete/retain); only for existing options (mc_option_id > 0)
+        self::$mc_option['mc_option_image'] = $this->set_mc_option_image();
 
         return self::$mc_option;
     }
@@ -161,6 +163,81 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
     }
 
     /**
+     * Sets mc_option_image: retain existing, clear on delete, or set from new upload.
+     * Only processes upload when mc_option_id > 0 (existing option).
+     *
+     * @return string Filename for DB, or '' if none/deleted
+     */
+    protected function set_mc_option_image() {
+        $mc_option_image = $this->set_mc_option_value( 'mc_option_image', '' );
+        // User action: delete this option's image
+        if ( parent::$user_action_action === 'delete' && parent::$user_action_element === 'mc_option_image' ) {
+            if ( isset( parent::$user_action_details['mc_option_id'] ) && (int) parent::$user_action_details['mc_option_id'] === (int) self::$mc_option['mc_option_id'] ) {
+                $mc_option_image = '';
+                parent::$response_obj->add_success( 'MC option image removed.' );
+            }
+        }
+        // New upload: only for existing options (we have a stable directory path)
+        if ( ! empty( $_FILES ) && (int) self::$mc_option['mc_option_id'] > 0 ) {
+            $field_name = 'mc_option_image_upload_' . self::$mc_option['mc_option_id'];
+            if ( isset( $_FILES[ $field_name ]['size'] ) && (int) $_FILES[ $field_name ]['size'] > 0 ) {
+                $new_image = $this->upload_mc_option_image( $field_name );
+                if ( $new_image !== false ) {
+                    $mc_option_image = $new_image;
+                }
+            }
+        }
+        return $mc_option_image;
+    }
+
+    /**
+     * Creates mc_option image dir (quiz_id/question_id/mc_option_{id}/) and uploads/resizes image.
+     *
+     * @param string $field_name Form file input name (e.g. mc_option_image_upload_123)
+     * @return string|false Filename saved, or false on error
+     */
+    protected function upload_mc_option_image( $field_name ) {
+        $new_image_name = false;
+        $image_upload   = wp_upload_bits( $_FILES[ $field_name ]['name'], null, @file_get_contents( $_FILES[ $field_name ]['tmp_name'] ) );
+        if ( $image_upload['error'] === false ) {
+            $this->prepare_quiz_image_dir();
+            $path = $this->prepare_mc_option_image_dir();
+            $new_image_name = $this->resize_image( $image_upload, $path, null );
+            $base_path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'] . '/' . parent::$question['question_id'] . '/mc_option_' . self::$mc_option['mc_option_id'] . '/';
+            $new_image_name = str_replace( $base_path, '', $new_image_name );
+            $this->resize_image( $image_upload, $path, 1000 );
+            $this->resize_image( $image_upload, $path, 740 );
+            $this->resize_image( $image_upload, $path, 580 );
+            $this->resize_image( $image_upload, $path, 320 );
+            $this->resize_image( $image_upload, $path, 200 );
+            $this->delete_file( $image_upload['file'] );
+            parent::$response_obj->add_success( 'MC option image uploaded.' );
+        } else {
+            parent::$response_obj->add_error( 'MC option image upload failed.' );
+        }
+        return $new_image_name;
+    }
+
+    /**
+     * Creates directory for this mc_option's image and clears existing files in it.
+     *
+     * @return string Path to mc_option image dir
+     */
+    protected function prepare_mc_option_image_dir() {
+        $path = ENP_QUIZ_IMAGE_DIR . parent::$quiz['quiz_id'] . '/' . parent::$question['question_id'] . '/mc_option_' . self::$mc_option['mc_option_id'] . '/';
+        if ( ! file_exists( $path ) ) {
+            mkdir( $path, 0777, true );
+        }
+        $files = glob( $path . '*' );
+        foreach ( $files as $file ) {
+            if ( is_file( $file ) ) {
+                unlink( $file );
+            }
+        }
+        return $path;
+    }
+
+    /**
      * Save a mc_option array in the database
      * Often used in a foreach loop to loop over all mc_options
      * If ID is passed, it will update that ID.
@@ -195,6 +272,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         // Get our Parameters ready
         $params = array(':question_id'      => parent::$question['question_id'],
                         ':mc_option_content'=> self::$mc_option['mc_option_content'],
+                        ':mc_option_image'  => isset( self::$mc_option['mc_option_image'] ) ? self::$mc_option['mc_option_image'] : '',
                         ':mc_option_correct'=> self::$mc_option['mc_option_correct'],
                         ':mc_option_order'  => self::$mc_option['mc_option_order'],
 						':mc_option_responses'  => 0
@@ -203,6 +281,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         $sql = "INSERT INTO ".$pdo->question_mc_option_table." (
                                             question_id,
                                             mc_option_content,
+                                            mc_option_image,
                                             mc_option_correct,
                                             mc_option_order,
 											mc_option_responses
@@ -210,6 +289,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
                                         VALUES(
                                             :question_id,
                                             :mc_option_content,
+                                            :mc_option_image,
                                             :mc_option_correct,
                                             :mc_option_order,
 											:mc_option_responses
@@ -250,6 +330,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         // Get our Parameters ready
         $params = array(':mc_option_id'     => self::$mc_option['mc_option_id'],
                         ':mc_option_content'=> self::$mc_option['mc_option_content'],
+                        ':mc_option_image'  => isset( self::$mc_option['mc_option_image'] ) ? self::$mc_option['mc_option_image'] : '',
                         ':mc_option_correct'=> self::$mc_option['mc_option_correct'],
                         ':mc_option_order'  => self::$mc_option['mc_option_order'],
                         ':mc_option_is_deleted'  => self::$mc_option['mc_option_is_deleted'],
@@ -257,6 +338,7 @@ class Enp_quiz_Save_mc_option extends Enp_quiz_Save_question {
         // write our SQL statement
         $sql = "UPDATE ".$pdo->question_mc_option_table."
                    SET  mc_option_content = :mc_option_content,
+                        mc_option_image = :mc_option_image,
                         mc_option_correct = :mc_option_correct,
                         mc_option_order = :mc_option_order,
                         mc_option_is_deleted = :mc_option_is_deleted
