@@ -96,6 +96,7 @@ class Enp_quiz_Quiz_create extends Enp_quiz_Create {
                 'jquery-ui-slider',
                 'jquery-ui-sortable',
                 'jquery-touch-punch',
+                'tinymce_cloud',
                 //$plugin_name.'-sticky-header',
                 $plugin_name.'-accordion'
             ),

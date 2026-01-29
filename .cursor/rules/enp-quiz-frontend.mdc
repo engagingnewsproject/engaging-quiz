@@ -1,0 +1,28 @@
+---
+description: CSS, JS, and template conventions for ENP Quiz
+globs: "**/*.scss,**/*.js,**/public/**/templates/**/*.php,**/public/**/partials/**/*.php"
+alwaysApply: false
+---
+
+# ENP Quiz – Frontend (CSS, JS, Templates)
+
+## CSS / SCSS
+- **BEM:** Use BEM-style class names. Prefer one-level selectors (avoid deep nesting) where reasonable.
+- **Prefix:** All quiz-specific classes use `.enp-` (e.g. `.enp-quiz`, `.enp-quiz__question`, `.enp-quiz__link`). Don’t attach styles to bare semantic elements like `a`; use a class like `.enp-*__link`.
+- **Build:** SCSS lives under `public/quiz-create/css/sass/` and `public/quiz-take/css/sass/`. Gulp compiles to CSS; **don’t edit files in `/dist`** – they are generated. Run gulp from the plugin (or `wp-content/plugins`) per contributing docs.
+
+## JavaScript
+- **Progressive enhancement:** Quiz Create and Quiz Take must work with JS off. Use JS to enhance (e.g. AJAX save, dynamic UI), not as the only path.
+- **Templating:** Underscore.js templates are generated from PHP: PHP builds “fake” data and outputs `{{variable_name}}` placeholders; JS receives the same structure. If you add new template variables, ensure they’re set in both PHP and JS or template generation will break.
+- **Quiz Create JS:** Source files in `public/quiz-create/js/quiz-create/` (e.g. `quiz-create--save.js`, `quiz-create--onLoad.js`) and `quiz-results/`, `utilities/`; gulp builds to `js/dist/`. Use utilities (accordion, display-messages, limited-chars, sticky-header, svg-class-shim) where applicable.
+- **Quiz Take JS:** Includes `iframe-parent.js` for postMessage (iframe height, “where are we?” for share URL). Don’t rely on `$('.svg')` without the svg-class-shim if targeting SVG elements with jQuery.
+
+## Templates (PHP)
+- **Quiz Create:** Virtual pages; `Enp_quiz_Create` uses `template_redirect` and picks which template to load. Main wrapper: `public/quiz-create/templates/enp-quiz-page.php`; page-specific templates in `templates/` and partials in `templates/partials/`.
+- **Quiz Take:** Entry templates are `public/quiz-take/templates/quiz.php` and `ab-test.php`. They instantiate `Enp_quiz_Take`, call `load_quiz()` (or AB variant), then include partials (question, slider, mc-option, quiz-end, etc.). Keep logic in the Take class; templates should output and call `$qt->...` or partials.
+
+## Cookies and state (Quiz Take)
+- Cookies: `enp_quiz_user_id`, `enp_response_id`, `enp_quiz_state`, `enp_current_question_id`, `enp_correctly_answered`, `enp_question_$id_is_correct`. State must degrade gracefully when cookies are blocked (e.g. iframe third-party).
+
+## Animations
+- Per contributing docs: animations should carry meaning and support usability, not only decoration.

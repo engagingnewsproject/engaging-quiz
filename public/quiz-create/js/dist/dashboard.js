@@ -176,7 +176,8 @@ function quizDeleteSuccess( response, textStatus, jqXHR ) {
         return false;
     }
 
-    response = $.parseJSON(jqXHR.responseJSON);
+    // responseJSON is already parsed by jQuery when server sends application/json
+    response = jqXHR.responseJSON;
     displayMessages(response.message);
 
     var userActionAction = response.user_action.action;
@@ -384,6 +385,9 @@ function appendMessage(message, status) {
 // Loop through messages and display them
 // Show success messages
 function displayMessages(message) {
+    if (!message || typeof message !== 'object') {
+        return;
+    }
     // loop through success messages
     //for(var success_i = 0; success_i < message.success.length; success_i++) {
         if(typeof message.success !== 'undefined' && message.success.length > 0) {
@@ -394,8 +398,10 @@ function displayMessages(message) {
     //}
 
     // Show error messages
-    for(var error_i = 0; error_i < message.error.length; error_i++) {
-        appendMessage(message.error[error_i], 'error');
+    if (message.error && message.error.length > 0) {
+        for(var error_i = 0; error_i < message.error.length; error_i++) {
+            appendMessage(message.error[error_i], 'error');
+        }
     }
 }
 

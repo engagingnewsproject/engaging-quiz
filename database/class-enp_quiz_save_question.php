@@ -623,9 +623,9 @@ class Enp_quiz_Save_question extends Enp_quiz_Save_quiz {
     }
 
     /**
-     * Deletes a file by path
+     * Deletes a file by path. Protected so child classes (e.g. Save_mc_option) can use it.
      */
-    private function delete_file( $file ) {
+    protected function delete_file( $file ) {
         if(is_file( $file ) ) {
             unlink( $file ); // delete file
         }

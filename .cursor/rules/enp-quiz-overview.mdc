@@ -1,0 +1,40 @@
+---
+description: ENP Quiz plugin architecture and how it works
+alwaysApply: true
+---
+
+# ENP Quiz Plugin – Overview
+
+## What it does
+WordPress plugin for creating and taking embeddable quizzes. Two main sides: **Quiz Create** (dashboard, build/edit quizzes, results) and **Quiz Take** (public-facing quiz/AB-test experience, often in iframes).
+
+## Entry and load flow
+- **Bootstrap:** `enp_quiz.php` defines constants (`ENP_QUIZ_ROOT`, `ENP_QUIZ_VERSION`), activation/deactivation, then `require`s all `includes/` and `database/` classes and `api/routes.php`. It calls `run_enp_quiz()` which instantiates `Enp_quiz` (in `includes/class-enp_quiz.php`).
+- **Router:** `Enp_quiz` chooses what to load:
+  - **Admin:** `load_admin()` → `admin/class-enp_quiz-admin.php`.
+  - **Non-admin (and AJAX):** `load_quiz_create()` → `public/quiz-create/class-enp_quiz-create.php` (`Enp_quiz_Create`). Quiz Create handles virtual pages via rewrite rules and template redirect.
+- **Quiz Take** is **not** loaded by `Enp_quiz`. It is loaded by **mod_rewrite** (Activator adds rules). Requests hit `public/quiz-take/templates/quiz.php` or `ab-test.php`; those templates instantiate `Enp_quiz_Take` from `public/quiz-take/class-enp_quiz-take.php` and call `$qt->load_quiz($quiz_id)` (or AB test variant).
+
+## Directory map
+| Path | Purpose |
+|------|---------|
+| `enp_quiz.php` | Bootstrap, constants, activation, requires, `run_enp_quiz()` |
+| `includes/` | Shared models: Quiz, Question, Slider, MC option, Nonce, User, Embed (site/quiz/domain), AB test, Slugify, Activator/Deactivator |
+| `database/` | `enp_quiz_Db` (PDO wrapper; table names from external config). `Enp_quiz_Save` base + many `Enp_quiz_Save_*` classes for quiz, question, embed, quiz_take, etc. |
+| `api/routes.php` | REST routes under `enp-quiz/v1`: domains, sites, embeds, quizzes, totals. Uses `enp_quiz_Db` and Embed/Quiz model classes. |
+| `admin/` | WP admin UI (class-enp_quiz-admin.php + partials, css, js). |
+| `public/quiz-create/` | Create flow: `class-enp_quiz-create.php` + `includes/` (Dashboard, Quiz_create, Preview, Publish, Results, AB test views, Breadcrumbs) + `templates/` + JS (quiz-create, dashboard, quiz-results, ab-results) + SCSS. Virtual pages via rewrite; AJAX saves. |
+| `public/quiz-take/` | Take flow: `class-enp_quiz-take.php` + `includes/` (cookies, take question/end, AB test) + `templates/` (quiz.php, ab-test.php, partials) + JS (quiz-take, iframe-parent) + SCSS. |
+| `tests/` | PHPUnit (EnpTestCase, database Save tests). |
+| `contributing/` | README-Contributor.mdown, included-files.md. |
+
+## External config (not in repo)
+- DB: plugin expects `enp-quiz-database-config.php` (e.g. in document root) with `$enp_db_*` and `$enp_quiz_table_*` for `enp_quiz_Db`.
+- Quiz Create: may include `WP_CONTENT_DIR . '/enp-quiz-config.php'` for extra config.
+- Optional: `ENP_GOOGLE_SAFE_BROWSING_API_KEY` in wp-config for embed URL validation.
+
+## Key conventions
+- **Class prefix:** PHP classes use `Enp_quiz_` or `Enp_quiz_` (e.g. `Enp_quiz_Create`, `Enp_quiz_Save_quiz`). DB class is `enp_quiz_Db` (lowercase).
+- **Saving (Create):** AJAX or POST → `Enp_quiz_Save_*` classes; full quiz save via `Enp_quiz_Save_quiz`.
+- **Nonces:** Session-based nonces in Quiz Create; changing pages invalidates previous nonce.
+- **Quiz Take:** Cookies for state (e.g. `enp_quiz_user_id`, `enp_response_id`); must still work without cookies. PostMessage used for iframe height and social share URL.

@@ -26,6 +26,8 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save
         $quiz_title,
         $quiz_feedback,
         $quiz_status,
+        $quiz_finish_message,
+        $quiz_updated_at,
         $status,
         $action,
         $message = array('error' => array(), 'success' => array()),
@@ -305,6 +307,13 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save
             // have been created yet
             $question_id = str_replace('question-image--delete-', '', $user_action);
             $details = array('question_id' => (int) $question_id);
+        }
+        // DELETE mc_option image
+        elseif (strpos($user_action, 'mc-option-image--delete-') !== false) {
+            $action = 'delete';
+            $element = 'mc_option_image';
+            $mc_option_id = str_replace('mc-option-image--delete-', '', $user_action);
+            $details = array('mc_option_id' => (int) $mc_option_id);
         }
         // DELETE mc_option
         elseif (strpos($user_action, 'mc-option--delete-') !== false) {

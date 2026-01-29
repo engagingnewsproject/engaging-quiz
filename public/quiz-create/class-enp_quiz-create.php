@@ -476,7 +476,22 @@ class Enp_quiz_Create {
         $save_quiz = new Enp_quiz_Save_quiz();
         // save the quiz by passing our $quiz array to the save function
 
-        $response = $save_quiz->save( $quiz );
+        try {
+            $response = $save_quiz->save( $quiz );
+        } catch ( Exception $e ) {
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log( 'enp-quiz save_quiz: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() );
+            }
+            self::$message['error'][] = 'Save failed: ' . $e->getMessage();
+            if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+                wp_send_json( array(
+                    'status'  => 'error',
+                    'message' => self::$message,
+                ) );
+                exit();
+            }
+            return false;
+        }
 
         // set it as our messages to return to the user
         self::$message = $this->set_message( $response );
@@ -501,9 +516,8 @@ class Enp_quiz_Create {
         // *************************//
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-            $json_response = $response;
-            $json_response = json_encode( $json_response );
-            wp_send_json( $json_response );
+            // wp_send_json() encodes the value; pass the object, not a pre-encoded string
+            wp_send_json( $response );
             // always end ajax with exit()
             exit();
         }
@@ -613,9 +627,8 @@ class Enp_quiz_Create {
         self::$message = $response['message'];
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-            $json_response = $response;
-            $json_response = json_encode( $json_response );
-            wp_send_json( $json_response );
+            // wp_send_json() encodes the value; pass the array/object, not a pre-encoded string
+            wp_send_json( $response );
             // always end ajax with exit()
             exit();
         }

@@ -697,9 +697,13 @@ class Enp_quiz_Question {
             // create the MC Options
             foreach ( $mc_option_ids as $mc_option_id ) {
                 // build mc option object
-                $mc_option = new Enp_quiz_MC_option( $mc_option_id );
-                // cast object to array in question_array
-                $mc_option_array               = $mc_option->get_take_mc_option_array();
+                $mc_option      = new Enp_quiz_MC_option( $mc_option_id );
+                $mc_option_array = $mc_option->get_take_mc_option_array();
+                // Add full image URL for quiz-take JS (per-question; avoids wrong question_id in template)
+                if ( ! empty( $mc_option_array['mc_option_image'] ) ) {
+                    $raw_src = ENP_QUIZ_IMAGE_URL . $this->get_quiz_id() . '/' . $this->get_question_id() . '/mc_option_' . $mc_option_id . '/' . $mc_option_array['mc_option_image'];
+                    $mc_option_array['mc_option_image_src'] = function_exists( 'esc_url' ) ? esc_url( $raw_src ) : $raw_src;
+                }
                 $question_array['mc_option'][] = $mc_option_array;
             }
         } elseif ( $question_type === 'slider' ) {

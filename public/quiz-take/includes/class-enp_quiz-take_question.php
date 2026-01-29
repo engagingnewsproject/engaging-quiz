@@ -217,12 +217,25 @@ class Enp_quiz_Take_Question {
 	*/
 	public function mc_option_js_template() {
 		$mc_option = new Enp_quiz_MC_option(0);
-		foreach($mc_option as $key => $value) {
-			$mc_option->$key = '{{'.$key.'}}';
+		foreach ( $mc_option as $key => $value ) {
+			$mc_option->$key = '{{' . $key . '}}';
 		}
-		$template = '<script type="text/template" id="mc_option_template">';
+		// So JS can inject per-question image URL (avoids first-question ID baked into template)
+		$mc_option->mc_option_image_src = '{{mc_option_image_src}}';
+
+		$template  = '<script type="text/template" id="mc_option_template">';
 		ob_start();
-		include(ENP_QUIZ_TAKE_TEMPLATES_PATH.'/partials/mc-option.php');
+		include ENP_QUIZ_TAKE_TEMPLATES_PATH . '/partials/mc-option.php';
+		$template .= ob_get_clean();
+		$template .= '</script>';
+
+		// Text-only option template (no image)
+		$mc_option->mc_option_image     = '';
+		$mc_option->mc_option_image_src = '';
+		unset( $mc_option->mc_option_image_src );
+		$template .= '<script type="text/template" id="mc_option_text_template">';
+		ob_start();
+		include ENP_QUIZ_TAKE_TEMPLATES_PATH . '/partials/mc-option.php';
 		$template .= ob_get_clean();
 		$template .= '</script>';
 

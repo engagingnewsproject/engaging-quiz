@@ -132,6 +132,15 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 
 		</main>
 	</div>
+
+	<div id="enp-option-image-modal" class="enp-option-image-modal" role="dialog" aria-modal="true" aria-label="Expanded image" hidden>
+		<div class="enp-option-image-modal__backdrop"></div>
+		<div class="enp-option-image-modal__content">
+			<button type="button" class="enp-option-image-modal__close" aria-label="Close"><svg class="enp-icon enp-icon--close" aria-hidden="true"><use xlink:href="#icon-close"></use></svg></button>
+			<img class="enp-option-image-modal__img" src="" alt="" />
+		</div>
+	</div>
+
 	<?php $current_url = new Enp_quiz_Current_URL(); ?>
 	<footer id="enp-quiz-footer" class="enp-callout">
 		<a class="enp-callout__link" href="<?php echo $current_url->get_root(); ?>/quiz-creator/?iframe_referral=true&amp;quiz_id=<?php echo $qt_end->quiz->get_quiz_id(); ?>" target="_blank">Powered by the Center for Media Engagement<span class="enp-screen-reader-text"> Link opens in a new window</span></a>
@@ -155,13 +164,39 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 
 	// load scripts
 	$qt->scripts();
-	// if we're on prod, include GA Tracking code
+	?>
+	<script>
+	(function($) {
+		if (!$) return;
+		// MC option image expand: open in modal (runs even if dist bundle not rebuilt)
+		$(document).on('click', '.enp-option__image-expand', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			var src = $(this).attr('data-enp-expand-src');
+			var $modal = $('#enp-option-image-modal');
+			var $img = $modal.find('.enp-option-image-modal__img');
+			var alt = $(this).closest('.enp-option__image-wrap').find('.enp-option__image').attr('alt') || '';
+			if (src && $modal.length) {
+				$img.attr({ src: src, alt: alt });
+				$modal.removeAttr('hidden');
+			}
+		});
+		$(document).on('click', '.enp-option-image-modal__backdrop, .enp-option-image-modal__close', function() {
+			$('#enp-option-image-modal').attr('hidden', 'hidden');
+		});
+		$(document).on('keydown', function(e) {
+			if (e.key === 'Escape' && $('#enp-option-image-modal').length && !$('#enp-option-image-modal').attr('hidden')) {
+				$('#enp-option-image-modal').attr('hidden', 'hidden');
+			}
+		});
+	})(typeof jQuery !== 'undefined' ? jQuery : null);
+	</script>
+	<?php
+	// Only output GA on prod hosts so $ga_id is never undefined (avoids XDebug injecting HTML into JS).
 	$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-
 	if ($host === 'engagingnewsproject.org' || $host === 'mediaengagement.org') {
 		$ga_id = ($host === 'mediaengagement.org') ? 'UA-52471115-4' : 'UA-52471115-1';
-	}
-	?>
+		?>
 		<script>
 			(function(i, s, o, g, r, a, m) {
 				i['GoogleAnalyticsObject'] = r;
@@ -175,10 +210,12 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 				m.parentNode.insertBefore(a, m)
 			})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-
-			ga('create', '<?php echo $ga_id; ?>', 'auto');
+			ga('create', '<?php echo esc_attr( $ga_id ); ?>', 'auto');
 			ga('send', 'pageview');
 		</script>
+		<?php
+	}
+	?>
 
 </body>
 

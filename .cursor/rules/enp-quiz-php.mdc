@@ -1,0 +1,29 @@
+---
+description: PHP conventions and patterns for ENP Quiz
+globs: "**/*.php"
+alwaysApply: false
+---
+
+# ENP Quiz – PHP Conventions
+
+## Class and file naming
+- **Classes:** `Enp_quiz_*` (PascalCase after prefix), e.g. `Enp_quiz_Create`, `Enp_quiz_Save_quiz`, `Enp_quiz_Quiz`, `Enp_quiz_Nonce`. Exception: DB wrapper is `enp_quiz_Db` (lowercase).
+- **Embed/domain:** `Enp_quiz_Embed_site`, `Enp_quiz_Embed_quiz`, `Enp_quiz_Embed_domain`, etc.
+- **Files:** One main class per file; filename mirrors class with underscores: `class-enp_quiz-create.php` → `Enp_quiz_Create`, `class-enp_quiz_save_quiz.php` → `Enp_quiz_Save_quiz`.
+
+## Database layer
+- **Read:** Use `enp_quiz_Db` (extends PDO). Table names come from config (`$this->quiz_table`, etc.). Use `fetchOne()`, `fetchAll()`, `query()` with params. Config file path: e.g. `$_SERVER["DOCUMENT_ROOT"].'/enp-quiz-database-config.php'`.
+- **Write/validation:** Extend `Enp_quiz_Save` (in `database/class-enp_quiz_save.php`). Use `process_string()`, `process_int()`, `validate_hex()`, etc. Add errors with `$this->add_error()`. Child classes implement the save logic and validation (e.g. `Enp_quiz_Save_embed_site` validates embed URL and optional Safe Browsing).
+
+## Adding new code
+- **New Save flow:** Add a class extending `Enp_quiz_Save` in `database/`; keep validation and DB logic in the Save class, not in templates.
+- **New includes class:** Add the `require` in `enp_quiz.php` (around the existing includes block) so it’s available everywhere the plugin runs.
+- **Logic vs templates:** Keep business logic in classes; templates should mostly output and call methods. Don’t put complex logic in `quiz.php` or other template files.
+
+## WordPress usage
+- Use `plugin_dir_path( __FILE__ )` (or `dirname( __FILE__ )`) and `plugins_url('enp-quiz')` for paths/URLs. Constants: `ENP_QUIZ_ROOT`, `ENP_QUIZ_ROOT_URL`, `ENP_QUIZ_VERSION`.
+- AJAX: Quiz Create registers `wp_ajax_save_quiz`, `wp_ajax_save_ab_test`; handlers live on `Enp_quiz_Create`. Use nonces from `Enp_quiz_Nonce` (session-based).
+- REST API: Routes in `api/routes.php` under `enp-quiz/v1`; callbacks use `enp_quiz_Db` and model classes (`Enp_quiz_Quiz`, `Enp_quiz_Embed_site`, etc.).
+
+## Style and standards
+- Project uses WordPress coding standards; see `rulesetsPHPCS.xml`. Use 2-space indent, lowercase keywords/constants, visibility on properties and methods. Run PHPCS when making larger changes.

@@ -179,9 +179,12 @@
     .enp-mc-option {
         position: relative;
         padding-left: 6px;
-
+        &:nth-child(n + 2) {
+            margin-top: 1.2rem;
+        }
         @include breakpoint(medium) {
             padding-left: 0;
+            
         }
     }
 
@@ -191,20 +194,22 @@
 
     .enp-mc-option__add,
     .enp-mc-option__button--correct,
-    .enp-mc-option__button--delete {
+    .enp-mc-option__button--delete,
+    .enp-mc-option__button--add-image,
+    .enp-mc-option__right-actions {
         display: none;
     }
 
     .enp-question-type__input--mc:checked ~ .enp-mc-options {
         .enp-mc-option__add,
         .enp-mc-option__button--correct,
-        .enp-mc-option__button--delete {
+        .enp-mc-option__button--delete,
+        .enp-mc-option__button--add-image {
             display: block;
         }
     }
 
-    .enp-button__question-image-delete,
-    .enp-mc-option__button--delete {
+    .enp-button__question-image-delete {
         @include btn--reset;
         position: absolute;
         top: 9px;
@@ -219,6 +224,53 @@
         &:focus,
         &:hover {
             fill: $red;
+        }
+    }
+
+    // MC option: stacked Add Image icon + Delete icon on the right of the input
+    // Pin right-actions to top-right of input row so they stay in place when image/preview appears below
+    .enp-mc-option__right-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+
+        .enp-mc-option__button--delete {
+            position: static;
+        }
+    }
+
+    .enp-mc-option__button--add-image,
+    .enp-mc-option__right-actions .enp-mc-option__button--delete,
+    .enp-mc-option-image-upload .enp-mc-option-image-preview__clear {
+        @include btn--reset;
+        fill: #bbb;
+        cursor: pointer;
+        padding: 0 0.25rem 0.25rem 0.25rem;
+
+        .enp-icon {
+            display: block;
+            width: 20px;
+            height: 20px;
+        }
+
+        &:focus,
+        &:hover {
+            fill: $red;
+        }
+    }
+    .enp-mc-option-image-upload .enp-mc-option-image-preview__clear {
+        padding: 0.25rem;
+        fill: $red;
+        &:focus,
+        &:hover {
+            fill: #bbb;
+        }
+    }
+    .enp-mc-option__button--add-image {
+        &:focus,
+        &:hover {
+            fill: $blue;
         }
     }
 
@@ -291,6 +343,164 @@
 
         &:hover .enp-mc-option__add__icon {
             @include icon--gray-bg--hover;
+        }
+    }
+
+    // MC option: row with text input; right-actions pinned so they don't move when preview appears
+    .enp-mc-option__input-row {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+
+        .enp-mc-option__input {
+            flex: 0 1 95%;
+            min-width: 0;
+            // Reserve space so text doesn't go under the right-action icons
+        }
+        .enp-mc-option__right-actions {
+            flex: 1 0 5%;
+        }
+    }
+    .enp-mc-option__input-row-content {
+        display: flex;
+        flex: 1 1 100%;
+        order: 1;
+    }
+    // MC option image upload: container for link (and hidden file input); sits at end of input row.
+    // Keep in document flow (no position: absolute) so when preview is visible it pushes content down.
+    // max-width + min-width: 0 so flex item doesn't grow with huge image; image max-width: 100% then resolves correctly.
+    .enp-mc-option-image-upload {
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        font-size: 14px;
+        flex: 1 1 100%;
+        order: 3;
+
+        // Preview wraps to next line below the row; constrain so large images don't overflow
+        .enp-mc-option-image-preview {
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+        }
+    }
+
+    // MC option image upload: "Add Image" as a link at end of input
+    .enp-mc-option-image-upload__trigger {
+        color: $blue;
+        text-decoration: none;
+        font-size: inherit;
+        cursor: pointer;
+        background: none;
+        border: 0;
+        padding: 0;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+            color: darken($blue, 10%);
+        }
+    }
+
+    // MC option image upload: hidden until option has 3+ characters (so option can be saved first)
+    .enp-mc-option-image-upload--hidden-until-content {
+        display: none;
+    }
+
+    // MC option image upload: hide native file input (link triggers it via JS)
+    .enp-mc-option-image-upload .enp-mc-option-image-upload__input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    // MC option image upload: preview hidden until file selected (JS removes --hidden)
+    .enp-mc-option-image-preview--hidden {
+        display: none;
+    }
+
+    // When preview is visible, add space below; position relative so clear button can sit bottom-right over image
+    .enp-mc-option-image-preview {
+        position: relative;
+        margin-bottom: 1.6rem;
+    }
+
+    // Constrain preview image to container (large blob images can be very wide)
+    .enp-mc-option-image-preview .enp-mc-option-image--preview {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        margin-top: 0.4rem;
+        object-fit: contain;
+    }
+
+    // Preview: clear/remove button (added by JS when file selected) — absolute bottom-right over image
+    .enp-mc-option-image-preview__clear {
+        @include btn--reset;
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        padding: 0.4rem;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 4px;
+        cursor: pointer;
+        fill: #fff;
+        transition: background 0.2s;
+
+        &:hover,
+        &:focus {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .enp-icon {
+            display: block;
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    // Saved MC option image: container for image + delete overlay
+    .enp-mc-option-image__container {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    // Saved MC option image: delete button absolute bottom-right over image
+    .enp-mc-option-image__remove {
+        @include btn--reset;
+        position: absolute;
+        bottom: 0.5rem;
+        right: 0.5rem;
+        padding: 0.4rem;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 4px;
+        cursor: pointer;
+        fill: #fff;
+        transition: background 0.2s;
+
+        &:hover,
+        &:focus {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .enp-icon {
+            display: block;
+            width: 20px;
+            height: 20px;
         }
     }
 

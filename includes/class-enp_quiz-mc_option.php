@@ -7,6 +7,7 @@
 class Enp_quiz_MC_option {
     public  $mc_option_id,
             $mc_option_content,
+            $mc_option_image,
             $mc_option_correct,
             $mc_option_order,
             $mc_option_responses,
@@ -62,6 +63,7 @@ class Enp_quiz_MC_option {
     protected function set_mc_option_object_values() {
         $this->mc_option_id = $this->set_mc_option_id();
         $this->mc_option_content = $this->set_mc_option_content();
+        $this->mc_option_image = $this->set_mc_option_image();
         $this->mc_option_correct = $this->set_mc_option_correct();
         $this->mc_option_order = $this->set_mc_option_order();
         $this->mc_option_responses = $this->set_mc_option_responses();
@@ -86,6 +88,16 @@ class Enp_quiz_MC_option {
     protected function set_mc_option_content() {
         $mc_option_content = stripslashes(self::$mc_option['mc_option_content']);
         return $mc_option_content;
+    }
+
+    /**
+     * Set the mc_option_image for our MC option object (image path when option is image type).
+     *
+     * @return string mc_option_image field from the database, or '' if not set
+     */
+    protected function set_mc_option_image() {
+        $mc_option_image = isset( self::$mc_option['mc_option_image'] ) ? self::$mc_option['mc_option_image'] : '';
+        return $mc_option_image;
     }
 
     /**
@@ -146,6 +158,15 @@ class Enp_quiz_MC_option {
     public function get_mc_option_content() {
         $mc_option_content = $this->mc_option_content;
         return $mc_option_content;
+    }
+
+    /**
+     * Get the mc_option_image (path/URL) for this option; empty string when text-only.
+     *
+     * @return string
+     */
+    public function get_mc_option_image() {
+        return isset( $this->mc_option_image ) ? $this->mc_option_image : '';
     }
 
     /**

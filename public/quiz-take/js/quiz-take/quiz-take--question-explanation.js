@@ -81,7 +81,7 @@ $(document).on('click', '.enp-next-step', function(e){
 *
 */
 function questionExplanationSubmitSuccess( response, textStatus, jqXHR ) {
-    var responseJSON = $.parseJSON(jqXHR.responseText);
+    var responseJSON = jqXHR.responseJSON !== undefined ? jqXHR.responseJSON : JSON.parse(jqXHR.responseText);
 
     // see if there are any errors
     if(responseJSON.error.length) {

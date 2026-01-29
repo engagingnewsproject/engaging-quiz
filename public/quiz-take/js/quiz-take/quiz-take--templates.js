@@ -6,6 +6,7 @@ _.templateSettings = {
 if($('#question_template').length) {
     var questionTemplate = _.template($('#question_template').html());
     var mcOptionTemplate = _.template($('#mc_option_template').html());
+    var mcOptionTextTemplate = $('#mc_option_text_template').length ? _.template($('#mc_option_text_template').html()) : null;
     var sliderTemplate = _.template($('#slider_template').html());
     var sliderRangeHelpersTemplate = _.template($('#slider_range_helpers_template').html());
     var questionImageTemplate = _.template($('#question_image_template').html());

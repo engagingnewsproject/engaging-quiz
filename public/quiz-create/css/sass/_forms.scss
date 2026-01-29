@@ -234,6 +234,9 @@
 
     .enp-input {
         @include input;
+        padding: .8rem;
+        margin-bottom: .2rem;
+
         &__sm {
             padding: 5px;
             margin-bottom: 5px;

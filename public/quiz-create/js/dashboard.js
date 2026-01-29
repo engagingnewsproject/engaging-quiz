@@ -176,7 +176,8 @@ function quizDeleteSuccess( response, textStatus, jqXHR ) {
         return false;
     }
 
-    response = $.parseJSON(jqXHR.responseJSON);
+    // responseJSON is already parsed by jQuery when server sends application/json
+    response = jqXHR.responseJSON;
     displayMessages(response.message);
 
     var userActionAction = response.user_action.action;
