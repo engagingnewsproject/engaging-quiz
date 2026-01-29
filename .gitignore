@@ -10,3 +10,9 @@ gulpfile.js
 enp-quiz.code-workspace
 .vscode/launch.json
 public/quiz-take/js/dist/quiz-take-NO-COMMENTS.js
+
+# Local / dev-only (do not deploy to dev/staging/prod)
+LOCAL/
+.cursor/
+error.txt
+npm-debug.log
