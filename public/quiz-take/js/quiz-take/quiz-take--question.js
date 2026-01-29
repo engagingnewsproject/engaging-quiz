@@ -85,8 +85,8 @@ $(document).on('click', '.enp-question__submit', function(e){
 function questionSaveSuccess( response, textStatus, jqXHR ) {
     // real quick, hide the submit button so it can't get submitted again
     $('.enp-question__submit').remove();
-    // get the response
-    var responseJSON = $.parseJSON(jqXHR.responseText);
+    // get the response (jQuery sets responseJSON when server sends application/json; otherwise parse)
+    var responseJSON = jqXHR.responseJSON !== undefined ? jqXHR.responseJSON : JSON.parse(jqXHR.responseText);
     // see if there are any errors
     if(responseJSON.error.length) {
         _.handle_error_message(responseJSON.error[0]);

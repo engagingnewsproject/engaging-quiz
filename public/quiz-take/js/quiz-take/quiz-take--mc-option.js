@@ -7,7 +7,8 @@
 function locateCorrectMCOption(container, callback) {
     var correct;
     $('.enp-option__input', container).each(function(e, obj) {
-        if($(this).data('correct') === '1') {
+        // Server sends mc_option_correct as 1/0 (number); accept number or string
+        if(Number($(this).data('correct')) === 1) {
             correct =  $(this);
             if(typeof(callback) == "function") {
                 callback($(this));
@@ -28,7 +29,8 @@ function locateCorrectMCOption(container, callback) {
 function locateIncorrectMCOptions(container, callback) {
     var incorrect;
     $('.enp-option__input', container).each(function(e, obj) {
-        if($(this).data('correct') === '0') {
+        // Server sends mc_option_correct as 1/0 (number); accept number or string
+        if(Number($(this).data('correct')) === 0) {
             incorrect =  $(this);
             if(typeof(callback) == "function") {
                 callback($(this));
@@ -70,22 +72,26 @@ function bindMCOptionData(questionJSON) {
 }
 
 function buildMCOptions(questionJSON) {
-    // generate mc option templates
-    for(var prop in questionJSON.mc_option) {
+    var optionHasImage, mcOptionData, templateFn;
+
+    for (var prop in questionJSON.mc_option) {
         mc_option_id = questionJSON.mc_option[prop].mc_option_id;
         mc_option_content = questionJSON.mc_option[prop].mc_option_content;
-        mcOptionData = {
-                        'mc_option_id': mc_option_id,
-                        'mc_option_content': mc_option_content
-        };
+        optionHasImage = questionJSON.mc_option[prop].mc_option_image_src;
 
-        // generate the template
-        new_mcOption = mcOptionTemplate(mcOptionData);
-        // insert it into the page
+        mcOptionData = {
+            mc_option_id: mc_option_id,
+            mc_option_content: mc_option_content
+        };
+        if (optionHasImage) {
+            mcOptionData.mc_option_image_src = optionHasImage;
+        }
+
+        templateFn = optionHasImage ? mcOptionTemplate : (mcOptionTextTemplate || mcOptionTemplate);
+        new_mcOption = templateFn(mcOptionData);
         $('#question_'+questionJSON.question_id+' .enp-question__submit').before(new_mcOption);
     }
 
-    // append the data to the mc options
     bindMCOptionData(questionJSON);
 }
 
@@ -98,11 +104,11 @@ function processMCSubmit() {
         console.log('no selected options');
         return false;
     }
-    // see if the input is correct or incorrect
+    // see if the input is correct or incorrect (server sends 1/0 as number from JSON)
     var correct = selectedMCInput.data('correct');
 
-    // check if it's correct or not
-    if(correct === '1') {
+    // check if it's correct or not; accept number or string
+    if(Number(correct) === 1) {
         correct_string = 'correct';
         // it's right! add the correct class to the input
         selectedMCInput.addClass('enp-option__input--correct-clicked');
