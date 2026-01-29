@@ -16,6 +16,11 @@ class Enp_quiz_Upgrade {
             $this->upgrade_to_110();
         }
 
+        // if current (old) version is less than 1.2.0
+        if(version_compare("1.2.0", $old_version) === 1) {
+            $this->upgrade_to_120();
+        }
+
         // update to the new version
         update_option('enp_quiz_version', ENP_QUIZ_VERSION);
     }
@@ -26,6 +31,18 @@ class Enp_quiz_Upgrade {
         // run activation scripts to create our new tables
         $activator = new Enp_quiz_Activator();
         $activator->create_tables();
+    }
+
+    /**
+     * Add mc_option_image column for text-or-image MC options (v1.2.0).
+     */
+    public function upgrade_to_120() {
+        global $wpdb;
+        $table = $wpdb->prefix . 'enp_question_mc_option';
+        $column = 'mc_option_image';
+        if ( $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM `{$table}` LIKE %s", $column ) ) !== $column ) {
+            $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `{$column}` TEXT NOT NULL DEFAULT '' AFTER mc_option_content" );
+        }
     }
 
     /**

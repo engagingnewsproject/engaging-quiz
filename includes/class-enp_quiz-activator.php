@@ -214,6 +214,7 @@ class Enp_quiz_Activator {
                     mc_option_id BIGINT(20) NOT NULL AUTO_INCREMENT,
                     question_id BIGINT(20) NOT NULL,
                     mc_option_content VARCHAR(255) NOT NULL,
+                    mc_option_image TEXT NOT NULL DEFAULT '',
                     mc_option_correct BOOLEAN NOT NULL,
                     mc_option_order BIGINT(3) NOT NULL,
                     mc_option_responses BIGINT(20) NOT NULL,
