@@ -188,4 +188,10 @@ function enp_log_error(){
     file_put_contents(plugin_dir_path( __FILE__ ).'/error.txt', ob_get_contents());
 }
 
+add_action('admin_notices', function() {
+    if (!defined('ENP_GOOGLE_SAFE_BROWSING_API_KEY') || empty(ENP_GOOGLE_SAFE_BROWSING_API_KEY)) {
+        echo '<div class="notice notice-error"><p><strong>ENP Quiz:</strong> Google Safe Browsing API key is missing! Please define <code>ENP_GOOGLE_SAFE_BROWSING_API_KEY</code> in your <code>wp-config.php</code> file.</p></div>';
+    }
+});
+
 run_enp_quiz();

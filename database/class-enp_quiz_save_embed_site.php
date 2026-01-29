@@ -83,6 +83,11 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
                 $this->add_error($require.' is empty.');
             }
         }
+		
+		if (!$this->is_safe_domain($embed_site['embed_site_url'])) {
+			$this->add_error('Domain flagged as unsafe by Google Safe Browsing: ' . $embed_site['embed_site_url']);
+			return $this->response;
+		}
 
         // if we already have errors, then return early
         if($this->has_errors($this->response) === true) {
@@ -170,6 +175,64 @@ class Enp_quiz_Save_embed_site extends Enp_quiz_Save {
         }
         // return response
         return $this->response;
+    }
+
+    protected function is_safe_domain($url) {
+        $host = parse_url($url, PHP_URL_HOST);
+        if (!$host) {
+            return false;
+        }
+
+        // Check cache first
+        $cache_key = 'enp_safe_domain_' . md5($host);
+        if (function_exists('get_transient')) {
+            $cached = get_transient($cache_key);
+            if ($cached !== false) {
+                return $cached === 'safe';
+            }
+        }
+
+		$api_key = defined('ENP_GOOGLE_SAFE_BROWSING_API_KEY') ? ENP_GOOGLE_SAFE_BROWSING_API_KEY : '';
+		if (empty($api_key)) {
+			// Optionally log or handle the error here
+			error_log('ENP Quiz: Google Safe Browsing API key is missing!');
+			// Optionally, you could return false or handle as you see fit
+			return true; // Fail open, or return false to block
+		}
+		$endpoint = 'https://safebrowsing.googleapis.com/v4/threatMatches:find?key=' . $api_key;
+        $body = json_encode([
+            'client' => [
+                'clientId' => 'enp-quiz-plugin',
+                'clientVersion' => '1.0'
+            ],
+            'threatInfo' => [
+                'threatTypes' => ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'POTENTIALLY_HARMFUL_APPLICATION'],
+                'platformTypes' => ['ANY_PLATFORM'],
+                'threatEntryTypes' => ['URL'],
+                'threatEntries' => [
+                    ['url' => 'http://' . $host],
+                    ['url' => 'https://' . $host]
+                ]
+            ]
+        ]);
+
+        $response = wp_remote_post($endpoint, [
+            'headers' => ['Content-Type' => 'application/json'],
+            'body' => $body,
+            'timeout' => 10
+        ]);
+
+        if (is_wp_error($response)) {
+            // Optionally log error
+            return true; // Fail open (allow) or false (block) depending on your preference
+        }
+
+        $data = json_decode(wp_remote_retrieve_body($response), true);
+        $is_safe = empty($data['matches']);
+        // Cache result for 1 day
+        set_transient($cache_key, $is_safe ? 'safe' : 'unsafe', DAY_IN_SECONDS);
+
+        return $is_safe;
     }
 
 }
