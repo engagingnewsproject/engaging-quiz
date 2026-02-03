@@ -856,6 +856,13 @@
         box-shadow: 0 0 3px $red;
     }
 
+    .enp-accordion-header__error {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: normal;
+        color: $red;
+    }
 }
 
 .enp-quiz.ui-sortable--sorting #enp-quiz .enp-accordion-content {

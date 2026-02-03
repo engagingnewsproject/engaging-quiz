@@ -6,8 +6,8 @@ function appendMessage(message, status) {
     var messageID = Math.floor((Math.random() * 1000) + 1);
     $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+messageID+'"><p class="enp-message__list enp-message__list--'+status+'">'+message+'</p></div>');
 
-    $('.enp-message-'+messageID).delay(3500).fadeOut(function(){
-        $('.enp-message-'+messageID).fadeOut();
+    $('.enp-message-'+messageID).delay(5000).fadeOut(function(){
+        $(this).remove();
     });
 }
 
@@ -40,9 +40,9 @@ function destroySuccessMessages() {
 }
 
 function removeErrorMessages() {
-    if($('.enp-quiz-message--error').length) {
+    if ($('.enp-quiz-message--error').length) {
         $('.enp-quiz-message--error').remove();
         $('.enp-accordion-header').removeClass('question-has-error');
+        $('.enp-accordion-header__error').remove();
     }
-
 }

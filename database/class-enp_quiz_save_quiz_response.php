@@ -538,8 +538,10 @@ class Enp_quiz_Save_quiz_Response extends Enp_quiz_Save
         } else {
             $mc_option_has_correct = false;
             foreach ($mc_options as $option) {
-                // check for values
-                if ($option['mc_option_content'] === '') {
+                // Option must have either text or an image (image-only options are allowed).
+                $has_content = isset( $option['mc_option_content'] ) && trim( (string) $option['mc_option_content'] ) !== '';
+                $has_image   = ! empty( $option['mc_option_image'] );
+                if ( ! $has_content && ! $has_image ) {
                     $this->add_error('Question ' . ($question['question_order'] + 1) . ' has an empty Multiple Choice Option field.');
                 }
                 // check to see if ANY one has been chosen

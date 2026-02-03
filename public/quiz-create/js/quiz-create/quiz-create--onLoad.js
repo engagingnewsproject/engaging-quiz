@@ -29,26 +29,32 @@ if(patt.test(url) === true) {
     hideSaveButton();
 }
 
-// check if there are any error messages
-if($('.enp-message__item--error').length !== 0) {
+// Check if there are any error messages; highlight questions and show inline error text.
+if ($('.enp-message__item--error').length !== 0) {
     var re = /Question \d+/;
-    // check each to see if we need to higlight a question
+    var errorsByQuestion = {};
     $('.enp-message__item--error').each(function() {
-        errorMessage = $(this).text();
-        found = errorMessage.match(re);
-        // if we found anything, process it
-        if(found !== null) {
-            // extract the number
-            questionNumber = found[0].replace(/Question /, '');
-            questionNumber = questionNumber - 1;
-            questionHeader = $('.enp-question-content:eq('+questionNumber+')').prev('.enp-accordion-header');
-            if(!questionHeader.hasClass('question-has-error')) {
-                questionHeader.addClass('question-has-error');
+        var errorMessage = $(this).text().trim();
+        var found = errorMessage.match(re);
+        if (found !== null) {
+            var questionNumber = found[0].replace(/Question /, '');
+            var questionIndex = parseInt(questionNumber, 10) - 1;
+            if (!errorsByQuestion[questionIndex]) {
+                errorsByQuestion[questionIndex] = [];
             }
+            errorsByQuestion[questionIndex].push(errorMessage);
         }
-
     });
-
+    $.each(errorsByQuestion, function(questionIndex, messages) {
+        var questionHeader = $('.enp-question-content:eq(' + questionIndex + ')').prev('.enp-accordion-header');
+        if (questionHeader.length && !questionHeader.hasClass('question-has-error')) {
+            questionHeader.addClass('question-has-error');
+            questionHeader.find('.enp-accordion-header__error').remove();
+            var errorHtml = '<span class="enp-accordion-header__error" role="alert">' +
+                messages.join(' ') + '</span>';
+            questionHeader.find('.enp-accordion-header__title').after(errorHtml);
+        }
+    });
 }
 
 // tinymce: Prevent jQuery UI dialog from blocking focusin
@@ -56,6 +62,11 @@ $(document).on('focusin', function(e) {
   if ($(e.target).closest(".tox-tinymce, .tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
     e.stopImmediatePropagation();
   }
+});
+
+// Server-rendered success messages (e.g. after Preview redirect): auto-hide after 5 seconds.
+$('.enp-quiz-message--success').not('.enp-quiz-message--ajax').delay(5000).fadeOut(function() {
+    $(this).remove();
 });
 
 // get each question container
