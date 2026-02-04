@@ -16,3 +16,4 @@ LOCAL/
 .cursor/
 error.txt
 npm-debug.log
+*.diff
