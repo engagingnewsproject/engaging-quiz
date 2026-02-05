@@ -96,7 +96,7 @@
 }
 #enp-quiz .enp-question-image-upload {
   border: 2px dashed var(--darker-gray);
-  color: var(--dark-gray);
+  color: var(--darker-gray);
   transition: all 0.2s;
 }
 #enp-quiz .enp-question-image-upload:hover, #enp-quiz .enp-question-image-upload:focus {
@@ -129,9 +129,8 @@
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  fill: #fff;
   padding: 0.02rem;
-  background: var(--dark-gray);
+  background: var(--darker-gray);
   fill: var(--background);
   margin-right: 5px;
   position: relative;
@@ -415,18 +414,20 @@
   color: #545454;
   box-shadow: none;
 }
-#enp-quiz .enp-mc-option__add:hover, #enp-quiz .enp-mc-option__add:focus {
+#enp-quiz .enp-mc-option__add:hover, 
+#enp-quiz .enp-mc-option__add:focus {
   border: 1px dashed var(--darkest-gray);
   color: var(--darker-gray);
   background: var(--white-90);
 }
 #enp-quiz .enp-mc-option__add {
   border: 2px dashed var(--darker-gray);
-  color: var(--dark-gray);
+  color: var(--darker-gray);
   transition: all 0.2s;
 }
-#enp-quiz .enp-mc-option__add:hover, #enp-quiz .enp-mc-option__add:focus {
-  color: var(--darker-gray);
+#enp-quiz .enp-mc-option__add:hover, 
+#enp-quiz .enp-mc-option__add:focus {
+  color: var(--darkest-gray);
   border: 2px dashed #999;
 }
 #enp-quiz .enp-mc-option__add {
@@ -443,7 +444,7 @@
   fill: #fff;
   padding: 0.02rem;
   margin-right: 5px;
-  background: var(--dark-gray);
+  background: var(--darker-gray);
   fill: var(--background);
   position: relative;
   top: 0.2rem;
@@ -712,11 +713,12 @@
 }
 #enp-quiz .enp-slider-correct-answer-range--add-range {
   border: 2px dashed var(--darker-gray);
-  color: var(--dark-gray);
+  color: var(--darker-gray);
   transition: all 0.2s;
 }
-#enp-quiz .enp-slider-correct-answer-range--add-range:hover, #enp-quiz .enp-slider-correct-answer-range--add-range:focus {
-  color: var(--darker-gray);
+#enp-quiz .enp-slider-correct-answer-range--add-range:hover, 
+#enp-quiz .enp-slider-correct-answer-range--add-range:focus {
+  color: var(--darkest-gray);
   border: 2px dashed #999;
 }
 #enp-quiz .enp-slider-correct-answer-range--add-range {

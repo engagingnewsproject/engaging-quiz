@@ -432,7 +432,7 @@
   padding: 0;
   position: relative;
 }
-@media (min-width: 1000px) {
+@media (min-width: 700px) {
   #enp-quiz .enp-dash-item--add-new {
     padding-top: 7rem;
   }

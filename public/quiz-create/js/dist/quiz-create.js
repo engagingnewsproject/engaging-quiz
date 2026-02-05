@@ -329,8 +329,8 @@ $('.enp-question-content').each(function(i) {
 
 
 
-// hide descriptions
-$('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
+// Hide visual upload triggers (label is kept for screen readers via .enp-screen-reader-text; do not .hide() it)
+$('.enp-button__question-image-upload, .enp-question-image-upload__input').hide();
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {
@@ -691,7 +691,7 @@ function temp_addQuestion() {
     // add the question upload area
     $('.enp-question-image__input', newQuestion).after(questionImageUpload);
     // hide the new image buttons
-    $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
+    $('.enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
 
     // add the swanky image upload button
     // bring the swanky upload image visual button back
@@ -850,7 +850,7 @@ function removeQuestionImage(question) {
     templateParams ={question_id: questionID, question_position: getQuestionIndex(questionID)};
     $('.enp-question-image__input',question).after(questionImageUploadTemplate(templateParams));
     // hide the upload button
-    $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input', question).hide();
+    $('.enp-button__question-image-upload, .enp-question-image-upload__input', question).hide();
     // bring the swanky upload image visual button back
     $('.enp-question-image__input',question).after(questionImageUploadButtonTemplate());
     // focus the button in case they want to upload a new one

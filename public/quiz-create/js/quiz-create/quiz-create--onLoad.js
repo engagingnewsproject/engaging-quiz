@@ -14,8 +14,8 @@ $('.enp-question-content').each(function(i) {
 
 
 
-// hide descriptions
-$('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input').hide();
+// Hide visual upload triggers (label is kept for screen readers via .enp-screen-reader-text; do not .hide() it)
+$('.enp-button__question-image-upload, .enp-question-image-upload__input').hide();
 
 // add our sliders into the templates
 $('.enp-slider-options').each(function() {

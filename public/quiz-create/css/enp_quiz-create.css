@@ -38,11 +38,16 @@
   --placeholder: rgb(121.5230769231, 117.8153846154, 151.1846153846);
   --red-tint-80: rgba(245, 216, 216, 0.8);
   /* Grays (from Sass darken/lighten chain on $light_gray) */
-  --really-light-gray: rgb(252.55, 252.06, 253.04);
-  --gray: rgb(244.9, 242.88, 246.92);
-  --dark-gray: rgb(232.15, 227.58, 236.72);
-  --darker-gray: rgb(168.4, 151.08, 185.72);
-  --darkest-gray: rgb(104.65, 83.72, 125.58);
+  /* --really-light-gray: rgb(252.55, 252.06, 253.04); */
+  --really-light-gray: #fafafa;
+  /* --gray: rgb(244.9, 242.88, 246.92); */
+  --gray: #f4f4f5;
+  /* --dark-gray: rgb(232.15, 227.58, 236.72); */
+  --dark-gray: #a1a1aa;
+  /* --darker-gray: rgb(168.4, 151.08, 185.72); */
+  --darker-gray: #52525b;
+  /* --darkest-gray: rgb(104.65, 83.72, 125.58); */
+  --darkest-gray: #27272a;
   --font-body: Arial, monospace, helvetica, arial, sans-serif;
   --font-title: Arial, monospace, helvetica, arial, sans-serif;
   --ease: cubic-bezier(0, 0, 0.3, 1);
