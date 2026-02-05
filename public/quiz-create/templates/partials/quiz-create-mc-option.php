@@ -1,5 +1,18 @@
 <?php
-// set-up the mc option
+/**
+ * Partial: single multiple-choice option row for the quiz create form.
+ *
+ * Renders one <li> containing the option text input, optional image upload (when quiz is
+ * editable), image preview with remove button if an image exists, and the correct-answer
+ * toggle. Used inside the MC options list for each question.
+ *
+ * Required (from including scope):
+ *   - $mc_option_id (int)  Option ID for names/ids and loading data.
+ *   - $question_id (int)   Parent question ID (for image paths and correct button).
+ *   - $question_i (int)    Question index in form array.
+ *   - $mc_option_i (int)   Option index in form array.
+ *   - $Quiz_create         Enp_quiz_Create instance (quiz state, delete/correct buttons).
+ */
 $mc_option = new Enp_quiz_MC_option($mc_option_id);
 $mc_option_image = $mc_option->get_mc_option_image();
 $quiz_id = isset($Quiz_create->quiz) ? $Quiz_create->quiz->get_quiz_id() : 0;
@@ -27,7 +40,7 @@ if ( ! empty( $mc_option_image ) && $quiz_id > 0 ) {
 		<?php if ( $Quiz_create->is_quiz_fully_editable() ) : ?>
 			<div class="enp-mc-option-image-upload">
 				<label for="enp-mc-option-image-upload--<?php echo $mc_option_id; ?>" class="enp-label enp-image-upload__label enp-screen-reader-text">Add Image</label>
-				<input id="enp-mc-option-image-upload--<?php echo $mc_option_id; ?>" type="file" accept="image/*" class="enp-mc-option-image-upload__input" name="mc_option_image_upload_<?php echo $mc_option_id; ?>">
+				<input id="enp-mc-option-image-upload--<?php echo $mc_option_id; ?>" type="file" accept="image/*" class="enp-mc-option-image-upload__input" name="mc_option_image_upload_<?php echo $mc_option_id; ?>" aria-label="<?php esc_attr_e( 'Add image', 'enp-quiz' ); ?>">
 				<div class="enp-mc-option-image-preview enp-mc-option-image-preview--hidden"></div>
 			</div>
 		<?php endif; ?>
