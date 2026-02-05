@@ -72,13 +72,16 @@ var quizCreateCssParts = [
     'public/quiz-create/css/parts/ab-results.css',
     'public/quiz-create/css/parts/slider.css'
 ];
+/* Keep original color format (e.g. rgba) so :root variables are not changed to hsla.
+ * cssnano 3.x (used by gulp-cssnano) has no "preset" API; pass colormin: false directly. */
+var cssnanoSafe = { colormin: false };
 gulp.task('cssQuizCreate', function () {
     return gulp.src(quizCreateCssParts, { base: 'public/quiz-create/css' })
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(concat('enp_quiz-create.css'))
         .pipe(autoprefixer())
-        .pipe(cssnano())
+        .pipe(cssnano(cssnanoSafe))
         .pipe(rename({ suffix: '.min' }))
         .pipe(sourcemaps.write('.', {
             mapSources: function (sourcePath) {
@@ -105,7 +108,7 @@ gulp.task('cssQuizTake', function () {
         .pipe(sourcemaps.init())
         .pipe(concat('enp_quiz-take.css'))
         .pipe(autoprefixer())
-        .pipe(cssnano())
+        .pipe(cssnano(cssnanoSafe))
         .pipe(rename({ suffix: '.min' }))
         .pipe(sourcemaps.write('.', {
             mapSources: function (sourcePath) {
