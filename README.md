@@ -69,15 +69,19 @@ This odd set-up will allow you to move your quiz database to an entirely differe
 
 ## Development
 
-To build assets (minify CSS and JS) with gulp, use **Node.js 16 or 18**. Run gulp from the plugin directory:
+To build assets (compile SCSS, minify CSS and JS) with gulp, use **Node.js 16**. Run gulp from the plugin directory:
 
 ```bash
 cd wp-content/plugins/enp-quiz
+nvm use          # uses .nvmrc (Node 16)
 npm install
-gulp
+npx gulp
 ```
 
-If you see `SyntaxError: Unexpected token ...` or `Cannot find module 'node:path'`, your Node version is too old. Use [nvm](https://github.com/nvm-sh/nvm) to switch: `nvm install 18 && nvm use 18`.
+Use **`npx gulp`** so the project’s local Gulp runs (not a global or Homebrew install). The project pins `graceful-fs` via npm `overrides` so Gulp 3 works on Node 16.
+
+- **`SyntaxError: Unexpected token ...`** or **`Cannot find module 'node:path'`** — Node is too old. Use [nvm](https://github.com/nvm-sh/nvm): `nvm install 16 && nvm use 16`.
+- **`ReferenceError: primordials is not defined`** — You’re on Node 17+ or using a global gulp. Use Node 16 and run **`npx gulp`** (see above).
 
 ## Frequently Asked Questions
 
