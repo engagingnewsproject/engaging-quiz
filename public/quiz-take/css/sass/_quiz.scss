@@ -1,3 +1,5 @@
+@use 'sass:color';
+
   // -------------------------//
  //   Taking a Quiz Styles   //
 // -------------------------//
@@ -290,7 +292,7 @@
 
         .enp-option__input--correct + .enp-option__label {
             box-shadow: inset 4px 0 0 $green;
-            background-color: lighten($green, 47);
+            background-color: color.adjust($green, $lightness: 47%);
         }
 
         .enp-option__input--incorrect-clicked + .enp-option__label {
@@ -354,11 +356,11 @@
     }
 
     .enp-explanation--correct .enp-explanation__title {
-        color: darken($green, 10);
+        color: color.adjust($green, $lightness: -10%);
     }
 
     .enp-explanation--incorrect .enp-explanation__title {
-        color: darken($red, 10);
+        color: color.adjust($red, $lightness: -10%);
     }
 
     .enp-explanation__explanation {

@@ -4,6 +4,7 @@
 */log/*
 *.log
 .sass-cache
+*-expanded.css
 node_modules/*
 bower_components/*
 gulpfile.js

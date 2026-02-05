@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 #enp-quiz {
     .enp-results-title {
         font-size: 1.6rem;
@@ -145,7 +147,7 @@
         position: absolute;
         padding-top: 8%;
         bottom: 2.5%;
-        background: lighten($green, 48);
+        background: color.adjust($green, $lightness: 48%);
     }
 
     .enp-results-flow__item--quiz-finishes {
@@ -153,7 +155,7 @@
             height: 35%;
             position: absolute;
             bottom: 5%;
-            background: lighten($green, 35);
+            background: color.adjust($green, $lightness: 35%);
     }
 
     .enp-results-flow__title {
@@ -375,7 +377,7 @@
     }
 
     .enp-results-question__option--correct {
-        background: lighten($green, 48);
+        background: color.adjust($green, $lightness: 48%);
     }
 
     .enp-results-question__option__text {
@@ -459,7 +461,7 @@
     }
 
     .enp-slider-responses-table tr.enp-slider-responses-table__response--correct td {
-        background-color: lighten($green, 48);
+        background-color: color.adjust($green, $lightness: 48%);
     }
 
     .enp-slider-responses-table__content {

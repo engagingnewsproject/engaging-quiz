@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 #enp-quiz fieldset {
     border: none;
     margin: 0;
@@ -51,7 +53,7 @@
 
 @mixin label {
     display: block;
-    color: lighten($font, 10);
+    color: color.adjust($font, $lightness: 10%);
     font-weight: normal;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -122,7 +124,7 @@
 .enp-textarea::placeholder {
     font-family: $fontBody;
     font-weight: 300;
-    color: lighten($font, 40);
+    color: color.adjust($font, $lightness: 40%);
 }
 
 @mixin textarea {

@@ -1,4 +1,4 @@
-
+@use 'sass:color';
 
 // enter the root BEM class and this will output the correct CSS for you
 @mixin radio-block($rootBEM) {
@@ -48,7 +48,7 @@
 
 @mixin label {
     display: block;
-    color: lighten($font, 10);
+    color: color.adjust($font, $lightness: 10%);
     font-weight: normal;
     font-size: 0.85rem;
     text-transform: uppercase;
@@ -261,7 +261,7 @@
     .enp-textarea::placeholder {
         font-family: $fontBody;
         font-weight: 300;
-        color: lighten($font, 40);
+        color: color.adjust($font, $lightness: 40%);
     }
 
     .enp-textarea {

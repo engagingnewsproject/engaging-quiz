@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 #enp-quiz {
 
     .enp-results--ab {
@@ -38,11 +40,11 @@
         }
 
         .enp-results-flow__item--quiz-starts {
-                background: lighten($red, 42);
+                background: color.adjust($red, $lightness: 42%);
         }
 
         .enp-results-flow__item--quiz-finishes {
-                background: lighten($red, 34);
+                background: color.adjust($red, $lightness: 34%);
         }
 
         th,

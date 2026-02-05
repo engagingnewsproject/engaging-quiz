@@ -47,7 +47,7 @@ $(document).on('click', '.enp-view-toggle', function() {
 $('.enp-dash-item__nav').each(function() {
     $(this).addClass('enp-dash-item__nav--collapsible')
             .attr('aria-hidden', true)
-            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg></button>');
+            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'" aria-label="Open menu"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg></button>');
 });
 
 /**
@@ -79,7 +79,7 @@ function addActiveMenuStates(dashItem) {
     // add the new active states in
     dashItem.addClass('enp-dash-item--menu-active');
     // button to activate the menu
-    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', true);
+    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', true).attr('aria-label', 'Close menu');
     // menu
     $('.enp-dash-item__nav', dashItem).attr('aria-hidden', false);
 }
@@ -91,7 +91,7 @@ function removeActiveMenuStates(dashItem) {
     // dash item card
     dashItem.removeClass('enp-dash-item--menu-active');
     // button to activate the menu
-    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', false);
+    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', false).attr('aria-label', 'Open menu');
     // menu
     $('.enp-dash-item__nav', dashItem).attr('aria-hidden', true);
 }

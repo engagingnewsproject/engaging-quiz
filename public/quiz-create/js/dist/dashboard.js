@@ -47,7 +47,7 @@ $(document).on('click', '.enp-view-toggle', function() {
 $('.enp-dash-item__nav').each(function() {
     $(this).addClass('enp-dash-item__nav--collapsible')
             .attr('aria-hidden', true)
-            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg></button>');
+            .before('<button class="enp-dash-item__menu-action" type="button" aria-expanded="false" aria-controls="'+$(this).attr('id')+'" aria-label="Open menu"><svg class="enp-dash-item__menu-action__icon enp-dash-item__menu-action__icon--bottom"><use xlink:href="#icon-chevron-down" /></svg></button>');
 });
 
 /**
@@ -79,7 +79,7 @@ function addActiveMenuStates(dashItem) {
     // add the new active states in
     dashItem.addClass('enp-dash-item--menu-active');
     // button to activate the menu
-    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', true);
+    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', true).attr('aria-label', 'Close menu');
     // menu
     $('.enp-dash-item__nav', dashItem).attr('aria-hidden', false);
 }
@@ -91,7 +91,7 @@ function removeActiveMenuStates(dashItem) {
     // dash item card
     dashItem.removeClass('enp-dash-item--menu-active');
     // button to activate the menu
-    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', false);
+    $('.enp-dash-item__menu-action', dashItem).attr('aria-expanded', false).attr('aria-label', 'Open menu');
     // menu
     $('.enp-dash-item__nav', dashItem).attr('aria-hidden', true);
 }
@@ -377,8 +377,8 @@ function appendMessage(message, status) {
     var messageID = Math.floor((Math.random() * 1000) + 1);
     $('.enp-quiz-message-ajax-container').append('<div class="enp-quiz-message enp-quiz-message--ajax enp-quiz-message--'+status+' enp-container enp-message-'+messageID+'"><p class="enp-message__list enp-message__list--'+status+'">'+message+'</p></div>');
 
-    $('.enp-message-'+messageID).delay(3500).fadeOut(function(){
-        $('.enp-message-'+messageID).fadeOut();
+    $('.enp-message-'+messageID).delay(5000).fadeOut(function(){
+        $(this).remove();
     });
 }
 
@@ -411,10 +411,10 @@ function destroySuccessMessages() {
 }
 
 function removeErrorMessages() {
-    if($('.enp-quiz-message--error').length) {
+    if ($('.enp-quiz-message--error').length) {
         $('.enp-quiz-message--error').remove();
         $('.enp-accordion-header').removeClass('question-has-error');
+        $('.enp-accordion-header__error').remove();
     }
-
 }
 });

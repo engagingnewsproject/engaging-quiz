@@ -1,0 +1,124 @@
+body #enp-quiz {
+  color: var(--font);
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  font-size: 1em;
+  line-height: 1.6;
+  font-weight: 400;
+}
+@media (min-width: 700px) {
+  body #enp-quiz {
+    font-size: 1.3em;
+  }
+}
+
+#enp-quiz {
+  /* Headings */
+}
+#enp-quiz h1, #enp-quiz h2, #enp-quiz h3, #enp-quiz h4, #enp-quiz h5, #enp-quiz h6 {
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  color: var(--title);
+  clear: both;
+  margin: 0 0 0.2rem;
+  font-weight: bold;
+  line-height: 1.2em;
+}
+#enp-quiz h1 {
+  font-size: 2em;
+}
+#enp-quiz h2 {
+  font-size: 1.75em;
+}
+#enp-quiz h3 {
+  font-size: 1.475em;
+}
+#enp-quiz h4 {
+  font-size: 1.3em;
+}
+#enp-quiz h5 {
+  font-size: 1.125em;
+}
+#enp-quiz h6 {
+  font-size: 1em;
+}
+#enp-quiz p + h1, #enp-quiz ul + h1,
+#enp-quiz p + h2, #enp-quiz ul + h2,
+#enp-quiz p + h3, #enp-quiz ul + h3,
+#enp-quiz p + h4, #enp-quiz ul + h4,
+#enp-quiz p + h5, #enp-quiz ul + h5,
+#enp-quiz p + h6, #enp-quiz ul + h6 {
+  margin-top: 1.8em;
+}
+#enp-quiz {
+  /* Text elements */
+}
+#enp-quiz p {
+  font-size: 0.85em;
+  margin-bottom: 1.125em;
+  font-weight: 300;
+}
+#enp-quiz ul, #enp-quiz ol {
+  margin: 0 0 1.6em 1.25em;
+}
+#enp-quiz ul {
+  list-style: disc;
+}
+#enp-quiz ol {
+  list-style: decimal;
+}
+#enp-quiz li > ul,
+#enp-quiz li > ol {
+  margin-bottom: 0;
+  margin-left: 1.6em;
+}
+#enp-quiz b, #enp-quiz strong {
+  font-weight: bold;
+}
+#enp-quiz dfn, #enp-quiz cite, #enp-quiz em {
+  font-family: georgia, times, serif;
+  font-style: italic;
+}
+#enp-quiz pre {
+  background: #eee;
+  font-family: "Courier 10 Pitch", Courier, monospace;
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  padding: 1.6em;
+  overflow: auto;
+  max-width: 100%;
+  overflow: scroll;
+  max-width: 68vw;
+  overflow-wrap: break-word;
+}
+#enp-quiz .code, #enp-quiz code, #enp-quiz kbd, #enp-quiz tt, #enp-quiz var {
+  font: 0.7em Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+}
+#enp-quiz table {
+  border: none;
+}
+#enp-quiz table th {
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+#enp-quiz table td {
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  font-size: 1rem;
+  border: none;
+  border-bottom: 1px solid #eee;
+}
+#enp-quiz table tr:nth-child(even) td {
+  background: var(--really-light-gray);
+}
+#enp-quiz table tr:last-child td {
+  border-bottom: none;
+}
+#enp-quiz figure {
+  margin: 0;
+}
+#enp-quiz img {
+  height: auto; /* Make sure images are scaled correctly. */
+  max-width: 100%; /* Adhere to container width. */
+}

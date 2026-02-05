@@ -1,0 +1,101 @@
+/* Text meant only for screen readers */
+/*
+*   @usage: @include btn--icon(BEM-root-class);
+*   Button with icon with white circular background.
+*    --------------
+*   |  BTN TEXT >  |
+*    --------------
+*   @param $rootBEM: root class name that will be extended
+*/
+/*
+*   @usage: @include btn--icon--circle(BEM-root-class);
+*   Button with icon with white circular background.
+*    ---------------
+*   |  BTN TEXT (>) |
+*    ---------------
+*   @param $rootBEM: root class name that will be extended
+*/
+/*
+*   @usage: @include btn--icon--hover-circle(BEM-root-class);
+*   Button with icon. Hovering/focusing button moves
+*   the icon to right and fades in a white circular background
+*    --------------                    ----------------
+*   |  BTN TEXT >  | --hover/focus--> |  BTN TEXT  (>) |
+*    --------------                    ----------------
+*   @param $rootBEM: root class name that will be extended
+*/
+#enp-quiz .enp-screen-reader-text {
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute !important;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+#enp-quiz .enp-screen-reader-text:hover,
+#enp-quiz .enp-screen-reader-text:active,
+#enp-quiz .enp-screen-reader-text:focus {
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  box-shadow: 0 0 2px 2px var(--black-60);
+  clip: auto !important;
+  color: #21759b;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  height: auto;
+  left: 5px;
+  line-height: normal;
+  padding: 15px 23px 14px;
+  text-decoration: none;
+  top: 5px;
+  width: auto;
+  z-index: 100000;
+}
+
+#enp-quiz .enp-quiz-message {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+#enp-quiz .enp-quiz-message:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+#enp-quiz .enp-quiz-message {
+  max-width: 400px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem 0.375rem;
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+#enp-quiz .enp-quiz-message__title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+#enp-quiz .enp-message__list {
+  list-style: none;
+  margin-left: 0;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+#enp-quiz .enp-quiz-message--error {
+  border-left: 6px solid var(--red);
+  animation: slideInTop 0.3s cubic-bezier(0, 0, 0.3, 1);
+}
+#enp-quiz .enp-quiz-message__title--error {
+  color: var(--link-hover);
+}
+#enp-quiz .enp-quiz-message--success {
+  border-left: 6px solid var(--green);
+  color: var(--green-light);
+}
+#enp-quiz .enp-quiz-message__title--success {
+  color: var(--green-light);
+}

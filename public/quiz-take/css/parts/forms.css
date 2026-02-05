@@ -1,0 +1,42 @@
+.enp-label {
+  display: block;
+  color: var(--form-label);
+  font-weight: normal;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.enp-legend {
+  display: block;
+  color: var(--form-label);
+  font-weight: normal;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  padding-top: 1.6rem;
+  margin-bottom: 0.2rem;
+  border: none;
+}
+
+.enp-input {
+  font-size: 1rem;
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  padding: 0.8rem 0.5rem;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 20rem;
+  max-width: 100%;
+  margin-bottom: 1.2rem;
+}
+@media (min-width: 700px) {
+  .enp-input {
+    padding: 0.8rem;
+  }
+}
+
+.enp-input::placeholder,
+.enp-textarea::placeholder {
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  font-weight: 300;
+  color: var(--placeholder);
+}
