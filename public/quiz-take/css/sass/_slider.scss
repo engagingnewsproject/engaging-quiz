@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 #enp-quiz {
 
     .enp-slider {
@@ -105,7 +107,7 @@
 
     .ui-slider-range-show-correct__tooltip__text {
         position: relative;
-        color: darken($green, 15);
+        color: color.adjust($green, $lightness: -15%);
         top: -1.35rem;
         font-size: .825rem;
         min-width: 100%;

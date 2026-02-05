@@ -1,0 +1,97 @@
+#enp-quiz .enp-breadcrumb-link__container {
+  padding-bottom: 2rem;
+}
+#enp-quiz .enp-quiz-breadcrumbs {
+  grid-row: 1;
+}
+#enp-quiz .enp-quiz-breadcrumbs__list {
+  display: flex;
+  list-style: none;
+  margin-left: 0;
+  margin-bottom: 0;
+}
+#enp-quiz .enp-quiz-breadcrumbs__item {
+  margin-right: 10px;
+}
+#enp-quiz .enp-quiz-breadcrumbs__item:last-of-type {
+  margin-right: 0;
+}
+#enp-quiz .enp-quiz-breadcrumbs__item {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  fill: var(--link);
+  margin-right: 5px;
+}
+@media (min-width: 400px) {
+  #enp-quiz .enp-quiz-breadcrumbs__item {
+    margin-right: 10px;
+  }
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active {
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+  padding: 0.85em 1.4em 0.75em;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--black-20);
+  background: var(--link);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  line-height: 1.6;
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active:focus, #enp-quiz .enp-quiz-breadcrumbs__link--active:hover {
+  color: #fff;
+  box-shadow: none;
+  background: var(--link-hover);
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active:active {
+  color: #fff;
+  box-shadow: inset 0 2px 0 var(--black-10);
+  background: var(--blue-aqua);
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active:focus {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active:disabled, #enp-quiz .enp-quiz-breadcrumbs__link--active:disabled:focus, #enp-quiz .enp-quiz-breadcrumbs__link--active:disabled:hover {
+  background: var(--link);
+  cursor: default;
+  opacity: 0.5;
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active {
+  border: 2px solid var(--link);
+  background: transparent;
+  color: var(--link);
+  box-shadow: none;
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active:focus, #enp-quiz .enp-quiz-breadcrumbs__link--active:hover {
+  background: transparent;
+  border: 2px solid var(--link-hover);
+  color: var(--link-hover);
+}
+#enp-quiz .enp-quiz-breadcrumbs__link--active {
+  padding: 0.4em 1em;
+}
+#enp-quiz .enp-quiz-breadcrumbs__link {
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+#enp-quiz .enp-quiz-breadcrumbs--fixed {
+  top: 0;
+  position: fixed;
+  animation: navSlideIn 0.25s;
+}

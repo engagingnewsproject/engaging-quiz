@@ -1,4 +1,34 @@
-/**
- * All of the CSS for your public-facing functionality should be
- * included in this file.
- */
+:root {
+  /* Design tokens (from SCSS variables) - quiz-take uses blue as link */
+  --font: #1d1c25;
+  --background: #FAF9FB;
+  --title: #5D5E5F;
+  --blue: #00A9B7;
+  --blue-hover: rgb(0, 121.9016393443, 132);
+  --dark-blue: #333F48;
+  --green: #60AAAD;
+  --green-light: rgb(77.644813278, 147.7145228216, 150.555186722);
+  --green-text: rgb(74.1742738589, 141.112033195, 143.8257261411);
+  --green-bg-near-white: rgb(254.1423236515, 254.5414937759, 254.5576763485);
+  --green-slider: rgb(65.4979253112, 124.6058091286, 127.0020746888);
+  --red: #bf5700;
+  --red-dark: rgb(140, 63.7696335079, 0);
+  --link: #00A9B7;
+  --link-hover: rgb(150.2, 68.4157068063, 0);
+  --khaki: #CCA562;
+  --light-gray: #FAF9FB;
+  /* Dashed border (btn--add) */
+  --dashed-border: rgb(211.75, 203.1, 220.4);
+  --dashed-border-hover: rgb(135.25, 111.3, 159.2);
+  /* UI */
+  --form-label: rgb(51.7538461538, 49.9692307692, 66.0307692308);
+  --placeholder: rgb(121.5230769231, 117.8153846154, 151.1846153846);
+  --black-60: rgba(0, 0, 0, 0.6);
+  --black-80: rgba(0, 0, 0, 0.8);
+  --font-body: Arial, monospace, helvetica, arial, sans-serif;
+  --font-title: Arial, monospace, helvetica, arial, sans-serif;
+  --ease: cubic-bezier(0, 0, 0.3, 1);
+  --breakpoint-small: 400px;
+  --breakpoint-medium: 700px;
+  --breakpoint-large: 1000px;
+}

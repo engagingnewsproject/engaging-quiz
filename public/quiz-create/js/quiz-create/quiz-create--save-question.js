@@ -11,7 +11,7 @@ function temp_addQuestion() {
     // add the question upload area
     $('.enp-question-image__input', newQuestion).after(questionImageUpload);
     // hide the new image buttons
-    $('.enp-image-upload__label, .enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
+    $('.enp-button__question-image-upload, .enp-question-image-upload__input', newQuestion).hide();
 
     // add the swanky image upload button
     // bring the swanky upload image visual button back

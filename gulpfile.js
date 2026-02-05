@@ -1,9 +1,6 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
-// Use Dart Sass (no native build / Python) instead of deprecated node-sass
-var sass = require('gulp-sass');
-sass.compiler = require('sass');
 var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('gulp-autoprefixer');
 var cssnano = require('gulp-cssnano');
@@ -15,24 +12,22 @@ const plumber = require('gulp-plumber');
 var reload  = browserSync.reload;
 
 
-// Static Server + watching scss/html files
-gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashboardJS', 'quizResultsJS', 'quizTakeJS', 'quizTakeIframeParentJS', 'quizTakeUtilityJS'], function() {
+// Static Server + watching css/html files
+gulp.task('serve', ['cssQuizCreate', 'cssQuizTake', 'quizCreateJS', 'quizDashboardJS', 'quizResultsJS', 'quizTakeJS', 'quizTakeIframeParentJS', 'quizTakeUtilityJS'], function() {
 
     browserSync({
         proxy: "localhost:10121",
     });
 
-    // quiz create
-    gulp.watch('public/quiz-create/css/sass/*.{scss,sass}', ['sassQuizCreate']);
+    // quiz create – :root + parts/*.css
+    gulp.watch(['public/quiz-create/css/enp_quiz-create.css', 'public/quiz-create/css/parts/*.css'], ['cssQuizCreate']);
     // watch javascript files
-    // compress on change
     gulp.watch('public/quiz-create/js/quiz-create/*.js', ['quizCreateJS']);
     gulp.watch('public/quiz-create/js/dashboard.js', ['quizDashboardJS']);
-    // compress on change
     gulp.watch('public/quiz-create/js/quiz-results/*.js', ['quizResultsJS']);
 
-    // quiz take
-    gulp.watch('public/quiz-take/css/sass/*.{scss,sass}', ['sassQuizTake']);
+    // quiz take – :root + parts/*.css
+    gulp.watch(['public/quiz-take/css/enp_quiz-take.css', 'public/quiz-take/css/parts/*.css'], ['cssQuizTake']);
 
     // compress on change
     gulp.watch('public/quiz-take/js/quiz-take/*.js', ['quizTakeJS']);
@@ -57,14 +52,70 @@ gulp.task('serve', ['sassQuizTake', 'sassQuizCreate', 'quizCreateJS', 'quizDashb
     gulp.watch(onChangeReload).on('change', reload);
 });
 
-gulp.task('sassQuizCreate', function () {
-    processSASS('public/quiz-create/css/');
+/* Build CSS: concat :root + parts (order matters), then autoprefixer + minify. */
+/* Order matches SCSS @import in enp_quiz-create.scss (setup → … → slider). */
+var quizCreateCssParts = [
+    'public/quiz-create/css/enp_quiz-create.css',
+    'public/quiz-create/css/parts/setup.css',
+    'public/quiz-create/css/parts/utilities.css',
+    'public/quiz-create/css/parts/typography.css',
+    'public/quiz-create/css/parts/base.css',
+    'public/quiz-create/css/parts/animations.css',
+    'public/quiz-create/css/parts/forms.css',
+    'public/quiz-create/css/parts/quiz-create.css',
+    'public/quiz-create/css/parts/quiz-preview.css',
+    'public/quiz-create/css/parts/quiz-publish.css',
+    'public/quiz-create/css/parts/ab-create.css',
+    'public/quiz-create/css/parts/dashboard.css',
+    'public/quiz-create/css/parts/breadcrumbs.css',
+    'public/quiz-create/css/parts/quiz-results.css',
+    'public/quiz-create/css/parts/ab-results.css',
+    'public/quiz-create/css/parts/slider.css'
+];
+/* Keep original color format (e.g. rgba) so :root variables are not changed to hsla.
+ * cssnano 3.x (used by gulp-cssnano) has no "preset" API; pass colormin: false directly. */
+var cssnanoSafe = { colormin: false };
+gulp.task('cssQuizCreate', function () {
+    return gulp.src(quizCreateCssParts, { base: 'public/quiz-create/css' })
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(concat('enp_quiz-create.css'))
+        .pipe(autoprefixer())
+        .pipe(cssnano(cssnanoSafe))
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(sourcemaps.write('.', {
+            mapSources: function (sourcePath) {
+                return sourcePath === 'enp_quiz-create.css' ? sourcePath : 'parts/' + sourcePath;
+            }
+        }))
+        .pipe(gulp.dest('public/quiz-create/css/'));
 });
 
-gulp.task('sassQuizTake', function () {
-    processSASS('public/quiz-take/css/');
-    // the slider is in the quiz create css now too...
-    processSASS('public/quiz-create/css/');
+/* Quiz Take CSS: concat :root + parts (order matches enp_quiz-take.scss). */
+var quizTakeCssParts = [
+    'public/quiz-take/css/enp_quiz-take.css',
+    'public/quiz-take/css/parts/setup.css',
+    'public/quiz-take/css/parts/utilities.css',
+    'public/quiz-take/css/parts/typography.css',
+    'public/quiz-take/css/parts/forms.css',
+    'public/quiz-take/css/parts/animations.css',
+    'public/quiz-take/css/parts/quiz.css',
+    'public/quiz-take/css/parts/slider.css'
+];
+gulp.task('cssQuizTake', function () {
+    return gulp.src(quizTakeCssParts, { base: 'public/quiz-take/css' })
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(concat('enp_quiz-take.css'))
+        .pipe(autoprefixer())
+        .pipe(cssnano(cssnanoSafe))
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(sourcemaps.write('.', {
+            mapSources: function (sourcePath) {
+                return sourcePath === 'enp_quiz-take.css' ? sourcePath : 'parts/' + sourcePath;
+            }
+        }))
+        .pipe(gulp.dest('public/quiz-take/css/'));
 });
 
 gulp.task('quizCreateJS', function(callback) {
@@ -239,31 +290,6 @@ function compressJS(path) {
         suffix: '.min'
       }))
       .pipe(gulp.dest(path));
-}
-
-function processSASS(path) {
-    return gulp.src(path+'sass/*.{scss,sass}')
-    .pipe(plumber())
-    .pipe(sourcemaps.init())
-    // Converts Sass into CSS with Gulp Sass
-    .pipe(sass({
-    errLogToConsole: true
-    }))
-    
-    // adds prefixes to whatever needs to get done
-    .pipe(autoprefixer())
-    
-    // minify the CSS
-    .pipe(cssnano())
-    
-    // rename to add .min
-    .pipe(rename({
-    suffix: '.min'
-    }))
-    .pipe(sourcemaps.write('.'))
-
-    // Outputs CSS files in the css folder
-    .pipe(gulp.dest(path));
 }
 
 // Creating a default task

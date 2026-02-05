@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // TEMP for dev theme
 #headerimg h1 {
     text-align: center;
@@ -379,7 +381,7 @@
         }
 
         &.enp-dash-item--draft {
-            box-shadow: inset 4px 0 0 lighten($green, 25%), 0 2px 2px rgba(0,0,0,.2);
+            box-shadow: inset 4px 0 0 color.adjust($green, $lightness: 25%), 0 2px 2px rgba(0,0,0,.2);
         }
 
         .enp-dash-item__menu-action__icon--bottom {
@@ -433,7 +435,7 @@
     }
 
     .enp-quiz-results__number--average-score {
-        color: darken($green, 8);
+        color: color.adjust($green, $lightness: -8%);
 
         &:after {
             content: '%';

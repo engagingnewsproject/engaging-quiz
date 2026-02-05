@@ -15,13 +15,12 @@ $light_blue: lighten($dark_blue, 40);
 // Grays
 $light_gray: #FAF9FB;
 $really_light_gray: lighten($light_gray, 1);
-$gray: darken($light_gray, 2);
-$dark_gray: darken($gray, 5);
-$darker_gray: darken($dark_gray, 20);
-$darkest_gray: darken($dark_gray, 50);
+$gray: darken($light_gray, 5);
+$dark_gray: darken($gray, 10);
+$darker_gray: darken($dark_gray, 30);
+$darkest_gray: darken($dark_gray, 60);
 
 // Other colors
-$green: darken(#58C88F,10);
 $green: #60AAAD;
 $dark_green: darken($green, 8);
 $red: #bf5700;

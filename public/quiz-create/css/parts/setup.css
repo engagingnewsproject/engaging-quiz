@@ -1,0 +1,68 @@
+html {
+  font-size: 16px !important;
+}
+
+html #enp-quiz {
+  box-sizing: border-box;
+}
+
+body #enp-quiz {
+  background: #fff;
+  overflow: hidden;
+}
+
+#enp-quiz *, #enp-quiz *:before, #enp-quiz *:after {
+  box-sizing: inherit;
+}
+#enp-quiz ul, #enp-quiz ol {
+  margin: 0 0 1.6rem 1.25rem;
+  padding: 0;
+}
+#enp-quiz textarea {
+  margin-bottom: 1rem;
+}
+#enp-quiz button, #enp-quiz input[type=button], #enp-quiz input[type=reset], #enp-quiz input[type=submit] {
+  border: none;
+}
+#enp-quiz button:active, #enp-quiz button:focus, #enp-quiz button:hover, #enp-quiz input[type=button]:active, #enp-quiz input[type=button]:focus, #enp-quiz input[type=button]:hover, #enp-quiz input[type=reset]:active, #enp-quiz input[type=reset]:focus, #enp-quiz input[type=reset]:hover, #enp-quiz input[type=submit]:active, #enp-quiz input[type=submit]:focus, #enp-quiz input[type=submit]:hover {
+  border: none;
+}
+#enp-quiz iframe {
+  border: none;
+}
+
+/*
+*   @usage: @include btn--icon(BEM-root-class);
+*   Button with icon with white circular background.
+*    --------------
+*   |  BTN TEXT >  |
+*    --------------
+*   @param $rootBEM: root class name that will be extended
+
+@mixin btn--icon($rootBEM) {
+    .(#){$rootBEM} {
+        @include btn--icon;
+    }
+
+    .(#){$rootBEM}__icon {
+        @include btn--icon__icon ;
+    }
+}
+*/
+/*
+*   @usage: @include btn--icon--circle(BEM-root-class);
+*   Button with icon with white circular background.
+*    ---------------
+*   |  BTN TEXT (>) |
+*    ---------------
+*   @param $rootBEM: root class name that will be extended
+*/
+/*
+*   @usage: @include btn--icon--hover-circle(BEM-root-class);
+*   Button with icon. Hovering/focusing button moves
+*   the icon to right and fades in a white circular background
+*    --------------                    ----------------
+*   |  BTN TEXT >  | --hover/focus--> |  BTN TEXT  (>) |
+*    --------------                    ----------------
+*   @param $rootBEM: root class name that will be extended
+*/

@@ -41,7 +41,7 @@
 	}
 
 	if(current_user_can('manage_options')) {
-		echo '<div class="enp-search-quizzes__form-item"><label class="enp-label enp-search-quizzes__label" for="enp-quiz-include">Include</label>';
+		echo '<div class="enp-search-quizzes__form-item"><label class="enp-label enp-search-quizzes__label" for="enp-quiz_include">Include</label>';
 		echo '<select id="enp-quiz_include" name="include" class="enp-search-quizzes__select">
 		<option '.selected( $include, "user", false ).' value="user">My Quizzes</option>
 		<option '.selected( $include, "all_users", false ).' value="all_users">All User\'s Quizzes</option>

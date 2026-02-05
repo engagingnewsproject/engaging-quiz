@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 #enp-quiz {
     // .enp-publish-page-container,
     // .enp-preview-page-container {
@@ -405,7 +407,7 @@
         &:hover,
         &:focus {
             text-decoration: underline;
-            color: darken($blue, 10%);
+            color: color.adjust($blue, $lightness: -10%);
         }
     }
 

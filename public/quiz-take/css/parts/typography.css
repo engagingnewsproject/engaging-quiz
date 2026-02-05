@@ -1,0 +1,227 @@
+
+body {
+  color: var(--font);
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  font-size: 1em;
+  line-height: 1.6;
+  font-weight: 400;
+}
+@media (min-width: 700px) {
+  body {
+    font-size: 1.3em;
+  }
+}
+
+#enp-quiz {
+  /* Headings */
+}
+#enp-quiz h1, #enp-quiz h2, #enp-quiz h3, #enp-quiz h4, #enp-quiz h5, #enp-quiz h6 {
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  color: var(--font);
+  clear: both;
+  margin: 0 0 0.2rem;
+  font-weight: bold;
+  line-height: 1.2em;
+}
+#enp-quiz h1 {
+  font-size: 2em;
+}
+#enp-quiz h2 {
+  font-size: 1.75em;
+}
+#enp-quiz h3 {
+  font-size: 1.475em;
+}
+#enp-quiz h4 {
+  font-size: 1.3em;
+}
+#enp-quiz h5 {
+  font-size: 1.125em;
+}
+#enp-quiz h6 {
+  font-size: 1em;
+}
+#enp-quiz p + h1, #enp-quiz ul + h1,
+#enp-quiz p + h2, #enp-quiz ul + h2,
+#enp-quiz p + h3, #enp-quiz ul + h3,
+#enp-quiz p + h4, #enp-quiz ul + h4,
+#enp-quiz p + h5, #enp-quiz ul + h5,
+#enp-quiz p + h6, #enp-quiz ul + h6 {
+  margin-top: 1.8em;
+}
+#enp-quiz {
+  /* Text elements */
+}
+#enp-quiz p {
+  font-size: 0.85em;
+  margin-bottom: 1.125em;
+  font-weight: 300;
+}
+#enp-quiz ul, #enp-quiz ol {
+  margin: 0 0 1.6em 1.25em;
+}
+#enp-quiz ul {
+  list-style: disc;
+}
+#enp-quiz ol {
+  list-style: decimal;
+}
+#enp-quiz li > ul,
+#enp-quiz li > ol {
+  margin-bottom: 0;
+  margin-left: 1.6em;
+}
+#enp-quiz b, #enp-quiz strong {
+  font-weight: bold;
+}
+#enp-quiz dfn, #enp-quiz cite, #enp-quiz em {
+  font-family: georgia, times, serif;
+  font-style: italic;
+}
+#enp-quiz pre {
+  background: #eee;
+  font-family: "Courier 10 Pitch", Courier, monospace;
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  padding: 1.6em;
+  overflow: auto;
+  max-width: 100%;
+}
+#enp-quiz .code, #enp-quiz code, #enp-quiz kbd, #enp-quiz tt, #enp-quiz var {
+  font: 0.7em Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+}
+#enp-quiz figure {
+  margin: 0;
+}
+#enp-quiz img {
+  height: auto; /* Make sure images are scaled correctly. */
+  max-width: 100%; /* Adhere to container width. */
+}
+#enp-quiz {
+  /* Links */
+}
+#enp-quiz a {
+  color: var(--blue);
+  text-decoration: none;
+  transition: color 0.2s;
+  touch-action: manipulation;
+}
+#enp-quiz a .enp-icon {
+  fill: var(--blue);
+}
+#enp-quiz a:hover,
+#enp-quiz a:focus,
+#enp-quiz a:active {
+  color: var(--blue-hover);
+}
+#enp-quiz a:hover .enp-icon,
+#enp-quiz a:focus .enp-icon,
+#enp-quiz a:active .enp-icon {
+  fill: var(--blue-hover);
+}
+#enp-quiz button:focus {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+#enp-quiz .enp-btn {
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+  padding: 0.85em 1.4em 0.75em;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--black-20);
+  background: var(--blue);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+#enp-quiz .enp-btn:hover {
+  color: #fff;
+  box-shadow: none;
+  background: var(--blue-hover);
+}
+#enp-quiz .enp-btn:active {
+  color: #fff;
+  box-shadow: inset 0 2px 0 var(--black-10);
+  background: var(--blue-aqua);
+}
+#enp-quiz .enp-btn:focus {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+#enp-quiz .enp-btn--add {
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+  padding: 0.85em 1.4em 0.75em;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--black-20);
+  background: var(--blue);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+#enp-quiz .enp-btn--add:hover {
+  color: #fff;
+  box-shadow: none;
+  background: var(--blue-hover);
+}
+#enp-quiz .enp-btn--add:active {
+  color: #fff;
+  box-shadow: inset 0 2px 0 var(--black-10);
+  background: var(--blue-aqua);
+}
+#enp-quiz .enp-btn--add:focus {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+#enp-quiz .enp-btn--add {
+  border: 3px dashed var(--dashed-border);
+  background: none;
+  color: #545454;
+  box-shadow: none;
+}
+#enp-quiz .enp-btn--add:hover, #enp-quiz .enp-btn--add:focus {
+  border: 3px dashed var(--dashed-border-hover);
+  color: var(--dashed-border-hover);
+  background: var(--white-90);
+}
+#enp-quiz .enp-btn--add {
+  width: 100%;
+}
+#enp-quiz .enp-btn--disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+#enp-quiz .enp-btn--enabled {
+  animation: expand 0.6s;
+}
+#enp-quiz .enp-icon {
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s;
+}
+#enp-quiz .enp-page-title {
+  font-size: 1.6rem;
+}
+
+#enp-quiz fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}

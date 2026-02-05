@@ -1,0 +1,57 @@
+:root {
+  /* Design tokens (from SCSS variables) */
+  --font: #1d1c25;
+  --background: #FAF9FB;
+  --title: #5D5E5F;
+  --blue: #00A9B7;
+  --dark-blue: #333F48;
+  --light-blue: rgb(147.8780487805, 165.7317073171, 179.1219512195);
+  --blue-aqua: rgb(30, 237.7868852459, 255);
+  --green: #60AAAD;
+  --green-aqua: #007a84;
+  --red: #bf5700;
+  --red-20: rgba(191, 87, 0, 0.2);
+  --link: #8A4000;
+  --link-hover: rgb(150.2, 68.4157068063, 0);
+  --khaki: #CCA562;
+  --light-gray: #FAF9FB;
+  --white-90: rgba(255, 255, 255, 0.9);
+  /* Blacks (opacity) */
+  --black-10: rgba(0, 0, 0, 0.1);
+  --black-20: rgba(0, 0, 0, 0.2);
+  --black-30: rgba(0, 0, 0, 0.3);
+  --black-40: rgba(0, 0, 0, 0.4);
+  --black-60: rgba(0, 0, 0, 0.6);
+  --black-70: rgba(0, 0, 0, 0.7);
+  --black-75: rgba(0, 0, 0, 0.75);
+  --black-80: rgba(0, 0, 0, 0.8);
+  /* Greens (computed) */
+  --green-light: rgb(77.644813278, 147.7145228216, 150.555186722);
+  --green-highlight: rgb(180.1182572614, 214.968879668, 216.3817427386);
+  --green-bg-light: rgb(213.765560166, 232.9564315353, 233.734439834);
+  --green-slider: rgb(65.4979253112, 124.6058091286, 127.0020746888);
+  /* Oranges */
+  --orange: rgb(255, 175.7204188482, 109.4);
+  --orange-light: rgb(255, 197.9361256545, 150.2);
+  /* UI */
+  --form-label: rgb(51.7538461538, 49.9692307692, 66.0307692308);
+  --placeholder: rgb(121.5230769231, 117.8153846154, 151.1846153846);
+  --red-tint-80: rgba(245, 216, 216, 0.8);
+  /* Grays (from Sass darken/lighten chain on $light_gray) */
+  /* --really-light-gray: rgb(252.55, 252.06, 253.04); */
+  --really-light-gray: #fafafa;
+  /* --gray: rgb(244.9, 242.88, 246.92); */
+  --gray: #f4f4f5;
+  /* --dark-gray: rgb(232.15, 227.58, 236.72); */
+  --dark-gray: #a1a1aa;
+  /* --darker-gray: rgb(168.4, 151.08, 185.72); */
+  --darker-gray: #52525b;
+  /* --darkest-gray: rgb(104.65, 83.72, 125.58); */
+  --darkest-gray: #27272a;
+  --font-body: Arial, monospace, helvetica, arial, sans-serif;
+  --font-title: Arial, monospace, helvetica, arial, sans-serif;
+  --ease: cubic-bezier(0, 0, 0.3, 1);
+  --breakpoint-small: 400px;
+  --breakpoint-medium: 700px;
+  --breakpoint-large: 1000px;
+}

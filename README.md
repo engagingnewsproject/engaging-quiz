@@ -69,7 +69,7 @@ This odd set-up will allow you to move your quiz database to an entirely differe
 
 ## Development
 
-To build assets (compile SCSS, minify JS) with gulp, use **Node.js 16 or 18**. Run gulp from the plugin directory:
+To build assets (minify CSS and JS) with gulp, use **Node.js 16 or 18**. Run gulp from the plugin directory:
 
 ```bash
 cd wp-content/plugins/enp-quiz

@@ -1,0 +1,203 @@
+#enp-quiz .enp-label {
+  display: block;
+  color: var(--form-label);
+  font-weight: normal;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+#enp-quiz .enp-label__sm {
+  font-size: 0.85rem;
+}
+#enp-quiz .enp-label.enp-quiz-winlose__label {
+  padding: 1rem 0 0 0;
+}
+#enp-quiz .enp-legend {
+  display: block;
+  color: var(--form-label);
+  font-weight: normal;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  padding-top: 1.6rem;
+  margin-bottom: 0.2rem;
+  border: none;
+  padding-top: 0;
+}
+#enp-quiz .enp-input {
+  font-size: 1rem;
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  padding: 0.8rem 0.5rem;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 20rem;
+  max-width: 100%;
+  margin-bottom: 1.2rem;
+}
+@media (min-width: 700px) {
+  #enp-quiz .enp-input {
+    padding: 0.8rem;
+    width: 100%;
+  }
+}
+#enp-quiz .enp-input {
+  padding: 0.8rem;
+  margin-bottom: 0.2rem;
+}
+#enp-quiz .enp-input__sm {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+#enp-quiz .enp-input.enp-input--has-description {
+  margin-bottom: 0.2rem;
+}
+#enp-quiz .enp-textarea-description,
+#enp-quiz .enp-input-description {
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+#enp-quiz .enp-textarea-description--before,
+#enp-quiz .enp-input-description--before {
+  margin-bottom: 0;
+}
+#enp-quiz .enp-input::placeholder,
+#enp-quiz .enp-textarea::placeholder {
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  font-weight: 300;
+  color: var(--placeholder);
+}
+#enp-quiz .enp-textarea {
+  font-size: 1rem;
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  padding: 0.8rem 0.5rem;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 20rem;
+  max-width: 100%;
+  margin-bottom: 1.2rem;
+}
+@media (min-width: 700px) {
+  #enp-quiz .enp-textarea {
+    padding: 0.8rem;
+    width: 100%;
+  }
+}
+#enp-quiz .enp-textarea {
+  line-height: 1.5;
+}
+#enp-quiz .enp-textarea:focus {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+#enp-quiz .enp-textarea.enp-textarea--has-description {
+  margin-bottom: 0.2rem;
+}
+#enp-quiz .enp-textarea.enp-textarea--has-description--before {
+  margin-bottom: 1.2rem;
+}
+#enp-quiz .enp-embed-code {
+  font-size: 1rem;
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  padding: 0.8rem 0.5rem;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 20rem;
+  max-width: 100%;
+  margin-bottom: 1.2rem;
+}
+@media (min-width: 700px) {
+  #enp-quiz .enp-embed-code {
+    padding: 0.8rem;
+    width: 100%;
+  }
+}
+#enp-quiz .enp-embed-code {
+  line-height: 1.5;
+}
+#enp-quiz .enp-embed-code:focus {
+  outline-color: #4D90FE;
+  outline-offset: -2px;
+  outline-style: auto;
+  outline-width: 5px;
+}
+#enp-quiz .enp-embed-code {
+  padding: 1.6rem;
+  font-size: 0.7rem;
+  font-family: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+}
+
+#enp-quiz .enp-publish-page-container,
+#enp-quiz .enp-quiz-form-container,
+#enp-quiz .enp-preview-page-container {
+  display: grid;
+  grid-column: 2/-1;
+  gap: 1rem;
+  width: 100%;
+  justify-items: center;
+}
+@media (min-width: 700px) {
+  #enp-quiz .enp-publish-page-container,
+  #enp-quiz .enp-quiz-form-container,
+  #enp-quiz .enp-preview-page-container {
+    justify-items: start;
+  }
+}
+#enp-quiz .enp-quiz-form {
+  display: grid;
+  padding-left: 0;
+  padding-right: 0;
+}
+@media (min-width: 1000px) {
+  #enp-quiz .enp-quiz-form {
+    width: 100%;
+    max-width: 40rem;
+  }
+}
+#enp-quiz .enp-preview-page-flex-container {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 700px) {
+  #enp-quiz .enp-preview-page-flex-container {
+    grid-template-columns: 1fr 3fr;
+  }
+}
+#enp-quiz .enp-quiz-title__label {
+  display: block;
+  color: var(--form-label);
+  font-weight: normal;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+#enp-quiz .enp-quiz-title__textarea {
+  font-size: 1rem;
+  font-family: Arial, monospace, helvetica, arial, sans-serif;
+  padding: 0.8rem 0.5rem;
+  background: #fff;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  width: 20rem;
+  max-width: 100%;
+  margin-bottom: 1.2rem;
+}
+@media (min-width: 700px) {
+  #enp-quiz .enp-quiz-title__textarea {
+    padding: 0.8rem;
+    width: 100%;
+  }
+}
+#enp-quiz .enp-quiz-title__textarea {
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+}
+#enp-quiz .enp-quiz-title__textarea::placeholder {
+  font-weight: bold;
+}
+#enp-quiz textarea {
+  color: #000;
+}
