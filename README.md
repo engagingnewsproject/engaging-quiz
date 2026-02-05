@@ -67,6 +67,18 @@ This file is located in your DOCUMENT_ROOT. It's outside of your public_html or 
 This odd set-up will allow you to move your quiz database to an entirely different server if you ever get hit with a lot of usage. Also, the plugin is written with PDO as the database connection layer, so you could even run your quiz database as something other than MySQL if you want.
 
 
+## Development
+
+To build assets (compile SCSS, minify JS) with gulp, use **Node.js 16 or 18**. Run gulp from the plugin directory:
+
+```bash
+cd wp-content/plugins/enp-quiz
+npm install
+gulp
+```
+
+If you see `SyntaxError: Unexpected token ...` or `Cannot find module 'node:path'`, your Node version is too old. Use [nvm](https://github.com/nvm-sh/nvm) to switch: `nvm install 18 && nvm use 18`.
+
 ## Frequently Asked Questions
 
 
