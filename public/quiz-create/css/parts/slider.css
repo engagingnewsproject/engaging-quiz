@@ -57,7 +57,7 @@
   color: var(--green-light);
 }
 #enp-quiz .enp-slider-input__input--invalid-animation {
-  box-shadow: 0 0 2px 1px #C1893E;
+  box-shadow: 0 0 2px 1px #c1893e;
 }
 #enp-quiz .enp-slider_input__range-helper {
   position: absolute;
@@ -72,7 +72,7 @@
 }
 #enp-quiz .enp-slider-input__range-helper__number {
   position: relative;
-  color: var(--dark-gray);
+  color: var(--darkest-gray);
 }
 #enp-quiz .ui-slider-range-show-correct__tooltip-container {
   position: relative;
@@ -202,11 +202,15 @@
   cursor: default;
   -ms-touch-action: none;
   touch-action: none;
-  transition: opacity 0.2s cubic-bezier(0, 0, 0.3, 1), height 0.18s cubic-bezier(0, 0, 0.3, 1), width 0.18s cubic-bezier(0, 0, 0.3, 1), transform 0.18s cubic-bezier(0, 0, 0.3, 1);
+  transition:
+    opacity 0.2s cubic-bezier(0, 0, 0.3, 1),
+    height 0.18s cubic-bezier(0, 0, 0.3, 1),
+    width 0.18s cubic-bezier(0, 0, 0.3, 1),
+    transform 0.18s cubic-bezier(0, 0, 0.3, 1);
 }
 #enp-quiz .enp-slider .ui-slider-handle:focus {
   outline: none;
-  box-shadow: 0 0 3px 1px #4D90FE;
+  box-shadow: 0 0 3px 1px #4d90fe;
 }
 #enp-quiz .enp-slider .ui-slider-handle--correct,
 #enp-quiz .enp-slider .ui-slider-handle--incorrect {
@@ -247,7 +251,8 @@
 #enp-quiz .enp-slider {
   /* support: IE8 - See #6727 */
 }
-#enp-quiz .enp-slider.ui-state-disabled .ui-slider-handle, #enp-quiz .enp-slider.ui-state-disabled .ui-slider-range {
+#enp-quiz .enp-slider.ui-state-disabled .ui-slider-handle,
+#enp-quiz .enp-slider.ui-state-disabled .ui-slider-range {
   filter: inherit;
 }
 #enp-quiz .ui-slider-horizontal {
