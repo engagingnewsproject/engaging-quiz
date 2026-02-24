@@ -22,7 +22,7 @@ function limitedChars(input) {
     counterContainer.classList.add('limited-chars__container');
     // Announce changes to the user
     counterContainer.setAttribute('aria-live', 'polite');
-    counterContainer.setAttribute('aria-role', 'log');
+    counterContainer.setAttribute('role', 'log');
     // Read the entire element even when only a small piece changes
     // ie - Announce "7 Characters Left" instead of just "7".
     counterContainer.setAttribute('aria-atomic', 'true');
