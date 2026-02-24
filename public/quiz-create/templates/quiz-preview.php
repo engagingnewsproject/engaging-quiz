@@ -91,7 +91,7 @@
 						<label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--border-color" for="enp-quiz-border-color">
 							Border Color
 						</label>
-						<input id="enp-quiz-border-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--color enp-quiz-styles__input--border-color" type="border" name="enp_quiz[quiz_border_color]" maxlength="7" value="<?php echo $quiz->get_quiz_border_color(); ?>" data-default="#dddddd" />
+						<input id="enp-quiz-border-color" class="enp-input enp-quiz-styles__input enp-quiz-styles__input--color enp-quiz-styles__input--border-color" type="text" name="enp_quiz[quiz_border_color]" maxlength="7" value="<?php echo $quiz->get_quiz_border_color(); ?>" data-default="#dddddd" />
 
 						<label class="enp-label enp-quiz-styles__label enp-quiz-styles__label--button-color" for="enp-quiz-button-color">
 							Button Color
@@ -163,19 +163,19 @@
 							<?php // TinyMCE toolbar on description fields below allows links/formatting (see quiz-preview.js). ?>
 							<p class="enp-input-description" style="font-size: 0.85rem;">** Double click any text you input to add formatting or links.</p>
 
-							<label class="enp-label enp-quiz-winlose__label" for="enp-win-title">
+							<label class="enp-label enp-quiz-winlose__label" for="enp-perfect-title">
 								Perfect Score &#129321;
 							</label>
-							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-perfect-description">Title</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-perfect-title">Title</label>
 							<input id="enp-perfect-title" class="enp-input enp-input__sm enp-quiz-winlose-perfect__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_perfect_title]" type="text" value="<?php echo $quiz->get_quiz_end_perfect_title(); ?>">
-							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-good-description">Description</label>
+							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-perfect-description">Description</label>
 							<textarea id="enp-perfect-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_perfect_description]"><?php echo $quiz->get_quiz_end_perfect_description(); ?></textarea>
 							<hr>
 							
 							<label class="enp-label enp-quiz-winlose__label" for="enp-good-title">
 								Good Score :)
 							</label>
-							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-good-description">Title</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-good-title">Title</label>
 							<input id="enp-good-title" class="enp-input enp-input__sm enp-quiz-winlose-fail__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_good_title]" type="text" value="<?php echo $quiz->get_quiz_end_good_title(); ?>">
 							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-good-description">Description</label>
 							<textarea id="enp-good-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_good_description]"><?php echo $quiz->get_quiz_end_good_description(); ?></textarea>
@@ -184,7 +184,7 @@
 							<label class="enp-label enp-quiz-winlose__label" for="enp-average-title">
 								Average Score :|
 							</label>
-							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-average-description">Title</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-average-title">Title</label>
 							<input id="enp-average-title" class="enp-input enp-input__sm enp-quiz-winlose-fail__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_average_title]" type="text" value="<?php echo $quiz->get_quiz_end_average_title(); ?>">
 							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-average-description">Description</label>
 							<textarea id="enp-average-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_average_description]"><?php echo $quiz->get_quiz_end_average_description(); ?></textarea>
@@ -193,7 +193,7 @@
 							<label class="enp-label enp-quiz-winlose__label" for="enp-fail-title">
 								Failing Score :(
 							</label>
-							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-fail-description">Title</label>
+							<label class="enp-label__sm enp-quiz-winlose__label" for="enp-fail-title">Title</label>
 							<input id="enp-fail-title" class="enp-input enp-input__sm enp-quiz-winlose-fail__input" maxlength="140" rows="1" name="enp_quiz[quiz_end_fail_title]" type="text" value="<?php echo $quiz->get_quiz_end_fail_title(); ?>">
 							<label class="enp-label__sm enp-quiz-winlose-fail__label" for="enp-fail-description">Description</label>
 							<textarea id="enp-fail-description" class="enp-textarea enp-quiz-winlose__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_end_fail_description]"><?php echo $quiz->get_quiz_end_fail_description(); ?></textarea>
@@ -204,8 +204,9 @@
 					<fieldset id="enp-quiz-feedback-text" class="enp-fieldset enp-fieldset--section">
 						<legend class="enp-legend enp-fieldset--section__title enp-quiz-feedback__legend">Feedback?</legend>
 						<fieldset class="enp-fieldset enp-quiz-feedback enp-quiz-feedback">
-							<p class="enp-input-description">What did you think of our quiz tool?</p>
-							<textarea id="enp-quiz-feedback" class="enp-textarea enp-quiz-feedback__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_feedback]" placeholder="We would love to hear from you!"></textarea>
+							<p id="enp-quiz-feedback-description" class="enp-input-description">What did you think of our quiz tool?</p>
+							<label class="enp-label enp-quiz-feedback__label" for="enp-quiz-feedback">Feedback</label>
+							<textarea id="enp-quiz-feedback" class="enp-textarea enp-quiz-feedback__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_feedback]" placeholder="We would love to hear from you!" aria-describedby="enp-quiz-feedback-description"></textarea>
 						</fieldset>
 					</fieldset>
 					<button type="submit" class="enp-btn--submit enp-preview-form__submit" name="enp-quiz-submit" value="quiz-save">Save</button>
@@ -220,7 +221,7 @@
 
 				<script type="text/javascript" src="<?php echo ENP_QUIZ_PLUGIN_URL; ?>public/quiz-take/js/dist/iframe-parent.js"></script>
 
-				<iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id(); ?>" class="enp-quiz-iframe" src="<?php echo ENP_QUIZ_URL . $quiz->get_quiz_id(); ?>" style="width: <?php echo $quiz->get_quiz_width(); ?>; height: 500px;"></iframe>
+				<iframe id="enp-quiz-iframe-<?php echo $quiz->get_quiz_id(); ?>" title="enp quiz iframe for quiz <?php echo $quiz->get_quiz_id(); ?>" class="enp-quiz-iframe" src="<?php echo ENP_QUIZ_URL . $quiz->get_quiz_id(); ?>" style="width: <?php echo $quiz->get_quiz_width(); ?>; height: 500px;"></iframe>
 
 			</section>
 		</div>
