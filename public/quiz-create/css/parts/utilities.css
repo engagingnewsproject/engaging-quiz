@@ -31,7 +31,9 @@
 #enp-quiz .enp-accordion-header {
   background: #fff;
   width: 100%;
-  box-shadow: inset 1px 1px 0 #ccc, inset -1px -1px 0 #ccc;
+  box-shadow:
+    inset 1px 1px 0 #ccc,
+    inset -1px -1px 0 #ccc;
   color: var(--font);
   font-family: Arial, monospace, helvetica, arial, sans-serif;
   font-size: 0.9rem;
@@ -70,7 +72,9 @@
 #enp-quiz .enp-accordion-content {
   background: #fff;
   width: 100%;
-  box-shadow: inset 1px -1px 0 #ccc, inset -1px -1px 0 #ccc;
+  box-shadow:
+    inset 1px -1px 0 #ccc,
+    inset -1px -1px 0 #ccc;
   display: block;
   position: relative;
   height: auto;
@@ -119,10 +123,10 @@
 }
 #enp-quiz .enp-quiz-message--success {
   border-left: 6px solid var(--green);
-  color: var(--green-light);
+  color: var(--green-slider);
 }
 #enp-quiz .enp-quiz-message__title--success {
-  color: var(--green-light);
+  color: var(--green-slider);
 }
 #enp-quiz .enp-quiz-message--note {
   border-left: 6px solid var(--khaki);
@@ -160,14 +164,14 @@
   margin-bottom: 0.2rem;
 }
 #enp-quiz .limited-chars__container {
-  color: var(--really-light-gray);
+  color: var(--darker-gray);
   font-size: 0.8rem;
   display: block;
   text-align: right;
   margin-bottom: 1.2rem;
 }
 #enp-quiz .limited-chars__counter {
-  color: var(--dark-gray);
+  color: var(--darker-gray);
 }
 #enp-quiz .limited-chars__container--error {
   color: var(--link-hover);
@@ -186,7 +190,8 @@
 #enp-quiz .enp-tooltip {
   position: relative;
 }
-#enp-quiz .enp-tooltip__activator:focus + .enp-tooltip__description, #enp-quiz .enp-tooltip__activator:focus > .enp-tooltip__description {
+#enp-quiz .enp-tooltip__activator:focus + .enp-tooltip__description,
+#enp-quiz .enp-tooltip__activator:focus > .enp-tooltip__description {
   display: block;
 }
 #enp-quiz .enp-tooltip__description {
