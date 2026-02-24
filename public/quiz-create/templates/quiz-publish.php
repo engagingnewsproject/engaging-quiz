@@ -31,7 +31,7 @@
                 <h1 class="enp-page-title enp-publish-page__title">Embed</h1>
                 <?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-embed-code.php'); ?>
                 <aside class="enp-aside enp-ab-ad__container">
-                    <h3 class="enp-aside__title enp-ab-ad__title">A/B Test</h3>
+                    <h2 class="enp-aside__title enp-ab-ad__title">A/B Test</h2>
                     <p class="enp-ab-ad__description">Test two quizzes against each other to see which one is more engaging.</p>
                     <a class="enp-btn enp-ab-ad__link" href="<? echo ENP_AB_TEST_URL; ?>new">New A/B Test</a>
                 </aside>

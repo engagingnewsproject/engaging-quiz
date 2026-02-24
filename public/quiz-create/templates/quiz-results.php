@@ -13,7 +13,7 @@
 	<section class="enp-container enp-aside__container">
 		<?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-share.php'); ?>
 		<div class="enp-embed__container">
-			<h3 class="enp-aside__title enp-embed__title">Embed</h3>
+			<h2 class="enp-aside__title enp-embed__title">Embed</h2>
 			<?php include(ENP_QUIZ_CREATE_TEMPLATES_PATH . 'partials/quiz-embed-code.php'); ?>
 		</div>
 	</section>
