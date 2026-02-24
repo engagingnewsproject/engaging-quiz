@@ -63,6 +63,8 @@ function createSliderTemplate(container) {
     $('.enp-slider__label', container).remove();
     // create the jQuery slider
     createSlider($('.enp-slider-input__input', container), sliderData);
+    // Preview is decorative (aria-hidden); avoid focusable descendants for a11y.
+    $(container).find('.enp-slider-preview .ui-slider-handle').attr('tabindex', '-1');
 }
 
 // on change slider values
@@ -325,6 +327,8 @@ function setUpSliderTemplate(sliderOptionsContainer) {
     accordion = {title: 'Advanced Slider Options', content: $('.enp-slider-advanced-options__content', sliderOptionsContainer), baseID: sliderID};
     //returns an accordion object with the header object and content object
     accordion = enp_accordion__create_headers(accordion);
+    // set the content ID
+    accordion.content.attr('id', accordion.baseID + '__accordion-content');
     // set-up all the accordion classes and start classes (so they're closed by default)
     enp_accordion__setup(accordion);
 }
