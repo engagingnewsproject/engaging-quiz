@@ -66,6 +66,11 @@ This file is located in your DOCUMENT_ROOT. It's outside of your public_html or 
 
 This odd set-up will allow you to move your quiz database to an entirely different server if you ever get hit with a lot of usage. Also, the plugin is written with PDO as the database connection layer, so you could even run your quiz database as something other than MySQL if you want.
 
+## Local development setup
+
+1. **Install the plugin** — Place the plugin in `wp-content/plugins/enp-quiz` and activate it in WordPress (see [Installation](#installation) above). Activation creates `enp-quiz-config.php` and `enp-quiz-database-config.php`; see [Advanced Installation](#advanced-installation) for their locations.
+2. **Build assets** — From the plugin directory, use Node 16, install dependencies, and run Gulp (see [Development](#development) below).
+3. **If something breaks locally** — See [Issues > Local Dev](#local-dev) for fixes (e.g. PDO/database connection, or `the_content()` / `$post` errors).
 
 ## Development
 
@@ -101,6 +106,8 @@ Use **`npx gulp`** so the project’s local Gulp runs (not a global or Homebrew 
 ## Issues
 
 ### Local Dev
+
+When setting up or running the plugin locally, you may hit the following. Apply the fixes below as needed.
 
 1. `Fatal error: Uncaught Error: PDO object is not initialized, constructor was not called in .../database/class-enp_quiz_db.php`
 
