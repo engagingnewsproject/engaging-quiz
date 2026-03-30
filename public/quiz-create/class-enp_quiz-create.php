@@ -93,6 +93,112 @@ class Enp_quiz_Create {
         return self::$nonce->outputKey( $return );
     }
 
+    protected function add_message( $type, $message ) {
+        if ( empty( self::$message ) || ! is_array( self::$message ) ) {
+            self::$message = array();
+        }
+
+        if ( empty( self::$message[ $type ] ) || ! is_array( self::$message[ $type ] ) ) {
+            self::$message[ $type ] = array();
+        }
+
+        self::$message[ $type ][] = $message;
+    }
+
+    public function get_recaptcha_site_key() {
+        if ( defined( 'ENP_QUIZ_RECAPTCHA_SITE_KEY' ) && ! empty( ENP_QUIZ_RECAPTCHA_SITE_KEY ) ) {
+            return trim( ENP_QUIZ_RECAPTCHA_SITE_KEY );
+        }
+
+        $site_key = get_option( 'enp_quiz_recaptcha_site_key', '' );
+
+        return is_string( $site_key ) ? trim( $site_key ) : '';
+    }
+
+    public function get_recaptcha_secret_key() {
+        if ( defined( 'ENP_QUIZ_RECAPTCHA_SECRET_KEY' ) && ! empty( ENP_QUIZ_RECAPTCHA_SECRET_KEY ) ) {
+            return trim( ENP_QUIZ_RECAPTCHA_SECRET_KEY );
+        }
+
+        $secret_key = get_option( 'enp_quiz_recaptcha_secret_key', '' );
+
+        return is_string( $secret_key ) ? trim( $secret_key ) : '';
+    }
+
+    public function should_require_publish_recaptcha( $quiz = null ) {
+        if ( empty( $this->get_recaptcha_site_key() ) ) {
+            return false;
+        }
+
+        if ( $quiz instanceof Enp_quiz_Quiz && $quiz->get_quiz_status() === 'published' ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function verify_publish_recaptcha() {
+        $site_key   = $this->get_recaptcha_site_key();
+        $secret_key = $this->get_recaptcha_secret_key();
+
+        if ( empty( $site_key ) || empty( $secret_key ) ) {
+            $this->add_message( 'error', 'Publishing requires reCAPTCHA. Add ENP_QUIZ_RECAPTCHA_SITE_KEY and ENP_QUIZ_RECAPTCHA_SECRET_KEY before publishing. Your changes were saved as a draft.' );
+            return false;
+        }
+
+        $token = '';
+        if ( isset( $_POST['g-recaptcha-response'] ) ) {
+            $token = sanitize_text_field( wp_unslash( $_POST['g-recaptcha-response'] ) );
+        }
+
+        if ( empty( $token ) ) {
+            $this->add_message( 'error', 'Please complete the reCAPTCHA before publishing. Your changes were saved as a draft.' );
+            return false;
+        }
+
+        $body = array(
+            'secret'   => $secret_key,
+            'response' => $token,
+        );
+
+        if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+            $body['remoteip'] = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+        }
+
+        $response = wp_remote_post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            array(
+                'body'    => $body,
+                'timeout' => 10,
+            )
+        );
+
+        if ( is_wp_error( $response ) ) {
+            $this->add_message( 'error', 'We could not verify the reCAPTCHA response. Your changes were saved as a draft. Please try again.' );
+            return false;
+        }
+
+        $response_code = wp_remote_retrieve_response_code( $response );
+        $data          = json_decode( wp_remote_retrieve_body( $response ), true );
+
+        if ( 200 !== (int) $response_code || empty( $data['success'] ) ) {
+            $error_codes = '';
+            if ( ! empty( $data['error-codes'] ) && is_array( $data['error-codes'] ) ) {
+                $error_codes = implode( ', ', array_map( 'sanitize_text_field', $data['error-codes'] ) );
+            }
+
+            if ( ! empty( $error_codes ) && ! in_array( 'missing-input-response', $data['error-codes'], true ) && ! in_array( 'invalid-input-response', $data['error-codes'], true ) ) {
+                $this->add_message( 'error', 'reCAPTCHA verification failed (' . $error_codes . '). Your changes were saved as a draft.' );
+            } else {
+                $this->add_message( 'error', 'Please complete the reCAPTCHA before publishing. Your changes were saved as a draft.' );
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Register and enqueue the stylesheets for quiz create.
      *
@@ -439,6 +545,20 @@ class Enp_quiz_Create {
                 return false;
             }
         }
+
+        $is_already_published_quiz = false;
+        if ( isset( $posted_quiz['quiz_id'] ) ) {
+            $publish_quiz = new Enp_quiz_Quiz( $posted_quiz['quiz_id'] );
+            if ( $publish_quiz->get_quiz_status() === 'published' ) {
+                $is_already_published_quiz = true;
+            }
+        }
+
+        if ( isset( $posted_user_action ) && $posted_user_action === 'quiz-publish' && ! $is_already_published_quiz && ! $this->verify_publish_recaptcha() ) {
+            // Save the current preview settings, but keep the quiz in draft state.
+            $posted_user_action = 'quiz-save';
+        }
+
         // initiate the save_quiz object
         // get access to wpdb
         global $wpdb;
@@ -658,11 +778,27 @@ class Enp_quiz_Create {
      * @return messages set
      */
     public function set_message( $response ) {
+        $messages = array();
+
         if ( isset( $response->message ) ) {
-            return $response->message;
-        } else {
-            return false;
+            $messages = $response->message;
         }
+
+        if ( ! empty( self::$message ) && is_array( self::$message ) ) {
+            foreach ( self::$message as $message_type => $message_group ) {
+                if ( empty( $message_group ) || ! is_array( $message_group ) ) {
+                    continue;
+                }
+
+                if ( empty( $messages[ $message_type ] ) || ! is_array( $messages[ $message_type ] ) ) {
+                    $messages[ $message_type ] = array();
+                }
+
+                $messages[ $message_type ] = array_merge( $messages[ $message_type ], $message_group );
+            }
+        }
+
+        return ! empty( $messages ) ? $messages : false;
     }
 
     /**

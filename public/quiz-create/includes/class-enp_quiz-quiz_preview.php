@@ -41,9 +41,12 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
     public function load_content($content)
     {
         ob_start();
-        $quiz = $this->quiz;
-        $enp_quiz_nonce = parent::$nonce;
-        $enp_current_page = 'preview';
+        $quiz                              = $this->quiz;
+        $enp_quiz_nonce                    = parent::$nonce;
+        $enp_current_page                  = 'preview';
+        $enp_recaptcha_site_key            = $this->get_recaptcha_site_key();
+        $enp_publish_requires_recaptcha    = $this->should_require_publish_recaptcha( $quiz );
+        $enp_publish_recaptcha_is_configured = ! empty( $enp_recaptcha_site_key ) && ! empty( $this->get_recaptcha_secret_key() );
         // set the button name
         if ($quiz->get_quiz_status() === 'published') {
             $enp_next_button_name = 'Embed';
@@ -82,8 +85,22 @@ class Enp_quiz_Quiz_preview extends Enp_quiz_Create {
         wp_register_script($this->plugin_name . '-quiz-preview', plugin_dir_url(__FILE__) . '../js/quiz-preview.js', array('jquery', 'tinymce_cloud', $this->plugin_name . '-iris', $this->plugin_name . '-accordion', $this->plugin_name . '-limited-chars'), ENP_QUIZ_VERSION, true);
         wp_enqueue_script($this->plugin_name . '-quiz-preview');
 
+        wp_localize_script(
+            $this->plugin_name . '-quiz-preview',
+            'quizPreview',
+            array(
+                'publishRequiresRecaptcha' => $this->should_require_publish_recaptcha( $this->quiz ),
+                'recaptchaErrorMessage'    => 'Please complete the reCAPTCHA before publishing.',
+            )
+        );
+
         wp_register_script($this->plugin_name . '-limited-chars', plugin_dir_url(__FILE__) . '../js/utilities/limited-chars.js', ENP_QUIZ_VERSION, true);
         wp_enqueue_script($this->plugin_name . '-limited-chars');
+
+        if ( $this->should_require_publish_recaptcha( $this->quiz ) ) {
+            wp_register_script( $this->plugin_name . '-quiz-preview-recaptcha', 'https://www.google.com/recaptcha/api.js', array(), null, true );
+            wp_enqueue_script( $this->plugin_name . '-quiz-preview-recaptcha' );
+        }
     }
 
     /*

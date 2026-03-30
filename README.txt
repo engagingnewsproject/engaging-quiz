@@ -28,6 +28,15 @@ Using the Engaging Quiz Creator, you can easily create quizzes that you can embe
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to 'http://your-site.com/enp-quiz/dashboard' to get to your dashboard and start creating quizzes.
 
+**Publish reCAPTCHA**
+
+To require reCAPTCHA on the Preview -> Publish step, define these in `wp-config.php` or save them in WordPress options:
+
+`define( 'ENP_QUIZ_RECAPTCHA_SITE_KEY', 'your-site-key' );`
+`define( 'ENP_QUIZ_RECAPTCHA_SECRET_KEY', 'your-secret-key' );`
+
+Do not commit the secret key to the repo.
+
 **Default URLs**
 
 *Dashboard*
