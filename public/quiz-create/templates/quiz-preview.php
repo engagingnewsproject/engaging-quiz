@@ -211,7 +211,7 @@
 					</fieldset>
 					<?php if ( $enp_publish_requires_recaptcha ) : ?>
 						<div class="enp-preview-form__recaptcha">
-							<p class="enp-input-description">Complete the reCAPTCHA before publishing this quiz.</p>
+							<p class="enp-input-description">Complete reCAPTCHA before publishing this quiz.</p>
 							<?php if ( $enp_publish_recaptcha_is_configured ) : ?>
 								<div class="g-recaptcha" data-sitekey="<?php echo esc_attr( $enp_recaptcha_site_key ); ?>"></div>
 							<?php else : ?>
