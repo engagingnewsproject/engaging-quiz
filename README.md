@@ -29,40 +29,41 @@ Using the Engaging Quiz Creator, you can easily create quizzes that you can embe
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to 'http://your-site.com/enp-quiz/dashboard' to get to your dashboard and start creating quizzes.
 
+**Publish reCAPTCHA**
+
+To require reCAPTCHA on the Preview -> Publish step, define these in `wp-config.php`:
+
+```php
+define( 'ENP_QUIZ_RECAPTCHA_SITE_KEY', 'your-site-key' );
+define( 'ENP_QUIZ_RECAPTCHA_SECRET_KEY', 'your-secret-key' );
+```
+
+The secret key should not be committed to the repo.
+
 **Default URLs**
 
-*Dashboard*
-http://your-site.com/enp-quiz/dashboard
+_Dashboard_ http://your-site.com/enp-quiz/dashboard
 
-*Create/Edit Quiz*
-http://your-site.com/enp-quiz/quiz-create
+_Create/Edit Quiz_ http://your-site.com/enp-quiz/quiz-create
 
-*Preview Quiz/Quiz Settings*
-http://your-site.com/enp-quiz/quiz-preview
+_Preview Quiz/Quiz Settings_ http://your-site.com/enp-quiz/quiz-preview
 
-*Publish Quiz/Quiz Embed Code*
-http://your-site.com/enp-quiz/quiz-publish
+_Publish Quiz/Quiz Embed Code_ http://your-site.com/enp-quiz/quiz-publish
 
-*Quiz Results*
-http://your-site.com/enp-quiz/quiz-results
+_Quiz Results_ http://your-site.com/enp-quiz/quiz-results
 
-*Create/Edit AB Test*
-http://your-site.com/enp-quiz/ab-test
+_Create/Edit AB Test_ http://your-site.com/enp-quiz/ab-test
 
-*AB Test Results*
-http://your-site.com/enp-quiz/ab-results
+_AB Test Results_ http://your-site.com/enp-quiz/ab-results
 
+**Advanced Installation** The plugin will create two configuration files on plugin activation:
 
-**Advanced Installation**
-The plugin will create two configuration files on plugin activation:
 - enp-quiz-config.php
 - enp-quiz-database-config.php
 
-*enp-quiz-config.php*
-This file is found in the wp-content folder. This is the main config file. You can change the path to your Template folders so you can change the views of the plugin. Templates default to the default plugin templates.
+_enp-quiz-config.php_ This file is found in the wp-content folder. This is the main config file. You can change the path to your Template folders so you can change the views of the plugin. Templates default to the default plugin templates.
 
-*enp-quiz-database-config.php*
-This file is located in your DOCUMENT_ROOT. It's outside of your public_html or domain-name.com folder (depending on your host). This is to protect it from prying eyes. It is included by the enp-quiz-config.php file. Feel free to move it, but be sure to change the path in the enp-quiz-config.php file too, otherwise the plugin won't know how to connect to your database.
+_enp-quiz-database-config.php_ This file is located in your DOCUMENT_ROOT. It's outside of your public_html or domain-name.com folder (depending on your host). This is to protect it from prying eyes. It is included by the enp-quiz-config.php file. Feel free to move it, but be sure to change the path in the enp-quiz-config.php file too, otherwise the plugin won't know how to connect to your database.
 
 This odd set-up will allow you to move your quiz database to an entirely different server if you ever get hit with a lot of usage. Also, the plugin is written with PDO as the database connection layer, so you could even run your quiz database as something other than MySQL if you want.
 
@@ -90,18 +91,11 @@ Use **`npx gulp`** so the project’s local Gulp runs (not a global or Homebrew 
 
 ## Frequently Asked Questions
 
-
-
 ## Screenshots
-
-
 
 ## Changelog
 
-
-
 ## Upgrade Notice
-
 
 ## Issues
 
@@ -151,5 +145,5 @@ Exclusions should be added for these files in order for the quiz embeds to work.
 ```
 ^/wp-content/plugins/enp-quiz/?
 ^/wp-content/plugins/enp-quiz/
-^/wp-content/plugins/enp-quiz 
+^/wp-content/plugins/enp-quiz
 ```

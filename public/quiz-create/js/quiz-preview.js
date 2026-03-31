@@ -1,4 +1,24 @@
 jQuery( document ).ready( function( $ ) {
+    var previewSubmitAction = null;
+
+    function showPreviewError(message) {
+        var messageContainer = $('.enp-preview-page-container');
+        var existingMessage = $('.enp-quiz-message--error', messageContainer);
+
+        if (existingMessage.length) {
+            $('.enp-message__list--error', existingMessage).html('<li class="enp-message__item enp-message__item--error">' + message + '</li>');
+            return;
+        }
+
+        messageContainer.prepend(
+            '<section class="enp-quiz-message enp-quiz-message--error enp-container">' +
+                '<h2 class="enp-quiz-message__title enp-quiz-message__title--error">error</h2>' +
+                '<ul class="enp-message__list enp-message__list--error">' +
+                    '<li class="enp-message__item enp-message__item--error">' + message + '</li>' +
+                '</ul>' +
+            '</section>'
+        );
+    }
 
     // set-up accordions
     $('.enp-fieldset--section').each( function(i) {
@@ -124,9 +144,24 @@ jQuery( document ).ready( function( $ ) {
     }
 
     /** Sync all TinyMCE editors (Results Screen descriptions) to their textareas before form submit. */
+    $('.enp-quiz-settings__form button[type="submit"]').on('click', function() {
+        previewSubmitAction = $(this).val();
+    });
+
     $('.enp-quiz-settings__form').on('submit', function() {
         if (typeof tinymce !== 'undefined') {
             tinymce.triggerSave();
+        }
+
+        if (
+            typeof quizPreview !== 'undefined' &&
+            quizPreview.publishRequiresRecaptcha &&
+            previewSubmitAction === 'quiz-publish'
+        ) {
+            if (typeof grecaptcha === 'undefined' || grecaptcha.getResponse() === '') {
+                showPreviewError(quizPreview.recaptchaErrorMessage);
+                return false;
+            }
         }
     });
 

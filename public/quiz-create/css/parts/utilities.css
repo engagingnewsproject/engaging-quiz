@@ -55,6 +55,9 @@
 #enp-quiz .enp-accordion-header:first-of-type {
   margin-top: 0;
 }
+#enp-quiz .enp-preview-form__recaptcha {
+  margin: 1.6rem 0 0;
+}
 #enp-quiz .enp-accordion-header .enp-accordion-header__icon {
   position: absolute;
   fill: var(--dark-gray);

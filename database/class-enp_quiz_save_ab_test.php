@@ -18,9 +18,13 @@
  * @author     Engaging News Project <jones.jeremydavid@gmail.com>
  */
 class Enp_quiz_Save_ab_test extends Enp_quiz_Save {
-    protected $ab_test,
-              $response = array('message'=>array('error'=>array(),'success'=>array()));
-
+    protected $ab_test;
+	public $response = array(
+		'message' => array(
+			'error'   => array(),
+			'success' => array(),
+		),
+	);
     public function __construct() {
 
     }

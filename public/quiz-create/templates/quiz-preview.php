@@ -209,6 +209,16 @@
 							<textarea id="enp-quiz-feedback" class="enp-textarea enp-quiz-feedback__textarea enp-textarea" maxlength="140" name="enp_quiz[quiz_feedback]" placeholder="We would love to hear from you!" aria-describedby="enp-quiz-feedback-description"></textarea>
 						</fieldset>
 					</fieldset>
+					<?php if ( $enp_publish_requires_recaptcha ) : ?>
+						<div class="enp-preview-form__recaptcha">
+							<p class="enp-input-description">Complete reCAPTCHA before publishing this quiz.</p>
+							<?php if ( $enp_publish_recaptcha_is_configured ) : ?>
+								<div class="g-recaptcha" data-sitekey="<?php echo esc_attr( $enp_recaptcha_site_key ); ?>"></div>
+							<?php else : ?>
+								<p class="enp-input-description"><strong>Publishing is disabled until reCAPTCHA keys are configured.</strong> Add <code>ENP_QUIZ_RECAPTCHA_SITE_KEY</code> and <code>ENP_QUIZ_RECAPTCHA_SECRET_KEY</code> to <code>wp-config.php</code> or save them in WordPress options.</p>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
 					<button type="submit" class="enp-btn--submit enp-preview-form__submit" name="enp-quiz-submit" value="quiz-save">Save</button>
 					<button type="submit" id="enp-btn--next-step" class="enp-btn--submit enp-btn--next-step enp-preview-form__submit--publish" name="enp-quiz-submit" value="quiz-publish"><? echo $enp_next_button_name; ?> <svg class="enp-icon enp-icon--chevron-right enp-btn--next-step__icon enp-preview-form__submit__icon">
 							<use xlink:href="#icon-chevron-right" />
