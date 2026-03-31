@@ -16,6 +16,7 @@ class Enp_quiz_Question {
             $question_type,
             $question_explanation,
             $question_order,
+            $question_is_deleted,
             $question_views,
             $question_responses,
             $question_responses_correct,

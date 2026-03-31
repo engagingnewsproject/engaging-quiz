@@ -18,6 +18,16 @@
  */
 class Enp_quiz_Save {
 
+    /**
+     * Response payload for add_error / add_success on embed-style saves (PHP 8.2+ requires declared properties).
+     *
+     * @var array{error: array<int, string>, success: array<int, string>}
+     */
+    public $response = array(
+        'error'   => array(),
+        'success' => array(),
+    );
+
     public function __construct() {
 
     }
