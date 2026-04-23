@@ -332,9 +332,8 @@ $bg_color_css $text_color_css $border_color_css $button_color_css $correct_color
 			aria-valuemin="1"
 			aria-valuenow="'. $this->get_current_progress_bar_question_number().'"
 			aria-valuemax="'.$this->quiz->get_total_question_count().'">
-
-			<div class="enp-quiz__progress__bar__question-count">'.$this->get_progress_bar_display_text().'</div>
-		</div>';
+		</div>
+		<div class="enp-quiz__progress__bar__question-count">'.$this->get_progress_bar_display_text().'</div>';
 		return $progressbar;
 	}
 
