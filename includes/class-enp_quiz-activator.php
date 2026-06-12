@@ -27,7 +27,8 @@ class Enp_quiz_Activator {
               $embed_site_table_name,
               $embed_site_type_table_name,
               $embed_site_br_site_type_table_name,
-              $embed_quiz_table_name;
+              $embed_quiz_table_name,
+              $news_candidate_table_name;
     /**
      * Short Description. (use period)
      *
@@ -136,6 +137,7 @@ class Enp_quiz_Activator {
         $this->embed_site_type_table_name = $wpdb->prefix . 'enp_embed_site_type';
         $this->embed_site_br_site_type_table_name = $wpdb->prefix . 'enp_embed_site_br_site_type';
         $this->embed_quiz_table_name = $wpdb->prefix . 'enp_embed_quiz';
+        $this->news_candidate_table_name = $wpdb->prefix . 'enp_news_candidate';
     }
 
     /**
@@ -372,6 +374,17 @@ class Enp_quiz_Activator {
                 ) $charset_collate;";
 
 
+        $news_candidate_table_name = $this->news_candidate_table_name;
+        $news_candidate_sql = "CREATE TABLE $news_candidate_table_name (
+                    embed_site_id BIGINT(20) UNSIGNED NOT NULL,
+                    normalized_host VARCHAR(191) NOT NULL,
+                    review_status VARCHAR(32) NOT NULL DEFAULT 'pending',
+                    notes TEXT NOT NULL,
+                    updated_at DATETIME NOT NULL,
+                    PRIMARY KEY  (embed_site_id),
+                    KEY normalized_host (normalized_host)
+                ) $charset_collate;";
+
         $embed_quiz_table_name = $this->embed_quiz_table_name;
         $embed_quiz_sql = "CREATE TABLE $embed_quiz_table_name (
                     embed_quiz_id BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -450,6 +463,10 @@ class Enp_quiz_Activator {
                     array(
                         'name'=>$this->embed_quiz_table_name,
                         'sql'=>$embed_quiz_sql
+                    ),
+                    array(
+                        'name'=>$this->news_candidate_table_name,
+                        'sql'=>$news_candidate_sql
                     ),
                 );
 

@@ -21,6 +21,11 @@ class Enp_quiz_Upgrade {
             $this->upgrade_to_120();
         }
 
+        // if current (old) version is less than 1.3.0
+        if(version_compare("1.3.0", $old_version) === 1) {
+            $this->upgrade_to_130();
+        }
+
         // update to the new version
         update_option('enp_quiz_version', ENP_QUIZ_VERSION);
     }
@@ -43,6 +48,15 @@ class Enp_quiz_Upgrade {
         if ( $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM `{$table}` LIKE %s", $column ) ) !== $column ) {
             $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `{$column}` TEXT NOT NULL DEFAULT '' AFTER mc_option_content" );
         }
+    }
+
+    /**
+     * Create news candidate review table (v1.3.0).
+     */
+    public function upgrade_to_130() {
+        require_once plugin_dir_path( __FILE__ ) . 'includes/class-enp_quiz-activator.php';
+        $activator = new Enp_quiz_Activator();
+        $activator->create_tables();
     }
 
     /**

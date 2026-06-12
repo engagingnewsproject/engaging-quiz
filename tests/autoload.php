@@ -28,6 +28,7 @@ require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_embed-site.php';
 require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_embed-site-type.php';
 require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_embed-site-bridge.php';
 require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_embed-quiz.php';
+require ENP_QUIZ_PLUGIN_DIR . 'includes/class-enp_quiz-news-candidates.php';
 
 // Database
 require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_db.php';
@@ -41,6 +42,7 @@ require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_quiz_response.php';
 require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_ab_test.php';
 require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_embed_quiz.php';
 require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_embed_site.php';
+require ENP_QUIZ_PLUGIN_DIR . 'database/class-enp_quiz_save_news_candidate.php';
 
 
 // Database for Quiz Take side (only need it to reset data)

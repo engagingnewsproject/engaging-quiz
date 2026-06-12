@@ -72,6 +72,19 @@ add_action( 'rest_api_init', function () {
     'callback'  => 'getQuizTotalsAPI',
     'args'      => getQuizTotalsAPIArgs()
   ) );
+
+  register_rest_route( $namespace, '/news-candidates', array(
+    'methods'             => 'GET',
+    'callback'            => 'getNewsCandidatesAPI',
+    'permission_callback' => '__return_true',
+  ) );
+
+  register_rest_route( $namespace, '/news-candidates/(?P<siteID>\d+)', array(
+    'methods'             => 'PATCH',
+    'callback'            => 'patchNewsCandidateAPI',
+    'permission_callback' => '__return_true',
+    'args'                => getNewsCandidatePatchArgs(),
+  ) );
 } );
 
 function getQuizDomainsAPI($request) {
@@ -353,6 +366,58 @@ function getQuizTotalsAPI($request) {
 function getQuizTotalsAPIArgs() {
     $args =[];
     return $args;
+}
+
+function getNewsCandidatesAPI($request) {
+  $engine = new Enp_quiz_News_candidates();
+  return $engine->get_api_payload();
+}
+
+function patchNewsCandidateAPI($request) {
+  $params = $request->get_json_params();
+  if ( ! is_array( $params ) ) {
+    $params = array();
+  }
+
+  $review_status = isset( $params['review_status'] ) ? $params['review_status'] : '';
+  $notes = isset( $params['notes'] ) ? $params['notes'] : '';
+  $normalized_host = isset( $params['normalized_host'] ) ? $params['normalized_host'] : '';
+
+  if ( $normalized_host === '' ) {
+    $site = new Enp_quiz_Embed_site( $request['siteID'] );
+    if ( $site && ! empty( $site->embed_site_url ) ) {
+      $normalized_host = Enp_quiz_News_candidates::normalize_host( $site->embed_site_url );
+    }
+  }
+
+  $save = new Enp_quiz_Save_news_candidate();
+  $response = $save->save_review(
+    (int) $request['siteID'],
+    $normalized_host,
+    $review_status,
+    $notes
+  );
+
+  if ( ! empty( $response['error'] ) ) {
+    return new WP_Error(
+      'enp_news_candidate_save_failed',
+      implode( '; ', $response['error'] ),
+      array( 'status' => 400 )
+    );
+  }
+
+  return $response;
+}
+
+function getNewsCandidatePatchArgs() {
+  return array(
+    'siteID' => array(
+      'required'          => true,
+      'validate_callback' => function( $value ) {
+        return is_numeric( $value ) && (int) $value > 0;
+      },
+    ),
+  );
 }
 
 /**
