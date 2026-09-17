@@ -210,7 +210,7 @@ $qt_end = new Enp_quiz_Take_Quiz_end($qt->quiz, $qt->get_correctly_answered());
 				m.parentNode.insertBefore(a, m)
 			})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-			ga('create', '<?php echo esc_attr( $ga_id ); ?>', 'auto');
+			ga('create', '<?php echo function_exists( 'esc_attr' ) ? esc_attr( $ga_id ) : htmlspecialchars( $ga_id, ENT_QUOTES, 'UTF-8' ); ?>', 'auto');
 			ga('send', 'pageview');
 		</script>
 		<?php
